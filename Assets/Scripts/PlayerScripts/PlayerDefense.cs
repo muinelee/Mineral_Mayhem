@@ -2,22 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayControl))]
 public class PlayerDefense : MonoBehaviour
 {
-    private bool isBlocking;
-    private bool isPerfectBlock;
+    private bool isBlocking = false;
+    private bool isPerfectBlock = false;
 
     private float statusEffectTimer;
     private float statusEffectDuration;
 
-    // private PlayerStats ps;
+    private PlayerCore pCore;
     private Rigidbody rb;
 
     // Start is called before the first frame update
     void Start()
     {
-        isBlocking = false;
-        rb = GetComponent<Rigidbody>();
+        pCore = gameObject.GetComponent<PlayerCore>();
+        rb = gameObject.GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -40,7 +41,9 @@ public class PlayerDefense : MonoBehaviour
 
         else if (!isBlocking)
         {
-            Debug.Log("Player takes " + damage + "damage");
+            pCore.hp -= damage;
+            rb.velocity = Vector3.zero;
+            Knockback(knockback, attackSource);
         }
 
 
@@ -96,9 +99,10 @@ public class PlayerDefense : MonoBehaviour
         isPerfectBlock = b;                             // Use animation event to turn perfectblocking on/off
     }
 
-    public void Knockback(float value, Vector3 attackSource)
+    public void Knockback(float knockbackValue, Vector3 attackSource)
     {
-
+        Vector3 direction = (transform.position - attackSource).normalized;
+        rb.velocity = direction * knockbackValue * Time.deltaTime * 100;
     }
 
     #region <----------STATUS EFFECT---------->

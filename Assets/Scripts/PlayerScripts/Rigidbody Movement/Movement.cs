@@ -6,13 +6,11 @@ public class Movement : MonoBehaviour
 {
     [SerializeField] public Rigidbody rb;
     [SerializeField] private float movSpd;
-    [SerializeField] private float turnSpd;
     [SerializeField] private bool canMove;
     private Vector3 direction;
     private Vector3 lookDirection;
     private float turnTime;
     private float turnSmoothVel;                                                                                        // reference variable for DampSmoothAngle
-
 
     private void Awake() 
     {
