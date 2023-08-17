@@ -15,8 +15,7 @@ public class PlayerCore : MonoBehaviour
         set 
         {
             _hp = value;
-            pc.enabled = false;
-            if (_hp <= 0) Debug.Log("Character died");
+            if (_hp <= 0) pc.enabled = false;
         }
     }
 

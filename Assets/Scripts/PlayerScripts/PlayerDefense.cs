@@ -25,6 +25,14 @@ public class PlayerDefense : MonoBehaviour
     void Update()
     {
         if (statusEffectTimer > 0) statusEffectTimer -= Time.deltaTime;
+
+        // ----- Delete in final build -----
+        if (Input.GetKeyDown(KeyCode.UpArrow)) TakeDamage(10, 20, transform.position + Vector3.forward, STATUS_EFFECT.NONE, 0,0);
+        if (Input.GetKeyDown(KeyCode.DownArrow)) TakeDamage(10, 20, transform.position + Vector3.back, STATUS_EFFECT.NONE, 0,0);
+        if (Input.GetKeyDown(KeyCode.RightArrow)) TakeDamage(10, 20, transform.position + Vector3.right, STATUS_EFFECT.NONE, 0,0);
+        if (Input.GetKeyDown(KeyCode.LeftArrow)) TakeDamage(10, 20, transform.position + Vector3.left, STATUS_EFFECT.NONE, 0,0);
+        // ----- Delete in final build -----
+
     }
 
     public void TakeDamage(float damage, float knockback, Vector3 attackSource, STATUS_EFFECT statusEffect, float statusEffect_Value, float statusEffect_Duration)
@@ -43,7 +51,8 @@ public class PlayerDefense : MonoBehaviour
         {
             pCore.hp -= damage;
             rb.velocity = Vector3.zero;
-            Knockback(knockback, attackSource);
+            Vector3 direction = (transform.position - attackSource).normalized;
+            Knockback(knockback, direction);
         }
 
 
@@ -99,9 +108,8 @@ public class PlayerDefense : MonoBehaviour
         isPerfectBlock = b;                             // Use animation event to turn perfectblocking on/off
     }
 
-    public void Knockback(float knockbackValue, Vector3 attackSource)
+    public void Knockback(float knockbackValue, Vector3 direction)
     {
-        Vector3 direction = (transform.position - attackSource).normalized;
         rb.velocity = direction * knockbackValue * Time.deltaTime * 100;
     }
 
