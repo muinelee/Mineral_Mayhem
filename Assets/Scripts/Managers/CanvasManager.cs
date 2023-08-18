@@ -7,41 +7,56 @@ using System;
 
 public class CanvasManager : MonoBehaviour
 {
-    [Header("Menus")]
+    [Header("Main Menu")]
     public GameObject mainMenu;
+    public GameObject compendium;
     public GameObject settingsMenu;
 
     [Header("Buttons")]
     public Button startButton;
+    public Button trainingRoomButton;
+    public Button compendiumButton;
     public Button settingsButton;
-    public Button backButton;
+    public Button mainMenuButton;
     public Button quitButton;
-
-    [Header("Text")]
-    public Text volSliderText;
 
     [Header("Slider")]
     public Slider volSlider;
+
+    [Header("Text")]
+    public Text volSliderText;
 
     // Start is called before the first frame update
     void Start()
     {
         // Checks to see if these objects exist so that we avoid NULL references
         if (startButton)
+        {
             startButton.onClick.AddListener(StartGame);
-
+        }
+        if (trainingRoomButton)
+        {
+            trainingRoomButton.onClick.AddListener(TrainingRoom);
+        }
+        if (compendiumButton)
+        {
+            compendiumButton.onClick.AddListener(Compendium);
+        }
         if (settingsButton)
+        {
             settingsButton.onClick.AddListener(ShowSettingsMenu);
-
-        if (backButton)
-            backButton.onClick.AddListener(ShowMainMenu);
-
+        }
+        if (mainMenuButton)
+        {
+            mainMenuButton.onClick.AddListener(ShowMainMenu);
+        }
         if (quitButton)
-            quitButton.onClick.AddListener(Quit);
+        { 
+        quitButton.onClick.AddListener(Quit);
+        }
 
         if (volSlider)
         {
-            // Passing an anonymous function with AddListner(value) =>
             volSlider.onValueChanged.AddListener((value) => OnSliderValueChanged(value));
 
             if (volSliderText)
@@ -51,25 +66,36 @@ public class CanvasManager : MonoBehaviour
 
             OnSliderValueChanged(volSlider.value);
         }
-
     }
 
     private void StartGame()
     {
-        // Need to load the main game scene
-        // SceneManager.LoadScene("Game");
+        Debug.Log("Start Game Logic Not Yet Implemented");
+        //SceneManager.LoadScene("Game");
     }
 
-    void ShowMainMenu()
+    void TrainingRoom()
     {
-        mainMenu.SetActive(true);
-        settingsMenu.SetActive(false);
+        SceneManager.LoadScene("Test Room");
+    }
+
+    void Compendium()
+    {
+        Debug.Log("Compendium Scene Logic Not Yet Implemented");
+        //mainMenu.SetActive(false);
+        //compendium.SetActive(true);
     }
 
     void ShowSettingsMenu()
     {
         mainMenu.SetActive(false);
         settingsMenu.SetActive(true);
+    }
+
+    void ShowMainMenu()
+    {
+        mainMenu.SetActive(true);
+        settingsMenu.SetActive(false);
     }
 
     void Quit()
@@ -87,13 +113,7 @@ public class CanvasManager : MonoBehaviour
         value = Mathf.Round(value / step) * step;
         volSliderText.text = (value * 100).ToString();
         
-        // Need to implement AudioManager, then uncomment next line
-        // AudioManager.Instance.SetVolume(value);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        // Need to implement AudioManager then apply logic
+        //AudioManager.Instance.SetVolume(value);
     }
 }
