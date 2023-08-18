@@ -6,13 +6,14 @@ using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class CC_PlayerController : MonoBehaviour
 {
     //Component Variables
     PlayerControls controls;
     Animator anim;
     CharacterController cc;
     GameObject opponent;
+    private KnockbackController kbc;
     public CinemachineVirtualCamera virtualCamera;
 
     //Movement Variables
@@ -31,12 +32,20 @@ public class PlayerController : MonoBehaviour
     private float verticalVelocity;
     private bool isDodging = false;
     private bool justFinishedDodge = false;
+    public float hitStrength = 10f;
+
+    public Vector3 attackerPosition;
+    public float attackerHitStrength;
+    public float bigHitThreshold = 10f;
 
     public int PlayerNumber                                                                 //Property for the player number, so we can separate player information and access it easily
     { get  { return _playerNumber; }
       set  { _playerNumber = value; gameObject.name = "Player " + _playerNumber; }
     }
     private int _playerNumber;
+
+    private enum State { Idle, Run, Attack, Reacting, Dodge, Block, Dead };
+    private State currentState;
 
 
 
@@ -56,6 +65,8 @@ public class PlayerController : MonoBehaviour
     {
         anim = gameObject.GetComponent<Animator>();
         cc = gameObject.GetComponent<CharacterController>();
+        kbc = gameObject.GetComponent<KnockbackController>();
+        currentState = State.Idle;
     }
 
     private void Update()
@@ -200,6 +211,21 @@ public class PlayerController : MonoBehaviour
         isDodging = false;                                                                                                                  //We set the isDodging bool to false so we can move the player again
     }
 
+    public void HitReaction()
+    {
+        kbc.ApplyKnockback(attackerPosition, hitStrength);                                                                                      // Apply knockback to the NPC
+
+
+        if (hitStrength >= bigHitThreshold)                                                                                                     // If damage is greater than or equal to the big hit threshold, trigger the big hit reaction
+        {
+            anim.SetTrigger("TakeBigHit");
+        }
+        else
+        {
+            anim.SetTrigger("TakeHit");                                                                                                    // Else, trigger the normal hit reaction
+        }
+        currentState = State.Reacting;                                                                                                     // Switch to Reacting state
+    }
 
     void Dodge()
     { 
@@ -226,11 +252,53 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
+    #region <------------------------Anim Toggles------------------------>
+    void AttackToggle()
+    {
+        if (anim.GetBool("isAttacking"))
+        {
+            anim.SetBool("isAttacking", true);
+        }
+        else
+        {
+            anim.SetBool("isAttacking", false);
+        }
+    }
 
+    void BlockToggle()
+    {
+        if (anim.GetBool("isBlocking"))
+        {
+            anim.SetBool("isBlocking", true);
+        }
+        else
+        {
+            anim.SetBool("isBlocking", false);
+        }
+    }
 
+    void DodgeToggle()
+    {
+        if (anim.GetBool("isDodging"))
+        {
+            anim.SetBool("isDodging", true);
+        }
+        else
+        {
+            anim.SetBool("isDodging", false);
+        }
+    }
 
-
-
-
-
+    void ReactToggle()
+    {
+        if (anim.GetBool("isReacting"))
+        {
+            anim.SetBool("isReacting", true);
+        }
+        else
+        {
+            anim.SetBool("isReacting", false);
+        }
+    }
+    #endregion
 }

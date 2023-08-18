@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8161407948508681393}
+  - component: {fileID: 7706032596601778653}
   m_Layer: 0
   m_Name: Katana
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32,6 +33,26 @@ Transform:
   - {fileID: 3890604022288098540}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 32.725, y: -49.25, z: -29.115}
+--- !u!114 &7706032596601778653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2016759516815700076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41d3de0a1b71e7141a91bd39cd03bf29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weapon: {fileID: 0}
+  weaponGrip: {fileID: 0}
+  weaponGrip2: {fileID: 0}
+  rightHandGrip: {fileID: 0}
+  leftHandGrip: {fileID: 0}
+  leftHand: {fileID: 0}
+  rightHand: {fileID: 0}
+  weaponCollider: {fileID: 0}
 --- !u!1 &4154790749130406949
 GameObject:
   m_ObjectHideFlags: 0
@@ -44,7 +65,7 @@ GameObject:
   - component: {fileID: 5271027609031700667}
   m_Layer: 0
   m_Name: WeaponGrip
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
