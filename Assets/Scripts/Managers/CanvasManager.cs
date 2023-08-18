@@ -7,17 +7,15 @@ using System;
 
 public class CanvasManager : MonoBehaviour
 {
+    [Header("Menus")]
+    public GameObject mainMenu;
+    public GameObject settingsMenu;
+
     [Header("Buttons")]
     public Button startButton;
     public Button settingsButton;
     public Button backButton;
     public Button quitButton;
-    public Button returnToMenuButton;
-    public Button resumeGame;
-
-    [Header("Menus")]
-    public GameObject mainMenu;
-    public GameObject settingsMenu;
 
     [Header("Text")]
     public Text volSliderText;
@@ -62,6 +60,12 @@ public class CanvasManager : MonoBehaviour
         // SceneManager.LoadScene("Game");
     }
 
+    void ShowMainMenu()
+    {
+        mainMenu.SetActive(true);
+        settingsMenu.SetActive(false);
+    }
+
     void ShowSettingsMenu()
     {
         mainMenu.SetActive(false);
@@ -85,12 +89,6 @@ public class CanvasManager : MonoBehaviour
         
         // Need to implement AudioManager, then uncomment next line
         // AudioManager.Instance.SetVolume(value);
-    }
-
-    void ShowMainMenu()
-    {
-        mainMenu.SetActive(true);
-        settingsMenu.SetActive(false);
     }
 
     // Update is called once per frame
