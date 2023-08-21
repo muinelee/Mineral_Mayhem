@@ -5,30 +5,71 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     [SerializeField] public Rigidbody rb;
+    [SerializeField] public Mobility_Attributes ma;    // Scriptable Object from 'Mobility Attributes'                                                                    
     [SerializeField] private float movSpd;
-    [SerializeField] private bool canMove;
+    private bool canMove = true;
+    private bool canDash = true;
+
+    public bool mobilitySkillActivated = false;
     private Vector3 direction;
     private Vector3 lookDirection;
     private float turnTime;
-    private float turnSmoothVel;                                                                                        // reference variable for DampSmoothAngle
+    private float turnSmoothVel;    // Reference variable for DampSmoothAngle
 
-    private void Awake() 
+    private float timer = 10f;
+
+    private void Awake()
     {
         if (!rb) rb = gameObject.GetComponent<Rigidbody>();
     }
 
+    private void Update()
+    {
+        if (mobilitySkillActivated)             // Activate mobility skill
+        {
+            if (ma.canDash)
+            {
+                ma.Activate();
+                timer = 0;
+                canMove = ma.canSteer;
+
+                // Space for invincibility
+            }
+
+            mobilitySkillActivated = false;
+        }
+
+        // ----- Timer ----
+        if (timer < ma.coolDown)    
+        {
+            timer += Time.deltaTime;
+            if (timer > ma.duration) 
+            {
+                if (!canMove) rb.velocity = Vector3.zero;
+                canMove = true;
+                ma.isActive = false;
+            }
+        }
+
+        else if (!canDash) canDash = true;
+    }
+
     private void FixedUpdate() 
     {
-        if (!canMove)
+        // ----- Set normal movement ----- //
+        if (canMove)
         {
-            Move(direction, movSpd);
             LookAtDirection(lookDirection);
+            if (!ma.isActive) Move(direction, movSpd);  // Normal movement
+            else if (ma.isActive) Move(direction, movSpd + ma.spdIncrease);          // For speed buff type mobility skill
         }
+
+        else if (!canMove && ma.isActive) rb.velocity = direction * movSpd * ma.spdIncrease * Time.deltaTime;   // For Dash type mobility skill
     }
 
     private void Move(Vector3 dir, float movSpd)
     {
-        rb.AddForce(dir * movSpd * Time.deltaTime * 100, ForceMode.Force);
+        rb.MovePosition(transform.position + dir * movSpd * Time.deltaTime);
     }
 
     private void LookAtDirection(Vector3 lookDir)
@@ -40,12 +81,11 @@ public class Movement : MonoBehaviour
 
     public void SetDirection(Vector3 targetDirection)
     {
-        direction = targetDirection;
+        if (canMove) direction = targetDirection.normalized;
     }
 
     public void SetLookDirection(Vector3 targetLookDirection)
     {
-
         lookDirection = (targetLookDirection - transform.position).normalized;
     }
 
@@ -54,14 +94,14 @@ public class Movement : MonoBehaviour
         canMove = b;
     }
 
-    public void StartDodge(int i)
+    public void ActivateMobilitySkill()     // Used to link controller to scriptable object. Otherwise it will throw a NullReference error
     {
-        if (i == 1) gameObject.layer = LayerMask.NameToLayer("Player - Dodge 1");
-        else if (i == 2) gameObject.layer = LayerMask.NameToLayer("Player - Dodge 2");
+            mobilitySkillActivated = true;
     }
 
-    public void EndDodge()
+    private void StopMobilitySkill()
     {
-        gameObject.layer = LayerMask.NameToLayer("Player");
+        // ----- Decrease SPEED ----- //
+        SetCanMove(true);
     }
 }

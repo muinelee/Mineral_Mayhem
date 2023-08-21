@@ -17,12 +17,9 @@ public class PlayControl : MonoBehaviour
     void Update()
     {
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit raycastHit)) mov.SetLookDirection(raycastHit.point);    
-    }
+        if (Physics.Raycast(ray, out RaycastHit raycastHit)) mov.SetLookDirection(raycastHit.point);
+        if (Input.GetKeyDown(KeyCode.Space)) mov.ActivateMobilitySkill();
 
-    // Use fixed update for affecting the game
-    void FixedUpdate()
-    {
-        mov.SetDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized);
+        mov.SetDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")));
     }
 }
