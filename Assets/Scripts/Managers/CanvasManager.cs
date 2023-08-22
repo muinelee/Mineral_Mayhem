@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using TMPro;
 
 public class CanvasManager : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class CanvasManager : MonoBehaviour
     public Slider volSlider;
 
     [Header("Text")]
-    public Text volSliderText;
+    public TMP_Text volSliderText;
 
     // Start is called before the first frame update
     void Start()
