@@ -9,11 +9,12 @@ public class Movement : MonoBehaviour
     [SerializeField] private float movSpd;
     private bool canMove = true;
     private bool canDash = true;
+    private bool dashActive = false;
 
     public bool mobilitySkillActivated = false;
     private Vector3 direction;
     private Vector3 lookDirection;
-    private float turnTime;
+    private float turnTime = 0.1f;
     private float turnSmoothVel;    // Reference variable for DampSmoothAngle
 
     private float timer = 10f;
@@ -23,19 +24,19 @@ public class Movement : MonoBehaviour
         if (!rb) rb = gameObject.GetComponent<Rigidbody>();
     }
 
+#region <----- UPDATE + FIXED UPDATE ----->
+
     private void Update()
     {
         if (mobilitySkillActivated)             // Activate mobility skill
         {
-            if (ma.canDash)
+            if (canDash)
             {
-                ma.Activate();
+                dashActive = true;
+                canDash = false;
                 timer = 0;
                 canMove = ma.canSteer;
-
-                // Space for invincibility
             }
-
             mobilitySkillActivated = false;
         }
 
@@ -47,7 +48,7 @@ public class Movement : MonoBehaviour
             {
                 if (!canMove) rb.velocity = Vector3.zero;
                 canMove = true;
-                ma.isActive = false;
+                dashActive = false;
             }
         }
 
@@ -60,12 +61,14 @@ public class Movement : MonoBehaviour
         if (canMove)
         {
             LookAtDirection(lookDirection);
-            if (!ma.isActive) Move(direction, movSpd);  // Normal movement
-            else if (ma.isActive) Move(direction, movSpd + ma.spdIncrease);          // For speed buff type mobility skill
+            if (!dashActive) Move(direction, movSpd);  // Normal movement
+            else if (dashActive) Move(direction, movSpd + ma.spdIncrease);          // For speed buff type mobility skill
         }
 
-        else if (!canMove && ma.isActive) rb.velocity = direction * movSpd * ma.spdIncrease * Time.deltaTime;   // For Dash type mobility skill
+        else if (!canMove && dashActive) rb.velocity = direction * movSpd * ma.spdIncrease * Time.deltaTime;   // For Dash type mobility skill
     }
+
+#endregion
 
     private void Move(Vector3 dir, float movSpd)
     {

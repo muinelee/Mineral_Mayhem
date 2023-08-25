@@ -10,16 +10,4 @@ public class Mobility_Attributes : ScriptableObject
     public float coolDown;
     public bool canSteer;
     public bool isInvicible;
-
-    public bool isActive;
-    public bool canDash;
-
-    public void Activate()
-    {
-        if (canDash)
-        {
-            isActive = true;
-            canDash = false;
-        }
-    }
 }
