@@ -38,7 +38,8 @@ public class Test_InputManager : MonoBehaviour
 
     void Move(InputAction.CallbackContext ctx)
     {
-        moveDirection = ctx.action.ReadValue<Vector3>();
+        Vector2 input2D = ctx.action.ReadValue<Vector2>();
+        moveDirection = Vector3.right * input2D.x + Vector3.forward * input2D.y;                                // Convert 2D input into 3D movement
         movement.SetDirection(moveDirection);
     }
 
