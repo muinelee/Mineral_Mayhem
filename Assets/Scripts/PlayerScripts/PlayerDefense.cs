@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayControl))]
 public class PlayerDefense : MonoBehaviour
 {
     private bool isBlocking = false;

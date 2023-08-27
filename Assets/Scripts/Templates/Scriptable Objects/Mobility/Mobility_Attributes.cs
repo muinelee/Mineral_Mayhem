@@ -9,5 +9,5 @@ public class Mobility_Attributes : ScriptableObject
     public float duration;
     public float coolDown;
     public bool canSteer;
-    public bool isInvicible;
+    public bool canPhase;
 }

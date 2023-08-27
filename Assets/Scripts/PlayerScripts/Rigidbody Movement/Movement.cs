@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    [SerializeField] public Rigidbody rb;
-    [SerializeField] public Mobility_Attributes ma;    // Scriptable Object from 'Mobility Attributes'                                                                    
+    [SerializeField] private Rigidbody rb;
+    [SerializeField] private CapsuleCollider cc;
+    [SerializeField] private Mobility_Attributes ma;    // Scriptable Object from 'Mobility Attributes'                                                       
     [SerializeField] private float movSpd;
     private bool canMove = true;
     private bool canDash = true;
@@ -22,6 +23,7 @@ public class Movement : MonoBehaviour
     private void Awake()
     {
         if (!rb) rb = gameObject.GetComponent<Rigidbody>();
+        if (!cc) cc = gameObject.GetComponent<CapsuleCollider>();
     }
 
 #region <----- UPDATE + FIXED UPDATE ----->
@@ -36,6 +38,7 @@ public class Movement : MonoBehaviour
                 canDash = false;
                 timer = 0;
                 canMove = ma.canSteer;
+                cc.enabled = !ma.canPhase;
             }
             mobilitySkillActivated = false;
         }
@@ -46,9 +49,10 @@ public class Movement : MonoBehaviour
             timer += Time.deltaTime;
             if (timer > ma.duration) 
             {
+                dashActive = false;
                 if (!canMove) rb.velocity = Vector3.zero;
                 canMove = true;
-                dashActive = false;
+                cc.enabled = true;
             }
         }
 
