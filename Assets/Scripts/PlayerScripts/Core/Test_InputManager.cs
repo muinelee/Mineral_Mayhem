@@ -11,6 +11,7 @@ public class Test_InputManager : MonoBehaviour
 
     // Scripts
     Movement movement;
+    Attack_Controller attackController;
     PlayerDefense defense;
 
     Vector3 moveDirection;
@@ -25,9 +26,13 @@ public class Test_InputManager : MonoBehaviour
         controls.Test_Input.Move.performed += ctx => Move(ctx);
         controls.Test_Input.Move.canceled += ctx => Move(ctx);
         controls.Test_Input.Dash.performed += ctx => Dash(ctx);
+        controls.Test_Input.Special_Ability_1.performed += ctx => ActivateQ(ctx);
+        controls.Test_Input.Special_Ability_2.performed += ctx => ActivateE(ctx);
 
         if (!cam) cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-        if (!movement) movement = GetComponent<Movement>();
+        if (!movement) movement = gameObject.GetComponent<Movement>();
+        if (!attackController) attackController = gameObject.GetComponent<Attack_Controller>();
+        if (!defense) defense = gameObject.GetComponent<PlayerDefense>();
     }
 
     private void Update() 
@@ -46,5 +51,15 @@ public class Test_InputManager : MonoBehaviour
     void Dash(InputAction.CallbackContext ctx)
     {
         if (moveDirection != Vector3.zero) movement.ActivateMobilitySkill();
+    }
+
+    void ActivateQ(InputAction.CallbackContext ctx)
+    {
+        attackController.ActivateQ();
+    }
+
+    void ActivateE(InputAction.CallbackContext ctx)
+    {
+        attackController.ActivateE();
     }
 }

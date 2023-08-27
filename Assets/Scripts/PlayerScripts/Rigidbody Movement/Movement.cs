@@ -12,13 +12,12 @@ public class Movement : MonoBehaviour
     private bool canDash = true;
     private bool dashActive = false;
 
-    public bool mobilitySkillActivated = false;
     private Vector3 direction;
     private Vector3 lookDirection;
     private float turnTime = 0.1f;
     private float turnSmoothVel;    // Reference variable for DampSmoothAngle
 
-    private float timer = 10f;
+    private float timer = 100f;
 
     private void Awake()
     {
@@ -26,24 +25,47 @@ public class Movement : MonoBehaviour
         if (!cc) cc = gameObject.GetComponent<CapsuleCollider>();
     }
 
-#region <----- UPDATE + FIXED UPDATE ----->
-
     private void Update()
     {
-        if (mobilitySkillActivated)             // Activate mobility skill
-        {
-            if (canDash)
-            {
-                dashActive = true;
-                canDash = false;
-                timer = 0;
-                canMove = ma.canSteer;
-                cc.enabled = !ma.canPhase;
-            }
-            mobilitySkillActivated = false;
-        }
+        MobilitySkillTimer();
+    }
 
-        // ----- Timer ----
+    private void FixedUpdate() 
+    {
+        // ----- Set normal movement ----- //
+        if (canMove) Move();
+
+        else if (!canMove && dashActive) rb.velocity = direction * movSpd * ma.spdIncrease * Time.deltaTime;   // player is using a dash ability
+    }
+
+    private void Move()
+    {
+        LookAtDirection(lookDirection);
+        if (!dashActive) rb.MovePosition(transform.position + direction * movSpd * Time.deltaTime);                                     // Normal movement
+        else if (dashActive) rb.MovePosition(transform.position  +  direction * (movSpd + ma.spdIncrease) * Time.deltaTime);            // Speed buff mobility skills is active
+    }
+
+    private void LookAtDirection(Vector3 lookDir)
+    {
+        float targetAngle = Mathf.Atan2(lookDirection.x, lookDirection.z) * Mathf.Rad2Deg;
+        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime);         // Smooths turning to target angle over time
+        transform.rotation = Quaternion.Euler(0, angle, 0);                                                             // Set rotation to angle
+    }
+
+    public void ActivateMobilitySkill()         // Used to link controller to scriptable object. Otherwise it will throw a NullReference error
+    {
+        if (canDash)
+        {
+            dashActive = true;
+            canDash = false;
+            timer = 0;
+            canMove = ma.canSteer;
+            cc.enabled = !ma.canPhase;
+        }
+    }
+
+    private void MobilitySkillTimer()
+    {
         if (timer < ma.coolDown)    
         {
             timer += Time.deltaTime;
@@ -52,38 +74,11 @@ public class Movement : MonoBehaviour
                 dashActive = false;
                 if (!canMove) rb.velocity = Vector3.zero;
                 canMove = true;
-                cc.enabled = true;
+                if (!cc.enabled) cc.enabled = true;
             }
         }
 
-        else if (!canDash) canDash = true;
-    }
-
-    private void FixedUpdate() 
-    {
-        // ----- Set normal movement ----- //
-        if (canMove)
-        {
-            LookAtDirection(lookDirection);
-            if (!dashActive) Move(direction, movSpd);  // Normal movement
-            else if (dashActive) Move(direction, movSpd + ma.spdIncrease);          // For speed buff type mobility skill
-        }
-
-        else if (!canMove && dashActive) rb.velocity = direction * movSpd * ma.spdIncrease * Time.deltaTime;   // For Dash type mobility skill
-    }
-
-#endregion
-
-    private void Move(Vector3 dir, float movSpd)
-    {
-        rb.MovePosition(transform.position + dir * movSpd * Time.deltaTime);
-    }
-
-    private void LookAtDirection(Vector3 lookDir)
-    {
-        float targetAngle = Mathf.Atan2(lookDirection.x, lookDirection.z) * Mathf.Rad2Deg;
-        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime);         // Smooths turning to target angle over time
-        transform.rotation = Quaternion.Euler(0, angle, 0);                                                             // Set rotation to angle
+        else if (!canDash && canMove) canDash = true;      // Timer is greater than cooldown. player can dash
     }
 
     public void SetDirection(Vector3 targetDirection)
@@ -99,16 +94,5 @@ public class Movement : MonoBehaviour
     public void SetCanMove(bool b)
     {
         canMove = b;
-    }
-
-    public void ActivateMobilitySkill()     // Used to link controller to scriptable object. Otherwise it will throw a NullReference error
-    {
-            mobilitySkillActivated = true;
-    }
-
-    private void StopMobilitySkill()
-    {
-        // ----- Decrease SPEED ----- //
-        SetCanMove(true);
     }
 }

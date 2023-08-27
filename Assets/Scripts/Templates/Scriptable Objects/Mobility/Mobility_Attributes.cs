@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Mobility Option", menuName = "Mobility_Attributes")]
+[CreateAssetMenu(fileName = "Mobility", menuName = "New Mobility Option")]
 public class Mobility_Attributes : ScriptableObject
 {
     public float spdIncrease;

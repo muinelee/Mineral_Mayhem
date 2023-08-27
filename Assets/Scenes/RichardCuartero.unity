@@ -237,11 +237,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 304963218}
+  - component: {fileID: 304963222}
   - component: {fileID: 304963217}
   - component: {fileID: 304963215}
   - component: {fileID: 304963219}
   - component: {fileID: 304963220}
-  - component: {fileID: 304963222}
+  - component: {fileID: 304963223}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -265,7 +266,6 @@ MonoBehaviour:
   cc: {fileID: 0}
   ma: {fileID: 11400000, guid: f274753c150bd874eae7b864b55478ef, type: 2}
   movSpd: 5.3
-  mobilitySkillActivated: 0
 --- !u!54 &304963217
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -358,6 +358,24 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &304963223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304963214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 741f2b96d606b3145b639f217b77e078, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canAttack: 0
+  attackPoint: {fileID: 774726163}
+  qAttack: {fileID: 11400000, guid: 82dca52f54f297c47bbf19d0a8ab8965, type: 2}
+  qAttackTimer: 100
+  eAttack: {fileID: 11400000, guid: b3e349b8ed05d7641b6117f7727d1f80, type: 2}
+  eAttackTimer: 100
 --- !u!1 &437474272
 GameObject:
   m_ObjectHideFlags: 0
@@ -556,7 +574,7 @@ GameObject:
   m_Component:
   - component: {fileID: 753437200}
   m_Layer: 0
-  m_Name: Walls
+  m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -829,9 +847,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 949447011}
-  - component: {fileID: 949447015}
-  - component: {fileID: 949447014}
-  - component: {fileID: 949447013}
   - component: {fileID: 949447012}
   - component: {fileID: 949447016}
   - component: {fileID: 949447017}
@@ -871,50 +886,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bcb360b91d5f45428ede562ad6fb39d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &949447013
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 949447010}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a2dffb68a694c34da4c003df71e8671, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  cc: {fileID: 0}
-  ma: {fileID: 0}
-  movSpd: 0
-  mobilitySkillActivated: 0
---- !u!114 &949447014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 949447010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e86728be3853cb4982065a06e3a8391, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 788104322}
-  mov: {fileID: 949447013}
---- !u!114 &949447015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 949447010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6b344f6049e2a14aa35a2686a06795b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pc: {fileID: 949447014}
 --- !u!54 &949447016
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -978,7 +949,7 @@ GameObject:
   - component: {fileID: 956864921}
   - component: {fileID: 956864920}
   m_Layer: 9
-  m_Name: Cube
+  m_Name: Obstacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
