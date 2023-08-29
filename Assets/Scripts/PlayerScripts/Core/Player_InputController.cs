@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Movement), typeof(PlayerDefense))]
-public class Test_InputManager : MonoBehaviour
+public class Player_InputController : MonoBehaviour
 {
     [SerializeField] private Camera cam;
     Test_InputControls controls;
 
     // Scripts
-    Movement movement;
-    Attack_Controller attackController;
-    PlayerDefense defense;
+    Player_Movement movement;
+    Player_AttackController attackController;
 
     Vector3 moveDirection;
 
@@ -30,9 +28,8 @@ public class Test_InputManager : MonoBehaviour
         controls.Test_Input.Special_Ability_2.performed += ctx => ActivateE(ctx);
 
         if (!cam) cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-        if (!movement) movement = gameObject.GetComponent<Movement>();
-        if (!attackController) attackController = gameObject.GetComponent<Attack_Controller>();
-        if (!defense) defense = gameObject.GetComponent<PlayerDefense>();
+        if (!movement) movement = gameObject.GetComponent<Player_Movement>();
+        if (!attackController) attackController = gameObject.GetComponent<Player_AttackController>();
     }
 
     private void Update() 
@@ -55,11 +52,11 @@ public class Test_InputManager : MonoBehaviour
 
     void ActivateQ(InputAction.CallbackContext ctx)
     {
-        attackController.ActivateQ();
+        attackController.ActivateAttack(attackController.qAttack, ref attackController.qAttackTimer);
     }
 
     void ActivateE(InputAction.CallbackContext ctx)
     {
-        attackController.ActivateE();
+        attackController.ActivateAttack(attackController.eAttack, ref attackController.eAttackTimer);
     }
 }

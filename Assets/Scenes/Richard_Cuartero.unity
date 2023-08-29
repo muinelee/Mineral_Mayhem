@@ -239,13 +239,13 @@ GameObject:
   - component: {fileID: 304963218}
   - component: {fileID: 304963222}
   - component: {fileID: 304963217}
+  - component: {fileID: 304963224}
   - component: {fileID: 304963215}
   - component: {fileID: 304963219}
-  - component: {fileID: 304963220}
   - component: {fileID: 304963223}
   m_Layer: 7
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -308,6 +308,7 @@ Transform:
   m_Children:
   - {fileID: 1265793137}
   - {fileID: 1911574539}
+  - {fileID: 1092272195}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!114 &304963219
@@ -323,18 +324,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
---- !u!114 &304963220
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 304963214}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bcb360b91d5f45428ede562ad6fb39d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!136 &304963222
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -376,6 +365,18 @@ MonoBehaviour:
   qAttackTimer: 100
   eAttack: {fileID: 11400000, guid: b3e349b8ed05d7641b6117f7727d1f80, type: 2}
   eAttackTimer: 100
+--- !u!114 &304963224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304963214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6b344f6049e2a14aa35a2686a06795b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &437474272
 GameObject:
   m_ObjectHideFlags: 0
@@ -1068,11 +1069,11 @@ Transform:
   m_GameObject: {fileID: 1092272194}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.39999998, z: 0.28}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalPosition: {x: 0, y: 1.4, z: 0.28000024}
+  m_LocalScale: {x: 0.60000014, y: 0.6, z: 0.60000014}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 1911574539}
+  m_Father: {fileID: 304963218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1092272197
 MeshRenderer:
@@ -1670,7 +1671,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1092272195}
   - {fileID: 774726163}
   m_Father: {fileID: 304963218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

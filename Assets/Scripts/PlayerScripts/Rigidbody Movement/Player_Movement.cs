@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Movement : MonoBehaviour
+public class Player_Movement : MonoBehaviour
 {
     [SerializeField] private Rigidbody rb;
     [SerializeField] private CapsuleCollider cc;
@@ -61,6 +61,7 @@ public class Movement : MonoBehaviour
             timer = 0;
             canMove = ma.canSteer;
             cc.enabled = !ma.canPhase;
+            ma.Activate(transform, transform.rotation);
         }
     }
 

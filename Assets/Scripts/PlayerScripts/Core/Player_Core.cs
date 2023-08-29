@@ -2,29 +2,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerDefense : MonoBehaviour
+[RequireComponent(typeof(Player_InputController), typeof(Player_Movement), typeof(Player_AttackController))]
+
+public class Player_Core : MonoBehaviour
 {
+    private float _hp = 50;
+    public float hp
+    {
+        get 
+        {
+            return _hp;
+        }
+        
+        set 
+        {
+            _hp = value;
+            if (_hp <= 0) pi.enabled = false;
+        }
+    }
+
     private bool isBlocking = false;
     private bool isPerfectBlock = false;
 
     private float statusEffectTimer;
     private float statusEffectDuration;
 
-    private Player_Core pCore;
     private Rigidbody rb;
+    private Player_InputController pi;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        pCore = gameObject.GetComponent<Player_Core>();
         rb = gameObject.GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         if (statusEffectTimer > 0) statusEffectTimer -= Time.deltaTime;
     }
+
 
     public void TakeDamage(float damage, float knockback, Vector3 attackSource, STATUS_EFFECT statusEffect, float statusEffect_Value, float statusEffect_Duration)
     {
@@ -40,7 +57,7 @@ public class PlayerDefense : MonoBehaviour
 
         else if (!isBlocking)
         {
-            pCore.hp -= damage;
+            hp -= damage;
             rb.velocity = Vector3.zero;
             Vector3 direction = (transform.position - attackSource).normalized;
             Knockback(knockback, direction);
