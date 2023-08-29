@@ -306,6 +306,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 774726163}
   - {fileID: 1265793137}
   - {fileID: 1911574539}
   - {fileID: 1092272195}
@@ -360,8 +361,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canAttack: 0
-  attackPoint: {fileID: 774726163}
-  qAttack: {fileID: 11400000, guid: 82dca52f54f297c47bbf19d0a8ab8965, type: 2}
+  attackPoint: {fileID: 774726162}
+  qAttack: {fileID: 11400000, guid: c3a7132a7d142d04890ba7f0c7353185, type: 2}
+  qActive: 0
   qAttackTimer: 100
   eAttack: {fileID: 11400000, guid: b3e349b8ed05d7641b6117f7727d1f80, type: 2}
   eAttackTimer: 100
@@ -509,7 +511,7 @@ Transform:
   m_GameObject: {fileID: 536319661}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0.22, y: 1, z: -0.08}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -627,11 +629,11 @@ Transform:
   m_GameObject: {fileID: 774726162}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalPosition: {x: 0, y: 1, z: 1}
+  m_LocalScale: {x: 0.40000004, y: 0.4, z: 0.40000004}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 1911574539}
+  m_Father: {fileID: 304963218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &774726164
 MeshRenderer:
@@ -1670,8 +1672,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 774726163}
+  m_Children: []
   m_Father: {fileID: 304963218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807

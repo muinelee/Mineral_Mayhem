@@ -7,9 +7,12 @@ public class Attack_Attribute : ScriptableObject
 {
     [Header("Attack Base Properties")]
     public float coolDown;
+    public float range;
+    public float damage;
     public string nameOfAttack;
     public string description;
 
+    public Vector3 offset;
     /* status effect on pause
     [Header("Status Effect")]
     [SerializeField] private STATUS_EFFECT statusEffect;
@@ -21,6 +24,6 @@ public class Attack_Attribute : ScriptableObject
 
     public void Activate(Transform attackPoint, Quaternion rotation)
     {
-        if (attackPrefab) Instantiate(attackPrefab, attackPoint.position, rotation);
+        if (attackPrefab) Instantiate(attackPrefab, attackPoint.position + offset, rotation);
     }
 }

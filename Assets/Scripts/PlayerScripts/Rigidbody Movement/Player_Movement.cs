@@ -92,8 +92,13 @@ public class Player_Movement : MonoBehaviour
         lookDirection = (targetLookDirection - transform.position).normalized;
     }
 
-    public void SetCanMove(bool b)
+    public void StopMovement()
     {
-        canMove = b;
+        canMove = false;
+    }
+
+    public void StartMovement()
+    {
+        canMove = true;
     }
 }

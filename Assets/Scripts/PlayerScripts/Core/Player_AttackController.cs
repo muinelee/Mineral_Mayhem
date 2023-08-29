@@ -5,9 +5,10 @@ using UnityEngine;
 public class Player_AttackController : MonoBehaviour
 {
     [SerializeField] private bool canAttack;
-    [SerializeField] private Transform attackPoint;
+    [SerializeField] private GameObject attackPoint;
 
     public Attack_Attribute qAttack;
+    public bool qActive = false;
     public float qAttackTimer = 100;
 
     public Attack_Attribute eAttack;
@@ -18,14 +19,26 @@ public class Player_AttackController : MonoBehaviour
     {
         if (qAttackTimer < qAttack.coolDown) qAttackTimer += Time.deltaTime;
         if (eAttackTimer < eAttack.coolDown) eAttackTimer += Time.deltaTime;
+
+
     }
 
     public void ActivateAttack(Attack_Attribute attack, ref float attackTimer)
     {
         if (attackTimer > attack.coolDown)
         {
-            attack.Activate(attackPoint, transform.rotation);
+            attack.Activate(attackPoint.transform, transform.rotation);
             attackTimer = 0;
         }
+    }
+
+    public void ReplaceAttack(Attack_Attribute equippedAttack, Attack_Attribute replacementAttack)
+    {
+        equippedAttack = replacementAttack;
+    }
+
+    public void ActivateQAbility()
+    {
+        qAttack.Activate(attackPoint.transform, transform.rotation);
     }
 }

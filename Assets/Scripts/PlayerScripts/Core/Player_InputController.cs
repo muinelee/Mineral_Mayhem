@@ -8,6 +8,7 @@ public class Player_InputController : MonoBehaviour
     [SerializeField] private Camera cam;
     Test_InputControls controls;
 
+
     // Scripts
     Player_Movement movement;
     Player_AttackController attackController;
@@ -19,6 +20,7 @@ public class Player_InputController : MonoBehaviour
 
     private void Awake()
     {
+
         controls = new Test_InputControls();
         controls.Test_Input.Enable();
         controls.Test_Input.Move.performed += ctx => Move(ctx);
@@ -40,7 +42,9 @@ public class Player_InputController : MonoBehaviour
 
     void Move(InputAction.CallbackContext ctx)
     {
+
         Vector2 input2D = ctx.action.ReadValue<Vector2>();
+        
         moveDirection = Vector3.right * input2D.x + Vector3.forward * input2D.y;                                // Convert 2D input into 3D movement
         movement.SetDirection(moveDirection);
     }
@@ -50,12 +54,12 @@ public class Player_InputController : MonoBehaviour
         if (moveDirection != Vector3.zero) movement.ActivateMobilitySkill();
     }
 
-    void ActivateQ(InputAction.CallbackContext ctx)
+    public void ActivateQ(InputAction.CallbackContext ctx)
     {
         attackController.ActivateAttack(attackController.qAttack, ref attackController.qAttackTimer);
     }
 
-    void ActivateE(InputAction.CallbackContext ctx)
+    public void ActivateE(InputAction.CallbackContext ctx)
     {
         attackController.ActivateAttack(attackController.eAttack, ref attackController.eAttackTimer);
     }
