@@ -7,8 +7,10 @@ public class Attack_Attribute : ScriptableObject
 {
     [Header("Attack Base Properties")]
     public float coolDown;
+    public float attackDuration;
     public float range;
     public float damage;
+
     public string nameOfAttack;
     public string description;
 
@@ -24,6 +26,7 @@ public class Attack_Attribute : ScriptableObject
 
     public void Activate(Transform attackPoint, Quaternion rotation)
     {
-        if (attackPrefab) Instantiate(attackPrefab, attackPoint.position + offset, rotation);
+        if (!attackPrefab) Instantiate(attackPrefab, attackPoint.position + offset, rotation);
     }
+
 }

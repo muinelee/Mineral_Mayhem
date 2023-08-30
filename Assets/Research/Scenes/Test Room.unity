@@ -2771,6 +2771,7 @@ GameObject:
   - component: {fileID: 304963219}
   - component: {fileID: 304963220}
   - component: {fileID: 304963222}
+  - component: {fileID: 304963223}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -2886,6 +2887,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+<<<<<<< Updated upstream
 --- !u!43 &372513669
 Mesh:
   m_ObjectHideFlags: 0
@@ -3160,11 +3162,15 @@ MeshRenderer:
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &403825790
+=======
+--- !u!114 &304963223
+>>>>>>> Stashed changes
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< Updated upstream
   m_GameObject: {fileID: 403825785}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -3549,6 +3555,24 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+=======
+  m_GameObject: {fileID: 304963214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 741f2b96d606b3145b639f217b77e078, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canAttack: 0
+  attackPoint: {fileID: 774726162}
+  qAttack: {fileID: 11400000, guid: 82dca52f54f297c47bbf19d0a8ab8965, type: 2}
+  qActive: 0
+  qAttackTimer: 100
+  eAttack: {fileID: 11400000, guid: a3da0ad07b4913c4e82f6c07a3d3668e, type: 2}
+  eAttackTimer: 100
+  combo: {fileID: 11400000, guid: 8ece8261d546c32478f316c910783b69, type: 2}
+  comboActive: 0
+  comboTimer: 1
+>>>>>>> Stashed changes
 --- !u!1 &437474272
 GameObject:
   m_ObjectHideFlags: 0
@@ -9160,7 +9184,6 @@ GameObject:
   m_Component:
   - component: {fileID: 949447011}
   - component: {fileID: 949447015}
-  - component: {fileID: 949447014}
   - component: {fileID: 949447013}
   - component: {fileID: 949447012}
   - component: {fileID: 949447016}
@@ -9173,7 +9196,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &949447011
 Transform:
   m_ObjectHideFlags: 0
@@ -9219,6 +9242,7 @@ MonoBehaviour:
   cc: {fileID: 0}
   ma: {fileID: 0}
   movSpd: 0
+<<<<<<< Updated upstream
 --- !u!114 &949447014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9231,6 +9255,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e86728be3853cb4982065a06e3a8391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+=======
+>>>>>>> Stashed changes
 --- !u!114 &949447015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9312,6 +9338,12 @@ MonoBehaviour:
   qAttackTimer: 100
   eAttack: {fileID: 0}
   eAttackTimer: 100
+<<<<<<< Updated upstream
+=======
+  combo: {fileID: 0}
+  comboActive: 0
+  comboTimer: 1
+>>>>>>> Stashed changes
 --- !u!114 &949447019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9424,7 +9456,7 @@ Transform:
   m_GameObject: {fileID: 956864919}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.35, y: 1.09, z: -0.32}
+  m_LocalPosition: {x: 0.35, y: 8.56, z: -0.32}
   m_LocalScale: {x: 1.8447411, y: 1, z: 12.165}
   m_ConstrainProportionsScale: 0
   m_Children: []

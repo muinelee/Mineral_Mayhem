@@ -12,11 +12,7 @@ public class Player_InputController : MonoBehaviour
     // Scripts
     Player_Movement movement;
     Player_AttackController attackController;
-
     Vector3 moveDirection;
-
-    private enum State { Idle, Run, Attack, Reacting, Dodge, Block, Dead };
-    private State currentState;
 
     private void Awake()
     {
@@ -26,6 +22,7 @@ public class Player_InputController : MonoBehaviour
         controls.Test_Input.Move.performed += ctx => Move(ctx);
         controls.Test_Input.Move.canceled += ctx => Move(ctx);
         controls.Test_Input.Dash.performed += ctx => Dash(ctx);
+        controls.Test_Input.Basic_Attack.performed += ctx => ActivateComboAttack();
         controls.Test_Input.Special_Ability_1.performed += ctx => ActivateQ(ctx);
         controls.Test_Input.Special_Ability_2.performed += ctx => ActivateE(ctx);
 
@@ -63,4 +60,10 @@ public class Player_InputController : MonoBehaviour
     {
         attackController.ActivateAttack(attackController.eAttack, ref attackController.eAttackTimer);
     }
+
+    public void ActivateComboAttack()
+    {
+        attackController.ActivateAttack(attackController.combo, ref attackController.comboTimer);
+    }
+
 }
