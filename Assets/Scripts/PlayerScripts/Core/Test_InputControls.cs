@@ -31,7 +31,7 @@ public partial class @Test_InputControls: IInputActionCollection2, IDisposable
                     ""name"": ""Move"",
                     ""type"": ""Value"",
                     ""id"": ""e23b4f2b-e3c1-46f5-8168-3f4ab696c745"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Vector3"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -84,9 +84,9 @@ public partial class @Test_InputControls: IInputActionCollection2, IDisposable
             ],
             ""bindings"": [
                 {
-                    ""name"": ""2D Vector"",
+                    ""name"": ""3D Vector"",
                     ""id"": ""80c0d553-9b03-4ce8-bb0e-ca5b2308a914"",
-                    ""path"": ""2DVector"",
+                    ""path"": ""3DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -95,7 +95,7 @@ public partial class @Test_InputControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""Up"",
+                    ""name"": ""forward"",
                     ""id"": ""3a8c6635-127c-4b11-bb0c-b7371476c4f9"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
@@ -106,7 +106,7 @@ public partial class @Test_InputControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""Down"",
+                    ""name"": ""backward"",
                     ""id"": ""67a5fbb1-76ab-487f-a61b-f5ae641a0f5f"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
@@ -139,9 +139,31 @@ public partial class @Test_InputControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
+                    ""name"": ""up"",
+                    ""id"": ""2f429b6c-4219-4ded-ad11-5274d518eae0"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""82505a6b-ac9f-48ee-ae5a-727758623d13"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": """",
                     ""id"": ""482c7a4b-f2a9-46a2-8c15-a6668d50bbad"",
-                    ""path"": ""<Mouse>/leftButton"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

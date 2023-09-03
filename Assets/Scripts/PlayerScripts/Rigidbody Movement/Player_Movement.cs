@@ -8,6 +8,12 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private CapsuleCollider cc;
     [SerializeField] private Mobility_Attributes ma;    // Scriptable Object from 'Mobility Attributes'                                                       
     [SerializeField] private float movSpd;
+
+    private float abilitySlow = 1;
+    private float targetAbilitySlow = 1;
+
+    private float statusEffectSlow = 1;
+
     private bool canMove = true;
     private bool canDash = true;
     private bool dashActive = false;
@@ -27,32 +33,54 @@ public class Player_Movement : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.J)) Debug.Log((transform.forward * 4));
+
         MobilitySkillTimer();
+        if (abilitySlow != targetAbilitySlow) ApplyAbilitySlow();
     }
 
     private void FixedUpdate() 
     {
         // ----- Set normal movement ----- //
         if (canMove) Move();
-
         else if (!canMove && dashActive) rb.velocity = direction * movSpd * ma.spdIncrease * Time.deltaTime;   // player is using a dash ability
     }
 
+#region <----- Movement and Look function ----->
+
     private void Move()
     {
-        LookAtDirection(lookDirection);
-        if (!dashActive) rb.MovePosition(transform.position + direction * movSpd * Time.deltaTime);                                     // Normal movement
-        else if (dashActive) rb.MovePosition(transform.position  +  direction * (movSpd + ma.spdIncrease) * Time.deltaTime);            // Speed buff mobility skills is active
+        LookAtDirection();
+        if (!dashActive) rb.MovePosition(transform.position + direction * movSpd * abilitySlow * statusEffectSlow * Time.deltaTime);                                     // Normal movement
+        else if (dashActive) rb.MovePosition(transform.position  +  direction * (movSpd + ma.spdIncrease) * abilitySlow * statusEffectSlow * Time.deltaTime);            // Speed buff mobility skills is active
     }
 
-    private void LookAtDirection(Vector3 lookDir)
+    private void LookAtDirection()
     {
         float targetAngle = Mathf.Atan2(lookDirection.x, lookDirection.z) * Mathf.Rad2Deg;
         float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime);         // Smooths turning to target angle over time
         transform.rotation = Quaternion.Euler(0, angle, 0);                                                             // Set rotation to angle
     }
 
-    public void ActivateMobilitySkill()         // Used to link controller to scriptable object. Otherwise it will throw a NullReference error
+#endregion
+
+#region <----- Move direction and look direction variables ----->
+
+    public void SetDirection(Vector3 targetDirection)
+    {
+        if (canMove) direction = targetDirection;
+    }
+
+    public void SetLookDirection(Vector3 targetLookDirection)
+    {
+        lookDirection = targetLookDirection;
+    }
+
+#endregion
+
+#region <----- Mobility Skill functions ----->
+
+    public void ActivateMobilitySkill()
     {
         if (canDash)
         {
@@ -82,23 +110,62 @@ public class Player_Movement : MonoBehaviour
         else if (!canDash && canMove) canDash = true;      // Timer is greater than cooldown. player can dash
     }
 
-    public void SetDirection(Vector3 targetDirection)
-    {
-        if (canMove) direction = targetDirection.normalized;
-    }
+#endregion
 
-    public void SetLookDirection(Vector3 targetLookDirection)
+#region <----- Set canMove variables ----->
+    
+    public void MovementDisabled()
     {
-        lookDirection = (targetLookDirection - transform.position).normalized;
-    }
-
-    public void StopMovement()
-    {
+        SetDirection(Vector3.zero);
         canMove = false;
     }
 
-    public void StartMovement()
+    public void MovementEnabled()
     {
         canMove = true;
     }
+
+    public bool GetCanMove()
+    {
+        return canMove;
+    }
+
+#endregion
+
+#region <----- Ability Slow Functions ----->
+
+    public void SetAbilitySlow(float value)
+    {
+        if (value < targetAbilitySlow) targetAbilitySlow = value;
+    }
+
+    public void ResetAbilitySlow()
+    {
+        targetAbilitySlow = 1;
+    }
+
+    private void ApplyAbilitySlow()
+    {
+        abilitySlow = Mathf.Lerp(abilitySlow, targetAbilitySlow, 0.3f);
+    }
+
+#endregion
+
+#region <----- Status Effect Slow Functions ----->
+
+    public void SetStatusEffectSlow(float value, float duration)
+    {
+        if (value < statusEffectSlow) 
+        {
+            statusEffectSlow = value;
+            Invoke("ResetStatusEffectSlow", duration);
+        }
+    }
+
+    public void ResetStatusEffectSlow()
+    {
+        statusEffectSlow = 1;
+    }
+
+#endregion
 }

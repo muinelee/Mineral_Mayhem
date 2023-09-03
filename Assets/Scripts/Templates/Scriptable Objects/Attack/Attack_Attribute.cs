@@ -6,14 +6,19 @@ using UnityEngine;
 public class Attack_Attribute : ScriptableObject
 {
     [Header("Attack Base Properties")]
-    public float coolDown;
-    public float range;
-    public float damage;
     public string nameOfAttack;
     public string description;
 
+    public float coolDown;
+    public float cost;
+    public float range;
+    public float damage;
+
     public Vector3 offset;
-    /* status effect on pause
+    public bool canOffset;
+    public float maxOffset;
+
+    /* working on status effects on pause
     [Header("Status Effect")]
     [SerializeField] private STATUS_EFFECT statusEffect;
     [SerializeField] private float statusEffect_Value;
@@ -24,6 +29,7 @@ public class Attack_Attribute : ScriptableObject
 
     public void Activate(Transform attackPoint, Quaternion rotation)
     {
+        Debug.Log("This attack is activated");
         if (attackPrefab) Instantiate(attackPrefab, attackPoint.position + offset, rotation);
     }
 }
