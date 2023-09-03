@@ -6,21 +6,10 @@ using UnityEngine;
 
 public class Player_Core : MonoBehaviour
 {
-    private float _hp = 50;
-    public float hp
-    {
-        get 
-        {
-            return _hp;
-        }
-        
-        set 
-        {
-            _hp = value;
-            if (_hp <= 0) pi.enabled = false;
-        }
-    }
+    [SerializeField] Player_StatsSO playerStats;
 
+    [SerializeField] private float heroMaxHP;
+    
     private bool isBlocking = false;
     private bool isPerfectBlock = false;
 
@@ -28,12 +17,20 @@ public class Player_Core : MonoBehaviour
     private float statusEffectDuration;
 
     private Rigidbody rb;
+    [SerializeField] private CapsuleCollider cc1;
+    [SerializeField] private CapsuleCollider cc2;
     private Player_InputController pi;
 
     // Start is called before the first frame update
     void Awake()
     {
         rb = gameObject.GetComponent<Rigidbody>();
+        pi = gameObject.GetComponent<Player_InputController>();
+        if (!cc1) Debug.Log("Capsule Collider 1 not seen in Player_Core");
+        if (!cc2) Debug.Log("Capsule Collider 2 not seen in Player_Core");
+
+        playerStats.maxHP = heroMaxHP;
+        playerStats.currentHP = heroMaxHP;
     }
 
 
@@ -57,8 +54,12 @@ public class Player_Core : MonoBehaviour
 
         else if (!isBlocking)
         {
-            hp -= damage;
-            rb.velocity = Vector3.zero;
+            playerStats.currentHP -= damage;
+            if (playerStats.currentHP <= 0)
+            {
+                Death();
+            }
+
             Vector3 direction = (transform.position - attackSource).normalized;
             Knockback(knockback, direction);
         }
@@ -77,5 +78,15 @@ public class Player_Core : MonoBehaviour
     public void Knockback(float knockbackValue, Vector3 direction)
     {
         rb.velocity = direction * knockbackValue * Time.deltaTime * 100;
+    }
+
+    private void Death()
+    {
+        Debug.Log("The Player has Dieded");
+        cc1.enabled = false;
+        cc2.enabled = false;
+        rb.isKinematic = true;
+        pi.StartDeath();
+        pi.enabled = false;
     }
 }

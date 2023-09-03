@@ -10,12 +10,12 @@ public class Player_InputController : MonoBehaviour
     Test_InputControls controls;
 
     // Scripts
-    Player_Movement movement;
+    Player_Movement pm;
     Player_AttackController attackController;
     Vector3 inputDirection;
     Vector3 lookDirection;
 
-    private enum State { Idle, Run, Attack, Reacting, Dodge, Block };
+    private enum State { Idle, Run, Attack, Reacting, Block, Dead };
     private State currentState;
 
     private void Awake()
@@ -34,7 +34,7 @@ public class Player_InputController : MonoBehaviour
 
         if (!cam) cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         if (!anim) anim = gameObject.GetComponentInChildren<Animator>();
-        if (!movement) movement = gameObject.GetComponent<Player_Movement>();
+        if (!pm) pm = gameObject.GetComponent<Player_Movement>();
         if (!attackController) attackController = gameObject.GetComponent<Player_AttackController>();
 
         currentState = State.Idle;
@@ -42,8 +42,11 @@ public class Player_InputController : MonoBehaviour
 
     private void Update() 
     {
-        Aim();
-        if (movement.GetCanMove()) Move();
+        if (currentState != State.Dead)
+        {
+            Aim();
+            if (pm.GetCanMove()) Move();
+        }
     }
 
     void SetMove(InputAction.CallbackContext ctx)
@@ -55,11 +58,11 @@ public class Player_InputController : MonoBehaviour
 
     void Move()
     {
-        movement.SetDirection(inputDirection);
+        pm.SetDirection(inputDirection);
         Vector3 perpendicularMovement = new Vector3(lookDirection.z, 0, -lookDirection.x);              // Perpendicular vector in 2D space
         float horizontalMovement = Vector3.Dot(inputDirection, perpendicularMovement);                   // Dot product to get horizontal direction
 
-        if (movement.GetCanMove())
+        if (pm.GetCanMove())
         {
             anim.SetFloat("Zaxis", Vector3.Dot(inputDirection,lookDirection), 0.2f, Time.deltaTime);     // Use Dot product to determine forward move direction relevant to look direction
             anim.SetFloat("Xaxis", horizontalMovement, 0.2f, Time.deltaTime);
@@ -71,7 +74,7 @@ public class Player_InputController : MonoBehaviour
         if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out RaycastHit raycastHit)) 
         {
             lookDirection = (raycastHit.point - transform.position).normalized;             
-            movement.SetLookDirection(lookDirection);       // Aim to point mouse hits
+            pm.SetLookDirection(lookDirection);       // Aim to point mouse hits
         }
     }
 
@@ -81,7 +84,7 @@ public class Player_InputController : MonoBehaviour
 
     void Dash(InputAction.CallbackContext ctx)
     {
-        if (inputDirection != Vector3.zero) movement.ActivateMobilitySkill();
+        if (inputDirection != Vector3.zero) pm.ActivateMobilitySkill();
     }
 
 #endregion
@@ -113,10 +116,10 @@ public class Player_InputController : MonoBehaviour
 
     void StartBlock(InputAction.CallbackContext ctx)
     {
-        if (currentState != State.Block && movement.GetCanMove() && attackController.GetCanAttack())     // Can only block when able to attack
+        if (currentState != State.Block && pm.GetCanMove() && attackController.GetCanAttack())     // Can only block when able to attack
         {
             currentState = State.Block;
-            movement.SetAbilitySlow(0.45f);
+            pm.SetAbilitySlow(0.45f);
             currentState = State.Block;
             anim.CrossFade("Block", 0.2f);
         }
@@ -124,21 +127,26 @@ public class Player_InputController : MonoBehaviour
 
     void EndBlock(InputAction.CallbackContext ctx)
     {
-        movement.ResetAbilitySlow();
+        pm.ResetAbilitySlow();
         if (currentState == State.Block) Invoke("ResetState", 0.2f);
     }
 
 #endregion
-
-
 
     void ResetState()
     {
         currentState = State.Idle;
         anim.CrossFade("Run", 0.2f);
 
-        movement.MovementEnabled();
+        pm.MovementEnabled();
 
         attackController.AttacksEnabled();
+    }
+
+    public void StartDeath()
+    {
+        pm.SetDirection(Vector3.zero);
+        currentState = State.Dead;
+        anim.CrossFade("Death", 0.3f);
     }
 }

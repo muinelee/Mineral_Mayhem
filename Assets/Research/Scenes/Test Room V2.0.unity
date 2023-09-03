@@ -2866,6 +2866,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bcb360b91d5f45428ede562ad6fb39d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isBlocking: 0
+  isPerfectBlock: 0
+  statusEffectTimer: 0
+  statusEffectDuration: 0
+  pCore: {fileID: 0}
+  rb: {fileID: 0}
 --- !u!136 &304963222
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2903,6 +2909,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: {fileID: 11400000, guid: 48c819abd23d3a0459b471055898e5d3, type: 2}
   maxHealth: {fileID: 11400000, guid: ade29e4a8f02438459006a92fe5ceb35, type: 2}
+  lerpTimer: {fileID: 0}
+  chipSpeed: {fileID: 0}
+  frontHealthBar: {fileID: 0}
+  backHealthBar: {fileID: 0}
 --- !u!114 &304963224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9354,6 +9364,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bcb360b91d5f45428ede562ad6fb39d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isBlocking: 0
+  isPerfectBlock: 0
+  statusEffectTimer: 0
+  statusEffectDuration: 0
+  pCore: {fileID: 0}
+  rb: {fileID: 0}
 --- !u!114 &949447013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9394,6 +9410,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6b344f6049e2a14aa35a2686a06795b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerStats: {fileID: 0}
+  heroMaxHP: 0
+  cc1: {fileID: 0}
+  cc2: {fileID: 0}
 --- !u!54 &949447016
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9456,10 +9476,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 741f2b96d606b3145b639f217b77e078, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canAttack: 0
   attackPoint: {fileID: 0}
   qAttack: {fileID: 0}
-  qActive: 0
   qAttackTimer: 100
   eAttack: {fileID: 0}
   eAttackTimer: 100

@@ -33,8 +33,6 @@ public class Player_Movement : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J)) Debug.Log((transform.forward * 4));
-
         MobilitySkillTimer();
         if (abilitySlow != targetAbilitySlow) ApplyAbilitySlow();
     }
