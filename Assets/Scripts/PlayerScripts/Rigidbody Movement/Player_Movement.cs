@@ -144,7 +144,7 @@ public class Player_Movement : MonoBehaviour
 
     private void ApplyAbilitySlow()
     {
-        abilitySlow = Mathf.Lerp(abilitySlow, targetAbilitySlow, 0.3f);
+        abilitySlow = Mathf.Lerp(1, targetAbilitySlow, 1f);
     }
 
 #endregion

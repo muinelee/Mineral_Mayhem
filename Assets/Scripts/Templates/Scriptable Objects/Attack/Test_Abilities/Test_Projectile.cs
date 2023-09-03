@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Test_Projectile : MonoBehaviour
+public class Test_Projectile : Attack
 {
     [SerializeField] private float flightSpd;
     [SerializeField] private float range;

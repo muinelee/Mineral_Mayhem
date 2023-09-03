@@ -29,6 +29,8 @@ public class Player_InputController : MonoBehaviour
         controls.Test_Input.Block.performed += ctx => StartBlock(ctx);
         controls.Test_Input.Block.canceled += ctx => EndBlock(ctx);
 
+        controls.Test_Input.Basic_Attack.performed += ctx => ActivateBasic(ctx);
+
         controls.Test_Input.Special_Ability_1.performed += ctx => ActivateQ(ctx);
         controls.Test_Input.Special_Ability_2.performed += ctx => ActivateE(ctx);
 
@@ -91,6 +93,11 @@ public class Player_InputController : MonoBehaviour
 
 #region <----- Attack Functions ----->
 
+    public void ActivateBasic(InputAction.CallbackContext ctx)
+    {
+        PassAttackInput(ref attackController.basicAttack[attackController.attackCounter % attackController.basicAttack.Length], ref attackController.basicAttackTimer);
+    }
+
     public void ActivateQ(InputAction.CallbackContext ctx)
     {
         PassAttackInput(ref attackController.qAttack, ref attackController.qAttackTimer);
@@ -107,6 +114,8 @@ public class Player_InputController : MonoBehaviour
         {
             anim.CrossFade(attack.nameOfAttack, 0.1f);
             attackController.ActivateAttack(attack, ref attackTimer);
+            pm.SetAbilitySlow(1 - attack.attackAbilitySlowPercentage);
+            if (attack.stopTurn) pm.MovementDisabled(); 
         }
     }
 
@@ -139,8 +148,9 @@ public class Player_InputController : MonoBehaviour
         anim.CrossFade("Run", 0.2f);
 
         pm.MovementEnabled();
+        pm.ResetAbilitySlow();
 
-        attackController.AttacksEnabled();
+        attackController.ResetAttack();
     }
 
     public void StartDeath()

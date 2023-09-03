@@ -2,16 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HitDetection : MonoBehaviour
+public class Hit_Detection : Attack
 {
     public LayerMask enemyLayer;
     public float attackRange = 4f;
     public float radius = 3f;
+
+    // ---- Delete in final build
+    public float timer = 0;
+    // -----
+
     public Vector3 offset;
+
+    private void Start() 
+    {
+        DetectHits();
+    }
+
+    private void Update() {
+        timer += Time.deltaTime;
+        if (timer > 0.5f) Destroy(gameObject);
+    }
 
     public void DetectHits()
     {
-        Debug.Log("Detecting hits");
         Vector3 position = transform.position + offset;
         Vector3 direction = transform.forward;
 
@@ -21,12 +35,11 @@ public class HitDetection : MonoBehaviour
             GameObject enemy = hit.collider.gameObject;
             if (enemy != null)
             {
-/*                Debug.Log("Hit " + hit.collider.name);
                 if (enemy.CompareTag("NPC"))
                 {
-                    Debug.Log("Hit " + hit.collider.name);
-                    enemy.GetComponent<NPCDefense>().TakeDamage(10f, 10f, transform.position, STATUS_EFFECT.NONE, 0, 0);
+                    enemy.GetComponent<NPC_Core>().TakeDamage(attackDamage, attackKnockback, playerTransform.position, STATUS_EFFECT.NONE, 0, 0);
                 }
+                /*
                 else if (enemy.CompareTag("Player"))
 
                 {
@@ -37,5 +50,4 @@ public class HitDetection : MonoBehaviour
             }
         }
     }
-
 }
