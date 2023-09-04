@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class NPC_Core : MonoBehaviour
 {
-    [SerializeField] Player_StatsSO npcStats;
-    
-    [SerializeField] private float heroMaxHP;
+    [SerializeField] public float currentHP;
+    [SerializeField] public float heroMaxHP;
 
     private Rigidbody rb;
     [SerializeField] private CapsuleCollider cc;
@@ -21,10 +20,9 @@ public class NPC_Core : MonoBehaviour
         //npcStats.currentHP = npcStats.maxHP;
     }
 
-    private void Awake()
+    public void Awake()
     {
-        npcStats.maxHP = heroMaxHP;
-        npcStats.currentHP = heroMaxHP;
+        currentHP = heroMaxHP;
     }
 
     // Update is called once per frame
@@ -35,11 +33,11 @@ public class NPC_Core : MonoBehaviour
 
     public void TakeDamage(float damage, float knockback, Vector3 attackSource, STATUS_EFFECT statuseffect, float statusEffect_Value, float statusEffect_Duration)
     {
-        npcStats.currentHP -= damage;
+        currentHP -= damage;
         anim.CrossFade("DummyPushed", 0.3f);
-        Debug.Log(npcStats.currentHP);
+        Debug.Log(currentHP);
 
-        if (npcStats.currentHP <= 0)
+        if (currentHP <= 0)
         {
             Death();            
         }
@@ -53,12 +51,12 @@ public class NPC_Core : MonoBehaviour
         rb.velocity = direction * knockbackValue;
     }
 
-    private void ResetAnimation()
+    public void ResetAnimation()
     {
         anim.CrossFade("DummyIdle", 0.3f);
     }
 
-    private void Death()
+    public void Death()
     {
         Debug.Log("NPC has Dieded");
         cc.enabled = false;
