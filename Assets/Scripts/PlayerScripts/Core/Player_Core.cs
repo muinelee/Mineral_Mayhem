@@ -1,0 +1,98 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[RequireComponent(typeof(Player_InputController), typeof(Player_Movement), typeof(Player_AttackController))]
+
+public class Player_Core : MonoBehaviour
+{
+    [SerializeField] Player_StatsSO playerStats;
+
+    [SerializeField] private float heroMaxHP;
+    
+    private bool isBlocking = false;
+    private bool isPerfectBlock = false;
+
+    private float statusEffectTimer;
+    private float statusEffectDuration;
+
+    private Rigidbody rb;
+    [SerializeField] private CapsuleCollider cc1;
+    [SerializeField] private CapsuleCollider cc2;
+    private Player_InputController pi;
+
+    // Start is called before the first frame update
+    void Awake()
+    {
+        rb = gameObject.GetComponent<Rigidbody>();
+        pi = gameObject.GetComponent<Player_InputController>();
+        if (!cc1) Debug.Log("Capsule Collider 1 not seen in Player_Core");
+        if (!cc2) Debug.Log("Capsule Collider 2 not seen in Player_Core");
+
+        playerStats.maxHP = heroMaxHP;
+        playerStats.currentHP = heroMaxHP;
+    }
+
+
+    void Update()
+    {
+        if (statusEffectTimer > 0) statusEffectTimer -= Time.deltaTime;
+
+        // ----- DEBUGGING -----
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            TakeDamage(10, 0, transform.position, STATUS_EFFECT.NONE, 0,0);
+        }
+    }
+
+
+    public void TakeDamage(float damage, float knockback, Vector3 attackSource, STATUS_EFFECT statusEffect, float statusEffect_Value, float statusEffect_Duration)
+    {
+        // ----- DAMAGE STEP -----
+
+        if (isPerfectBlock)
+        {
+            // Insert perfect block code
+            return;
+        }
+
+        if (isBlocking) damage *= 0.2f;
+
+        else if (!isBlocking)
+        {
+            playerStats.currentHP -= damage;
+            if (playerStats.currentHP <= 0)
+            {
+                Death();
+            }
+
+            Vector3 direction = (transform.position - attackSource).normalized;
+            Knockback(knockback, direction);
+        }
+    }
+
+    public void SetIsBlocking(bool b)
+    {
+        isBlocking = b;                                 // Use animation event to turn blocking on/off
+    }
+
+    public void SetIsPerfectBlocking(bool b)
+    {
+        isPerfectBlock = b;                             // Use animation event to turn perfectblocking on/off
+    }
+
+    public void Knockback(float knockbackValue, Vector3 direction)
+    {
+        rb.AddForce(direction * knockbackValue, ForceMode.Impulse);
+    }
+
+    private void Death()
+    {
+        Debug.Log("The Player has Dieded");
+        cc1.enabled = false;
+        cc2.enabled = false;
+        rb.isKinematic = true;
+        pi.StartDeath();
+        pi.enabled = false;
+    }
+}
