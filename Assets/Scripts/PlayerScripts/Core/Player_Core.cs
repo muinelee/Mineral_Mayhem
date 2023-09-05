@@ -83,7 +83,7 @@ public class Player_Core : MonoBehaviour
 
     public void Knockback(float knockbackValue, Vector3 direction)
     {
-        rb.velocity = direction * knockbackValue * Time.deltaTime * 100;
+        rb.AddForce(direction * knockbackValue, ForceMode.Impulse);
     }
 
     private void Death()

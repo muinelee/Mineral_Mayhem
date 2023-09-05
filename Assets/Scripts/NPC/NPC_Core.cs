@@ -48,7 +48,7 @@ public class NPC_Core : MonoBehaviour
 
     public void Knockback(float knockbackValue, Vector3 direction)
     {
-        rb.velocity = direction * knockbackValue;
+        rb.AddForce(direction * knockbackValue, ForceMode.Impulse);
     }
 
     public void ResetAnimation()

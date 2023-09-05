@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Test_WallAttack : MonoBehaviour
+public class Test_WallAttack : Attack
 {
 
     [SerializeField] private float duration;
