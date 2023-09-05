@@ -101,6 +101,8 @@ public class Player_InputController : MonoBehaviour
         PassAttackInput(ref attackController.basicAttack[attackController.attackCounter % attackController.basicAttack.Length], ref attackController.basicAttackTimer);
     }
 
+    #region <----- Special Abilities ----->
+
     public void ActivateQ(InputAction.CallbackContext ctx)
     {
         PassAttackInput(ref attackController.qAttack, ref attackController.qAttackTimer);
@@ -110,7 +112,6 @@ public class Player_InputController : MonoBehaviour
     {
         if (attackController.qAttack.canCharge) PassHoldDuration(ref attackController.qAttack, attackController.qAttackTimer);
     }
-
 
     public void ActivateE(InputAction.CallbackContext ctx)
     {
@@ -132,6 +133,8 @@ public class Player_InputController : MonoBehaviour
     {
         PassHoldDuration(ref attackController.currentAttack, 100);
     }
+
+    #endregion
 
     public void PassAttackInput(ref Attack_Attribute attack, ref float attackTimer)
     {

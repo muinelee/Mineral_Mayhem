@@ -25,6 +25,7 @@ public class Test_Projectile : Attack
 
     private void OnCollisionEnter(Collision other) 
     {
+        if (other.gameObject.CompareTag("NPC")) other.gameObject.GetComponent<NPC_Core>().TakeDamage(attackDamage, attackKnockback, playerTransform.position, STATUS_EFFECT.NONE, 0, 0);
         Destroy(this.gameObject);
     }
 }
