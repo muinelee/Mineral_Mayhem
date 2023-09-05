@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7784953425980275886}
   - component: {fileID: 3253677391132116289}
   - component: {fileID: 1846881794514147426}
-  - component: {fileID: 7927840119854400601}
   - component: {fileID: 8519087818903048785}
   m_Layer: 0
   m_Name: Charge_AttacK_Sphere_2
@@ -85,27 +84,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &7927840119854400601
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5193544080409257610}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8519087818903048785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,12 +96,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5f3bc63147448744be5b59ceb205d88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDamage: 0
-  attackKnockback: 0
+  attackDamage: 10
+  attackKnockback: 10
   playerTransform: {fileID: 4482721321737489052, guid: 1bf738ec7de409740977bea70babddca, type: 3}
   attackStatusEffect: 0
   attackStatusEffectDuration: 0
   attackStatusEffectValue: 0
+  holdDuration: 0
   enemyLayer:
     serializedVersion: 2
     m_Bits: 2048

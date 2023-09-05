@@ -10,4 +10,6 @@ public abstract class Attack : MonoBehaviour
     public STATUS_EFFECT attackStatusEffect;
     public float attackStatusEffectDuration;
     public float attackStatusEffectValue;
+
+    public float holdDuration = 0;
 }

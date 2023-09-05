@@ -15,7 +15,7 @@ public class Player_InputController : MonoBehaviour
     Vector3 inputDirection;
     Vector3 lookDirection;
 
-    private enum State { Idle, Run, Attack, Reacting, Block, Dead };
+    private enum State { Idle, Run, Attack, Reacting, Block, Dead, Charge};
     private State currentState;
 
     private void Awake()
@@ -32,7 +32,10 @@ public class Player_InputController : MonoBehaviour
         controls.Test_Input.Basic_Attack.performed += ctx => ActivateBasic(ctx);
 
         controls.Test_Input.Special_Ability_1.performed += ctx => ActivateQ(ctx);
+        controls.Test_Input.Special_Ability_1.canceled += ctx => ActivateQCharge(ctx);
+
         controls.Test_Input.Special_Ability_2.performed += ctx => ActivateE(ctx);
+        controls.Test_Input.Special_Ability_2.canceled += ctx => ActivateECharge(ctx);
 
         if (!cam) cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         if (!anim) anim = gameObject.GetComponentInChildren<Animator>();
@@ -103,9 +106,31 @@ public class Player_InputController : MonoBehaviour
         PassAttackInput(ref attackController.qAttack, ref attackController.qAttackTimer);
     }
 
+    public void ActivateQCharge(InputAction.CallbackContext ctx)
+    {
+        if (attackController.qAttack.canCharge) PassHoldDuration(ref attackController.qAttack, attackController.qAttackTimer);
+    }
+
+
     public void ActivateE(InputAction.CallbackContext ctx)
     {
         PassAttackInput(ref attackController.eAttack, ref attackController.eAttackTimer);
+    }
+
+    public void ActivateECharge(InputAction.CallbackContext ctx)
+    {
+        if (attackController.eAttack.canCharge) PassHoldDuration(ref attackController.eAttack, attackController.eAttackTimer);
+    }
+ 
+    public void PassHoldDuration(ref Attack_Attribute attack, float attackTimer)
+    {
+            anim.CrossFade(attackController.qAttack.nameOfAttack + "_Release", 0.2f);
+            attackController.PassCharge(attackTimer);
+    }
+
+    public void HeldMaxDuration()
+    {
+        PassHoldDuration(ref attackController.currentAttack, 100);
     }
 
     public void PassAttackInput(ref Attack_Attribute attack, ref float attackTimer)

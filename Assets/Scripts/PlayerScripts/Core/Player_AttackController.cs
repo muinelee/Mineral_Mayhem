@@ -7,12 +7,13 @@ public class Player_AttackController : MonoBehaviour
     private bool canAttack = true;
     [SerializeField] private GameObject attackPoint;
 
+    public Attack_Attribute currentAttack;
+
     public Attack_Attribute[] basicAttack;
     public int attackCounter =  0;
     public float basicAttackTimer = 100;
 
     public Attack_Attribute qAttack;
-    private Attack_Attribute currentAttack;
     public float qAttackTimer = 100;
 
     public Attack_Attribute eAttack;
@@ -36,6 +37,11 @@ public class Player_AttackController : MonoBehaviour
             attackTimer = 0;
             attack.player = this.transform;
         }
+    }
+
+    public void PassCharge(float attackTimer)
+    {
+        currentAttack.TakeChargeDuration(attackTimer);
     }
 
     public void FireAttack()

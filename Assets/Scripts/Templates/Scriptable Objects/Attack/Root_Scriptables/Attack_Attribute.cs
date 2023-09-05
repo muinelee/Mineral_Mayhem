@@ -16,12 +16,20 @@ public class Attack_Attribute : ScriptableObject
     public float cost;
     public float range;
     
+    #region <----- universal variables to pass to prefab ----->
+    
     public float damage;
     public float knockback;
     public Transform player;
     public STATUS_EFFECT statusEffect;
     public float statusEffectDuration;
     public float statusEffectValue;
+    
+    #endregion
+
+    public bool canCharge;
+    public float chargeMinTimer;
+    public float chargeHoldDuration;
 
     public Vector3 offset;
     public bool canOffset;
@@ -43,8 +51,15 @@ public class Attack_Attribute : ScriptableObject
             iaAttack.attackDamage = damage;
             iaAttack.attackKnockback = knockback;
             iaAttack.playerTransform = player;
+            if (canCharge) iaAttack.holdDuration = chargeHoldDuration;
 
             // IMplement status effects later
         }
+    }
+
+    public void TakeChargeDuration(float holdDuration)
+    {
+        Debug.Log("Charge attack was held for " + holdDuration + " seconds");
+        chargeHoldDuration = holdDuration;
     }
 }
