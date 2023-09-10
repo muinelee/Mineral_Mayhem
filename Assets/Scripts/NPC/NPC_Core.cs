@@ -3,11 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using System;
 
 public class NPC_Core : MonoBehaviour
 {
     [SerializeField] public float currentHP;
     [SerializeField] public float heroMaxHP;
+
+    //to watch for death counter
+    public event Action OnDeath;
 
     private Rigidbody rb;
     private Animator anim;
@@ -73,6 +77,8 @@ public class NPC_Core : MonoBehaviour
 
     public void Death()
     {
+        OnDeath?.Invoke();
+        Debug.Log("Death has been invoked"); //testing purposes I'm just slowly going crazy
         Debug.Log("NPC has Dieded");
         cc.enabled = false;
         rb.isKinematic = true;

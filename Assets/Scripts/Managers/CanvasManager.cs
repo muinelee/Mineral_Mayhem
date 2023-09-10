@@ -8,10 +8,13 @@ using TMPro;
 
 public class CanvasManager : MonoBehaviour
 {
+    private bool isPaused = false;
+
     [Header("Main Menu")]
     public GameObject mainMenu;
     public GameObject compendium;
     public GameObject settingsMenu;
+    public GameObject pauseMenu;
 
     [Header("Buttons")]
     public Button startButton;
@@ -69,6 +72,21 @@ public class CanvasManager : MonoBehaviour
         }
     }
 
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isPaused)
+            {
+                ClosePauseMenu();
+            }
+            else
+            {
+                ShowPauseMenu();
+            }
+        }
+    }
+
     private void StartGame()
     {
         Debug.Log("Start Game Logic Not Yet Implemented");
@@ -90,13 +108,28 @@ public class CanvasManager : MonoBehaviour
     void ShowSettingsMenu()
     {
         mainMenu.SetActive(false);
+        pauseMenu.SetActive(false);
         settingsMenu.SetActive(true);
+    }
+
+    void ShowPauseMenu()
+    {
+        pauseMenu.SetActive(true);
+        Time.timeScale = 0f;
+        isPaused = true;
+        Debug.Log("Please end this misery");
+    }
+
+    void ClosePauseMenu()
+    {
+        pauseMenu.SetActive(false);
+        Time.timeScale = 1f;
+        isPaused = false;
     }
 
     void ShowMainMenu()
     {
-        mainMenu.SetActive(true);
-        settingsMenu.SetActive(false);
+        SceneManager.LoadScene("_MainMenu");
     }
 
     void Quit()
