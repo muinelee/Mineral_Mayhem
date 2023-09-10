@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class NPC_Core : MonoBehaviour
@@ -8,8 +10,9 @@ public class NPC_Core : MonoBehaviour
     [SerializeField] public float heroMaxHP;
 
     private Rigidbody rb;
-    [SerializeField] private CapsuleCollider cc;
     private Animator anim;
+    [SerializeField] private CapsuleCollider cc;
+    [SerializeField] private GameObject floatingTextPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +40,12 @@ public class NPC_Core : MonoBehaviour
         anim.CrossFade("DummyPushed", 0.3f);
         Debug.Log(currentHP);
 
+        // Trigger floating text here.
+        if (floatingTextPrefab)
+        {
+            ShowFloatingText(damage);
+        }
+
         if (currentHP <= 0)
         {
             Death();            
@@ -44,6 +53,12 @@ public class NPC_Core : MonoBehaviour
 
         Vector3 direction = (transform.position - attackSource).normalized;
         Knockback(knockback, direction);
+    }
+
+    private void ShowFloatingText(float damage)
+    {
+        var go = Instantiate(floatingTextPrefab, transform.position, Quaternion.identity, transform);
+        go.GetComponent<TextMeshPro>().text = damage.ToString();
     }
 
     public void Knockback(float knockbackValue, Vector3 direction)
