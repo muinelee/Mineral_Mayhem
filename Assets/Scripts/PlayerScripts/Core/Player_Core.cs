@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(Player_InputController), typeof(Player_Movement), typeof(Player_AttackController))]
@@ -19,6 +20,7 @@ public class Player_Core : MonoBehaviour
     private Rigidbody rb;
     [SerializeField] private CapsuleCollider cc1;
     [SerializeField] private CapsuleCollider cc2;
+    [SerializeField] private GameObject floatingTextPrefab;
     private Player_InputController pi;
 
     // Start is called before the first frame update
@@ -58,17 +60,20 @@ public class Player_Core : MonoBehaviour
 
         if (isBlocking) damage *= 0.2f;
 
-        else if (!isBlocking)
+        // Trigger floating text here.
+        if (floatingTextPrefab)
         {
-            playerStats.currentHP -= damage;
-            if (playerStats.currentHP <= 0)
-            {
-                Death();
-            }
-
-            Vector3 direction = (transform.position - attackSource).normalized;
-            Knockback(knockback, direction);
+            ShowFloatingText(damage);
         }
+        
+        playerStats.currentHP -= damage;
+        if (playerStats.currentHP <= 0)
+        {
+            Death();
+        }
+
+        Vector3 direction = (transform.position - attackSource).normalized;
+        Knockback(knockback, direction);        
     }
 
     public void SetIsBlocking(bool b)
@@ -79,6 +84,12 @@ public class Player_Core : MonoBehaviour
     public void SetIsPerfectBlocking(bool b)
     {
         isPerfectBlock = b;                             // Use animation event to turn perfectblocking on/off
+    }
+
+    private void ShowFloatingText(float damage)
+    {
+        var go = Instantiate(floatingTextPrefab, transform.position, Quaternion.identity, transform);
+        go.GetComponent<TextMeshPro>().text = damage.ToString();
     }
 
     public void Knockback(float knockbackValue, Vector3 direction)
