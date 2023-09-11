@@ -78,7 +78,7 @@ public class Player_InputController : MonoBehaviour
     {
         if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out RaycastHit raycastHit)) 
         {
-            lookDirection = (raycastHit.point - transform.position).normalized;            
+            lookDirection = (raycastHit.point - transform.position).normalized;             
             pm.SetLookDirection(lookDirection);       // Aim to point mouse hits
         }
     }
