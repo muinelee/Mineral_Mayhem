@@ -28,19 +28,13 @@ public class Attack_Attribute : ScriptableObject
     #endregion
 
     public bool canCharge;
-    public float chargeMinTimer;
     public float chargeHoldDuration;
 
-    public Vector3 offset;
     public bool canOffset;
+    public Vector3 offset;
     public float maxOffset;
 
     [SerializeField] private GameObject attackPrefab;
-
-    private void Awake() 
-    {
-        
-    }
 
     public void Activate(Transform attackPoint, Quaternion rotation)
     {

@@ -39,12 +39,6 @@ public class Player_Core : MonoBehaviour
     void Update()
     {
         if (statusEffectTimer > 0) statusEffectTimer -= Time.deltaTime;
-
-        // ----- DEBUGGING -----
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            TakeDamage(10, 0, transform.position, STATUS_EFFECT.NONE, 0,0);
-        }
     }
 
 
