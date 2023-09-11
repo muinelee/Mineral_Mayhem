@@ -11,7 +11,6 @@ public class Player_Movement : MonoBehaviour
 
     private float abilitySlow = 1;
     private float targetAbilitySlow = 1;
-
     private float statusEffectSlow = 1;
 
     private bool canMove = true;
@@ -41,7 +40,7 @@ public class Player_Movement : MonoBehaviour
     {
         // ----- Set normal movement ----- //
         if (canMove) Move();
-        else if (!canMove && dashActive) rb.velocity = direction * movSpd * ma.spdIncrease * Time.deltaTime;   // player is using a dash ability
+        else if (!canMove && dashActive) rb.AddForce(direction * movSpd * ma.spdIncrease, ForceMode.Impulse);   // player is using a dash ability
     }
 
 #region <----- Movement and Look function ----->
