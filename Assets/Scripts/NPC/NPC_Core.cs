@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using System;
 
 public class NPC_Core : MonoBehaviour
 {
@@ -15,6 +14,7 @@ public class NPC_Core : MonoBehaviour
 
     private Rigidbody rb;
     private Animator anim;
+    private NPC_AINavigation aiNav;
     [SerializeField] private CapsuleCollider cc;
     [SerializeField] private GameObject floatingTextPrefab;
 
@@ -24,18 +24,13 @@ public class NPC_Core : MonoBehaviour
         if (!rb) rb = GetComponent<Rigidbody>();
         if (!cc) cc = GetComponent<CapsuleCollider>();
         if (!anim) anim = GetComponentInChildren<Animator>();
+        if (!aiNav) aiNav = GetComponent<NPC_AINavigation>();
         //npcStats.currentHP = npcStats.maxHP;
     }
 
     public void Awake()
     {
         currentHP = heroMaxHP;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void TakeDamage(float damage, float knockback, Vector3 attackSource, STATUS_EFFECT statuseffect, float statusEffect_Value, float statusEffect_Duration)
@@ -83,6 +78,7 @@ public class NPC_Core : MonoBehaviour
         cc.enabled = false;
         rb.isKinematic = true;
         anim.CrossFade("DummyDied", 0.3f);
+        aiNav.DeathActivated();
         Destroy(gameObject, 3f);
     }
 }

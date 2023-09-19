@@ -45,31 +45,20 @@ public class NPC_AINavigation : MonoBehaviour
 
     void Move()
     {
-        if (behavior == Behavior.Chase) 
+        if (nma.enabled == true)
         {
-            nma.destination = player.position;    // Only applies to chasing enemies
+            if (behavior == Behavior.Chase) 
+            {
+                nma.destination = player.position;    // Only applies to chasing enemies
+            }
+                
+            else if (behavior == Behavior.Wander) WanderBehavior();
         }
-            
-        else if (behavior == Behavior.Wander) WanderBehavior();
-
-            // ----- Chase Behavior -----
-
-            // ----- After hitting player change target Need Attack Script
-
-
-
-            // ----- Wander Behavior -----
-
-            // Get Target when starting
-
-            
-
-            //  Change target when reaching target
     }
 
     void GetTarget()
     {
-        nma.destination = transform.position + new Vector3(Random.Range(-distanceOffset, distanceOffset), 0, Random.Range(-distanceOffset, distanceOffset));
+        if (nma.enabled) nma.destination = transform.position + new Vector3(Random.Range(-distanceOffset, distanceOffset), 0, Random.Range(-distanceOffset, distanceOffset));
     }
 
     void WanderBehavior()
@@ -78,5 +67,11 @@ public class NPC_AINavigation : MonoBehaviour
         {
             Invoke("GetTarget", pauseDuration);
         }
+    }
+
+    public void DeathActivated()
+    {
+        nma.enabled = false;
+        this.enabled = false;
     }
 }
