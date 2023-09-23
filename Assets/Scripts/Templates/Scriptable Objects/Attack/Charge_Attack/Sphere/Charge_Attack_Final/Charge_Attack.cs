@@ -13,7 +13,8 @@ public class Charge_Attack : Attack
         else SelectChargeAttack(2);
     }
 
-    private void LateUpdate() {
+    private void LateUpdate() 
+    {
         Destroy(this.gameObject);
     }
 

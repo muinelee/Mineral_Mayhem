@@ -14,7 +14,7 @@ public class NPC_Core : MonoBehaviour
 
     private Rigidbody rb;
     private Animator anim;
-    private NPC_AINavigation aiNav;
+    private NPC_AINavigation npcAINav;
     [SerializeField] private CapsuleCollider cc;
     [SerializeField] private GameObject floatingTextPrefab;
 
@@ -24,7 +24,7 @@ public class NPC_Core : MonoBehaviour
         if (!rb) rb = GetComponent<Rigidbody>();
         if (!cc) cc = GetComponent<CapsuleCollider>();
         if (!anim) anim = GetComponentInChildren<Animator>();
-        if (!aiNav) aiNav = GetComponent<NPC_AINavigation>();
+        if (!npcAINav) npcAINav = GetComponent<NPC_AINavigation>();
         //npcStats.currentHP = npcStats.maxHP;
     }
 
@@ -37,7 +37,6 @@ public class NPC_Core : MonoBehaviour
     {
         currentHP -= damage;
         anim.CrossFade("DummyPushed", 0.3f);
-        Debug.Log(currentHP);
 
         // Trigger floating text here.
         if (floatingTextPrefab)
@@ -52,6 +51,7 @@ public class NPC_Core : MonoBehaviour
 
         Vector3 direction = (transform.position - attackSource).normalized;
         Knockback(knockback, direction);
+        if (knockback != 0) npcAINav.ApplyHitStun();
     }
 
     private void ShowFloatingText(float damage)
@@ -78,7 +78,7 @@ public class NPC_Core : MonoBehaviour
         cc.enabled = false;
         rb.isKinematic = true;
         anim.CrossFade("DummyDied", 0.3f);
-        aiNav.DeathActivated();
+        npcAINav.DeathActivated();
         Destroy(gameObject, 3f);
     }
 }
