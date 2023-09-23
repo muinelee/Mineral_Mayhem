@@ -21,13 +21,13 @@ public class Player_Core : MonoBehaviour
     [SerializeField] private CapsuleCollider cc1;
     [SerializeField] private CapsuleCollider cc2;
     [SerializeField] private GameObject floatingTextPrefab;
-    private Player_InputController pi;
+    private Player_InputController playerInput;
 
     // Start is called before the first frame update
     void Awake()
     {
         rb = gameObject.GetComponent<Rigidbody>();
-        pi = gameObject.GetComponent<Player_InputController>();
+        playerInput = gameObject.GetComponent<Player_InputController>();
         if (!cc1) Debug.Log("Capsule Collider 1 not seen in Player_Core");
         if (!cc2) Debug.Log("Capsule Collider 2 not seen in Player_Core");
 
@@ -103,7 +103,7 @@ public class Player_Core : MonoBehaviour
         cc1.enabled = false;
         cc2.enabled = false;
         rb.isKinematic = true;
-        pi.StartDeath();
-        pi.enabled = false;
+        playerInput.StartDeath();
+        playerInput.enabled = false;
     }
 }
