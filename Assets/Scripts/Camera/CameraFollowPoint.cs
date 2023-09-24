@@ -21,7 +21,6 @@ public class CameraFollowPoint : MonoBehaviour
 
     public void PassCursorPosition(Vector3 cursorPosition)
     {
-
         if (!lookAheadMode) transform.position = Vector3.Lerp(transform.position, transform.parent.position, 0.01f);
 
         else if (lookAheadMode)

@@ -21,6 +21,8 @@ public class Player_InputController : MonoBehaviour
 
     private void Awake()
     {
+        Cursor.lockState = CursorLockMode.Confined;
+
         controls = new Test_InputControls();
         controls.Test_Input.Enable();
         controls.Test_Input.Move.performed += ctx => SetMove(ctx);
