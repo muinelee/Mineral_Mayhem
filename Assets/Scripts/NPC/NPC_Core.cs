@@ -51,6 +51,7 @@ public class NPC_Core : MonoBehaviour
             Death();            
         }
 
+        if (CombatEffectManager.instance && damage > 12) CombatEffectManager.instance.HitStop();
         Vector3 direction = (transform.position - attackSource).normalized;
         Knockback(knockback, direction);
         if (knockback != 0) npcAINav.ApplyHitStun();
@@ -74,6 +75,7 @@ public class NPC_Core : MonoBehaviour
 
     public void Death()
     {
+        if (CombatEffectManager.instance) CombatEffectManager.instance.TimeSlow();
         OnDeath?.Invoke();
         Debug.Log("Death has been invoked");
         Debug.Log("NPC has Dieded");
