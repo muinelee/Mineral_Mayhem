@@ -108,7 +108,7 @@ public class CanvasManager : MonoBehaviour
     void ShowSettingsMenu()
     {
         mainMenu.SetActive(false);
-        pauseMenu.SetActive(false);
+        //pauseMenu.SetActive(false);
         settingsMenu.SetActive(true);
     }
 
@@ -117,7 +117,6 @@ public class CanvasManager : MonoBehaviour
         pauseMenu.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
-        Debug.Log("Please end this misery");
     }
 
     void ClosePauseMenu()

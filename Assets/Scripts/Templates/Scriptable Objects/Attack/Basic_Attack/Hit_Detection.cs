@@ -38,6 +38,8 @@ public class Hit_Detection : Attack
                 if (enemy.CompareTag("NPC"))
                 {
                     // Debug showing which enemy was hit and by which attack
+                    Debug.Log("Hit " + hit.collider.name + " with " + this.name);
+
                     enemy.GetComponent<NPC_Core>().TakeDamage(attackDamage, attackKnockback, playerTransform.position, STATUS_EFFECT.NONE, 0, 0);
                 }
                 /*

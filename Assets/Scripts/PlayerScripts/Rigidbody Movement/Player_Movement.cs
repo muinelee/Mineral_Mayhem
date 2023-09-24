@@ -20,7 +20,7 @@ public class Player_Movement : MonoBehaviour
 
     private Vector3 direction;
     private Vector3 lookDirection;
-    private float turnTime = 0.1f;
+    [SerializeField] private float turnTime = 0.1f;
     private float turnSmoothVel;    // Reference variable for DampSmoothAngle
 
     private float timer = 100f;

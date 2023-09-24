@@ -15,9 +15,11 @@ public class Mobility_Attributes : ScriptableObject
     public bool canPhase;
 
     [SerializeField] private GameObject extraEffectPrefab;
+    [SerializeField] private AudioClip mobilitySFX;
 
     public void Activate(Transform spawnPoint, Quaternion rotation)
     {
+        AudioManager.Instance.PlayAudioSFX(mobilitySFX);
         if (extraEffectPrefab) Instantiate(extraEffectPrefab,spawnPoint.position, rotation);
     }
 }
