@@ -17,6 +17,7 @@ public class NPC_Core : MonoBehaviour
     private NPC_AINavigation npcAINav;
     [SerializeField] private CapsuleCollider cc;
     [SerializeField] private GameObject floatingTextPrefab;
+    [SerializeField] private AudioClip hitSFX;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +36,7 @@ public class NPC_Core : MonoBehaviour
 
     public void TakeDamage(float damage, float knockback, Vector3 attackSource, STATUS_EFFECT statuseffect, float statusEffect_Value, float statusEffect_Duration)
     {
+        AudioManager.Instance.PlayAudioSFX(hitSFX);
         currentHP -= damage;
         anim.CrossFade("DummyPushed", 0.3f);
 
