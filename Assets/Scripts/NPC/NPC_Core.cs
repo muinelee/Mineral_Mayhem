@@ -17,6 +17,7 @@ public class NPC_Core : MonoBehaviour
     private NPC_AINavigation npcAINav;
     [SerializeField] private CapsuleCollider cc;
     [SerializeField] private GameObject floatingTextPrefab;
+    [SerializeField] private AudioClip hitSFX;
 
     // Start is called before the first frame update
     void Start()
@@ -35,7 +36,7 @@ public class NPC_Core : MonoBehaviour
 
     public void TakeDamage(float damage, float knockback, Vector3 attackSource, STATUS_EFFECT statuseffect, float statusEffect_Value, float statusEffect_Duration)
     {
-
+        AudioManager.Instance.PlayAudioSFX(hitSFX);
         currentHP -= damage;
         anim.CrossFade("DummyPushed", 0.3f);
 
@@ -45,12 +46,14 @@ public class NPC_Core : MonoBehaviour
             ShowFloatingText(damage);
         }
 
-        if (currentHP <= 0) Death();
+        if (currentHP <= 0)
+        {
+            Death();            
+        }
 
         Vector3 direction = (transform.position - attackSource).normalized;
         Knockback(knockback, direction);
         if (knockback != 0) npcAINav.ApplyHitStun();
-        if (CombatEffectManager.instance) if (damage > 12) CombatEffectManager.instance.HitStop();
     }
 
     private void ShowFloatingText(float damage)
@@ -71,7 +74,6 @@ public class NPC_Core : MonoBehaviour
 
     public void Death()
     {
-        if (CombatEffectManager.instance) CombatEffectManager.instance.TimeSlow();
         OnDeath?.Invoke();
         Debug.Log("Death has been invoked");
         Debug.Log("NPC has Dieded");
