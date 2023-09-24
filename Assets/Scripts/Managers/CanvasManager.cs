@@ -117,7 +117,6 @@ public class CanvasManager : MonoBehaviour
         pauseMenu.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
-        Debug.Log("Please end this misery");
     }
 
     void ClosePauseMenu()

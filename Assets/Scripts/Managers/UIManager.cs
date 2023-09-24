@@ -35,7 +35,7 @@ public class UIManager : MonoBehaviour
             }
             if (timeRemaining <= 0)
             {
-                SceneManager.LoadScene("GameOver");  //WHY WONT YOU WORK
+                SceneManager.LoadScene("GameOver");  //works :)
                 //stop the timer
                 Debug.Log("Time has run out!");
                 timeRemaining = 0;

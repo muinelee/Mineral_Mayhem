@@ -73,7 +73,7 @@ public class NPC_Core : MonoBehaviour
     public void Death()
     {
         OnDeath?.Invoke();
-        Debug.Log("Death has been invoked"); //testing purposes I'm just slowly going crazy
+        Debug.Log("Death has been invoked");
         Debug.Log("NPC has Dieded");
         cc.enabled = false;
         rb.isKinematic = true;
