@@ -132,8 +132,11 @@ public class Player_InputController : MonoBehaviour
  
     public void PassHoldDuration(ref Attack_Attribute attack, float attackTimer)
     {
+        if (currentState != State.Dead)
+        {
             anim.CrossFade(attackController.qAttack.nameOfAttack + "_Release", 0.2f);
             attackController.PassCharge(attackTimer);
+        }
     }
 
     public void HeldMaxDuration()

@@ -9,10 +9,17 @@ public class CameraFollowPoint : MonoBehaviour
     */
 
     private bool lookAheadMode = false;
+    private Transform target;
 
     [Header("Camera Offset properties")]
     [SerializeField] private float maxCameraOffset;
     [SerializeField] private float cameraOffsetTransitionTime;
+
+    private void Start() 
+    {
+        target = transform.parent.transform;
+        transform.parent = null;
+    }
 
     public void ToggleLookAheadCam()
     {
@@ -21,12 +28,15 @@ public class CameraFollowPoint : MonoBehaviour
 
     public void PassCursorPosition(Vector3 cursorPosition)
     {
-        if (!lookAheadMode) transform.position = Vector3.Lerp(transform.position, transform.parent.position, 0.01f);
+        cursorPosition.y = 0;
+
+        if (!lookAheadMode) transform.position = Vector3.Lerp(transform.position, target.position, cameraOffsetTransitionTime);
 
         else if (lookAheadMode)
         {
-            if (Vector3.Distance(transform.parent.position, cursorPosition) < maxCameraOffset) transform.position = Vector3.Lerp(transform.position, cursorPosition, cameraOffsetTransitionTime);
-            else transform.position = Vector3.Lerp(transform.position, transform.parent.position + (cursorPosition - transform.parent.position).normalized * maxCameraOffset, cameraOffsetTransitionTime);
+            if (Vector3.Distance(target.position, cursorPosition) < maxCameraOffset) transform.position = Vector3.Lerp(transform.position, cursorPosition, cameraOffsetTransitionTime);
+            else transform.position = Vector3.Lerp(transform.position, target.position + ((cursorPosition - target.position).normalized * maxCameraOffset), cameraOffsetTransitionTime);
         }
+    
     }
 }
