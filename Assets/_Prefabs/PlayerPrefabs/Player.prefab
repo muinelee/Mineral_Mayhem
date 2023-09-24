@@ -790,6 +790,7 @@ Transform:
   - {fileID: 8620428752735322607}
   - {fileID: 7744200180092039858}
   - {fileID: 4476860055314256687}
+  - {fileID: 6206136326987146961}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!95 &2906446282311323803
@@ -844,8 +845,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2325042064758100430}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
+  m_Mass: 3
+  m_Drag: 3
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -893,6 +894,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
+  camFollowPoint: {fileID: 0}
 --- !u!114 &8189946468831615977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -909,6 +911,7 @@ MonoBehaviour:
   cc: {fileID: 0}
   ma: {fileID: 11400000, guid: f274753c150bd874eae7b864b55478ef, type: 2}
   movSpd: 5.3
+  turnTime: 0.1
 --- !u!114 &1354829235088109865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2132,6 +2135,52 @@ Transform:
   - {fileID: 8133382647551937702}
   m_Father: {fileID: 1482089352615669405}
   m_LocalEulerAnglesHint: {x: -18.603363, y: -51.26379, z: -0.19299221}
+--- !u!1 &7499573521156098562
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6206136326987146961}
+  - component: {fileID: 7773516160572292071}
+  m_Layer: 7
+  m_Name: CameraFollowPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6206136326987146961
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7499573521156098562}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4482721321737489052}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7773516160572292071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7499573521156098562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da1e4d485bc1cdb47a9b1df105ac8773, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCameraOffset: 5
+  cameraOffsetTransitionTime: 0.04
 --- !u!1 &7539639214341006524
 GameObject:
   m_ObjectHideFlags: 0
