@@ -80,6 +80,33 @@ public partial class @Test_InputControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Special_Ability_3"",
+                    ""type"": ""Button"",
+                    ""id"": ""655d03a6-2920-48b4-862f-9cc9cc8eac0a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Ultimate_Ability"",
+                    ""type"": ""Button"",
+                    ""id"": ""29e6c106-275b-4d26-b4b5-9dc8ec65a61d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Toggle_Look_Ahead_Cam"",
+                    ""type"": ""Button"",
+                    ""id"": ""f984fa5f-d6dd-42a3-84d4-654b7317e585"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -214,6 +241,39 @@ public partial class @Test_InputControls: IInputActionCollection2, IDisposable
                     ""action"": ""Block"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""890ec960-eee0-4ea2-98e6-556ad104db14"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Special_Ability_3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""069a79df-6034-47c7-aa25-b00efb3cb979"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Ultimate_Ability"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b5589a1f-1678-4fd2-82c8-ed9183bb3194"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Toggle_Look_Ahead_Cam"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -228,6 +288,9 @@ public partial class @Test_InputControls: IInputActionCollection2, IDisposable
         m_Test_Input_Block = m_Test_Input.FindAction("Block", throwIfNotFound: true);
         m_Test_Input_Special_Ability_1 = m_Test_Input.FindAction("Special_Ability_1", throwIfNotFound: true);
         m_Test_Input_Special_Ability_2 = m_Test_Input.FindAction("Special_Ability_2", throwIfNotFound: true);
+        m_Test_Input_Special_Ability_3 = m_Test_Input.FindAction("Special_Ability_3", throwIfNotFound: true);
+        m_Test_Input_Ultimate_Ability = m_Test_Input.FindAction("Ultimate_Ability", throwIfNotFound: true);
+        m_Test_Input_Toggle_Look_Ahead_Cam = m_Test_Input.FindAction("Toggle_Look_Ahead_Cam", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -295,6 +358,9 @@ public partial class @Test_InputControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Test_Input_Block;
     private readonly InputAction m_Test_Input_Special_Ability_1;
     private readonly InputAction m_Test_Input_Special_Ability_2;
+    private readonly InputAction m_Test_Input_Special_Ability_3;
+    private readonly InputAction m_Test_Input_Ultimate_Ability;
+    private readonly InputAction m_Test_Input_Toggle_Look_Ahead_Cam;
     public struct Test_InputActions
     {
         private @Test_InputControls m_Wrapper;
@@ -305,6 +371,9 @@ public partial class @Test_InputControls: IInputActionCollection2, IDisposable
         public InputAction @Block => m_Wrapper.m_Test_Input_Block;
         public InputAction @Special_Ability_1 => m_Wrapper.m_Test_Input_Special_Ability_1;
         public InputAction @Special_Ability_2 => m_Wrapper.m_Test_Input_Special_Ability_2;
+        public InputAction @Special_Ability_3 => m_Wrapper.m_Test_Input_Special_Ability_3;
+        public InputAction @Ultimate_Ability => m_Wrapper.m_Test_Input_Ultimate_Ability;
+        public InputAction @Toggle_Look_Ahead_Cam => m_Wrapper.m_Test_Input_Toggle_Look_Ahead_Cam;
         public InputActionMap Get() { return m_Wrapper.m_Test_Input; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -332,6 +401,15 @@ public partial class @Test_InputControls: IInputActionCollection2, IDisposable
             @Special_Ability_2.started += instance.OnSpecial_Ability_2;
             @Special_Ability_2.performed += instance.OnSpecial_Ability_2;
             @Special_Ability_2.canceled += instance.OnSpecial_Ability_2;
+            @Special_Ability_3.started += instance.OnSpecial_Ability_3;
+            @Special_Ability_3.performed += instance.OnSpecial_Ability_3;
+            @Special_Ability_3.canceled += instance.OnSpecial_Ability_3;
+            @Ultimate_Ability.started += instance.OnUltimate_Ability;
+            @Ultimate_Ability.performed += instance.OnUltimate_Ability;
+            @Ultimate_Ability.canceled += instance.OnUltimate_Ability;
+            @Toggle_Look_Ahead_Cam.started += instance.OnToggle_Look_Ahead_Cam;
+            @Toggle_Look_Ahead_Cam.performed += instance.OnToggle_Look_Ahead_Cam;
+            @Toggle_Look_Ahead_Cam.canceled += instance.OnToggle_Look_Ahead_Cam;
         }
 
         private void UnregisterCallbacks(ITest_InputActions instance)
@@ -354,6 +432,15 @@ public partial class @Test_InputControls: IInputActionCollection2, IDisposable
             @Special_Ability_2.started -= instance.OnSpecial_Ability_2;
             @Special_Ability_2.performed -= instance.OnSpecial_Ability_2;
             @Special_Ability_2.canceled -= instance.OnSpecial_Ability_2;
+            @Special_Ability_3.started -= instance.OnSpecial_Ability_3;
+            @Special_Ability_3.performed -= instance.OnSpecial_Ability_3;
+            @Special_Ability_3.canceled -= instance.OnSpecial_Ability_3;
+            @Ultimate_Ability.started -= instance.OnUltimate_Ability;
+            @Ultimate_Ability.performed -= instance.OnUltimate_Ability;
+            @Ultimate_Ability.canceled -= instance.OnUltimate_Ability;
+            @Toggle_Look_Ahead_Cam.started -= instance.OnToggle_Look_Ahead_Cam;
+            @Toggle_Look_Ahead_Cam.performed -= instance.OnToggle_Look_Ahead_Cam;
+            @Toggle_Look_Ahead_Cam.canceled -= instance.OnToggle_Look_Ahead_Cam;
         }
 
         public void RemoveCallbacks(ITest_InputActions instance)
@@ -379,5 +466,8 @@ public partial class @Test_InputControls: IInputActionCollection2, IDisposable
         void OnBlock(InputAction.CallbackContext context);
         void OnSpecial_Ability_1(InputAction.CallbackContext context);
         void OnSpecial_Ability_2(InputAction.CallbackContext context);
+        void OnSpecial_Ability_3(InputAction.CallbackContext context);
+        void OnUltimate_Ability(InputAction.CallbackContext context);
+        void OnToggle_Look_Ahead_Cam(InputAction.CallbackContext context);
     }
 }
