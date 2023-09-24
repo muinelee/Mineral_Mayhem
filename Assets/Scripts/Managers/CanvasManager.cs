@@ -108,7 +108,7 @@ public class CanvasManager : MonoBehaviour
     void ShowSettingsMenu()
     {
         mainMenu.SetActive(false);
-        pauseMenu.SetActive(false);
+        //pauseMenu.SetActive(false);
         settingsMenu.SetActive(true);
     }
 
