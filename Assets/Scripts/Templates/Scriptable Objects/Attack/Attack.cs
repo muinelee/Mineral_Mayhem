@@ -12,4 +12,10 @@ public abstract class Attack : MonoBehaviour
     public float attackStatusEffectValue;
 
     public float holdDuration = 0;
+    [SerializeField] private float attackLifetime;
+
+    protected virtual void Start() 
+    {
+        Destroy(gameObject, attackLifetime);
+    }
 }

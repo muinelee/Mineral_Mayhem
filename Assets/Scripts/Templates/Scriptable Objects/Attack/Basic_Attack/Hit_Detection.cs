@@ -8,20 +8,12 @@ public class Hit_Detection : Attack
     public float attackRange = 4f;
     public float radius = 3f;
 
-    // ---- Delete in final build
-    public float timer = 0;
-    // -----
-
     public Vector3 offset;
 
-    private void Start() 
+    protected override void Start() 
     {
+        base.Start();
         DetectHits();
-    }
-
-    private void Update() {
-        timer += Time.deltaTime;
-        if (timer > 0.5f) Destroy(gameObject);
     }
 
     public void DetectHits()

@@ -10,8 +10,10 @@ public class Test_Projectile : Attack
     private Vector3 startPos;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         if (!rb) rb = gameObject.GetComponent<Rigidbody>();
         Vector3 direction = transform.rotation * Vector3.forward;
         rb.velocity = direction * flightSpd;
