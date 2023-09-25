@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
 using TMPro;
+using UnityEngine.Animations.Rigging;
 
 public class CanvasManager : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class CanvasManager : MonoBehaviour
     public Button settingsButton;
     public Button mainMenuButton;
     public Button quitButton;
+    public Button restartButton;
 
     [Header("Slider")]
     public Slider volSlider;
@@ -57,6 +59,10 @@ public class CanvasManager : MonoBehaviour
         if (quitButton)
         { 
         quitButton.onClick.AddListener(Quit);
+        }
+        if (restartButton)
+        {
+            restartButton.onClick.AddListener(Restart);
         }
 
         if (volSlider)
@@ -138,6 +144,11 @@ public class CanvasManager : MonoBehaviour
         #else
         Application.Quit();
         #endif
+    }
+
+    void Restart()
+    {
+        SceneManager.LoadScene("_Main_Scene");
     }
 
     void OnSliderValueChanged(float value)
