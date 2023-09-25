@@ -20,6 +20,16 @@ public class PlatformDrop : MonoBehaviour
         Invoke("StartDrop", dropDelay);
     }
 
+    private void OnCollisionEnter(Collision other)
+    {
+        other.transform.SetParent(transform);
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        other.transform.SetParent(null);
+    }
+
     void StartDrop()
     {
         isDropping = true;
@@ -71,9 +81,9 @@ public class PlatformDrop : MonoBehaviour
         }
 
         // wait for the destroy delay
-        yield return new WaitForSeconds(destroyDelay);
+        //yield return new WaitForSeconds(destroyDelay);
 
         // destroy the platform
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 }
