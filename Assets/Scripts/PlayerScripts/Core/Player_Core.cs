@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Player_InputController), typeof(Player_Movement), typeof(Player_AttackController))]
 
@@ -105,5 +106,12 @@ public class Player_Core : MonoBehaviour
         rb.isKinematic = true;
         playerInput.StartDeath();
         playerInput.enabled = false;
+        Invoke("PlayerDieded", 5f);
+    }
+
+    void PlayerDieded()
+    {
+        Debug.Log("Player has dieded");
+        SceneManager.LoadScene("GameOver");
     }
 }
