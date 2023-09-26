@@ -84312,37 +84312,6 @@ Transform:
   - {fileID: 1446197153}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1883736673
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1883736674}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1883736674
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1883736673}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -34.83, y: 6.6690617, z: -11.43}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &1897143312
 Mesh:
   m_ObjectHideFlags: 0
@@ -84607,7 +84576,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemiesToSpawn:
   - {fileID: 242954914259512595, guid: c06afeb949f658048b125fccd1f98fc3, type: 3}
-  spawnRadius: 20
+  spawnRadius:
+  - 35
+  - 25
+  - 12
+  - 10
+  - 7
 --- !u!4 &1934015205
 Transform:
   m_ObjectHideFlags: 0
@@ -88644,4 +88618,3 @@ SceneRoots:
   - {fileID: 326576845}
   - {fileID: 1601825014}
   - {fileID: 526184063}
-  - {fileID: 1883736674}
