@@ -14,6 +14,12 @@ public class Player_InputController : MonoBehaviour
     Player_AttackController attackController;
     Vector3 inputDirection;
     Vector3 lookDirection;
+    [SerializeField] private CameraShakeController cameraShake;
+    [SerializeField] private float shakeIntensity = 5;
+    [SerializeField] private float shakeTime = 2;
+
+
+
 
     private enum State { Idle, Run, Attack, Reacting, Block, Dead, Charge};
     private State currentState;
@@ -105,12 +111,16 @@ public class Player_InputController : MonoBehaviour
 
     public void ActivateQ(InputAction.CallbackContext ctx)
     {
+       
         PassAttackInput(ref attackController.qAttack, ref attackController.qAttackTimer);
+      
     }
 
     public void ActivateQCharge(InputAction.CallbackContext ctx)
     {
+       
         if (attackController.qAttack.canCharge) PassHoldDuration(ref attackController.qAttack, attackController.qAttackTimer);
+        
     }
 
     public void ActivateE(InputAction.CallbackContext ctx)
@@ -120,13 +130,17 @@ public class Player_InputController : MonoBehaviour
 
     public void ActivateECharge(InputAction.CallbackContext ctx)
     {
+      
         if (attackController.eAttack.canCharge) PassHoldDuration(ref attackController.eAttack, attackController.eAttackTimer);
+          
     }
  
     public void PassHoldDuration(ref Attack_Attribute attack, float attackTimer)
     {
             anim.CrossFade(attackController.qAttack.nameOfAttack + "_Release", 0.2f);
             attackController.PassCharge(attackTimer);
+            cameraShake.ShakeCamera(shakeIntensity, shakeTime);
+
     }
 
     public void HeldMaxDuration()
@@ -140,6 +154,7 @@ public class Player_InputController : MonoBehaviour
     {
         if (currentState == State.Idle && attackController.GetCanAttack() && attackTimer > attack.coolDown)
         {
+            
             anim.CrossFade(attack.nameOfAttack, 0.1f);
             attackController.ActivateAttack(attack, ref attackTimer);
             pm.SetAbilitySlow(1 - attack.attackAbilitySlowPercentage);

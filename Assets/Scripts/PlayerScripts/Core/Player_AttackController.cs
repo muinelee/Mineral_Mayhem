@@ -6,7 +6,8 @@ public class Player_AttackController : MonoBehaviour
 {
     private bool canAttack = true;
     [SerializeField] private GameObject attackPoint;
-
+    //camerashake
+    
     public Attack_Attribute currentAttack;
 
     public Attack_Attribute[] basicAttack;
@@ -18,6 +19,10 @@ public class Player_AttackController : MonoBehaviour
 
     public Attack_Attribute eAttack;
     public float eAttackTimer = 100;
+
+    //camerashake
+    
+
 
     void Update()       // Should only manage timers
     {
@@ -31,16 +36,19 @@ public class Player_AttackController : MonoBehaviour
 
         if (attackTimer > attack.coolDown && canAttack)
         {
+            
             currentAttack = attack;
             attackCounter++;
             canAttack = false;
             attackTimer = 0;
             attack.player = this.transform;
+            
         }
     }
 
     public void PassCharge(float attackTimer)
     {
+        
         currentAttack.TakeChargeDuration(attackTimer);
     }
 

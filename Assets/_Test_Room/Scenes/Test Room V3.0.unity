@@ -7179,6 +7179,7 @@ GameObject:
   - component: {fileID: 416479443}
   - component: {fileID: 416479445}
   - component: {fileID: 416479444}
+  - component: {fileID: 416479446}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -7235,6 +7236,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &416479446
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 416479442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NoiseProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
+  m_PivotOffset: {x: 0, y: 0, z: 0}
+  m_AmplitudeGain: 1
+  m_FrequencyGain: 1
+  mNoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &437474272
 GameObject:
   m_ObjectHideFlags: 0
@@ -7515,6 +7533,7 @@ GameObject:
   m_Component:
   - component: {fileID: 469672554}
   - component: {fileID: 469672553}
+  - component: {fileID: 469672555}
   m_Layer: 0
   m_Name: Vcam
   m_TagString: Untagged
@@ -7577,6 +7596,18 @@ Transform:
   - {fileID: 416479443}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &469672555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 469672552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19c5f2217ab7c4ca2aa208d5dada7546, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &470305916
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19296,6 +19327,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0.23751621
       objectReference: {fileID: 0}
+    - target: {fileID: 7567705827589690153, guid: 1bf738ec7de409740977bea70babddca, type: 3}
+      propertyPath: shakeTime
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7567705827589690153, guid: 1bf738ec7de409740977bea70babddca, type: 3}
+      propertyPath: cameraShake
+      value: 
+      objectReference: {fileID: 469672555}
     - target: {fileID: 7632879009227650534, guid: 1bf738ec7de409740977bea70babddca, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 4.6480865

@@ -22,6 +22,8 @@ public class Player_Core : MonoBehaviour
     [SerializeField] private CapsuleCollider cc2;
     [SerializeField] private GameObject floatingTextPrefab;
     private Player_InputController pi;
+   
+
 
     // Start is called before the first frame update
     void Awake()
