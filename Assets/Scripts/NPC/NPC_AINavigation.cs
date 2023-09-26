@@ -35,7 +35,6 @@ public class NPC_AINavigation : MonoBehaviour
 
         player = GameObject.FindGameObjectWithTag("Participant").GetComponent<Transform>();
         SetBehavior();
-
     }
 
     void Update()
@@ -45,15 +44,13 @@ public class NPC_AINavigation : MonoBehaviour
         if (hitStunTimer < hitStunDuration) hitStunTimer += Time.deltaTime;
         if (hitStunTimer > hitStunDuration && !canMove) canMove = true;
 
-        rb.AddForce(Vector3.down * 9.81f * gravityScale, ForceMode.Force);
-
-        if (!Physics.Raycast(groundCheck.position, groundCheck.forward, 10, stageLayer) && behavior == Behavior.Wander) 
+        if (!Physics.Raycast(groundCheck.position, Vector3.down, 5, stageLayer)) 
         {
-            Debug.Log("Should get a new target");
-            GetTarget();
+            navMeshAgent.enabled = false;
+            rb.AddForce(Vector3.down * 9.81f * gravityScale, ForceMode.Force);
         }
 
-        if (Input.GetKey(KeyCode.Y) && behavior == Behavior.Wander) navMeshAgent.destination = new Vector3(-35, 6, -11);
+        if (!Physics.Raycast(groundCheck.position, groundCheck.forward, 10, stageLayer) && behavior == Behavior.Wander) GetTarget();
     }
 
     void SetBehavior()

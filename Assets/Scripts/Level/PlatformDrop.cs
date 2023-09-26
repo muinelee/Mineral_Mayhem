@@ -9,8 +9,6 @@ public class PlatformDrop : MonoBehaviour
     public float wallDestroyDelay = 2f;    // delay before destroying "SpawnWall" objects
     public float dropSpeed = 10f;          // speed of the drop
 
-    private bool isDropping = false;
-
     public delegate void DropFinishedAction();
     public event DropFinishedAction OnFinishedDropping;
 
@@ -32,7 +30,6 @@ public class PlatformDrop : MonoBehaviour
 
     void StartDrop()
     {
-        isDropping = true;
         // initial position of the platform
         Vector3 initialPosition = transform.position;
         // calculates the distance in units set by dropDistance to get the target position
