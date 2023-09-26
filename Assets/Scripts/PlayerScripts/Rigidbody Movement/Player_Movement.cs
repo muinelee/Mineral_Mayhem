@@ -8,6 +8,7 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private CapsuleCollider cc;
     [SerializeField] private Mobility_Attributes ma;    // Scriptable Object from 'Mobility Attributes'                                                       
     [SerializeField] private float movSpd;
+    [SerializeField] private float gravityScale;
 
     private float abilitySlow = 1;
     private float targetAbilitySlow = 1;
@@ -20,7 +21,7 @@ public class Player_Movement : MonoBehaviour
 
     private Vector3 direction;
     private Vector3 lookDirection;
-    private float turnTime = 0.1f;
+    [SerializeField] private float turnTime = 0.1f;
     private float turnSmoothVel;    // Reference variable for DampSmoothAngle
 
     private float timer = 100f;
@@ -35,13 +36,15 @@ public class Player_Movement : MonoBehaviour
     {
         MobilitySkillTimer();
         if (abilitySlow != targetAbilitySlow) ApplyAbilitySlow();
+
+        rb.AddForce(Vector3.down * 9.81f * gravityScale, ForceMode.Force);
     }
 
     private void FixedUpdate() 
     {
         // ----- Set normal movement ----- //
         if (canMove) Move();
-        else if (!canMove && dashActive) rb.velocity = direction * movSpd * ma.spdIncrease * Time.deltaTime;   // player is using a dash ability
+        else if (!canMove && dashActive) rb.AddForce(direction * movSpd * ma.spdIncrease, ForceMode.Impulse);   // player is using a dash ability
     }
 
 #region <----- Movement and Look function ----->
@@ -144,7 +147,7 @@ public class Player_Movement : MonoBehaviour
 
     private void ApplyAbilitySlow()
     {
-        abilitySlow = Mathf.Lerp(1, targetAbilitySlow, 1f);
+        abilitySlow = Mathf.Lerp(1, targetAbilitySlow, 0.7f);
     }
 
 #endregion

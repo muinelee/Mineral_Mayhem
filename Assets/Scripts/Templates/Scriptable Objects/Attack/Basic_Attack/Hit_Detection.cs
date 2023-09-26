@@ -8,20 +8,12 @@ public class Hit_Detection : Attack
     public float attackRange = 4f;
     public float radius = 3f;
 
-    // ---- Delete in final build
-    public float timer = 0;
-    // -----
-
     public Vector3 offset;
 
-    private void Start() 
+    protected override void Start() 
     {
+        base.Start();
         DetectHits();
-    }
-
-    private void Update() {
-        timer += Time.deltaTime;
-        if (timer > 0.5f) Destroy(gameObject);
     }
 
     public void DetectHits()
@@ -29,7 +21,7 @@ public class Hit_Detection : Attack
         Vector3 position = transform.position + offset;
         Vector3 direction = transform.forward;
 
-        RaycastHit[] hits = Physics.SphereCastAll(position, radius, direction, attackRange, enemyLayer);
+        RaycastHit[] hits = Physics.SphereCastAll(position, radius, transform.forward, attackRange, enemyLayer);
         foreach (RaycastHit hit in hits)
         {
             GameObject enemy = hit.collider.gameObject;
@@ -40,12 +32,10 @@ public class Hit_Detection : Attack
                     // Debug showing which enemy was hit and by which attack
                     Debug.Log("Hit " + hit.collider.name + " with " + this.name);
 
-
                     enemy.GetComponent<NPC_Core>().TakeDamage(attackDamage, attackKnockback, playerTransform.position, STATUS_EFFECT.NONE, 0, 0);
                 }
                 /*
                 else if (enemy.CompareTag("Player"))
-
                 {
                     Debug.Log("Hit " + hit.collider.name);
                     enemy.GetComponent<PlayerDefense>().TakeDamage(10f, 10f, transform.position, STATUS_EFFECT.NONE, 0, 0);
@@ -53,5 +43,11 @@ public class Hit_Detection : Attack
                 */
             }
         }
+    }
+
+    private void OnDrawGizmos() 
+    {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawSphere(transform.position, radius);
     }
 }

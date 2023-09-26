@@ -36,6 +36,7 @@ public class Attack_Attribute : ScriptableObject
     public float maxOffset;
 
     [SerializeField] private GameObject attackPrefab;
+    [SerializeField] private AudioClip attackSFX;
 
     private void Awake() 
     {
@@ -46,14 +47,14 @@ public class Attack_Attribute : ScriptableObject
     {
         if (attackPrefab)
         {
+            AudioManager.Instance.PlayAudioSFX(attackSFX);
             GameObject instantiatedAttack = Instantiate(attackPrefab, attackPoint.position + offset, rotation);
             Attack iaAttack = instantiatedAttack.GetComponent<Attack>();
             iaAttack.attackDamage = damage;
             iaAttack.attackKnockback = knockback;
             iaAttack.playerTransform = player;
             if (canCharge) iaAttack.holdDuration = chargeHoldDuration;
-
-            // IMplement status effects later
+            // Implement status effects later
         }
     }
 

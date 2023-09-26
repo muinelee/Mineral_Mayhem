@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Player_InputController), typeof(Player_Movement), typeof(Player_AttackController))]
 
@@ -19,13 +21,14 @@ public class Player_Core : MonoBehaviour
     private Rigidbody rb;
     [SerializeField] private CapsuleCollider cc1;
     [SerializeField] private CapsuleCollider cc2;
-    private Player_InputController pi;
+    [SerializeField] private GameObject floatingTextPrefab;
+    private Player_InputController playerInput;
 
     // Start is called before the first frame update
     void Awake()
     {
         rb = gameObject.GetComponent<Rigidbody>();
-        pi = gameObject.GetComponent<Player_InputController>();
+        playerInput = gameObject.GetComponent<Player_InputController>();
         if (!cc1) Debug.Log("Capsule Collider 1 not seen in Player_Core");
         if (!cc2) Debug.Log("Capsule Collider 2 not seen in Player_Core");
 
@@ -58,17 +61,20 @@ public class Player_Core : MonoBehaviour
 
         if (isBlocking) damage *= 0.2f;
 
-        else if (!isBlocking)
+        // Trigger floating text here.
+        if (floatingTextPrefab)
         {
-            playerStats.currentHP -= damage;
-            if (playerStats.currentHP <= 0)
-            {
-                Death();
-            }
-
-            Vector3 direction = (transform.position - attackSource).normalized;
-            Knockback(knockback, direction);
+            ShowFloatingText(damage);
         }
+        
+        playerStats.currentHP -= damage;
+        if (playerStats.currentHP <= 0)
+        {
+            Death();
+        }
+
+        Vector3 direction = (transform.position - attackSource).normalized;
+        Knockback(knockback, direction);        
     }
 
     public void SetIsBlocking(bool b)
@@ -81,18 +87,31 @@ public class Player_Core : MonoBehaviour
         isPerfectBlock = b;                             // Use animation event to turn perfectblocking on/off
     }
 
+    private void ShowFloatingText(float damage)
+    {
+        var go = Instantiate(floatingTextPrefab, transform.position, Quaternion.identity, transform);
+        go.GetComponent<TextMeshPro>().text = damage.ToString();
+    }
+
     public void Knockback(float knockbackValue, Vector3 direction)
     {
         rb.AddForce(direction * knockbackValue, ForceMode.Impulse);
     }
 
-    private void Death()
+    public void Death()
     {
         Debug.Log("The Player has Dieded");
         cc1.enabled = false;
         cc2.enabled = false;
         rb.isKinematic = true;
-        pi.StartDeath();
-        pi.enabled = false;
+        playerInput.StartDeath();
+        playerInput.enabled = false;
+        Invoke("PlayerDieded", 5f);
+    }
+
+    void PlayerDieded()
+    {
+        Debug.Log("Player has dieded");
+        SceneManager.LoadScene("GameOver");
     }
 }

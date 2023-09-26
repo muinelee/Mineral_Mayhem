@@ -5,13 +5,17 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
 using TMPro;
+using UnityEngine.Animations.Rigging;
 
 public class CanvasManager : MonoBehaviour
 {
+    private bool isPaused = false;
+
     [Header("Main Menu")]
     public GameObject mainMenu;
     public GameObject compendium;
     public GameObject settingsMenu;
+    public GameObject pauseMenu;
 
     [Header("Buttons")]
     public Button startButton;
@@ -20,6 +24,7 @@ public class CanvasManager : MonoBehaviour
     public Button settingsButton;
     public Button mainMenuButton;
     public Button quitButton;
+    public Button restartButton;
 
     [Header("Slider")]
     public Slider volSlider;
@@ -55,6 +60,10 @@ public class CanvasManager : MonoBehaviour
         { 
         quitButton.onClick.AddListener(Quit);
         }
+        if (restartButton)
+        {
+            restartButton.onClick.AddListener(Restart);
+        }
 
         if (volSlider)
         {
@@ -69,15 +78,30 @@ public class CanvasManager : MonoBehaviour
         }
     }
 
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isPaused)
+            {
+                ClosePauseMenu();
+            }
+            else
+            {
+                ShowPauseMenu();
+            }
+        }
+    }
+
     private void StartGame()
     {
         Debug.Log("Start Game Logic Not Yet Implemented");
-        //SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("IvanLee");
     }
 
     void TrainingRoom()
     {
-        SceneManager.LoadScene("Test Room");
+        SceneManager.LoadScene("IvanLee");
     }
 
     void Compendium()
@@ -90,13 +114,27 @@ public class CanvasManager : MonoBehaviour
     void ShowSettingsMenu()
     {
         mainMenu.SetActive(false);
+        //pauseMenu.SetActive(false);
         settingsMenu.SetActive(true);
+    }
+
+    void ShowPauseMenu()
+    {
+        pauseMenu.SetActive(true);
+        Time.timeScale = 0f;
+        isPaused = true;
+    }
+
+    void ClosePauseMenu()
+    {
+        pauseMenu.SetActive(false);
+        Time.timeScale = 1f;
+        isPaused = false;
     }
 
     void ShowMainMenu()
     {
-        mainMenu.SetActive(true);
-        settingsMenu.SetActive(false);
+        SceneManager.LoadScene("_MainMenu");
     }
 
     void Quit()
@@ -106,6 +144,12 @@ public class CanvasManager : MonoBehaviour
         #else
         Application.Quit();
         #endif
+    }
+
+    void Restart()
+    {
+        GameManager.instance.amountKilled = 0;
+        SceneManager.LoadScene("IvanLee");
     }
 
     void OnSliderValueChanged(float value)

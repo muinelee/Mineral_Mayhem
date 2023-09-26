@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine;
 using System.Collections;
 
 public class PlatformDrop : MonoBehaviour
@@ -10,8 +9,6 @@ public class PlatformDrop : MonoBehaviour
     public float wallDestroyDelay = 2f;    // delay before destroying "SpawnWall" objects
     public float dropSpeed = 10f;          // speed of the drop
 
-    private bool isDropping = false;
-
     public delegate void DropFinishedAction();
     public event DropFinishedAction OnFinishedDropping;
 
@@ -21,9 +18,18 @@ public class PlatformDrop : MonoBehaviour
         Invoke("StartDrop", dropDelay);
     }
 
+    private void OnCollisionEnter(Collision other)
+    {
+        other.transform.SetParent(transform);
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        other.transform.SetParent(null);
+    }
+
     void StartDrop()
     {
-        isDropping = true;
         // initial position of the platform
         Vector3 initialPosition = transform.position;
         // calculates the distance in units set by dropDistance to get the target position
@@ -72,9 +78,9 @@ public class PlatformDrop : MonoBehaviour
         }
 
         // wait for the destroy delay
-        yield return new WaitForSeconds(destroyDelay);
+        //yield return new WaitForSeconds(destroyDelay);
 
         // destroy the platform
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 }
