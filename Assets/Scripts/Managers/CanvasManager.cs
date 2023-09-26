@@ -148,6 +148,7 @@ public class CanvasManager : MonoBehaviour
 
     void Restart()
     {
+        GameManager.instance.amountKilled = 0;
         SceneManager.LoadScene("IvanLee");
     }
 
