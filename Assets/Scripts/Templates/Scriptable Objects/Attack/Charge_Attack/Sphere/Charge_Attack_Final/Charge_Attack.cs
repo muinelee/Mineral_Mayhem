@@ -6,8 +6,10 @@ public class Charge_Attack : Attack
 {
     [SerializeField] private Attack[] attackPrefabs;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         if (holdDuration < 1) SelectChargeAttack(0);
         else if (holdDuration < 2) SelectChargeAttack(1);
         else SelectChargeAttack(2);
