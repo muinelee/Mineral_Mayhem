@@ -44,7 +44,7 @@ public class NPC_AINavigation : MonoBehaviour
         if (hitStunTimer < hitStunDuration) hitStunTimer += Time.deltaTime;
         if (hitStunTimer > hitStunDuration && !canMove) canMove = true;
 
-        if (!Physics.Raycast(groundCheck.position, Vector3.down, 5, stageLayer)) 
+        if (!Physics.Raycast(groundCheck.position, Vector3.down, 2, stageLayer)) 
         {
             navMeshAgent.enabled = false;
             rb.AddForce(Vector3.down * 9.81f * gravityScale, ForceMode.Force);

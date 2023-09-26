@@ -96,12 +96,12 @@ public class CanvasManager : MonoBehaviour
     private void StartGame()
     {
         Debug.Log("Start Game Logic Not Yet Implemented");
-        //SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("IvanLee");
     }
 
     void TrainingRoom()
     {
-        SceneManager.LoadScene("Test Room");
+        SceneManager.LoadScene("IvanLee");
     }
 
     void Compendium()
@@ -148,7 +148,7 @@ public class CanvasManager : MonoBehaviour
 
     void Restart()
     {
-        SceneManager.LoadScene("_Main_Scene");
+        SceneManager.LoadScene("IvanLee");
     }
 
     void OnSliderValueChanged(float value)
