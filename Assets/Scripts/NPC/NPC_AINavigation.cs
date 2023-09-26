@@ -20,13 +20,18 @@ public class NPC_AINavigation : MonoBehaviour
     [Header("Wander Properties")]
     [SerializeField] private float pauseDuration;
     [SerializeField] private float wanderRange;
+    [SerializeField] private LayerMask stageLayer;
+    [SerializeField] private Transform groundCheck;
 
     private NPC_Attack npcAttack;
+    private Rigidbody rb;
+    [SerializeField] private float gravityScale;
 
     void Start()
     {
         if (!navMeshAgent) navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         if (!npcAttack) npcAttack = gameObject.GetComponent<NPC_Attack>();
+        if (!rb) rb = gameObject.GetComponent<Rigidbody>();
 
         player = GameObject.FindGameObjectWithTag("Participant").GetComponent<Transform>();
         SetBehavior();
@@ -39,6 +44,16 @@ public class NPC_AINavigation : MonoBehaviour
 
         if (hitStunTimer < hitStunDuration) hitStunTimer += Time.deltaTime;
         if (hitStunTimer > hitStunDuration && !canMove) canMove = true;
+
+        rb.AddForce(Vector3.down * 9.81f * gravityScale, ForceMode.Force);
+
+        if (!Physics.Raycast(groundCheck.position, groundCheck.forward, 10, stageLayer) && behavior == Behavior.Wander) 
+        {
+            Debug.Log("Should get a new target");
+            GetTarget();
+        }
+
+        if (Input.GetKey(KeyCode.Y) && behavior == Behavior.Wander) navMeshAgent.destination = new Vector3(-35, 6, -11);
     }
 
     void SetBehavior()
@@ -69,7 +84,11 @@ public class NPC_AINavigation : MonoBehaviour
 
     void GetTarget()
     {
-        if (navMeshAgent.enabled) navMeshAgent.destination = transform.position + new Vector3(Random.Range(-wanderRange, wanderRange), 0, Random.Range(-wanderRange, wanderRange));
+        if (navMeshAgent.enabled) 
+        {
+            Vector3 newTargetDestination = transform.position + new Vector3(Random.Range(-wanderRange, wanderRange), 0, Random.Range(-wanderRange, wanderRange));
+            navMeshAgent.destination = newTargetDestination;
+        }
     }
 
     void WanderBehavior()
@@ -77,15 +96,24 @@ public class NPC_AINavigation : MonoBehaviour
         if (Vector3.Distance(navMeshAgent.destination, transform.position) <= navMeshAgent.stoppingDistance) Invoke("GetTarget", pauseDuration);
     }
 
-    public void DeathActivated()
+    private void OnDisable() 
     {
-        navMeshAgent.enabled = false;
-        this.enabled = false;
+        if (navMeshAgent.enabled == true) navMeshAgent.enabled = false;
+    }
+
+    private void OnEnable() 
+    {
+        if (navMeshAgent && navMeshAgent.enabled == false) navMeshAgent.enabled = true;
     }
 
     public void ApplyHitStun()
     {
         canMove = false;
         hitStunTimer = 0;
+    }
+
+    private void OnDrawGizmos() 
+    {
+        Gizmos.DrawRay(groundCheck.position, groundCheck.forward * 10);
     }
 }

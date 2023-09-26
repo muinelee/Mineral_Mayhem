@@ -98,7 +98,7 @@ public class Player_Core : MonoBehaviour
         rb.AddForce(direction * knockbackValue, ForceMode.Impulse);
     }
 
-    private void Death()
+    public void Death()
     {
         Debug.Log("The Player has Dieded");
         cc1.enabled = false;

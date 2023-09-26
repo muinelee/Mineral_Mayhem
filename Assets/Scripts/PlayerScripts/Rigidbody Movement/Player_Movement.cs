@@ -8,6 +8,7 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private CapsuleCollider cc;
     [SerializeField] private Mobility_Attributes ma;    // Scriptable Object from 'Mobility Attributes'                                                       
     [SerializeField] private float movSpd;
+    [SerializeField] private float gravityScale;
 
     private float abilitySlow = 1;
     private float targetAbilitySlow = 1;
@@ -35,6 +36,8 @@ public class Player_Movement : MonoBehaviour
     {
         MobilitySkillTimer();
         if (abilitySlow != targetAbilitySlow) ApplyAbilitySlow();
+
+        rb.AddForce(Vector3.down * 9.81f * gravityScale, ForceMode.Force);
     }
 
     private void FixedUpdate() 

@@ -82,7 +82,25 @@ public class NPC_Core : MonoBehaviour
         cc.enabled = false;
         rb.isKinematic = true;
         anim.CrossFade("DummyDied", 0.3f);
-        npcAINav.DeathActivated();
+        npcAINav.enabled = false;
         Destroy(gameObject, 3f);
+    }
+
+    private void OnCollisionExit(Collision other) 
+    {
+        if (other.transform.tag == "Platform")
+        {
+            Debug.Log("Dummy has left the platform");
+            npcAINav.enabled = false;
+        }
+    }
+
+    private void OnCollisionStay(Collision other) 
+    {
+        if (other.transform.tag == "Platform") 
+        {
+            Debug.Log("Dummy has landed on platform");
+            npcAINav.enabled = true;
+        }
     }
 }
