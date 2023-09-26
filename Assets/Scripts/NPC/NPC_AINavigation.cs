@@ -77,7 +77,7 @@ public class NPC_AINavigation : MonoBehaviour
          if (navMeshAgent.enabled == true)
         {
             if (!canMove) navMeshAgent.destination = transform.position;
-            else if (behavior == Behavior.Chase && npcAttack.canAttack) navMeshAgent.destination = player.position;
+            else if (behavior == Behavior.Chase && npcAttack.canAttack && player) navMeshAgent.destination = player.position;
             else if (behavior == Behavior.Wander) WanderBehavior();
         }
     }
