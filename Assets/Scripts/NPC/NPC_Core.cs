@@ -48,6 +48,7 @@ public class NPC_Core : MonoBehaviour
 
         if (currentHP <= 0)
         {
+            if (CombatEffectManager.instance) CombatEffectManager.instance.TimeSlow();
             Death();            
         }
 
@@ -75,7 +76,6 @@ public class NPC_Core : MonoBehaviour
 
     public void Death()
     {
-        if (CombatEffectManager.instance) CombatEffectManager.instance.TimeSlow();
         OnDeath?.Invoke();
         Debug.Log("Death has been invoked");
         Debug.Log("NPC has Dieded");

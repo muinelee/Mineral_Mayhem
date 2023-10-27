@@ -38,11 +38,6 @@ public class Attack_Attribute : ScriptableObject
     [SerializeField] private GameObject attackPrefab;
     [SerializeField] private AudioClip attackSFX;
 
-    private void Awake() 
-    {
-        
-    }
-
     public void Activate(Transform attackPoint, Quaternion rotation)
     {
         if (attackPrefab)
@@ -60,7 +55,6 @@ public class Attack_Attribute : ScriptableObject
 
     public void TakeChargeDuration(float holdDuration)
     {
-        Debug.Log("Charge attack was held for " + holdDuration + " seconds");
         chargeHoldDuration = holdDuration;
     }
 }
