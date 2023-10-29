@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Unity.Netcode;
 
 [RequireComponent(typeof(Player_InputController), typeof(Player_Movement), typeof(Player_AttackController))]
 
-public class Player_Core : MonoBehaviour
+public class Player_Core : NetworkBehaviour
 {
     [SerializeField] Player_StatsSO playerStats;
 
