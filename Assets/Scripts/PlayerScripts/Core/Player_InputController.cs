@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player_InputController : MonoBehaviour
+public class Player_InputController : NetworkBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private CameraFollowPoint camFollowPoint;
@@ -53,6 +54,11 @@ public class Player_InputController : MonoBehaviour
 
     private void Update() 
     {
+        if (!IsOwner)
+        {
+            return;
+        }
+
         if (currentState != State.Dead)
         {
             Aim();

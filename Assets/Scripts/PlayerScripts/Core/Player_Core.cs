@@ -7,7 +7,7 @@ using Unity.Netcode;
 
 [RequireComponent(typeof(Player_InputController), typeof(Player_Movement), typeof(Player_AttackController))]
 
-public class Player_Core : NetworkBehaviour
+public class Player_Core : MonoBehaviour
 {
     [SerializeField] Player_StatsSO playerStats;
 
