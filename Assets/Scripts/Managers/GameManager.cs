@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public bool subscribed = false;
 
     public static GameManager instance;
+    public UIManager uiManager;
 
     private void Start()
     {
@@ -34,6 +35,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         FindAndSubcribeToEnemies();
+        spellCooldown();
 /*        //find all objects with NPC_Core script
         enemies = GameObject.FindGameObjectsWithTag("NPC");
         //subscribe to death function
@@ -101,4 +103,23 @@ public class GameManager : MonoBehaviour
         //update the array
         enemies = newEnemies;
     }*/
+
+   public void spellCooldown() {
+        //find the player
+        GameObject player = GameObject.FindGameObjectWithTag("Participant");
+
+        if (player != null) {
+            //reference the player attack controller
+            Player_AttackController playerAttackController = player.GetComponent<Player_AttackController>();
+            //find spell cooldown
+            float eSpellCooldown = playerAttackController.eAttackTimer;
+            float qSpellCooldown = playerAttackController.qAttackTimer;
+            //send cooldown to uimanager
+            uiManager.DisplayESpellCooldown(eSpellCooldown);
+
+            if (player == null) {
+                Debug.Log("Player not found");
+            }
+        }
+   }
 }
