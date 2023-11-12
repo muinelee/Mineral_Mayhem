@@ -28,10 +28,10 @@ public class AttackManager : NetworkBehaviour
 
         foreach (Player_InputController p in players)
         {
-            foreach (GameObject attack in p.attackController.attacks)
+            foreach (GameObject a in p.attackController.attacks)
             {
-                Debug.Log(attack.name);
-                Instantiate(attack, p.attackController.attackPoint.position, p.gameObject.transform.rotation);
+                Debug.Log(a.name);
+                GameObject attack = Instantiate(a, p.attackController.attackPoint.position, p.gameObject.transform.rotation);
             }
         }
     }

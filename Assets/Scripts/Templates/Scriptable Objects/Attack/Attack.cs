@@ -17,8 +17,9 @@ public abstract class Attack : NetworkBehaviour
     public float holdDuration = 0;
     [SerializeField] private float attackLifetime;
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
+        AudioManager.Instance.PlayAudioSFX(attackSFX);
         Invoke("AttackComplete", attackLifetime);        
     }
 

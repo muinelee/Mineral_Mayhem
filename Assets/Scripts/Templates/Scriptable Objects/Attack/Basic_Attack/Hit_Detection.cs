@@ -10,9 +10,9 @@ public class Hit_Detection : Attack
 
     public Vector3 offset;
 
-    protected override void Start() 
+    protected override void OnEnable()
     {
-        base.Start();
+        base.OnEnable();
         DetectHits();
     }
 

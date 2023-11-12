@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class Player_AttackController : MonoBehaviour
+public class Player_AttackController : NetworkBehaviour
 {
     private bool canAttack = true;
     public Transform attackPoint;
@@ -29,6 +30,9 @@ public class Player_AttackController : MonoBehaviour
 
     void Update()       // Should only manage timers
     {
+        if (Input.GetKeyDown(KeyCode.I)) FireAttack(0);
+        if (Input.GetKeyDown(KeyCode.O)) FireAttack(1);
+
         if (basicAttackTimer < basicAttack[0].coolDown) basicAttackTimer += Time.deltaTime;
         if (qAttackTimer < qAttack.coolDown) qAttackTimer += Time.deltaTime;
         if (eAttackTimer < eAttack.coolDown) eAttackTimer += Time.deltaTime;
@@ -51,9 +55,9 @@ public class Player_AttackController : MonoBehaviour
         currentAttack.TakeChargeDuration(attackTimer);
     }
 
-    public void FireAttack()
+    public void FireAttack(int index)
     {
-        currentAttack.Activate(attackPoint, transform.rotation);
+        ActivateAttackServerRpc((int)OwnerClientId, index);
     }
 
     public void AttacksEnabled()
@@ -86,5 +90,11 @@ public class Player_AttackController : MonoBehaviour
     public void ReplaceAttack(ref Attack_Attribute equippedAttack, Attack_Attribute replacementAttack)
     {
         equippedAttack = replacementAttack;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ActivateAttackServerRpc(int clientID, int index, ServerRpcParams serverRpcParams = default)
+    {
+        Debug.Log($"Is the ClientID {serverRpcParams.Receive.SenderClientId} the owner? {IsOwner}");
     }
 }
