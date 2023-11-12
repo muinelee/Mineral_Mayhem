@@ -13,16 +13,17 @@ public class Player_InputController : NetworkBehaviour
     Test_InputControls controls;
 
     // Scripts
-    Player_Movement playerMovement;
-    Player_AttackController attackController;
-    Vector3 inputDirection;
-    Vector3 lookDirection;
+    private Player_Movement playerMovement;
+    public Player_AttackController attackController;
+    private Vector3 inputDirection;
+    private Vector3 lookDirection;
 
-    private enum State { Idle, Run, Attack, Reacting, Block, Dead, Charge};
+    private enum State { Priming, Idle, Run, Attack, Reacting, Block, Dead, Charge};
     private State currentState;
 
     private void Awake()
     {
+
         Cursor.lockState = CursorLockMode.Confined;
 
         if (!cam) cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
@@ -56,9 +57,7 @@ public class Player_InputController : NetworkBehaviour
 
         controls.Test_Input.Toggle_Look_Ahead_Cam.performed += ctx => camFollowPoint.ToggleLookAheadCam();
 
-        currentState = State.Idle;
-
-        Debug.Log(IsOwner);
+        currentState = State.Priming;
 
         CinemachineVirtualCamera cinemachineVC = cam.GetComponentInChildren<CinemachineVirtualCamera>();
         cinemachineVC.Follow = camFollowPoint.transform;
@@ -73,7 +72,14 @@ public class Player_InputController : NetworkBehaviour
         {
             Aim();
             if (playerMovement.GetCanMove()) Move();
+
+            if (currentState != State.Priming) return;
+            
+            TestServerRPC();
+            currentState = State.Idle;
         }
+
+
     }
 
     void SetMove(InputAction.CallbackContext ctx)
@@ -121,7 +127,7 @@ public class Player_InputController : NetworkBehaviour
 
     public void ActivateBasic(InputAction.CallbackContext ctx)
     {
-        if (IsOwner) PassAttackInput(ref attackController.basicAttack[attackController.attackCounter % attackController.basicAttack.Length], ref attackController.basicAttackTimer);
+        PassAttackInput(ref attackController.basicAttack[attackController.attackCounter % attackController.basicAttack.Length], ref attackController.basicAttackTimer);
     }
 
     #region <----- Special Abilities ----->
@@ -212,5 +218,11 @@ public class Player_InputController : NetworkBehaviour
         playerMovement.SetDirection(Vector3.zero);
         currentState = State.Dead;
         anim.CrossFade("Death", 0.3f);
+    }
+
+    [ServerRpc]
+    private void TestServerRPC()
+    {
+        AttackManager.instance.AddPlayer(this);
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player_AttackController : MonoBehaviour
 {
     private bool canAttack = true;
-    [SerializeField] private GameObject attackPoint;
+    public Transform attackPoint;
 
     public Attack_Attribute currentAttack;
 
@@ -19,6 +19,14 @@ public class Player_AttackController : MonoBehaviour
     public Attack_Attribute eAttack;
     public float eAttackTimer = 100;
 
+    public List<GameObject> attacks;
+
+    private void Awake()
+    {
+        CreateAttack(qAttack);
+        CreateAttack(eAttack);
+    }
+
     void Update()       // Should only manage timers
     {
         if (basicAttackTimer < basicAttack[0].coolDown) basicAttackTimer += Time.deltaTime;
@@ -28,7 +36,6 @@ public class Player_AttackController : MonoBehaviour
 
     public void ActivateAttack(Attack_Attribute attack, ref float attackTimer)
     {
-
         if (attackTimer > attack.coolDown && canAttack)
         {
             currentAttack = attack;
@@ -46,7 +53,7 @@ public class Player_AttackController : MonoBehaviour
 
     public void FireAttack()
     {
-        currentAttack.Activate(attackPoint.transform, transform.rotation);
+        currentAttack.Activate(attackPoint, transform.rotation);
     }
 
     public void AttacksEnabled()
@@ -68,6 +75,12 @@ public class Player_AttackController : MonoBehaviour
     {
         attackCounter = 0;
         AttacksEnabled();
+    }
+
+    private void CreateAttack(Attack_Attribute attackSO)
+    {
+        GameObject attack = Instantiate(attackSO.attackPrefab, attackPoint.position + attackSO.offset, transform.rotation);
+        attacks.Add(attack);
     }
 
     public void ReplaceAttack(ref Attack_Attribute equippedAttack, Attack_Attribute replacementAttack)

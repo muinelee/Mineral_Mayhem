@@ -898,6 +898,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
   camFollowPoint: {fileID: 0}
+  attackController: {fileID: 0}
 --- !u!114 &8189946468831615977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -928,7 +929,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 741f2b96d606b3145b639f217b77e078, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackPoint: {fileID: 8878183488579339123}
+  attackPoint: {fileID: 8620428752735322607}
   currentAttack: {fileID: 0}
   basicAttack:
   - {fileID: 11400000, guid: 505ba6c7808a1a542bc33fd7bd214918, type: 2}
@@ -940,6 +941,7 @@ MonoBehaviour:
   qAttackTimer: 100
   eAttack: {fileID: 11400000, guid: 82dca52f54f297c47bbf19d0a8ab8965, type: 2}
   eAttackTimer: 100
+  attacks: []
 --- !u!114 &7421263225784347132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2664,8 +2666,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 1}
-  m_LocalScale: {x: 0.4000002, y: 0.4, z: 0.4000002}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4482721321737489052}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

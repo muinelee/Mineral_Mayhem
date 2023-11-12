@@ -35,21 +35,14 @@ public class Attack_Attribute : ScriptableObject
     public bool canOffset;
     public float maxOffset;
 
-    [SerializeField] private GameObject attackPrefab;
+    [SerializeField] public GameObject attackPrefab;
     [SerializeField] private AudioClip attackSFX;
 
     public void Activate(Transform attackPoint, Quaternion rotation)
     {
         if (attackPrefab)
         {
-            AudioManager.Instance.PlayAudioSFX(attackSFX);
             GameObject instantiatedAttack = Instantiate(attackPrefab, attackPoint.position + offset, rotation);
-            Attack iaAttack = instantiatedAttack.GetComponent<Attack>();
-            iaAttack.attackDamage = damage;
-            iaAttack.attackKnockback = knockback;
-            iaAttack.playerTransform = player;
-            if (canCharge) iaAttack.holdDuration = chargeHoldDuration;
-            // Implement status effects later
         }
     }
 

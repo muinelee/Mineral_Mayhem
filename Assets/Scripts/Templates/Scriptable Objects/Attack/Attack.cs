@@ -5,6 +5,8 @@ using UnityEngine;
 
 public abstract class Attack : NetworkBehaviour
 {
+    [SerializeField] private AudioClip attackSFX;
+
     public float attackDamage;
     public float attackKnockback;
     public Transform playerTransform;
@@ -15,14 +17,19 @@ public abstract class Attack : NetworkBehaviour
     public float holdDuration = 0;
     [SerializeField] private float attackLifetime;
 
-    protected virtual void Start() 
+    private void OnEnable()
     {
-        Destroy(gameObject, attackLifetime);
+        Invoke("AttackComplete", attackLifetime);        
     }
 
     protected virtual void DealDamage(GameObject other)
     {
         if (other.CompareTag("NPC")) other.GetComponent<NPC_Core>().TakeDamage(attackDamage, attackKnockback, playerTransform.position, STATUS_EFFECT.NONE, 0, 0);
         else if(other.CompareTag("Player")) other.GetComponent<Player_Core>().TakeDamage(attackDamage, attackKnockback, playerTransform.position, STATUS_EFFECT.NONE, 0, 0);
+    }
+
+    protected void AttackComplete()
+    {
+        gameObject.SetActive(false);
     }
 }
