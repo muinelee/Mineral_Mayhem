@@ -57,7 +57,12 @@ public class Player_AttackController : NetworkBehaviour
 
     public void FireAttack(int index)
     {
-        ActivateAttackServerRpc((int)OwnerClientId, index);
+        if (IsOwner)
+        {
+            GameObject attack = Instantiate(attacks[index], attackPoint.position, transform.rotation);
+            attack.SetActive(true);
+            attack.GetComponent<NetworkObject>().Spawn(true);
+        }
     }
 
     public void AttacksEnabled()
