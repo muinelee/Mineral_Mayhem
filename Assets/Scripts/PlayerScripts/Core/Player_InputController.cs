@@ -66,7 +66,10 @@ public class Player_InputController : NetworkBehaviour
 
     private void Update() 
     {
+
         if (!IsOwner) return;
+
+        if (Input.GetKeyDown(KeyCode.K)) Debug.Log($"IsOwner: {transform.name}{OwnerClientId} {IsOwner}");
 
         if (currentState != State.Dead)
         {

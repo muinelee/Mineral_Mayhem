@@ -24,14 +24,14 @@ public class Player_AttackController : NetworkBehaviour
 
     private void Awake()
     {
-        CreateAttack(qAttack);
-        CreateAttack(eAttack);
+        attacks.Add(eAttack.attackPrefab);
     }
 
     void Update()       // Should only manage timers
     {
-        if (Input.GetKeyDown(KeyCode.I)) FireAttack(0);
-        if (Input.GetKeyDown(KeyCode.O)) FireAttack(1);
+        if (!IsOwner) return;
+
+        if (Input.GetKeyDown(KeyCode.I)) CreateAttackServerRpc();
 
         if (basicAttackTimer < basicAttack[0].coolDown) basicAttackTimer += Time.deltaTime;
         if (qAttackTimer < qAttack.coolDown) qAttackTimer += Time.deltaTime;
@@ -55,16 +55,6 @@ public class Player_AttackController : NetworkBehaviour
         currentAttack.TakeChargeDuration(attackTimer);
     }
 
-    public void FireAttack(int index)
-    {
-        if (IsOwner)
-        {
-            GameObject attack = Instantiate(attacks[index], attackPoint.position, transform.rotation);
-            attack.SetActive(true);
-            attack.GetComponent<NetworkObject>().Spawn(true);
-        }
-    }
-
     public void AttacksEnabled()
     {
         canAttack = true;
@@ -86,20 +76,19 @@ public class Player_AttackController : NetworkBehaviour
         AttacksEnabled();
     }
 
-    private void CreateAttack(Attack_Attribute attackSO)
-    {
-        GameObject attack = Instantiate(attackSO.attackPrefab, attackPoint.position + attackSO.offset, transform.rotation);
-        attacks.Add(attack);
-    }
-
     public void ReplaceAttack(ref Attack_Attribute equippedAttack, Attack_Attribute replacementAttack)
     {
         equippedAttack = replacementAttack;
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void ActivateAttackServerRpc(int clientID, int index, ServerRpcParams serverRpcParams = default)
+    private void CreateAttackServerRpc()
     {
-        Debug.Log($"Is the ClientID {serverRpcParams.Receive.SenderClientId} the owner? {IsOwner}");
+        Instantiate(eAttack.attackPrefab, attackPoint.position + eAttack.offset, transform.rotation).GetComponent<NetworkObject>().Spawn(true);
+    }
+
+    private void TestCallingAttackManagerAttack()
+    {
+        AttackManager.instance.TestFirePlayerAttack((int)OwnerClientId, 0);
     }
 }

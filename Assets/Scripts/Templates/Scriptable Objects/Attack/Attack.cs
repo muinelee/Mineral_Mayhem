@@ -29,8 +29,9 @@ public abstract class Attack : NetworkBehaviour
         else if(other.CompareTag("Player")) other.GetComponent<Player_Core>().TakeDamage(attackDamage, attackKnockback, playerTransform.position, STATUS_EFFECT.NONE, 0, 0);
     }
 
-    protected void AttackComplete()
+    [ServerRpc]
+    protected void AttackCompleteServerRpc()
     {
-        gameObject.SetActive(false);
+        GetComponent<NetworkObject>().Despawn(true);
     }
 }

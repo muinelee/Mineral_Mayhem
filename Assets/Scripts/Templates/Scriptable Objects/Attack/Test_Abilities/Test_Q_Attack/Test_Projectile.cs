@@ -22,12 +22,12 @@ public class Test_Projectile : Attack
     }
 
     private void Update() {
-        if (Vector3.Distance(transform.position, startPos) > range) gameObject.SetActive(false);
+        if (Vector3.Distance(transform.position, startPos) > range) AttackCompleteServerRpc();
     }
 
     private void OnCollisionEnter(Collision other) 
     {
         DealDamage(other.gameObject);
-        gameObject.SetActive(false);
+        AttackCompleteServerRpc();
     }
 }
