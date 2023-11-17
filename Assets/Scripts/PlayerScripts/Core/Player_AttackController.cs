@@ -82,7 +82,7 @@ public class Player_AttackController : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void CreateAttackServerRpc()
+    public void CreateAttackServerRpc()
     {
         Instantiate(eAttack.attackPrefab, attackPoint.position + eAttack.offset, transform.rotation).GetComponent<NetworkObject>().Spawn(true);
     }

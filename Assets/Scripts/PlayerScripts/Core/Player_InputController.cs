@@ -173,6 +173,9 @@ public class Player_InputController : NetworkBehaviour
 
     public void PassAttackInput(ref Attack_Attribute attack, ref float attackTimer)
     {
+        if (currentState == State.Idle && attackController.GetCanAttack() && attackTimer > attack.coolDown) attackController.CreateAttackServerRpc();
+
+        /*
         if (currentState == State.Idle && attackController.GetCanAttack() && attackTimer > attack.coolDown)
         {
             anim.CrossFade(attack.nameOfAttack, 0.1f);
@@ -180,11 +183,12 @@ public class Player_InputController : NetworkBehaviour
             playerMovement.SetAbilitySlow(1 - attack.attackAbilitySlowPercentage);
             if (attack.stopTurn) playerMovement.MovementDisabled(); 
         }
+        */
     }
 
-#endregion
+    #endregion
 
-#region <----- Block Functions ----->
+    #region <----- Block Functions ----->
 
     void StartBlock(InputAction.CallbackContext ctx)
     {
