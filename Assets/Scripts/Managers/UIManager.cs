@@ -16,18 +16,11 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI timeText;
     public TextMeshProUGUI amountKilledText;
 
-    //cooldown stuff used before, may use it again so commenting it out for now
-    //public Image cooldownRadius;
-    //public Text cooldownText;
-    //public float cooldownTimer = 0.0f;
-    //public float minValue = 0.0f;
-    //public float maxValue = 10.0f;
-
     //cooldown stuff
-    public Image imageCooldown;
-    public Text cooldownText;
-    public bool isCooldown = false;
-    public float cooldownTimer = 0.0f;
+    public Image EimageCooldown;
+    public Image QimageCooldown;
+    public Text EcooldownText;
+    public Text QcooldownText;
     //cooldown time comes from player_attackController script in the function
 
     //testing purposes
@@ -48,6 +41,7 @@ public class UIManager : MonoBehaviour
                 timeRemaining -= Time.deltaTime;
                 DisplayTime(timeRemaining);
                 DisplayNPCKilled();
+                spellCooldown();
             }
             if (timeRemaining <= 0)
             {
@@ -82,25 +76,57 @@ public class UIManager : MonoBehaviour
 
     }
 
-    /*public void DisplayESpellCooldown(float eCooldownTime) { commenting out for now, may use later keep for now
+    public void spellCooldown()
+    {
+        //find the player
+        GameObject player = GameObject.FindGameObjectWithTag("Participant");
+
+        if (player != null)
+        {
+            //reference the player attack controller
+            Player_AttackController playerAttackController = player.GetComponent<Player_AttackController>();
+            //find spell cooldown
+            float eSpellCooldownTimer = playerAttackController.eAttackTimer;
+            float eSpellCooldown = playerAttackController.eAttack.coolDown;
+            float qSpellCooldown = playerAttackController.qAttackTimer;
+            float qSpellCooldownTimer = playerAttackController.qAttack.coolDown;
+            //send cooldown to uimanager
+            DisplayESpellCooldown(eSpellCooldown, eSpellCooldownTimer);
+            DisplayQSpellCooldown(qSpellCooldown, qSpellCooldownTimer);
+
+            if (player == null)
+            {
+                Debug.Log("Player not found");
+            }
+        }
+    }
+    public void DisplayESpellCooldown(float eSpellCooldown, float eSpellCooldownTimer)
+    {
         //display the cooldown
-        //normalize the cooldown time, clamp it between 0 - 1 so it stops messing up the fill amount
-        //not working currently, ignore for now
-        //float normalizedRadius = Mathf.Clamp01((eCooldownTime - minValue) / (maxValue - minValue));
-        cooldownRadius.fillAmount = eCooldownTime;
+        EcooldownText.text = (eSpellCooldown - eSpellCooldownTimer).ToString("F2");
+        if (eSpellCooldown - eSpellCooldownTimer <= 0)
+        {
+            EcooldownText.text = "";
+            EimageCooldown.fillAmount = 0;
+        }
+        else
+        {
+            EimageCooldown.fillAmount = (eSpellCooldown - eSpellCooldownTimer) / eSpellCooldown;
+        }
+    }
 
-        cooldownText.text = eCooldownTime.ToString("F2");
-    }*/
-
-    public void DisplayESpellCooldown(float eCooldownTime) {
-        //display cooldown, and count back to 0
-        cooldownTimer += Time.deltaTime;
-        cooldownTimer = Mathf.Clamp(cooldownTimer, 0.0f, eCooldownTime);
-        cooldownText.text = cooldownTimer.ToString("F2");
-
-
-
-
-        imageCooldown.fillAmount = eCooldownTime;
+    public void DisplayQSpellCooldown(float qSpellCooldown, float qSpellCooldownTimer)
+    {
+        //display the cooldown
+        QcooldownText.text = (qSpellCooldown - qSpellCooldownTimer).ToString("F2");
+        if (qSpellCooldown - qSpellCooldownTimer <= 0)
+        {
+            QcooldownText.text = "";
+            QimageCooldown.fillAmount = 0;
+        }
+        else
+        {
+            QimageCooldown.fillAmount = (qSpellCooldown - qSpellCooldownTimer) / qSpellCooldown;
+        }
     }
 }
