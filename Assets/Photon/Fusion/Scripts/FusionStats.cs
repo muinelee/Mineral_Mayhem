@@ -73,13 +73,13 @@ public class FusionStats : Fusion.Behaviour {
 
 
   // Lookup for all FusionStats associated with active runners.
-  static Dictionary<NetworkRunner, List<FusionStats>> _statsForRunnerLookup = new Dictionary<NetworkRunner, List<FusionStats>>();
+  static Dictionary<Fusion.NetworkRunner, List<FusionStats>> _statsForRunnerLookup = new Dictionary<Fusion.NetworkRunner, List<FusionStats>>();
 
   // Record of active SimStats, used to prevent more than one _guid version from existing (in the case of SimStats existing in a scene that gets cloned in Multi-Peer).
   static Dictionary<string, FusionStats> _activeGuids = new Dictionary<string, FusionStats>();
 
   // Added to make calling by reflection cleaner internally. Used in RunnerVisibilityControls.
-  internal static FusionStats CreateInternal(NetworkRunner runner = null, DefaultLayouts layout = DefaultLayouts.Left, Stats.NetStatFlags? netStatsMask = null, Stats.SimStatFlags? simStatsMask = null) {
+  internal static FusionStats CreateInternal(Fusion.NetworkRunner runner = null, DefaultLayouts layout = DefaultLayouts.Left, Stats.NetStatFlags? netStatsMask = null, Stats.SimStatFlags? simStatsMask = null) {
     return Create(null, runner, layout, layout, netStatsMask, simStatsMask);
   }
 
@@ -92,7 +92,7 @@ public class FusionStats : Fusion.Behaviour {
   /// <param name="netStatsMask">The network stats to be enabled. If left null, default statistics will be used.</param>
   /// <param name="simStatsMask">The simulation stats to be enabled. If left null, default statistics will be used.</param>
   /// <returns></returns>
-  public static FusionStats Create(Transform parent = null, NetworkRunner runner = null, DefaultLayouts? screenLayout = null, DefaultLayouts? objectLayout = null, Stats.NetStatFlags? netStatsMask = null, Stats.SimStatFlags? simStatsMask = null) {
+  public static FusionStats Create(Transform parent = null, Fusion.NetworkRunner runner = null, DefaultLayouts? screenLayout = null, DefaultLayouts? objectLayout = null, Stats.NetStatFlags? netStatsMask = null, Stats.SimStatFlags? simStatsMask = null) {
 
     var go = new GameObject($"{nameof(FusionStats)} {(runner ? runner.name : "null")}");
     FusionStats stats;
@@ -446,16 +446,16 @@ public class FusionStats : Fusion.Behaviour {
     }
   }
 
-  /// <summary>
-  /// The <see cref="NetworkRunner"/> currently associated with this <see cref="FusionStats"/> component and graphs.
-  /// </summary>
-  [Header("Data")]
+    /// <summary>
+    /// The <see cref="Fusion.NetworkRunner"/> currently associated with this <see cref="FusionStats"/> component and graphs.
+    /// </summary>
+    [Header("Data")]
   [SerializeField]
   [InlineHelp]
   [EditorDisabled]
   [MultiPropertyDrawersFix]
-  NetworkRunner _runner;
-  public NetworkRunner Runner {
+    Fusion.NetworkRunner _runner;
+  public Fusion.NetworkRunner Runner {
     get {
 
       if (Application.isPlaying == false) {
@@ -505,10 +505,10 @@ public class FusionStats : Fusion.Behaviour {
   [InlineHelp]
   public bool InitializeAllGraphs;
 
-  /// <summary>
-  /// When <see cref="_runner"/> is null and no <see cref="NetworkRunner"/> exists in the current scene, FusionStats will continuously attempt to find and connect to an active <see cref="NetworkRunner"/> which matches these indicated modes.
-  /// </summary>
-  [InlineHelp]
+    /// <summary>
+    /// When <see cref="_runner"/> is null and no <see cref="Fusion.NetworkRunner"/> exists in the current scene, FusionStats will continuously attempt to find and connect to an active <see cref="Fusion.NetworkRunner"/> which matches these indicated modes.
+    /// </summary>
+    [InlineHelp]
   [VersaMask]
   [MultiPropertyDrawersFix]
   public SimulationModes ConnectTo = /*SimulationModes.Host | SimulationModes.Server | */SimulationModes.Client;
@@ -1122,7 +1122,7 @@ public class FusionStats : Fusion.Behaviour {
     _layoutDirty = 2;
   }
 
-  void AssociateWithRunner(NetworkRunner runner) {
+  void AssociateWithRunner(Fusion.NetworkRunner runner) {
     if (runner != null) {
       if (_statsForRunnerLookup.TryGetValue(runner, out var runnerStats) == false) {
         _statsForRunnerLookup.Add(runner, new List<FusionStats>() { this });
@@ -1132,7 +1132,7 @@ public class FusionStats : Fusion.Behaviour {
     }
   }
 
-  void DisassociateWithRunner(NetworkRunner runner) {
+  void DisassociateWithRunner(Fusion.NetworkRunner runner) {
     if (runner != null && _statsForRunnerLookup.TryGetValue(runner, out var oldrunnerstats)) {
       if (oldrunnerstats.Contains(this)) {
         oldrunnerstats.Remove(this);

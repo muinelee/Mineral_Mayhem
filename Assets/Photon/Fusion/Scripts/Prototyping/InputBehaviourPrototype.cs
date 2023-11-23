@@ -5,12 +5,12 @@ using Fusion.Sockets;
 using UnityEngine;
 
 /// <summary>
-/// A simple example of Fusion input collection. This component should be on the same GameObject as the <see cref="NetworkRunner"/>.
+/// A simple example of Fusion input collection. This component should be on the same GameObject as the <see cref="Fusion.NetworkRunner"/>.
 /// </summary>
 [ScriptHelp(BackColor = EditorHeaderBackColor.Steel)]
 public class InputBehaviourPrototype : Fusion.Behaviour, INetworkRunnerCallbacks {
 
-  public void OnInput(NetworkRunner runner, NetworkInput input) {
+  public void OnInput(Fusion.NetworkRunner runner, NetworkInput input) {
     var frameworkInput = new NetworkInputPrototype();
 
     if (Input.GetKey(KeyCode.W)) {
@@ -64,31 +64,31 @@ public class InputBehaviourPrototype : Fusion.Behaviour, INetworkRunnerCallbacks
     input.Set(frameworkInput);
   }
 
-  public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
+  public void OnInputMissing(Fusion.NetworkRunner runner, PlayerRef player, NetworkInput input) { }
 
-  public void OnConnectedToServer(NetworkRunner runner) { }
-  public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
-  public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
-  public void OnDisconnectedFromServer(NetworkRunner runner) { }
-  public void OnPlayerJoined(NetworkRunner          runner, PlayerRef            player)                                                           { }
-  public void OnPlayerLeft(NetworkRunner            runner, PlayerRef            player)                                                           { }
-  public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)                                                          { }
-  public void OnShutdown(NetworkRunner              runner, ShutdownReason       shutdownReason) { }
-  public void OnSessionListUpdated(NetworkRunner    runner, List<SessionInfo>    sessionList)    {  }
-  public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) {
+  public void OnConnectedToServer(Fusion.NetworkRunner runner) { }
+  public void OnConnectFailed(Fusion.NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) { }
+  public void OnConnectRequest(Fusion.NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
+  public void OnDisconnectedFromServer(Fusion.NetworkRunner runner) { }
+  public void OnPlayerJoined(Fusion.NetworkRunner          runner, PlayerRef            player)                                                           { }
+  public void OnPlayerLeft(Fusion.NetworkRunner            runner, PlayerRef            player)                                                           { }
+  public void OnUserSimulationMessage(Fusion.NetworkRunner runner, SimulationMessagePtr message)                                                          { }
+  public void OnShutdown(Fusion.NetworkRunner              runner, ShutdownReason       shutdownReason) { }
+  public void OnSessionListUpdated(Fusion.NetworkRunner    runner, List<SessionInfo>    sessionList)    {  }
+  public void OnReliableDataReceived(Fusion.NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) {
   }
 
-  public void OnSceneLoadDone(NetworkRunner runner) {
+  public void OnSceneLoadDone(Fusion.NetworkRunner runner) {
     
   }
 
-  public void OnSceneLoadStart(NetworkRunner runner) {
+  public void OnSceneLoadStart(Fusion.NetworkRunner runner) {
   }
 
-  public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) {
+  public void OnCustomAuthenticationResponse(Fusion.NetworkRunner runner, Dictionary<string, object> data) {
   }
 
-  public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) {
+  public void OnHostMigration(Fusion.NetworkRunner runner, HostMigrationToken hostMigrationToken) {
 
   }
 }

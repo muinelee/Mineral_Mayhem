@@ -280,7 +280,7 @@ public abstract class FusionGraphBase : Fusion.Behaviour, IFusionStatsView {
     }
   }
 
-  protected void CheckIfValidIncurrentMode(NetworkRunner runner) {
+  protected void CheckIfValidIncurrentMode(Fusion.NetworkRunner runner) {
     if (runner == false) {
       return;
     }

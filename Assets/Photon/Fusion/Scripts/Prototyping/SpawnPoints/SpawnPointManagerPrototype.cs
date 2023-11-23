@@ -84,7 +84,7 @@ public abstract class SpawnPointManagerPrototype<T> : Fusion.Behaviour, ISpawnPo
   /// Find all <see cref="ISpawnPointPrototype"/> instances in the same scene as this spawner. 
   /// This should only be done at development time if using the Photon relay for any spawn logic.
   /// </summary>
-  public void CollectSpawnPoints(NetworkRunner runner) {
+  public void CollectSpawnPoints(Fusion.NetworkRunner runner) {
     _spawnPoints.Clear();
     _spawnPoints.AddRange(runner.SimulationUnityScene.FindObjectsOfTypeInOrder<T, Component>());
   }
@@ -92,7 +92,7 @@ public abstract class SpawnPointManagerPrototype<T> : Fusion.Behaviour, ISpawnPo
   /// <summary>
   /// Select the next spawn point using the defined <see cref="Sequence"/>. Override this method to expand on this, such as detecting if a spawn point is blocked.
   /// </summary>
-  public virtual Transform GetNextSpawnPoint(NetworkRunner runner, PlayerRef player, bool skipIfBlocked = true) {
+  public virtual Transform GetNextSpawnPoint(Fusion.NetworkRunner runner, PlayerRef player, bool skipIfBlocked = true) {
 
     CollectSpawnPoints(runner);
 

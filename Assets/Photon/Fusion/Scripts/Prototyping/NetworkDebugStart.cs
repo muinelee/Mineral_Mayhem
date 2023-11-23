@@ -43,15 +43,15 @@ public class NetworkDebugStart : Fusion.Behaviour {
     AllConnected,
   }
 
-  /// <summary>
-  /// Supply a Prefab or a scene object which has the <see cref="NetworkRunner"/> component on it, 
-  /// as well as any runner dependent components which implement <see cref="INetworkRunnerCallbacks"/>, 
-  /// such as <see cref="NetworkEvents"/> or your own custom INetworkInput implementations.
-  /// </summary>
-  [InlineHelp]
+    /// <summary>
+    /// Supply a Prefab or a scene object which has the <see cref="Fusion.NetworkRunner"/> component on it, 
+    /// as well as any runner dependent components which implement <see cref="INetworkRunnerCallbacks"/>, 
+    /// such as <see cref="NetworkEvents"/> or your own custom INetworkInput implementations.
+    /// </summary>
+    [InlineHelp]
   [WarnIf(nameof(RunnerPrefab), false, "No " + nameof(RunnerPrefab) + " supplied. Will search for a " + nameof(NetworkRunner) + " in the scene at startup.")]
   [MultiPropertyDrawersFix]
-  public NetworkRunner RunnerPrefab;
+  public Fusion.NetworkRunner RunnerPrefab;
 
   /// <summary>
   /// Select how network startup will be triggered. Automatically, by in-game menu selection, or exclusively by script.
@@ -61,11 +61,11 @@ public class NetworkDebugStart : Fusion.Behaviour {
   [WarnIf(nameof(StartMode), (double)StartModes.Manual, "Start network by calling the methods " + nameof(StartHost) + "(), " + nameof(StartServer) + "(), " + nameof(StartClient) + "(), " + nameof(StartHostPlusClients) + "(), or " + nameof(StartServerPlusClients) + "()", MsgType = 1)]
   public StartModes StartMode = StartModes.UserInterface;
 
-  /// <summary>
-  /// When <see cref="StartMode"/> is set to <see cref="StartModes.Automatic"/>, this option selects if the <see cref="NetworkRunner"/> 
-  /// will be started as a dedicated server, or as a host (which is a server with a local player).
-  /// </summary>
-  [InlineHelp]
+    /// <summary>
+    /// When <see cref="StartMode"/> is set to <see cref="StartModes.Automatic"/>, this option selects if the <see cref="Fusion.NetworkRunner"/> 
+    /// will be started as a dedicated server, or as a host (which is a server with a local player).
+    /// </summary>
+    [InlineHelp]
   [UnityEngine.Serialization.FormerlySerializedAs("Server")]
   [DrawIf(nameof(StartMode), (long)StartModes.Automatic, Hide = true)]
   public GameMode AutoStartAs = GameMode.Shared;
@@ -77,19 +77,19 @@ public class NetworkDebugStart : Fusion.Behaviour {
   [DrawIf(nameof(StartMode), (long)StartModes.UserInterface, Hide = true)]
   public bool AutoHideGUI = true;
 
-  /// <summary>
-  /// The number of client <see cref="NetworkRunner"/> instances that will be created if running in Mulit-Peer Mode. 
-  /// When using the Select start mode, this number will be the default value for the additional clients option box.
-  /// </summary>
-  [InlineHelp]
+    /// <summary>
+    /// The number of client <see cref="Fusion.NetworkRunner"/> instances that will be created if running in Mulit-Peer Mode. 
+    /// When using the Select start mode, this number will be the default value for the additional clients option box.
+    /// </summary>
+    [InlineHelp]
   [DrawIf(nameof(ShowAutoClients), Hide = true)]
   public int AutoClients = 1;
 
 
-  /// <summary>
-  /// The port that server/host <see cref="NetworkRunner"/> will use.
-  /// </summary>
-  [InlineHelp]
+    /// <summary>
+    /// The port that server/host <see cref="Fusion.NetworkRunner"/> will use.
+    /// </summary>
+    [InlineHelp]
   public ushort ServerPort = 27015;
 
   /// <summary>
@@ -105,7 +105,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
   public bool AlwaysShowStats = false;
 
   [NonSerialized]
-  NetworkRunner _server;
+    Fusion.NetworkRunner _server;
 
   /// <summary>
   /// The Scene that will be loaded after network shutdown completes (all peers have disconnected). 
@@ -189,25 +189,25 @@ public class NetworkDebugStart : Fusion.Behaviour {
     var config = NetworkProjectConfig.Global;
     var isMultiPeer = config.PeerMode == NetworkProjectConfig.PeerModes.Multiple;
 
-    var existingrunner = FindObjectOfType<NetworkRunner>();
+    var existingrunner = FindObjectOfType<Fusion.NetworkRunner>();
 
     if (existingrunner && existingrunner != RunnerPrefab) {
-      if (existingrunner.State != NetworkRunner.States.Shutdown) {
-        // disable
-        enabled = false;
+      if (existingrunner.State != Fusion.NetworkRunner.States.Shutdown) {
+                // disable
+                enabled = false;
 
         // destroy this and GUI (if exists), and return
         var gui = GetComponent<NetworkDebugStartGUI>();
         if (gui) {
-          Destroy(gui);
+                    Destroy(gui);
         }
 
-        Destroy(this);
+                Destroy(this);
         return;
       } else {
         // If no RunnerPrefab is supplied, use the scene runner.
         if (RunnerPrefab == null) {
-          RunnerPrefab = existingrunner;
+                    RunnerPrefab = existingrunner;
         }
       }
     }
@@ -295,20 +295,20 @@ public class NetworkDebugStart : Fusion.Behaviour {
     }
   }
 
-  /// <summary>
-  /// Start a Fusion server instance, and the number of client instances indicated by <see cref="AutoClients"/>. 
-  /// InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="NetworkRunner"/> instances.
-  /// </summary>
-  [BehaviourButtonAction("Start Server Plus Clients", true, false, nameof(IsShutdownAndMultiPeer))]
+    /// <summary>
+    /// Start a Fusion server instance, and the number of client instances indicated by <see cref="AutoClients"/>. 
+    /// InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="Fusion.NetworkRunner"/> instances.
+    /// </summary>
+    [BehaviourButtonAction("Start Server Plus Clients", true, false, nameof(IsShutdownAndMultiPeer))]
   public virtual void StartServerPlusClients() {
     StartServerPlusClients(AutoClients);
   }
 
-  /// <summary>
-  /// Start a Fusion host instance, and the number of client instances indicated by <see cref="AutoClients"/>. 
-  /// InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="NetworkRunner"/> instances.
-  /// </summary>
-  [BehaviourButtonAction("Start Host Plus Clients", true, false, nameof(IsShutdownAndMultiPeer))]
+    /// <summary>
+    /// Start a Fusion host instance, and the number of client instances indicated by <see cref="AutoClients"/>. 
+    /// InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="Fusion.NetworkRunner"/> instances.
+    /// </summary>
+    [BehaviourButtonAction("Start Host Plus Clients", true, false, nameof(IsShutdownAndMultiPeer))]
   public void StartHostPlusClients() {
     StartHostPlusClients(AutoClients);
   }
@@ -318,11 +318,11 @@ public class NetworkDebugStart : Fusion.Behaviour {
     ShutdownAll();
   }
 
-  /// <summary>
-  /// Start a Fusion server instance, and the indicated number of client instances. 
-  /// InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="NetworkRunner"/> instances.
-  /// </summary>
-  public virtual void StartServerPlusClients(int clientCount) {
+    /// <summary>
+    /// Start a Fusion server instance, and the indicated number of client instances. 
+    /// InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="Fusion.NetworkRunner"/> instances.
+    /// </summary>
+    public virtual void StartServerPlusClients(int clientCount) {
     if (NetworkProjectConfig.Global.PeerMode == NetworkProjectConfig.PeerModes.Multiple) {
       if (TryGetSceneRef(out var sceneRef)) {
         StartCoroutine(StartWithClients(GameMode.Server, sceneRef, clientCount));
@@ -332,11 +332,11 @@ public class NetworkDebugStart : Fusion.Behaviour {
     }
   }
 
-  /// <summary>
-  /// Start a Fusion host instance (server with local player), and the indicated number of additional client instances. 
-  /// InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="NetworkRunner"/> instances.
-  /// </summary>
-  public void StartHostPlusClients(int clientCount) {
+    /// <summary>
+    /// Start a Fusion host instance (server with local player), and the indicated number of additional client instances. 
+    /// InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="Fusion.NetworkRunner"/> instances.
+    /// </summary>
+    public void StartHostPlusClients(int clientCount) {
     if (NetworkProjectConfig.Global.PeerMode == NetworkProjectConfig.PeerModes.Multiple) {
       if (TryGetSceneRef(out var sceneRef)) {
         StartCoroutine(StartWithClients(GameMode.Host, sceneRef, clientCount));
@@ -346,11 +346,11 @@ public class NetworkDebugStart : Fusion.Behaviour {
     }
   }
 
-  /// <summary>
-  /// Start a Fusion host instance (server with local player), and the indicated number of additional client instances. 
-  /// InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="NetworkRunner"/> instances.
-  /// </summary>
-  public void StartMultipleClients(int clientCount) {
+    /// <summary>
+    /// Start a Fusion host instance (server with local player), and the indicated number of additional client instances. 
+    /// InstanceMode must be set to Multi-Peer mode, as this requires multiple <see cref="Fusion.NetworkRunner"/> instances.
+    /// </summary>
+    public void StartMultipleClients(int clientCount) {
     if (NetworkProjectConfig.Global.PeerMode == NetworkProjectConfig.PeerModes.Multiple) {
       if (TryGetSceneRef(out var sceneRef)) {
         StartCoroutine(StartWithClients(GameMode.Client, sceneRef, clientCount));
@@ -385,7 +385,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
   }
 
   public void ShutdownAll() {
-    foreach (var runner in NetworkRunner.Instances.ToList()) {
+    foreach (var runner in Fusion.NetworkRunner.Instances.ToList()) {
       if (runner != null && runner.IsRunning) {
         runner.Shutdown();
       }
@@ -562,7 +562,7 @@ public class NetworkDebugStart : Fusion.Behaviour {
     CurrentStage = Stage.AllConnected;
   }
 
-  protected virtual Task InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, NetAddress address, SceneRef scene, Action<NetworkRunner> initialized) {
+  protected virtual Task InitializeNetworkRunner(Fusion.NetworkRunner runner, GameMode gameMode, NetAddress address, SceneRef scene, Action<Fusion.NetworkRunner> initialized) {
     
     var sceneManager = runner.GetComponents(typeof(MonoBehaviour)).OfType<INetworkSceneManager>().FirstOrDefault();
     if (sceneManager == null) {

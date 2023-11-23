@@ -84,7 +84,7 @@ public class SpawnerPrototype<T> : SimulationBehaviour, IPlayerJoined, IPlayerLe
     PlayerLeft(Runner, player);
   }
 
-  void PlayerJoined(NetworkRunner runner, PlayerRef player) {
+  void PlayerJoined(Fusion.NetworkRunner runner, PlayerRef player) {
 
     if (SpawnMethod != SpawnMethods.AutoOnNetworkStart)
       return;
@@ -99,13 +99,13 @@ public class SpawnerPrototype<T> : SimulationBehaviour, IPlayerJoined, IPlayerLe
     RegisterPlayerAndObject(player, playerNetworkObject);
   }
 
-  void PlayerLeft(NetworkRunner runner, PlayerRef player) {
+  void PlayerLeft(Fusion.NetworkRunner runner, PlayerRef player) {
     DespawnPlayersObjects(runner, player);
     UnregisterPlayer(player);
   }
 
 
-  public NetworkObject TrySpawn(NetworkRunner runner, PlayerRef player) {
+  public NetworkObject TrySpawn(Fusion.NetworkRunner runner, PlayerRef player) {
 
     if (PlayerPrefab == false || !player.IsValid) {
       return null;
@@ -126,7 +126,7 @@ public class SpawnerPrototype<T> : SimulationBehaviour, IPlayerJoined, IPlayerLe
 
   [BehaviourButtonAction("Spawn For All Players On Server", true, false)]
   public void TrySpawnAll() {
-    var runners = NetworkRunner.GetInstancesEnumerator();
+    var runners = Fusion.NetworkRunner.GetInstancesEnumerator();
     while (runners.MoveNext()) {
       var runner = runners.Current;
       if (runner.IsRunning && runner.IsServer) {
@@ -150,7 +150,7 @@ public class SpawnerPrototype<T> : SimulationBehaviour, IPlayerJoined, IPlayerLe
     Runner.SetPlayerAlwaysInterested(player, playerObject, true);
   }
 
-  protected void DespawnPlayersObjects(NetworkRunner runner, PlayerRef player) {
+  protected void DespawnPlayersObjects(Fusion.NetworkRunner runner, PlayerRef player) {
     if (_spawnedLookup.ContainsKey(player)) {
       var playerObjects = _spawnedLookup[player];
       if (playerObjects.Count > 0) {

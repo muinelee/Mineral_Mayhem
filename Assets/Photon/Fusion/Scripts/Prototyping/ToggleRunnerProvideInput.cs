@@ -53,7 +53,7 @@ public class ToggleRunnerProvideInput : Fusion.Behaviour {
 
   private void ToggleAll(int runnerIndex) {
 
-    var runners = NetworkRunner.GetInstancesEnumerator();
+    var runners = Fusion.NetworkRunner.GetInstancesEnumerator();
 
     int index = 0;
     while (runners.MoveNext()) {
