@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Netcode;
+using Fusion;
 
 public class Player_AttackController : NetworkBehaviour
 {
@@ -29,10 +29,6 @@ public class Player_AttackController : NetworkBehaviour
 
     void Update()       // Should only manage timers
     {
-        if (!IsOwner) return;
-
-        if (Input.GetKeyDown(KeyCode.I)) CreateAttackServerRpc();
-
         if (basicAttackTimer < basicAttack[0].coolDown) basicAttackTimer += Time.deltaTime;
         if (qAttackTimer < qAttack.coolDown) qAttackTimer += Time.deltaTime;
         if (eAttackTimer < eAttack.coolDown) eAttackTimer += Time.deltaTime;
@@ -79,16 +75,5 @@ public class Player_AttackController : NetworkBehaviour
     public void ReplaceAttack(ref Attack_Attribute equippedAttack, Attack_Attribute replacementAttack)
     {
         equippedAttack = replacementAttack;
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void CreateAttackServerRpc()
-    {
-        Instantiate(eAttack.attackPrefab, attackPoint.position + eAttack.offset, transform.rotation).GetComponent<NetworkObject>().Spawn(true);
-    }
-
-    private void TestCallingAttackManagerAttack()
-    {
-        AttackManager.instance.TestFirePlayerAttack((int)OwnerClientId, 0);
     }
 }

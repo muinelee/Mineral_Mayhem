@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Unity.Netcode;
+using Fusion;
 
 [RequireComponent(typeof(Player_InputController), typeof(Player_Movement), typeof(Player_AttackController))]
 

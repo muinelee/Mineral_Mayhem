@@ -22,12 +22,11 @@ public class Test_Projectile : Attack
     }
 
     private void Update() {
-        if (Vector3.Distance(transform.position, startPos) > range) AttackCompleteServerRpc();
+        if (Vector3.Distance(transform.position, startPos) > range) /*Insert Disable Attack Funtion*/;
     }
 
     private void OnCollisionEnter(Collision other) 
     {
         DealDamage(other.gameObject);
-        AttackCompleteServerRpc();
     }
 }

@@ -1,7 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
+using Fusion;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -36,8 +36,6 @@ public class Player_InputController : NetworkBehaviour
 
     private void Start()
     {
-        if (!IsOwner) return;
-
         controls = new Test_InputControls();
         controls.Test_Input.Enable();
         controls.Test_Input.Move.performed += ctx => SetMove(ctx);
@@ -66,19 +64,13 @@ public class Player_InputController : NetworkBehaviour
 
     private void Update() 
     {
-
-        if (!IsOwner) return;
-
-        if (Input.GetKeyDown(KeyCode.K)) Debug.Log($"IsOwner: {transform.name}{OwnerClientId} {IsOwner}");
-
         if (currentState != State.Dead)
         {
             Aim();
             if (playerMovement.GetCanMove()) Move();
 
             if (currentState != State.Priming) return;
-            
-            TestServerRPC();
+
             currentState = State.Idle;
         }
 
@@ -173,8 +165,6 @@ public class Player_InputController : NetworkBehaviour
 
     public void PassAttackInput(ref Attack_Attribute attack, ref float attackTimer)
     {
-        if (currentState == State.Idle && attackController.GetCanAttack() && attackTimer > attack.coolDown) attackController.CreateAttackServerRpc();
-
         /*
         if (currentState == State.Idle && attackController.GetCanAttack() && attackTimer > attack.coolDown)
         {
@@ -225,11 +215,5 @@ public class Player_InputController : NetworkBehaviour
         playerMovement.SetDirection(Vector3.zero);
         currentState = State.Dead;
         anim.CrossFade("Death", 0.3f);
-    }
-
-    [ServerRpc]
-    private void TestServerRPC()
-    {
-        AttackManager.instance.AddPlayer(this);
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
+using Fusion;
 using UnityEngine;
 
 public abstract class Attack : NetworkBehaviour
@@ -27,11 +27,5 @@ public abstract class Attack : NetworkBehaviour
     {
         if (other.CompareTag("NPC")) other.GetComponent<NPC_Core>().TakeDamage(attackDamage, attackKnockback, playerTransform.position, STATUS_EFFECT.NONE, 0, 0);
         else if(other.CompareTag("Player")) other.GetComponent<Player_Core>().TakeDamage(attackDamage, attackKnockback, playerTransform.position, STATUS_EFFECT.NONE, 0, 0);
-    }
-
-    [ServerRpc]
-    protected void AttackCompleteServerRpc()
-    {
-        GetComponent<NetworkObject>().Despawn(true);
     }
 }
