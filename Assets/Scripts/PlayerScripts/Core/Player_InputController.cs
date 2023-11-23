@@ -36,7 +36,7 @@ public class Player_InputController : NetworkBehaviour
 
     private void Start()
     {
-        controls = new Test_InputControls();
+/*        controls = new Test_InputControls();
         controls.Test_Input.Enable();
         controls.Test_Input.Move.performed += ctx => SetMove(ctx);
         controls.Test_Input.Move.canceled += ctx => SetMove(ctx);
@@ -53,7 +53,7 @@ public class Player_InputController : NetworkBehaviour
         controls.Test_Input.Special_Ability_2.performed += ctx => ActivateE(ctx);
         controls.Test_Input.Special_Ability_2.canceled += ctx => ActivateECharge(ctx);
 
-        controls.Test_Input.Toggle_Look_Ahead_Cam.performed += ctx => camFollowPoint.ToggleLookAheadCam();
+        controls.Test_Input.Toggle_Look_Ahead_Cam.performed += ctx => camFollowPoint.ToggleLookAheadCam();*/
 
         currentState = State.Priming;
 
@@ -73,8 +73,6 @@ public class Player_InputController : NetworkBehaviour
 
             currentState = State.Idle;
         }
-
-
     }
 
     void SetMove(InputAction.CallbackContext ctx)
@@ -165,15 +163,15 @@ public class Player_InputController : NetworkBehaviour
 
     public void PassAttackInput(ref Attack_Attribute attack, ref float attackTimer)
     {
-        /*
+
         if (currentState == State.Idle && attackController.GetCanAttack() && attackTimer > attack.coolDown)
         {
             anim.CrossFade(attack.nameOfAttack, 0.1f);
             attackController.ActivateAttack(attack, ref attackTimer);
             playerMovement.SetAbilitySlow(1 - attack.attackAbilitySlowPercentage);
-            if (attack.stopTurn) playerMovement.MovementDisabled(); 
+            if (attack.stopTurn) playerMovement.MovementDisabled();
         }
-        */
+
     }
 
     #endregion
