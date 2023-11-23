@@ -10,7 +10,6 @@ public class Player_InputController : NetworkBehaviour
     [SerializeField] private Camera cam;
     [SerializeField] private CameraFollowPoint camFollowPoint;
     private Animator anim;
-    Test_InputControls controls;
 
     // Scripts
     private Player_Movement playerMovement;
@@ -23,7 +22,6 @@ public class Player_InputController : NetworkBehaviour
 
     private void Awake()
     {
-
         Cursor.lockState = CursorLockMode.Confined;
 
         if (!cam) cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
@@ -31,30 +29,10 @@ public class Player_InputController : NetworkBehaviour
         if (!anim) anim = gameObject.GetComponentInChildren<Animator>();
         if (!playerMovement) playerMovement = gameObject.GetComponent<Player_Movement>();
         if (!attackController) attackController = gameObject.GetComponent<Player_AttackController>();
-        
     }
 
     private void Start()
     {
-/*        controls = new Test_InputControls();
-        controls.Test_Input.Enable();
-        controls.Test_Input.Move.performed += ctx => SetMove(ctx);
-        controls.Test_Input.Move.canceled += ctx => SetMove(ctx);
-        controls.Test_Input.Dash.performed += ctx => Dash(ctx);
-
-        controls.Test_Input.Block.performed += ctx => StartBlock(ctx);
-        controls.Test_Input.Block.canceled += ctx => EndBlock(ctx);
-
-        controls.Test_Input.Basic_Attack.performed += ctx => ActivateBasic(ctx);
-
-        controls.Test_Input.Special_Ability_1.performed += ctx => ActivateQ(ctx);
-        controls.Test_Input.Special_Ability_1.canceled += ctx => ActivateQCharge(ctx);
-
-        controls.Test_Input.Special_Ability_2.performed += ctx => ActivateE(ctx);
-        controls.Test_Input.Special_Ability_2.canceled += ctx => ActivateECharge(ctx);
-
-        controls.Test_Input.Toggle_Look_Ahead_Cam.performed += ctx => camFollowPoint.ToggleLookAheadCam();*/
-
         currentState = State.Priming;
 
         CinemachineVirtualCamera cinemachineVC = cam.GetComponentInChildren<CinemachineVirtualCamera>();
@@ -67,6 +45,7 @@ public class Player_InputController : NetworkBehaviour
         if (currentState != State.Dead)
         {
             Aim();
+            GetInput();
             if (playerMovement.GetCanMove()) Move();
 
             if (currentState != State.Priming) return;
@@ -75,10 +54,24 @@ public class Player_InputController : NetworkBehaviour
         }
     }
 
-    void SetMove(InputAction.CallbackContext ctx)
+    private void GetInput()
     {
-        inputDirection = ctx.action.ReadValue<Vector3>().normalized;
+        inputDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        
+        if (Input.GetKeyDown(KeyCode.Space)) Dash();
+
+        if (Input.GetMouseButtonDown(0)) ActivateBasic();
+
+        if (Input.GetKeyDown(KeyCode.Q)) PassAttackInput(ref attackController.qAttack, ref attackController.qAttackTimer);
+        if (Input.GetKeyDown(KeyCode.E)) PassAttackInput(ref attackController.eAttack, ref attackController.eAttackTimer);
+        // if (Input.GetKeyDown(KeyCode.R)) PassAttackINput(ref attackController.rAttack, ref attackCOntroller.rAttackTimer);       Use when ready
+
+        if (Input.GetMouseButtonDown(1)) StartBlock();
+        else if (Input.GetMouseButtonUp(1)) EndBlock();
+
+        if (Input.GetMouseButtonDown(2)) camFollowPoint.ToggleLookAheadCam();
     }
+
 
 #region <----- Move and Aim Function ----->
 
@@ -109,7 +102,7 @@ public class Player_InputController : NetworkBehaviour
 
 #region <----- Dash Function ----->
 
-    void Dash(InputAction.CallbackContext ctx)
+    void Dash()
     {
         if (inputDirection != Vector3.zero) playerMovement.ActivateMobilitySkill();
     }
@@ -118,48 +111,10 @@ public class Player_InputController : NetworkBehaviour
 
 #region <----- Attack Functions ----->
 
-    public void ActivateBasic(InputAction.CallbackContext ctx)
+    public void ActivateBasic()
     {
         PassAttackInput(ref attackController.basicAttack[attackController.attackCounter % attackController.basicAttack.Length], ref attackController.basicAttackTimer);
     }
-
-    #region <----- Special Abilities ----->
-
-    public void ActivateQ(InputAction.CallbackContext ctx)
-    {
-        PassAttackInput(ref attackController.qAttack, ref attackController.qAttackTimer);
-    }
-
-    public void ActivateQCharge(InputAction.CallbackContext ctx)
-    {
-        if (attackController.qAttack.canCharge) PassHoldDuration(ref attackController.qAttack, attackController.qAttackTimer);
-    }
-
-    public void ActivateE(InputAction.CallbackContext ctx)
-    {
-        PassAttackInput(ref attackController.eAttack, ref attackController.eAttackTimer);
-    }
-
-    public void ActivateECharge(InputAction.CallbackContext ctx)
-    {
-        if (attackController.eAttack.canCharge) PassHoldDuration(ref attackController.eAttack, attackController.eAttackTimer);
-    }
- 
-    public void PassHoldDuration(ref Attack_Attribute attack, float attackTimer)
-    {
-        if (currentState != State.Dead)
-        {
-            anim.CrossFade(attackController.qAttack.nameOfAttack + "_Release", 0.2f);
-            attackController.PassCharge(attackTimer);
-        }
-    }
-
-    public void HeldMaxDuration()
-    {
-        PassHoldDuration(ref attackController.currentAttack, 100);
-    }
-
-    #endregion
 
     public void PassAttackInput(ref Attack_Attribute attack, ref float attackTimer)
     {
@@ -178,7 +133,7 @@ public class Player_InputController : NetworkBehaviour
 
     #region <----- Block Functions ----->
 
-    void StartBlock(InputAction.CallbackContext ctx)
+    void StartBlock()
     {
         if (currentState != State.Block && playerMovement.GetCanMove() && attackController.GetCanAttack())     // Can only block when able to attack
         {
@@ -189,7 +144,7 @@ public class Player_InputController : NetworkBehaviour
         }
     }
 
-    void EndBlock(InputAction.CallbackContext ctx)
+    void EndBlock()
     {
         playerMovement.ResetAbilitySlow();
         if (currentState == State.Block) Invoke("ResetState", 0.2f);

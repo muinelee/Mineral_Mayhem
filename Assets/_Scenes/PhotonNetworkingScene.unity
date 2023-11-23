@@ -514,8 +514,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4210079a1a110ef42b53cbbd657d4300, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startHostButton: {fileID: 943012479}
-  startClientButton: {fileID: 684470727}
 --- !u!1001 &218968968
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1175,6 +1173,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7153496583213180026, guid: 720e6219b385cae478bf28464c571174, type: 3}
+      propertyPath: Flags
+      value: 2561
+      objectReference: {fileID: 0}
+    - target: {fileID: 7153496583213180026, guid: 720e6219b385cae478bf28464c571174, type: 3}
+      propertyPath: NetworkedBehaviours.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7153496583213180026, guid: 720e6219b385cae478bf28464c571174, type: 3}
+      propertyPath: NetworkedBehaviours.Array.data[0]
+      value: 
+      objectReference: {fileID: 642280780}
+    - target: {fileID: 7153496583213180026, guid: 720e6219b385cae478bf28464c571174, type: 3}
+      propertyPath: NetworkGuid.RawGuidValue.Array.data[0]
+      value: -7977469239483328673
+      objectReference: {fileID: 0}
+    - target: {fileID: 7153496583213180026, guid: 720e6219b385cae478bf28464c571174, type: 3}
+      propertyPath: NetworkGuid.RawGuidValue.Array.data[1]
+      value: 517536705534287274
+      objectReference: {fileID: 0}
     - target: {fileID: 8176208509690355021, guid: 720e6219b385cae478bf28464c571174, type: 3}
       propertyPath: m_Name
       value: NetworkAttackManager
@@ -1816,6 +1834,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &642280780 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2112734722286808319, guid: 720e6219b385cae478bf28464c571174, type: 3}
+  m_PrefabInstance: {fileID: 381272955}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f400dae98d99b994fba97f0b3981a0e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &684470725
 GameObject:
   m_ObjectHideFlags: 0
@@ -2216,33 +2245,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 593a2fe42fa9d37498c96f9a383b6521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunInBackground: 1
-  LogLevel: 1
-  NetworkConfig:
-    ProtocolVersion: 0
-    NetworkTransport: {fileID: 834328066}
-    PlayerPrefab: {fileID: 2325042064758100430, guid: 1bf738ec7de409740977bea70babddca, type: 3}
-    NetworkPrefabs:
-    - Override: 0
-      Prefab: {fileID: 4857867164193416124, guid: 95e941cf1b25f59469ba7bd6cf2b36a9, type: 3}
-      SourcePrefabToOverride: {fileID: 0}
-      SourceHashToOverride: 0
-      OverridingTargetPrefab: {fileID: 0}
-    TickRate: 30
-    ClientConnectionBufferTimeout: 10
-    ConnectionApproval: 0
-    ConnectionData: 
-    EnableTimeResync: 0
-    TimeResyncInterval: 30
-    EnsureNetworkVariableLengthSafety: 0
-    EnableSceneManagement: 1
-    ForceSamePrefabs: 1
-    RecycleNetworkIds: 1
-    NetworkIdRecycleDelay: 120
-    RpcHashSize: 0
-    LoadSceneTimeOut: 120
-    SpawnTimeout: 1
-    EnableNetworkLogs: 1
 --- !u!4 &834328065
 Transform:
   m_ObjectHideFlags: 0
@@ -2270,23 +2272,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ProtocolType: 0
-  m_UseWebSockets: 0
-  m_UseEncryption: 0
-  m_MaxPacketQueueSize: 128
-  m_MaxPayloadSize: 6144
-  m_HeartbeatTimeoutMS: 500
-  m_ConnectTimeoutMS: 1000
-  m_MaxConnectAttempts: 60
-  m_DisconnectTimeoutMS: 30000
-  ConnectionData:
-    Address: 127.0.0.1
-    Port: 7777
-    ServerListenAddress: 
-  DebugSimulator:
-    PacketDelayMS: 0
-    PacketJitterMS: 0
-    PacketDropRate: 0
 --- !u!43 &863594229
 Mesh:
   m_ObjectHideFlags: 0

@@ -46,11 +46,6 @@ public class Player_AttackController : NetworkBehaviour
         }
     }
 
-    public void PassCharge(float attackTimer)
-    {
-        currentAttack.TakeChargeDuration(attackTimer);
-    }
-
     public void AttacksEnabled()
     {
         canAttack = true;
