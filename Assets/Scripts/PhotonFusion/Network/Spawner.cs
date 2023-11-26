@@ -9,7 +9,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     public NetworkPlayer playerPrefab;
 
-    CharacterInputHandler characterInputHandler;
+    NetworkPlayer_InputController playerInputController;
 
     // Start is called before the first frame update
     void Start()
@@ -29,11 +29,11 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        if (characterInputHandler == null && NetworkPlayer.Local != null)
-            characterInputHandler = NetworkPlayer.Local.GetComponent<CharacterInputHandler>();
+        if (playerInputController == null && NetworkPlayer.Local != null)
+            playerInputController = NetworkPlayer.Local.GetComponent<NetworkPlayer_InputController>();
 
-        if (characterInputHandler != null)
-            input.Set(characterInputHandler.GetNetworkInput());
+        if (playerInputController != null)
+            input.Set(playerInputController.GetNetworkInput());
     }
 
     public void OnConnectedToServer(NetworkRunner runner) { Debug.Log("OnConnectedToServer"); }

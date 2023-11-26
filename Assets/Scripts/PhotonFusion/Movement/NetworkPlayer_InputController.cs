@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterInputHandler : MonoBehaviour
+public class NetworkPlayer_InputController : MonoBehaviour
 {
     Vector2 moveInputVector = Vector2.zero;
 

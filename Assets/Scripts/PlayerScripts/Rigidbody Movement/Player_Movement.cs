@@ -1,10 +1,11 @@
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player_Movement : MonoBehaviour
+public class Player_Movement : NetworkBehaviour
 {
-    [SerializeField] private Rigidbody rb;
+    [SerializeField] private NetworkRigidbody rb;
     [SerializeField] private CapsuleCollider cc;
     [SerializeField] private Mobility_Attributes ma;    // Scriptable Object from 'Mobility Attributes'                                                       
     [SerializeField] private float movSpd;
@@ -28,7 +29,7 @@ public class Player_Movement : MonoBehaviour
 
     private void Awake()
     {
-        if (!rb) rb = gameObject.GetComponent<Rigidbody>();
+        if (!rb) rb = gameObject.GetComponent<NetworkRigidbody>();
         if (!cc) cc = gameObject.GetComponent<CapsuleCollider>();
     }
 
@@ -37,14 +38,14 @@ public class Player_Movement : MonoBehaviour
         MobilitySkillTimer();
         if (abilitySlow != targetAbilitySlow) ApplyAbilitySlow();
 
-        rb.AddForce(Vector3.down * 9.81f * gravityScale, ForceMode.Force);
+        rb.Rigidbody.AddForce(Vector3.down * 9.81f * gravityScale, ForceMode.Force);
     }
 
-    private void FixedUpdate() 
+    public override void FixedUpdateNetwork()
     {
         // ----- Set normal movement ----- //
         if (canMove) Move();
-        else if (!canMove && dashActive) rb.AddForce(direction * movSpd * ma.spdIncrease, ForceMode.Impulse);   // player is using a dash ability
+        else if (!canMove && dashActive) rb.Rigidbody.AddForce(direction * movSpd * ma.spdIncrease, ForceMode.Impulse);   // player is using a dash ability
     }
 
 #region <----- Movement and Look function ----->
@@ -52,8 +53,8 @@ public class Player_Movement : MonoBehaviour
     private void Move()
     {
         LookAtDirection();
-        if (!dashActive) rb.MovePosition(transform.position + direction * movSpd * abilitySlow * statusEffectSlow * Time.deltaTime);                                     // Normal movement
-        else if (dashActive) rb.MovePosition(transform.position  +  direction * (movSpd + ma.spdIncrease) * abilitySlow * statusEffectSlow * Time.deltaTime);            // Speed buff mobility skills is active
+        if (!dashActive) rb.Rigidbody.MovePosition(transform.position + direction * movSpd * abilitySlow * statusEffectSlow * Time.deltaTime);                                     // Normal movement
+        else if (dashActive) rb.Rigidbody.MovePosition(transform.position  +  direction * (movSpd + ma.spdIncrease) * abilitySlow * statusEffectSlow * Time.deltaTime);            // Speed buff mobility skills is active
     }
 
     private void LookAtDirection()
@@ -102,7 +103,7 @@ public class Player_Movement : MonoBehaviour
             if (timer > ma.duration) 
             {
                 dashActive = false;
-                if (!canMove) rb.velocity = Vector3.zero;
+                if (!canMove) rb.Rigidbody.velocity = Vector3.zero;
                 canMove = true;
                 if (!cc.enabled) cc.enabled = true;
             }

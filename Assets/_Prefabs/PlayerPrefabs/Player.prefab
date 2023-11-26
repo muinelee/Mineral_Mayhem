@@ -766,6 +766,7 @@ GameObject:
   - component: {fileID: 1354829235088109865}
   - component: {fileID: 6549385512684466053}
   - component: {fileID: 2306860819257507601}
+  - component: {fileID: 5913084657862253200}
   m_Layer: 7
   m_Name: Player
   m_TagString: Participant
@@ -911,6 +912,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a2dffb68a694c34da4c003df71e8671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   rb: {fileID: 0}
   cc: {fileID: 0}
   ma: {fileID: 11400000, guid: f274753c150bd874eae7b864b55478ef, type: 2}
@@ -979,9 +981,39 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 7567705827589690153}
+  - {fileID: 8189946468831615977}
   - {fileID: 1354829235088109865}
   - {fileID: 6549385512684466053}
+  - {fileID: 5913084657862253200}
   SimulationBehaviours: []
+--- !u!114 &5913084657862253200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2325042064758100430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1710889294, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  InterpolationSpace: 0
+  InterpolationTarget: {fileID: 4482721321737489052}
+  InterpolateErrorCorrection: 1
+  InterpolatedErrorCorrectionSettings:
+    MinRate: 3.3
+    MaxRate: 10
+    PosBlendStart: 0.25
+    PosBlendEnd: 1
+    PosMinCorrection: 0.025
+    PosTeleportDistance: 2
+    RotBlendStart: 0.1
+    RotBlendEnd: 0.5
+    RotTeleportRadians: 1.5
+  UseLegacySharedModeInterpolation: 0
+  TargetInterpolationDelay: 0.03
 --- !u!1 &2349310247255981325
 GameObject:
   m_ObjectHideFlags: 0

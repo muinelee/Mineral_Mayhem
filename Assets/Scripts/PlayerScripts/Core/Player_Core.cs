@@ -33,8 +33,8 @@ public class Player_Core : MonoBehaviour
         if (!cc1) Debug.Log("Capsule Collider 1 not seen in Player_Core");
         if (!cc2) Debug.Log("Capsule Collider 2 not seen in Player_Core");
 
-        playerStats.maxHP = heroMaxHP;
-        playerStats.currentHP = heroMaxHP;
+        //playerStats.maxHP = heroMaxHP;
+       // playerStats.currentHP = heroMaxHP;
     }
 
 
@@ -101,7 +101,6 @@ public class Player_Core : MonoBehaviour
 
     public void Death()
     {
-        Debug.Log("The Player has Dieded");
         cc1.enabled = false;
         cc2.enabled = false;
         rb.isKinematic = true;
@@ -112,7 +111,6 @@ public class Player_Core : MonoBehaviour
 
     void PlayerDieded()
     {
-        Debug.Log("Player has dieded");
         SceneManager.LoadScene("GameOver");
     }
 }
