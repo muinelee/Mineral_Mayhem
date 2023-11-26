@@ -45,7 +45,7 @@ public class Player_Movement : NetworkBehaviour
     {
         // ----- Set normal movement ----- //
         if (canMove) Move();
-        else if (!canMove && dashActive) rb.Rigidbody.AddForce(direction * movSpd * ma.spdIncrease, ForceMode.Impulse);   // player is using a dash ability
+        else if (!canMove && dashActive) rb.Rigidbody.AddForce(direction * movSpd * ma.spdIncrease * Time.deltaTime, ForceMode.Impulse);   // player is using a dash ability
     }
 
 #region <----- Movement and Look function ----->

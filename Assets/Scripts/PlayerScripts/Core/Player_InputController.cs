@@ -15,7 +15,7 @@ public class Player_InputController : NetworkBehaviour
     // Scripts
     private Player_Movement playerMovement;
     public Player_AttackController attackController;
-    private Vector3 inputDirection;
+    private Vector3 moveDirection;
     private Vector3 lookDirection;
 
     private enum State { Priming, Idle, Run, Attack, Reacting, Block, Dead, Charge};
@@ -57,7 +57,7 @@ public class Player_InputController : NetworkBehaviour
 
     private void GetInput()
     {
-        inputDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         
         if (Input.GetKeyDown(KeyCode.Space)) Dash();
 
@@ -88,13 +88,13 @@ public class Player_InputController : NetworkBehaviour
 
     void Move()
     {
-        playerMovement.SetDirection(inputDirection);
+        playerMovement.SetDirection(moveDirection);
         Vector3 perpendicularMovement = new Vector3(lookDirection.z, 0, -lookDirection.x);              // Perpendicular vector in 2D space
-        float horizontalMovement = Vector3.Dot(inputDirection, perpendicularMovement);                   // Dot product to get horizontal direction
+        float horizontalMovement = Vector3.Dot(moveDirection, perpendicularMovement);                   // Dot product to get horizontal direction
 
         if (playerMovement.GetCanMove())
         {
-            anim.SetFloat("Zaxis", Vector3.Dot(inputDirection,lookDirection), 0.2f, Time.deltaTime);     // Use Dot product to determine forward move direction relevant to look direction
+            anim.SetFloat("Zaxis", Vector3.Dot(moveDirection,lookDirection), 0.2f, Time.deltaTime);     // Use Dot product to determine forward move direction relevant to look direction
             anim.SetFloat("Xaxis", horizontalMovement, 0.2f, Time.deltaTime);
         }
     }
@@ -105,7 +105,7 @@ public class Player_InputController : NetworkBehaviour
 
     void Dash()
     {
-        if (inputDirection != Vector3.zero) playerMovement.ActivateMobilitySkill();
+        if (moveDirection != Vector3.zero) playerMovement.ActivateMobilitySkill();
     }
 
 #endregion
@@ -169,5 +169,15 @@ public class Player_InputController : NetworkBehaviour
         playerMovement.SetDirection(Vector3.zero);
         currentState = State.Dead;
         anim.CrossFade("Death", 0.3f);
+    }
+
+    public NetworkInputData GetNetworkInput()
+    {
+        NetworkInputData networkInputData = new NetworkInputData();
+
+        networkInputData.moveDirection = moveDirection;
+        networkInputData.lookDirection = lookDirection;
+
+        return networkInputData;
     }
 }
