@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Fusion.Sockets;
 
 public class Player_InputController : NetworkBehaviour
 {

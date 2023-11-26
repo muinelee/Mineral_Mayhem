@@ -9,13 +9,13 @@ public class CameraFollowPoint : MonoBehaviour
     */
 
     private bool lookAheadMode = false;
-    private Transform target;
+    [SerializeField] private Transform target;
 
     [Header("Camera Offset properties")]
     [SerializeField] private float maxCameraOffset;
     [SerializeField] private float cameraOffsetTransitionTime;
 
-    private void Start() 
+    private void Awake() 
     {
         target = transform.parent.transform;
         transform.parent = null;
