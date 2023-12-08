@@ -7,11 +7,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
     public static NetworkPlayer Local { get; private set; }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     public override void Spawned()
     {

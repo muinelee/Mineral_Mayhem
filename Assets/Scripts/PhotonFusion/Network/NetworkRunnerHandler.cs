@@ -14,7 +14,6 @@ public class NetworkRunnerHandler : MonoBehaviour
 
     NetworkRunner networkRunner;
 
-    // Start is called before the first frame update
     void Start()
     {
         networkRunner = Instantiate(networkRunnerPrefab);
