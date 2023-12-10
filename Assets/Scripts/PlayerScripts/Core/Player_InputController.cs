@@ -176,7 +176,7 @@ public class Player_InputController : NetworkBehaviour
         NetworkInputData networkInputData = new NetworkInputData();
 
         networkInputData.moveDirection = moveDirection;
-        networkInputData.lookDirection = lookDirection;
+    //    networkInputData.lookDirection = transform.rotation.y;
 
         return networkInputData;
     }

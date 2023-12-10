@@ -5,9 +5,9 @@ using Fusion;
 
 public struct NetworkInputData : INetworkInput
 {
-    public Vector3 moveDirection;
-    public Vector3 lookDirection;
-    public bool isDashing;
-    public bool isQAttack;
-    public bool isEAttack;
+    public Vector2 moveDirection;
+    public float lookDirection;
+    public NetworkBool isDashing;
+    public NetworkBool isQAttack;
+    public NetworkBool isEAttack;
 }
