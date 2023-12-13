@@ -8,33 +8,26 @@ using UnityEngine;
 public class NetworkPlayer_InputController : NetworkBehaviour
 {
     private Vector2 moveInputVector = Vector2.zero;
+    private float lookDirection;
     private bool isDashPressed = false;
     private bool isQPressed = false;
     private bool isEPressed = false;
 
-    [SerializeField] private NetworkPlayer_Movement playerMovement;
     private Camera cam;
-    public CameraFollowPoint camFollowPoint;
 
-    private void Awake()
-    {
-        playerMovement = GetComponent<NetworkPlayer_Movement>();
-        cam = FindAnyObjectByType<Camera>();
-    }
+    private float turnSmoothVel;
+    [SerializeField][Range(0.2f, 1f)] private float turnTime;
 
     private void Update()
     {
-        if (NetworkPlayer.isLocal)
-        {
-            moveInputVector.x = Input.GetAxis("Horizontal");
-            moveInputVector.y = Input.GetAxis("Vertical");
+        moveInputVector.x = Input.GetAxis("Horizontal");
+        moveInputVector.y = Input.GetAxis("Vertical");
 
-            isDashPressed = Input.GetKeyDown(KeyCode.Space);
-            isQPressed = Input.GetKeyDown(KeyCode.Q);
-            isEPressed = Input.GetKeyDown(KeyCode.E);
+        isDashPressed = Input.GetKeyDown(KeyCode.Space);
+        isQPressed = Input.GetKeyDown(KeyCode.Q);
+        isEPressed = Input.GetKeyDown(KeyCode.E);
 
-            Aim();
-        }
+        if (Object.HasInputAuthority) Aim();
     }
 
     public NetworkInputData GetNetworkInput()
@@ -43,7 +36,7 @@ public class NetworkPlayer_InputController : NetworkBehaviour
 
         networkInputData.moveDirection = moveInputVector.normalized;
 
-        networkInputData.lookDirection = transform.rotation.y;
+        networkInputData.lookDirection = lookDirection;
 
         networkInputData.isDashing = isDashPressed;
         networkInputData.isQAttack = isQPressed;
@@ -56,13 +49,16 @@ public class NetworkPlayer_InputController : NetworkBehaviour
     {
         if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out RaycastHit raycastHit))
         {
-            Vector3 lookDirection = (raycastHit.point - transform.position).normalized;
-
-            // Move Camera Follow point to proper position
-            //camFollowPoint.PassCursorPosition(raycastHit.point);
+            Vector3 targetDirection = (raycastHit.point - transform.position).normalized;
 
             // Rotate player using the networkplayer_movement
-            playerMovement.SetLookDirection(lookDirection);
+            float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
+            lookDirection = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime);
         }
-   }
+    }
+
+    public void SetCam(Camera camera)
+    {
+        cam = camera;
+    }
 }
