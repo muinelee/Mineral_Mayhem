@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5589622251466101637}
   - component: {fileID: 8986336812292418098}
   - component: {fileID: 2430217939546453825}
+  - component: {fileID: 7827230098480810277}
   m_Layer: 0
   m_Name: PhotonPlayerPrefab
   m_TagString: Untagged
@@ -52,7 +53,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  camPrefab: {fileID: 3964539747024617936, guid: 7e2e97bf6d812224ab18a404004be672, type: 3}
 --- !u!114 &8768662430847072064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,6 +79,7 @@ MonoBehaviour:
   - {fileID: 5589622251466101637}
   - {fileID: 8986336812292418098}
   - {fileID: 2430217939546453825}
+  - {fileID: 7827230098480810277}
   SimulationBehaviours: []
 --- !u!135 &569291861852959994
 SphereCollider:
@@ -169,6 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  turnTime: 0.01
 --- !u!114 &2430217939546453825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,8 +186,23 @@ MonoBehaviour:
   _interpolationDataSource: 0
   networkRigidBody: {fileID: 5589622251466101637}
   moveSpeed: 15
-  cam: {fileID: 0}
-  turnTime: 0
+--- !u!114 &7827230098480810277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593386485324816745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04b2834c711f85c46af8012f7d49bad4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  qAttackPrefab: {fileID: 8866796779995447616, guid: 5ec8d68097cc4d14989a1eba3bb102e4, type: 3}
+  qAttackCoolDown: 0
+  eAttack: {fileID: 0}
+  eAttackCoolDown: 0
 --- !u!1 &939947111739340818
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,16 +16,16 @@ public class NetworkPlayer_InputController : NetworkBehaviour
     private Camera cam;
 
     private float turnSmoothVel;
-    [SerializeField][Range(0.2f, 1f)] private float turnTime;
+    [SerializeField][Range(0.01f, 1f)] private float turnTime;
 
     private void Update()
     {
         moveInputVector.x = Input.GetAxis("Horizontal");
         moveInputVector.y = Input.GetAxis("Vertical");
 
-        isDashPressed = Input.GetKeyDown(KeyCode.Space);
-        isQPressed = Input.GetKeyDown(KeyCode.Q);
-        isEPressed = Input.GetKeyDown(KeyCode.E);
+        if (Input.GetKeyDown(KeyCode.Space)) isDashPressed = true;
+        if (Input.GetKeyDown(KeyCode.Q)) isQPressed = true;
+        if (Input.GetKeyDown(KeyCode.E)) isEPressed = true;
 
         if (Object.HasInputAuthority) Aim();
     }
@@ -41,6 +41,11 @@ public class NetworkPlayer_InputController : NetworkBehaviour
         networkInputData.isDashing = isDashPressed;
         networkInputData.isQAttack = isQPressed;
         networkInputData.isEAttack = isEPressed;
+
+        // reset ability triggers since data has been passed
+        isDashPressed = false;
+        isQPressed = false;
+        isEPressed = false;
 
         return networkInputData;
     }
