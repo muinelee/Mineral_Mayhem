@@ -20,6 +20,8 @@ public class NetworkPlayer_InputController : NetworkBehaviour
 
     private void Update()
     {
+        if (!Object.HasInputAuthority) return;
+
         moveInputVector.x = Input.GetAxis("Horizontal");
         moveInputVector.y = Input.GetAxis("Vertical");
 

@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5753180243211217106}
   - component: {fileID: 6637283189777839560}
-  - component: {fileID: 647560169748848111}
   - component: {fileID: -5875406894911467557}
+  - component: {fileID: 647560169748848111}
   m_Layer: 0
   m_Name: PlaceholderAttack
   m_TagString: Untagged
@@ -58,26 +58,9 @@ MonoBehaviour:
   NestedObjects:
   - {fileID: 4800340078178701569}
   NetworkedBehaviours:
-  - {fileID: 647560169748848111}
   - {fileID: -5875406894911467557}
+  - {fileID: 647560169748848111}
   SimulationBehaviours: []
---- !u!114 &647560169748848111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4462330325895038277}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 676319929e35a214b9c6ebcd60713159, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  attackName: Placeholder attack
-  attackDescription: Placeholder description
-  damage: 12
-  lifetimeDuration: 2
 --- !u!114 &-5875406894911467557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,6 +89,29 @@ MonoBehaviour:
     RotTeleportRadians: 1.5
   UseLegacySharedModeInterpolation: 0
   TargetInterpolationDelay: 0.03
+--- !u!114 &647560169748848111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4462330325895038277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 676319929e35a214b9c6ebcd60713159, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  attackName: Placeholder attack
+  attackDescription: Placeholder description
+  damage: 12
+  sfx: {fileID: 0}
+  lifetimeDuration: 2
+  offset: 3
+  radius: 1
+  collisionLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1001 &2224742402993255947
 PrefabInstance:
   m_ObjectHideFlags: 0
