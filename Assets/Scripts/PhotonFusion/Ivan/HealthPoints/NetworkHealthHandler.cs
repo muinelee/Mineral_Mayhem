@@ -6,14 +6,14 @@ using Fusion;
 public class NetworkHealthHandler : NetworkBehaviour
 {
     [Networked(OnChanged = nameof(OnHPChanged))]
-    byte HP { get; set; }
+    public int HP { get; set; }
 
     [Networked(OnChanged = nameof(OnStateChanged))]
     public bool isDead { get; set; }
 
     bool isInitialized = false;
 
-    const byte startingHP = 5;
+    const int startingHP = 100;
 
     // Start is called before the first frame update
     void Start()
@@ -23,14 +23,14 @@ public class NetworkHealthHandler : NetworkBehaviour
     }
 
     // Function only called on the server
-    public void OnTakeDamage()
+    public void OnTakeDamage(int damageAmount)
     {
         if (isDead)
         {
             return;
         }
 
-        HP -= 1;
+        HP -= damageAmount;
 
         Debug.Log($"{Time.time} {transform.name} took damage and has {HP} HP left");
 

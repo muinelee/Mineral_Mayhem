@@ -13,7 +13,7 @@ public class NetworkAttack_Base : NetworkBehaviour
     public string attackDescription;
 
     [Header("Damage")]
-    [SerializeField] private string damage;
+    [SerializeField] protected int damage;
 
     [Header("SFX")]
     [SerializeField] private AudioClip sfx;
