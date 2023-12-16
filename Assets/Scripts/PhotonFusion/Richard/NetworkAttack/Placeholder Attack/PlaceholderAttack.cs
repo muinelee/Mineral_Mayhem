@@ -1,6 +1,7 @@
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlaceholderAttack : NetworkAttack_Base
@@ -11,23 +12,50 @@ public class PlaceholderAttack : NetworkAttack_Base
         Spawn an attack in front of the player and produce a particle effect.
         Get the objects in area of attack and (temporary) display object network ID
     */
+
+    // Variables to destroy this gameobject
     [SerializeField] private float lifetimeDuration;
     private TickTimer timer = TickTimer.None;
 
+    // Forward offset during spawn
+    [SerializeField] private float offset;
+
+    // Components for getting objects in attack range
+    [SerializeField] private float radius;
+    List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
+    [SerializeField] private LayerMask collisionLayer;
+
     public override void Spawned()
     {
+        if (!Object.HasStateAuthority) return;
+
+        DealDamage();
         timer = TickTimer.CreateFromSeconds(Runner, lifetimeDuration);
+        transform.position += transform.forward * offset;
     }
 
     public override void FixedUpdateNetwork()
     {
         if (Object.HasStateAuthority)
         {
+
             if (timer.Expired(Runner))
             {
                 timer = TickTimer.None;
                 Runner.Despawn(GetComponent<NetworkObject>());
             }
         }
+    }
+
+    private void DealDamage()
+    {
+        Runner.LagCompensation.OverlapSphere(transform.position, radius, Object.InputAuthority, hits, collisionLayer, HitOptions.IncludePhysX);
+
+        for (int i = 0; i < hits.Count; i++)
+        {
+            Debug.Log(hits[i].GameObject.transform.name);
+        }
+
+        Debug.Log($"The size of the hit list is  {hits.Count}");
     }
 }
