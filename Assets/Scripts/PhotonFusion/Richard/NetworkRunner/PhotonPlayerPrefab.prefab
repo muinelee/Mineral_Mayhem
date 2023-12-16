@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 8986336812292418098}
   - component: {fileID: 2430217939546453825}
   - component: {fileID: 7827230098480810277}
+  - component: {fileID: 6903174612733432645}
+
   m_Layer: 7
   m_Name: PhotonPlayerPrefab
   m_TagString: Untagged
@@ -80,6 +82,7 @@ MonoBehaviour:
   - {fileID: 8986336812292418098}
   - {fileID: 2430217939546453825}
   - {fileID: 7827230098480810277}
+  - {fileID: 6903174612733432645}
   SimulationBehaviours: []
 --- !u!135 &569291861852959994
 SphereCollider:
@@ -203,6 +206,20 @@ MonoBehaviour:
   qAttackCoolDown: 0
   eAttack: {fileID: 0}
   eAttackCoolDown: 0
+--- !u!114 &6903174612733432645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593386485324816745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d1e92efa2ce3264a87bbc5490a293f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  _isDead: 0
 --- !u!1 &939947111739340818
 GameObject:
   m_ObjectHideFlags: 0
