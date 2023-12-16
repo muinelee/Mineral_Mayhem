@@ -57,5 +57,15 @@ public class PlaceholderAttack : NetworkAttack_Base
         }
 
         Debug.Log($"The size of the hit list is  {hits.Count}");
+
+        foreach (var hit in hits)
+        {
+            var healthHandler = hit.GameObject.GetComponent<NetworkHealthHandler>();
+
+            if (healthHandler != null)
+            {
+                healthHandler.OnTakeDamage(damage);
+            }
+        }
     }
 }
