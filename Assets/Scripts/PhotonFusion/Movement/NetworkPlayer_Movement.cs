@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class NetworkPlayer_Movement : NetworkBehaviour
 {
-    [Header("Rigidbody Component")]
-    [SerializeField] private NetworkRigidbody networkRigidBody;
     
     [Header("Movement properties")]
     [SerializeField] private float moveSpeed;
@@ -17,30 +15,25 @@ public class NetworkPlayer_Movement : NetworkBehaviour
     private Vector3 targetDirection;
     public bool canMove;
 
-    // Other Components
+    // Components Set OnSpawn in NetworkPlayer Script
     private Animator anim;
-
-    void Start()
-    {
-        anim = GetComponentInChildren<Animator>();
-    }
+    private NetworkRigidbody networkRigidBody;
 
     public override void FixedUpdateNetwork()
     {
         if (GetInput(out NetworkInputData networkInputData))
         {
-            networkRigidBody.Rigidbody.AddForce(networkInputData.moveDirection * moveSpeed);
-            // Set direction player is looking
+            // Set direction player is looking at
             targetDirection = (networkInputData.cursorLocation - transform.position).normalized;
 
             // Rotate
             Aim();
 
             // Move
+            networkRigidBody.Rigidbody.AddForce(networkInputData.moveDirection * moveSpeed);
 
             // Play movement animation
             PlayMovementAnimation(networkInputData.moveDirection);
-
         }
     }
 
@@ -66,5 +59,10 @@ public class NetworkPlayer_Movement : NetworkBehaviour
     public void SetAnimator(Animator animator)
     {
         anim = animator;
+    }
+
+    public void SetNetworkRigidbody(NetworkRigidbody networkRb)
+    {
+        networkRigidBody = networkRb;
     }
 }
