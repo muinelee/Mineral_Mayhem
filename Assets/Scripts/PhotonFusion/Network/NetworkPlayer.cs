@@ -23,6 +23,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             Debug.Log("Camera made to target local player");
 
             GetComponent<NetworkPlayer_InputController>().SetCam(FindAnyObjectByType<Camera>());
+
+            Debug.Log("Set Camera for local player");
+
+            GetComponent<NetworkPlayer_Movement>().SetAnimator(GetComponentInChildren<Animator>());
+
+            Debug.Log("Set Animator for local player's movement script");
         }
 
         else

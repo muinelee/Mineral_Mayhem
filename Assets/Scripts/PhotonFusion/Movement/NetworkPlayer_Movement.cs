@@ -6,21 +6,65 @@ using UnityEngine;
 
 public class NetworkPlayer_Movement : NetworkBehaviour
 {
+    [Header("Rigidbody Component")]
     [SerializeField] private NetworkRigidbody networkRigidBody;
+    
+    [Header("Movement properties")]
     [SerializeField] private float moveSpeed;
+    [SerializeField] private float turnTime;
+    private float turnSmoothVel;
 
-    // Start is called before the first frame update
+    private Vector3 targetDirection;
+    public bool canMove;
+
+    // Other Components
+    private Animator anim;
+
     void Start()
     {
-        networkRigidBody = GetComponent<NetworkRigidbody>();
+        anim = GetComponentInChildren<Animator>();
     }
 
     public override void FixedUpdateNetwork()
     {
         if (GetInput(out NetworkInputData networkInputData))
         {
-            networkRigidBody.Rigidbody.AddForce((Vector3.right * networkInputData.moveDirection.x + Vector3.forward * networkInputData.moveDirection.y) * moveSpeed);
-            transform.rotation = Quaternion.Euler(Vector3.up * networkInputData.lookDirection);
+            networkRigidBody.Rigidbody.AddForce(networkInputData.moveDirection * moveSpeed);
+            // Set direction player is looking
+            targetDirection = (networkInputData.cursorLocation - transform.position).normalized;
+
+            // Rotate
+            Aim();
+
+            // Move
+
+            // Play movement animation
+            PlayMovementAnimation(networkInputData.moveDirection);
+
         }
+    }
+
+    private void Aim()
+    {
+        {
+            // Rotate player using the networkplayer_movement
+            float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime);
+            transform.rotation = Quaternion.Euler(0, angle, 0);
+        }
+    }
+
+    private void PlayMovementAnimation(Vector3 moveDirection)
+    {
+        Vector3 perpendicularMovement = new Vector3(targetDirection.z, 0, -targetDirection.x);              // Perpendicular vector in 2D space
+        float horizontalMovement = Vector3.Dot(moveDirection, perpendicularMovement);                       // Dot product to get horizontal direction
+
+        anim.SetFloat("Zaxis", Vector3.Dot(moveDirection, targetDirection), 0.2f, Runner.DeltaTime);     // Use Dot product to determine forward move direction relevant to look direction
+        anim.SetFloat("Xaxis", horizontalMovement, 0.2f, Runner.DeltaTime);
+    }
+
+    public void SetAnimator(Animator animator)
+    {
+        anim = animator;
     }
 }

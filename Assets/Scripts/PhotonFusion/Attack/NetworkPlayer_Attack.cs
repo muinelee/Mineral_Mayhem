@@ -5,7 +5,8 @@ using Fusion;
 
 public class NetworkPlayer_Attack : NetworkBehaviour
 {
-    PlayerRef playerRef;
+    // Control variables
+    private bool canAttack = false;
 
     [Header("Q Attack Properties")]
     private NetworkObject qAttack;
@@ -24,8 +25,13 @@ public class NetworkPlayer_Attack : NetworkBehaviour
         {
             if (networkInputData.isQAttack && !qAttack)
             {
-                qAttack = Runner.Spawn(qAttackPrefab, transform.position + Vector3.up, Quaternion.Euler(Vector3.up * networkInputData.lookDirection), Object.InputAuthority);
+                qAttack = Runner.Spawn(qAttackPrefab, transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
             }
         }
+    }
+
+    public bool GetCanAttack()
+    {
+        return canAttack;
     }
 }
