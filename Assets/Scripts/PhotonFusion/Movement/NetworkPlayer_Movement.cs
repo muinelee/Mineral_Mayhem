@@ -102,7 +102,7 @@ public class NetworkPlayer_Movement : NetworkBehaviour
         if (dashDurationTimer.Expired(Runner))
         {
             dashSpeed = 0;
-            if (dashAbility) networkRigidBody.Rigidbody.velocity = Vector3.zero;
+            if (dashAbility) networkRigidBody.Rigidbody.velocity *= 0.2f;
             isDashing = false;
             dashDurationTimer = TickTimer.None;
         }
