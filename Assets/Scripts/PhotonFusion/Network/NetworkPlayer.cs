@@ -25,17 +25,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             GetComponent<NetworkPlayer_InputController>().SetCam(FindAnyObjectByType<Camera>());
 
             Debug.Log("Set Camera for local player");
-
-
-            // NetworkPlayer_Movement components
-
-            NetworkPlayer_Movement playerMovement = GetComponent<NetworkPlayer_Movement>();
-
-            playerMovement.SetNetworkRigidbody(GetComponent<NetworkRigidbody>());
-
-            playerMovement.SetAnimator(GetComponentInChildren<Animator>());
-
-            Debug.Log("Set Network Rigidbody and Animator for local player's movement script");
         }
 
         else
