@@ -84,6 +84,7 @@ MonoBehaviour:
   - {fileID: 7827230098480810277}
   - {fileID: 6903174612733432645}
   - {fileID: 2098500895633039834}
+  - {fileID: 779764453492850429}
   SimulationBehaviours: []
 --- !u!135 &569291861852959994
 SphereCollider:
@@ -214,6 +215,7 @@ MonoBehaviour:
   qAttackCoolDown: 0
   eAttack: {fileID: 0}
   eAttackCoolDown: 0
+  anim: {fileID: 0}
 --- !u!114 &6903174612733432645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -318,6 +320,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0f107ae103619b647902efb1b0fa6235, type: 3}
       insertIndex: -1
       addedObject: {fileID: 240942584216921724}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0f107ae103619b647902efb1b0fa6235, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 779764453492850429}
   m_SourcePrefab: {fileID: 100100000, guid: 0f107ae103619b647902efb1b0fa6235, type: 3}
 --- !u!1 &8549805724308872582 stripped
 GameObject:
@@ -345,6 +350,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &779764453492850429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8549805724308872582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5827dcaff5fa364eabfe19e9715ee0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
 --- !u!4 &9073860091152189244 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0f107ae103619b647902efb1b0fa6235, type: 3}

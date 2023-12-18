@@ -19,13 +19,22 @@ public class NetworkPlayer_Attack : NetworkBehaviour
     [SerializeField] private float eAttackCoolDown;
     private float eAttackTimer;
 
+    //Components
+    [SerializeField] private Animator anim;
+
+    public override void Spawned()
+    {
+        if (!anim) anim = GetComponentInChildren<Animator>();
+    }
+
     public override void FixedUpdateNetwork()
     {
         if (GetInput(out NetworkInputData networkInputData))
         {
-            if (networkInputData.isQAttack && !qAttack)
+            if (networkInputData.isQAttack && !qAttack && !anim.GetBool("isAttacking"))
             {
-                qAttack = Runner.Spawn(qAttackPrefab, transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+                anim.SetBool("isAttacking", true);
+                anim.CrossFade(qAttackPrefab.GetComponent<NetworkAttack_Base>().attackName, 0.2f);
             }
         }
     }
@@ -33,5 +42,10 @@ public class NetworkPlayer_Attack : NetworkBehaviour
     public bool GetCanAttack()
     {
         return canAttack;
+    }
+
+    public void FireQAttack()
+    {
+        qAttack = Runner.Spawn(qAttackPrefab, transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
     }
 }

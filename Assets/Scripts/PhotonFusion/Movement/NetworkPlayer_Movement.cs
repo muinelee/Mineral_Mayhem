@@ -38,7 +38,7 @@ public class NetworkPlayer_Movement : NetworkBehaviour
     {
         if (GetInput(out NetworkInputData networkInputData))
         {
-            if (canMove && !isDashing)
+            if (canMove && !isDashing && !anim.GetBool("isAttacking"))
             {
                 // Set direction player is looking at
                 targetDirection = (networkInputData.cursorLocation - transform.position).normalized;
