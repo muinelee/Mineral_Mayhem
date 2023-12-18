@@ -10,17 +10,19 @@ public class NetworkPlayer_Movement : NetworkBehaviour
     [Header("Movement properties")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float turnTime;
-    public bool canMove;
+    public bool canMove = true;
     private Vector3 targetDirection;
     private float dashSpeed = 0;
     private float turnSmoothVel;
 
     [Header("Dash Properties")]
+    [SerializeField] private bool dashAbility;             // is true if dash, or false if it's a boost
     [SerializeField] private float dashValue;
     [SerializeField] private float dashCoolDown;
     [SerializeField] private float dashDuration;
     private TickTimer dashCoolDownTimer = TickTimer.None;
     private TickTimer dashDurationTimer = TickTimer.None;
+    private bool isDashing = false;
 
     // Components to be retrieved when Spawned
     [SerializeField] private Animator anim;
@@ -36,20 +38,23 @@ public class NetworkPlayer_Movement : NetworkBehaviour
     {
         if (GetInput(out NetworkInputData networkInputData))
         {
-            // Set direction player is looking at
-            targetDirection = (networkInputData.cursorLocation - transform.position).normalized;
+            if (canMove && !isDashing)
+            {
+                // Set direction player is looking at
+                targetDirection = (networkInputData.cursorLocation - transform.position).normalized;
 
-            // Rotate
-            Aim();
+                // Rotate
+                Aim();
 
-            // Move
-            networkRigidBody.Rigidbody.AddForce(networkInputData.moveDirection * (moveSpeed + dashSpeed));
+                // Move
+                networkRigidBody.Rigidbody.AddForce(networkInputData.moveDirection * (moveSpeed + dashSpeed));
 
-            // Dash (Can be a boost or buff)
-            if (networkInputData.isDashing) Dash();
+                // Dash (Can be a boost or buff)
+                if (networkInputData.isDashing) MobilityAbility(networkInputData.moveDirection);
 
-            // Play movement animation
-            PlayMovementAnimation(networkInputData.moveDirection);
+                // Play movement animation
+                PlayMovementAnimation(networkInputData.moveDirection);
+            }
 
             // Manage Timers and ability effects
             ManageTimers();
@@ -66,14 +71,20 @@ public class NetworkPlayer_Movement : NetworkBehaviour
         }
     }
 
-    private void Dash()
+    private void MobilityAbility(Vector3 moveDirection)
     {
         if (dashCoolDownTimer.IsRunning) return;
 
+        if (dashAbility)
+        {
+            networkRigidBody.Rigidbody.velocity = moveDirection * dashValue;
+            isDashing = true;
+        }
+
+        else dashSpeed = dashValue;
+
         dashCoolDownTimer = TickTimer.CreateFromSeconds(Runner, dashCoolDown);
         dashDurationTimer = TickTimer.CreateFromSeconds(Runner, dashDuration);
-
-        dashSpeed = dashValue;
     }
 
     private void PlayMovementAnimation(Vector3 moveDirection)
@@ -91,6 +102,8 @@ public class NetworkPlayer_Movement : NetworkBehaviour
         if (dashDurationTimer.Expired(Runner))
         {
             dashSpeed = 0;
+            if (dashAbility) networkRigidBody.Rigidbody.velocity = Vector3.zero;
+            isDashing = false;
             dashDurationTimer = TickTimer.None;
         }
     }
