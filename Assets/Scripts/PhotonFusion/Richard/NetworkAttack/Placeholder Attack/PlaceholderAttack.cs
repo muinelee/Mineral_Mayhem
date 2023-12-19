@@ -49,11 +49,11 @@ public class PlaceholderAttack : NetworkAttack_Base
 
     private void DealDamage()
     {
-        Runner.LagCompensation.OverlapSphere(transform.position, radius, Object.InputAuthority, hits, collisionLayer, HitOptions.IncludePhysX);
+        Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
 
         for (int i = 0; i < hits.Count; i++)
         {
-            Debug.Log(hits[i].GameObject.transform.name);
+            Debug.Log($"We hit {hits[i].GameObject.transform.name} and their ID is {hits[i].GameObject.GetComponent<NetworkObject>().HasStateAuthority}");
         }
 
         Debug.Log($"The size of the hit list is  {hits.Count}");
@@ -62,7 +62,7 @@ public class PlaceholderAttack : NetworkAttack_Base
         {
             var healthHandler = hit.GameObject.GetComponent<NetworkHealthHandler>();
 
-            if (healthHandler != null)
+            if (healthHandler != null || !hit.GameObject.GetComponent<NetworkObject>().HasInputAuthority)
             {
                 healthHandler.OnTakeDamage(damage);
             }

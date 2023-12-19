@@ -9,15 +9,12 @@ public class NetworkPlayer_Attack : NetworkBehaviour
     private bool canAttack = false;
 
     [Header("Q Attack Properties")]
-    private NetworkObject qAttack;
-    [SerializeField] private NetworkObject qAttackPrefab;
-    [SerializeField] private float qAttackCoolDown;
-    private float qAttackTimer;
+    [SerializeField] private SO_NetworkAttack qAttack;
+    private TickTimer qAttackCoolDownTimer;
 
     [Header("E Attack Properties")]
-    [SerializeField] private GameObject eAttack;
-    [SerializeField] private float eAttackCoolDown;
-    private float eAttackTimer;
+    [SerializeField] private SO_NetworkAttack eAttack;
+    private TickTimer eAttackCoolDownTimer;
 
     //Components
     [SerializeField] private Animator anim;
@@ -29,14 +26,26 @@ public class NetworkPlayer_Attack : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputData networkInputData))
+        if (GetInput(out NetworkInputData networkInputData) && !anim.GetBool("isAttacking"))
         {
-            if (networkInputData.isQAttack && !qAttack && !anim.GetBool("isAttacking"))
-            {
-                anim.SetBool("isAttacking", true);
-                anim.CrossFade(qAttackPrefab.GetComponent<NetworkAttack_Base>().attackName, 0.2f);
-            }
+            if (networkInputData.isQAttack && !qAttackCoolDownTimer.IsRunning) ActivateAttack(qAttack,ref qAttackCoolDownTimer);
+            if (networkInputData.isEAttack && !eAttackCoolDownTimer.IsRunning) ActivateAttack(eAttack,ref eAttackCoolDownTimer);
         }
+
+        ManageTimers(ref qAttackCoolDownTimer);
+        ManageTimers(ref eAttackCoolDownTimer);
+    }
+
+    private void ManageTimers(ref TickTimer timer)
+    {
+        if (timer.Expired(Runner)) timer = TickTimer.None;
+    }
+
+    private void ActivateAttack(SO_NetworkAttack attack, ref TickTimer attackTimer)
+    {
+        anim.SetBool("isAttacking", true);
+        anim.CrossFade(attack.attackName, 0.2f);
+        attackTimer = TickTimer.CreateFromSeconds(Runner, attack.GetCoolDown());
     }
 
     public bool GetCanAttack()
@@ -46,6 +55,6 @@ public class NetworkPlayer_Attack : NetworkBehaviour
 
     public void FireQAttack()
     {
-        qAttack = Runner.Spawn(qAttackPrefab, transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        Runner.Spawn(qAttack.GetAttack(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
     }
 }

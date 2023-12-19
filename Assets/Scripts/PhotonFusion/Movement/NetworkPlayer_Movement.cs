@@ -83,6 +83,7 @@ public class NetworkPlayer_Movement : NetworkBehaviour
 
         else dashSpeed = dashValue;
 
+        // Start the timers
         dashCoolDownTimer = TickTimer.CreateFromSeconds(Runner, dashCoolDown);
         dashDurationTimer = TickTimer.CreateFromSeconds(Runner, dashDuration);
     }
