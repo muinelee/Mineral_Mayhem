@@ -114,4 +114,14 @@ public class Player_Core : MonoBehaviour
         Debug.Log("Player has dieded");
         SceneManager.LoadScene("GameOver");
     }
+
+    public void ResetHealth()
+    {
+        playerStats.currentHP = playerStats.maxHP;
+    }
+
+    public bool IsDead()
+    {
+        return playerStats.currentHP <= 0;
+    }
 }

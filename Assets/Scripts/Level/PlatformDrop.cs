@@ -48,7 +48,7 @@ public class PlatformDrop : MonoBehaviour
 
         while (elapsedTime < dropDuration)
         {
-            // fins position based on time and speed
+            // finds position based on time and speed
             float t = elapsedTime / dropDuration;
             Vector3 newPosition = Vector3.Lerp(initialPosition, targetPosition, t);
 
