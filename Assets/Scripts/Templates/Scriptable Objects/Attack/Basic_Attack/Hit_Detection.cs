@@ -27,17 +27,7 @@ public class Hit_Detection : Attack
             GameObject enemy = hit.collider.gameObject;
             if (enemy != null)
             {
-                if (enemy.CompareTag("NPC"))
-                {
-                    enemy.GetComponent<NPC_Core>().TakeDamage(attackDamage, attackKnockback, playerTransform.position, STATUS_EFFECT.NONE, 0, 0);
-                }
-                /*
-                else if (enemy.CompareTag("Player"))
-                {
-                    Debug.Log("Hit " + hit.collider.name);
-                    enemy.GetComponent<PlayerDefense>().TakeDamage(10f, 10f, transform.position, STATUS_EFFECT.NONE, 0, 0);
-                }
-                */
+                DealDamage(enemy);
             }
         }
     }

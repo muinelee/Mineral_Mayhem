@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public bool subscribed = false;
 
     public static GameManager instance;
+    public UIManager uiManager;
 
     private void Start()
     {
@@ -101,4 +102,5 @@ public class GameManager : MonoBehaviour
         //update the array
         enemies = newEnemies;
     }*/
+
 }

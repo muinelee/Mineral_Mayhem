@@ -1,9 +1,11 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player_InputController : MonoBehaviour
+public class Player_InputController : NetworkBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private CameraFollowPoint camFollowPoint;
@@ -22,6 +24,18 @@ public class Player_InputController : MonoBehaviour
     private void Awake()
     {
         Cursor.lockState = CursorLockMode.Confined;
+
+        if (!cam) cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        if (!camFollowPoint) camFollowPoint = gameObject.GetComponentInChildren<CameraFollowPoint>();
+        if (!anim) anim = gameObject.GetComponentInChildren<Animator>();
+        if (!playerMovement) playerMovement = gameObject.GetComponent<Player_Movement>();
+        if (!attackController) attackController = gameObject.GetComponent<Player_AttackController>();
+        
+    }
+
+    private void Start()
+    {
+        if (!IsOwner) return;
 
         controls = new Test_InputControls();
         controls.Test_Input.Enable();
@@ -42,17 +56,19 @@ public class Player_InputController : MonoBehaviour
 
         controls.Test_Input.Toggle_Look_Ahead_Cam.performed += ctx => camFollowPoint.ToggleLookAheadCam();
 
-        if (!cam) cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-        if (!camFollowPoint) camFollowPoint = gameObject.GetComponentInChildren<CameraFollowPoint>();
-        if (!anim) anim = gameObject.GetComponentInChildren<Animator>();
-        if (!playerMovement) playerMovement = gameObject.GetComponent<Player_Movement>();
-        if (!attackController) attackController = gameObject.GetComponent<Player_AttackController>();
-
         currentState = State.Idle;
+
+        Debug.Log(IsOwner);
+
+        CinemachineVirtualCamera cinemachineVC = cam.GetComponentInChildren<CinemachineVirtualCamera>();
+        cinemachineVC.Follow = camFollowPoint.transform;
+        cinemachineVC.LookAt = camFollowPoint.transform;
     }
 
     private void Update() 
     {
+        if (!IsOwner) return;
+
         if (currentState != State.Dead)
         {
             Aim();
@@ -105,7 +121,7 @@ public class Player_InputController : MonoBehaviour
 
     public void ActivateBasic(InputAction.CallbackContext ctx)
     {
-        PassAttackInput(ref attackController.basicAttack[attackController.attackCounter % attackController.basicAttack.Length], ref attackController.basicAttackTimer);
+        if (IsOwner) PassAttackInput(ref attackController.basicAttack[attackController.attackCounter % attackController.basicAttack.Length], ref attackController.basicAttackTimer);
     }
 
     #region <----- Special Abilities ----->
