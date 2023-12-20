@@ -49,23 +49,31 @@ public class PlaceholderAttack : NetworkAttack_Base
 
     private void DealDamage()
     {
-        Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
+        Runner.LagCompensation.OverlapSphere(transform.position + transform.forward * offset, radius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
 
         for (int i = 0; i < hits.Count; i++)
         {
-            Debug.Log($"We hit {hits[i].GameObject.transform.name} and their ID is {hits[i].GameObject.GetComponent<NetworkObject>().HasStateAuthority}");
+            Debug.Log($"Did we hit a hitbox? {hits[i].Hitbox}");
+            NetworkHealthHandler healthHandler = hits[i].GameObject.GetComponentInParent<NetworkHealthHandler>();
+
+            if (healthHandler) healthHandler.OnTakeDamage(damage);
         }
 
         Debug.Log($"The size of the hit list is  {hits.Count}");
 
-        foreach (var hit in hits)
+ /*       foreach (var hit in hits)
         {
             var healthHandler = hit.GameObject.GetComponent<NetworkHealthHandler>();
 
-            if (healthHandler != null || !hit.GameObject.GetComponent<NetworkObject>().HasInputAuthority)
+            if (healthHandler != null)
             {
                 healthHandler.OnTakeDamage(damage);
             }
-        }
+        } */
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(transform.position, radius);
     }
 }
