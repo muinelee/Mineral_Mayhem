@@ -29,9 +29,11 @@ public class PlaceholderAttack : NetworkAttack_Base
     {
         if (!Object.HasStateAuthority) return;
 
-        DealDamage();
         timer = TickTimer.CreateFromSeconds(Runner, lifetimeDuration);
         transform.position += transform.forward * offset;
+
+        // Deal Damage Last
+        DealDamage();
     }
 
     public override void FixedUpdateNetwork()
@@ -49,7 +51,7 @@ public class PlaceholderAttack : NetworkAttack_Base
 
     private void DealDamage()
     {
-        Runner.LagCompensation.OverlapSphere(transform.position + transform.forward * offset, radius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
+        Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
 
         for (int i = 0; i < hits.Count; i++)
         {
