@@ -1,24 +1,24 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
+using Fusion;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Fusion.Sockets;
 
 public class Player_InputController : NetworkBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private CameraFollowPoint camFollowPoint;
     private Animator anim;
-    Test_InputControls controls;
 
     // Scripts
-    Player_Movement playerMovement;
-    Player_AttackController attackController;
-    Vector3 inputDirection;
-    Vector3 lookDirection;
+    private Player_Movement playerMovement;
+    public Player_AttackController attackController;
+    private Vector3 moveDirection;
+    private Vector3 lookDirection;
 
-    private enum State { Idle, Run, Attack, Reacting, Block, Dead, Charge};
+    private enum State { Priming, Idle, Run, Attack, Reacting, Block, Dead, Charge};
     private State currentState;
 
     private void Awake()
@@ -30,35 +30,11 @@ public class Player_InputController : NetworkBehaviour
         if (!anim) anim = gameObject.GetComponentInChildren<Animator>();
         if (!playerMovement) playerMovement = gameObject.GetComponent<Player_Movement>();
         if (!attackController) attackController = gameObject.GetComponent<Player_AttackController>();
-        
     }
 
     private void Start()
     {
-        if (!IsOwner) return;
-
-        controls = new Test_InputControls();
-        controls.Test_Input.Enable();
-        controls.Test_Input.Move.performed += ctx => SetMove(ctx);
-        controls.Test_Input.Move.canceled += ctx => SetMove(ctx);
-        controls.Test_Input.Dash.performed += ctx => Dash(ctx);
-
-        controls.Test_Input.Block.performed += ctx => StartBlock(ctx);
-        controls.Test_Input.Block.canceled += ctx => EndBlock(ctx);
-
-        controls.Test_Input.Basic_Attack.performed += ctx => ActivateBasic(ctx);
-
-        controls.Test_Input.Special_Ability_1.performed += ctx => ActivateQ(ctx);
-        controls.Test_Input.Special_Ability_1.canceled += ctx => ActivateQCharge(ctx);
-
-        controls.Test_Input.Special_Ability_2.performed += ctx => ActivateE(ctx);
-        controls.Test_Input.Special_Ability_2.canceled += ctx => ActivateECharge(ctx);
-
-        controls.Test_Input.Toggle_Look_Ahead_Cam.performed += ctx => camFollowPoint.ToggleLookAheadCam();
-
-        currentState = State.Idle;
-
-        Debug.Log(IsOwner);
+        currentState = State.Priming;
 
         CinemachineVirtualCamera cinemachineVC = cam.GetComponentInChildren<CinemachineVirtualCamera>();
         cinemachineVC.Follow = camFollowPoint.transform;
@@ -67,19 +43,36 @@ public class Player_InputController : NetworkBehaviour
 
     private void Update() 
     {
-        if (!IsOwner) return;
-
         if (currentState != State.Dead)
         {
             Aim();
+            GetInput();
             if (playerMovement.GetCanMove()) Move();
+
+            if (currentState != State.Priming) return;
+
+            currentState = State.Idle;
         }
     }
 
-    void SetMove(InputAction.CallbackContext ctx)
+    private void GetInput()
     {
-        inputDirection = ctx.action.ReadValue<Vector3>().normalized;
+        moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        
+        if (Input.GetKeyDown(KeyCode.Space)) Dash();
+
+        if (Input.GetMouseButtonDown(0)) ActivateBasic();
+
+        if (Input.GetKeyDown(KeyCode.Q)) PassAttackInput(ref attackController.qAttack, ref attackController.qAttackTimer);
+        if (Input.GetKeyDown(KeyCode.E)) PassAttackInput(ref attackController.eAttack, ref attackController.eAttackTimer);
+        // if (Input.GetKeyDown(KeyCode.R)) PassAttackINput(ref attackController.rAttack, ref attackCOntroller.rAttackTimer);       Use when ready
+
+        if (Input.GetMouseButtonDown(1)) StartBlock();
+        else if (Input.GetMouseButtonUp(1)) EndBlock();
+
+        if (Input.GetMouseButtonDown(2)) camFollowPoint.ToggleLookAheadCam();
     }
+
 
 #region <----- Move and Aim Function ----->
 
@@ -95,13 +88,13 @@ public class Player_InputController : NetworkBehaviour
 
     void Move()
     {
-        playerMovement.SetDirection(inputDirection);
+        playerMovement.SetDirection(moveDirection);
         Vector3 perpendicularMovement = new Vector3(lookDirection.z, 0, -lookDirection.x);              // Perpendicular vector in 2D space
-        float horizontalMovement = Vector3.Dot(inputDirection, perpendicularMovement);                   // Dot product to get horizontal direction
+        float horizontalMovement = Vector3.Dot(moveDirection, perpendicularMovement);                   // Dot product to get horizontal direction
 
         if (playerMovement.GetCanMove())
         {
-            anim.SetFloat("Zaxis", Vector3.Dot(inputDirection,lookDirection), 0.2f, Time.deltaTime);     // Use Dot product to determine forward move direction relevant to look direction
+            anim.SetFloat("Zaxis", Vector3.Dot(moveDirection,lookDirection), 0.2f, Time.deltaTime);     // Use Dot product to determine forward move direction relevant to look direction
             anim.SetFloat("Xaxis", horizontalMovement, 0.2f, Time.deltaTime);
         }
     }
@@ -110,74 +103,38 @@ public class Player_InputController : NetworkBehaviour
 
 #region <----- Dash Function ----->
 
-    void Dash(InputAction.CallbackContext ctx)
+    void Dash()
     {
-        if (inputDirection != Vector3.zero) playerMovement.ActivateMobilitySkill();
+        if (moveDirection != Vector3.zero) playerMovement.ActivateMobilitySkill();
     }
 
 #endregion
 
 #region <----- Attack Functions ----->
 
-    public void ActivateBasic(InputAction.CallbackContext ctx)
+    public void ActivateBasic()
     {
-        if (IsOwner) PassAttackInput(ref attackController.basicAttack[attackController.attackCounter % attackController.basicAttack.Length], ref attackController.basicAttackTimer);
+        PassAttackInput(ref attackController.basicAttack[attackController.attackCounter % attackController.basicAttack.Length], ref attackController.basicAttackTimer);
     }
-
-    #region <----- Special Abilities ----->
-
-    public void ActivateQ(InputAction.CallbackContext ctx)
-    {
-        PassAttackInput(ref attackController.qAttack, ref attackController.qAttackTimer);
-    }
-
-    public void ActivateQCharge(InputAction.CallbackContext ctx)
-    {
-        if (attackController.qAttack.canCharge) PassHoldDuration(ref attackController.qAttack, attackController.qAttackTimer);
-    }
-
-    public void ActivateE(InputAction.CallbackContext ctx)
-    {
-        PassAttackInput(ref attackController.eAttack, ref attackController.eAttackTimer);
-    }
-
-    public void ActivateECharge(InputAction.CallbackContext ctx)
-    {
-        if (attackController.eAttack.canCharge) PassHoldDuration(ref attackController.eAttack, attackController.eAttackTimer);
-    }
- 
-    public void PassHoldDuration(ref Attack_Attribute attack, float attackTimer)
-    {
-        if (currentState != State.Dead)
-        {
-            anim.CrossFade(attackController.qAttack.nameOfAttack + "_Release", 0.2f);
-            attackController.PassCharge(attackTimer);
-        }
-    }
-
-    public void HeldMaxDuration()
-    {
-        PassHoldDuration(ref attackController.currentAttack, 100);
-    }
-
-    #endregion
 
     public void PassAttackInput(ref Attack_Attribute attack, ref float attackTimer)
     {
+
         if (currentState == State.Idle && attackController.GetCanAttack() && attackTimer > attack.coolDown)
         {
             anim.CrossFade(attack.nameOfAttack, 0.1f);
             attackController.ActivateAttack(attack, ref attackTimer);
             playerMovement.SetAbilitySlow(1 - attack.attackAbilitySlowPercentage);
-            if (attack.stopTurn) playerMovement.MovementDisabled(); 
+            if (attack.stopTurn) playerMovement.MovementDisabled();
         }
+
     }
 
-#endregion
+    #endregion
 
-#region <----- Block Functions ----->
+    #region <----- Block Functions ----->
 
-    void StartBlock(InputAction.CallbackContext ctx)
+    void StartBlock()
     {
         if (currentState != State.Block && playerMovement.GetCanMove() && attackController.GetCanAttack())     // Can only block when able to attack
         {
@@ -188,7 +145,7 @@ public class Player_InputController : NetworkBehaviour
         }
     }
 
-    void EndBlock(InputAction.CallbackContext ctx)
+    void EndBlock()
     {
         playerMovement.ResetAbilitySlow();
         if (currentState == State.Block) Invoke("ResetState", 0.2f);
@@ -212,5 +169,15 @@ public class Player_InputController : NetworkBehaviour
         playerMovement.SetDirection(Vector3.zero);
         currentState = State.Dead;
         anim.CrossFade("Death", 0.3f);
+    }
+
+    public NetworkInputData GetNetworkInput()
+    {
+        NetworkInputData networkInputData = new NetworkInputData();
+
+        networkInputData.moveDirection = moveDirection;
+    //    networkInputData.lookDirection = transform.rotation.y;
+
+        return networkInputData;
     }
 }

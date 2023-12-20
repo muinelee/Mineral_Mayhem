@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7549703273994006273}
   - component: {fileID: 996724567218129855}
   - component: {fileID: 1515426758337693297}
+  - component: {fileID: 3877882352751242294}
   m_Layer: 0
   m_Name: Charge_Attack_Arc
   m_TagString: Untagged
@@ -1451,16 +1452,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5f3bc63147448744be5b59ceb205d88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackSFX: {fileID: 0}
   attackDamage: 0
   attackKnockback: 0
   playerTransform: {fileID: 4482721321737489052, guid: 1bf738ec7de409740977bea70babddca, type: 3}
   attackStatusEffect: 0
   attackStatusEffectDuration: 0
   attackStatusEffectValue: 0
+  holdDuration: 0
+  attackLifetime: 0
   enemyLayer:
     serializedVersion: 2
     m_Bits: 2048
   attackRange: 4
   radius: 4
-  timer: 0
   offset: {x: 0, y: 0, z: 0}
+--- !u!114 &3877882352751242294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6171576547671867835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1

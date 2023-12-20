@@ -10,9 +10,9 @@ public class Test_Projectile : Attack
     private Vector3 startPos;
 
     // Start is called before the first frame update
-    protected override void Start()
+    protected override void OnEnable()
     {
-        base.Start();
+        base.OnEnable();
 
         if (!rb) rb = gameObject.GetComponent<Rigidbody>();
         Vector3 direction = transform.rotation * Vector3.forward;
@@ -22,12 +22,11 @@ public class Test_Projectile : Attack
     }
 
     private void Update() {
-        if (Vector3.Distance(transform.position, startPos) > range) Destroy(this.gameObject);
+        //if (Vector3.Distance(transform.position, startPos) > range) /*Insert Disable Attack Funtion*/;
     }
 
     private void OnCollisionEnter(Collision other) 
     {
         DealDamage(other.gameObject);
-        Destroy(this.gameObject);
     }
 }

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6297402478797838343}
   - component: {fileID: 332357652239514886}
+  - component: {fileID: -5670067391099719936}
   m_Layer: 0
   m_Name: Charge_Attack
   m_TagString: Untagged
@@ -44,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 155ea5a879a75b54ea5f62c25fd9e5e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackSFX: {fileID: 0}
   attackDamage: 0
   attackKnockback: 0
   playerTransform: {fileID: 0}
@@ -51,7 +53,24 @@ MonoBehaviour:
   attackStatusEffectDuration: 0
   attackStatusEffectValue: 0
   holdDuration: 0
+  attackLifetime: 0
   attackPrefabs:
   - {fileID: 2626493815713597045, guid: 9dd9a35d4e2213a448e808b48b5db768, type: 3}
   - {fileID: 8519087818903048785, guid: 28c9ec331e69fc841aad3cc60b1f922f, type: 3}
   - {fileID: 5436837083389788307, guid: b7e54198e82b9ec439e913e3fd001e5a, type: 3}
+--- !u!114 &-5670067391099719936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4105047082202533429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1

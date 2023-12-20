@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Fusion;
 
-public class Player_AttackController : MonoBehaviour
+public class Player_AttackController : NetworkBehaviour
 {
     private bool canAttack = true;
-    [SerializeField] private GameObject attackPoint;
+    public Transform attackPoint;
 
     public Attack_Attribute currentAttack;
 
@@ -19,6 +20,13 @@ public class Player_AttackController : MonoBehaviour
     public Attack_Attribute eAttack;
     public float eAttackTimer = 100;
 
+    public List<GameObject> attacks;
+
+    private void Awake()
+    {
+        attacks.Add(eAttack.attackPrefab);
+    }
+
     void Update()       // Should only manage timers
     {
         if (basicAttackTimer < basicAttack[0].coolDown) basicAttackTimer += Time.deltaTime;
@@ -28,7 +36,6 @@ public class Player_AttackController : MonoBehaviour
 
     public void ActivateAttack(Attack_Attribute attack, ref float attackTimer)
     {
-
         if (attackTimer > attack.coolDown && canAttack)
         {
             currentAttack = attack;
@@ -37,16 +44,6 @@ public class Player_AttackController : MonoBehaviour
             attackTimer = 0;
             attack.player = this.transform;
         }
-    }
-
-    public void PassCharge(float attackTimer)
-    {
-        currentAttack.TakeChargeDuration(attackTimer);
-    }
-
-    public void FireAttack()
-    {
-        currentAttack.Activate(attackPoint.transform, transform.rotation);
     }
 
     public void AttacksEnabled()

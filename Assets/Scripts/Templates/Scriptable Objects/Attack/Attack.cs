@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
+using Fusion;
 using UnityEngine;
 
 public abstract class Attack : NetworkBehaviour
 {
+    [SerializeField] private AudioClip attackSFX;
+
     public float attackDamage;
     public float attackKnockback;
     public Transform playerTransform;
@@ -15,9 +17,10 @@ public abstract class Attack : NetworkBehaviour
     public float holdDuration = 0;
     [SerializeField] private float attackLifetime;
 
-    protected virtual void Start() 
+    protected virtual void OnEnable()
     {
-        Destroy(gameObject, attackLifetime);
+        AudioManager.Instance.PlayAudioSFX(attackSFX);
+        Invoke("AttackComplete", attackLifetime);        
     }
 
     protected virtual void DealDamage(GameObject other)
