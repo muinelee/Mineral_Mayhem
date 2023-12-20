@@ -15,6 +15,7 @@ public class SO_NetworkAttack : ScriptableObject
 
     [Header("Cooldown Properties")]
     [SerializeField] private float coolDown;
+    public TickTimer coolDownTimer;
 
     public NetworkObject GetAttack()
     {
