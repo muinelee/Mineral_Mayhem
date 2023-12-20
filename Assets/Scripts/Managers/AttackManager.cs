@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Netcode;
+using Fusion;
 
 [RequireComponent(typeof(NetworkObject))]
 public class AttackManager : NetworkBehaviour
@@ -23,10 +23,5 @@ public class AttackManager : NetworkBehaviour
     public void RemovePlayer(Player_InputController player)
     {
         players.Remove(player);
-    }
-
-    public void TestFirePlayerAttack(int playerID, int playerAttackIndex)
-    {
-        Instantiate(players[playerID].attackController.attacks[playerAttackIndex], players[playerID].transform.position, players[playerID].transform.rotation).GetComponent<NetworkObject>().Spawn(true);
     }
 }
