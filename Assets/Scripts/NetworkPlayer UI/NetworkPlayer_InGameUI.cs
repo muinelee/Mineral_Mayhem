@@ -27,7 +27,11 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+        // Update Q Spell UI display
         DisplaySpellCooldown(ref playerAttack.GetQAttackCoolDownTimer(), qImageCooldown, qCooldownText, qAttack.GetCoolDown());
+        
+        // Update E Spell UI display
+        DisplaySpellCooldown(ref playerAttack.GetEAttackCoolDownTimer(), eImageCooldown, eCooldownText, eAttack.GetCoolDown());
     }
 
     public void DisplaySpellCooldown(ref TickTimer coolDownTimer, Image coolDownImage, Text coolDownText, float maxCoolDown)
@@ -48,6 +52,7 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
     public void PrimeUI()
     {
         qAttackIcon.sprite = qAttack.GetAttackIcon();
+        eAttackIcon.sprite = eAttack.GetAttackIcon();
     }
 
     public void SetQAttack(SO_NetworkAttack newAttack)
