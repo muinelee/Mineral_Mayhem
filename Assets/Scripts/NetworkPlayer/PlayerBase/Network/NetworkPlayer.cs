@@ -16,17 +16,26 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             Debug.Log("Spawned local player");
 
+
             CinemachineVirtualCamera virtualCam = FindAnyObjectByType<CinemachineVirtualCamera>();
             virtualCam.Follow = this.transform;
             virtualCam.LookAt= this.transform;
 
             Debug.Log("Camera made to target local player");
 
+
             GetComponent<NetworkPlayer_InputController>().SetCam(FindAnyObjectByType<Camera>());
 
             Debug.Log("Set Camera for local player");
 
+
             NetworkPlayer_InGameUI playerUI = FindAnyObjectByType<NetworkPlayer_InGameUI>();
+
+            playerUI.SetPlayerHealth(GetComponent<NetworkPlayer_Health>());
+
+            Debug.Log("Local player health linked to player UI");
+
+
             NetworkPlayer_Attack playerAttack = GetComponent<NetworkPlayer_Attack>();
 
             playerUI.SetPlayerAttack(playerAttack);

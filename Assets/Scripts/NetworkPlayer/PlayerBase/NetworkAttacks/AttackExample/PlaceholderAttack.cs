@@ -56,7 +56,7 @@ public class PlaceholderAttack : NetworkAttack_Base
         for (int i = 0; i < hits.Count; i++)
         {
             Debug.Log($"Did we hit a hitbox? {hits[i].Hitbox}");
-            NetworkHealthHandler healthHandler = hits[i].GameObject.GetComponentInParent<NetworkHealthHandler>();
+            NetworkPlayer_Health healthHandler = hits[i].GameObject.GetComponentInParent<NetworkPlayer_Health>();
 
             if (healthHandler) healthHandler.OnTakeDamage(damage);
         }
