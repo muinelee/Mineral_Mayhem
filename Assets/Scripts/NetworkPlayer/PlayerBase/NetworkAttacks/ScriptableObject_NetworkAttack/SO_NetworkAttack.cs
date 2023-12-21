@@ -19,7 +19,7 @@ public class SO_NetworkAttack : ScriptableObject
     [Header("Cooldown Properties")]
     [SerializeField] private float coolDown;
 
-    public NetworkObject GetAttack()
+    public NetworkObject GetAttackPrefab()
     {
         return attack;
     }

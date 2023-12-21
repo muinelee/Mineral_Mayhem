@@ -22,6 +22,11 @@ public class NetworkPlayer_AnimationLink : NetworkBehaviour
         playerAttack.FireQAttack();
     }
 
+    public void FireEAttack()
+    {
+        playerAttack.FireEAttack();
+    }
+
     public void ResetAnimation()
     {
         anim.SetBool("isAttacking", false);

@@ -17,7 +17,7 @@ public class NetworkPlayer_Attack : NetworkBehaviour
     private TickTimer eAttackCoolDownTimer;
 
     //Components
-    [SerializeField] private Animator anim;
+    private Animator anim;
 
     public override void Spawned()
     {
@@ -33,7 +33,7 @@ public class NetworkPlayer_Attack : NetworkBehaviour
         }
 
         ManageTimers(ref qAttackCoolDownTimer);
-        //ManageTimers(ref eAttack.coolDownTimer);
+        ManageTimers(ref eAttackCoolDownTimer);
     }
 
     private void ManageTimers(ref TickTimer timer)
@@ -55,7 +55,12 @@ public class NetworkPlayer_Attack : NetworkBehaviour
 
     public void FireQAttack()
     {
-        Runner.Spawn(qAttack.GetAttack(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        Runner.Spawn(qAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+    }
+
+    public void FireEAttack()
+    {
+        Runner.Spawn(eAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
     }
 
     public SO_NetworkAttack GetQAttack()

@@ -73,9 +73,4 @@ public class PlaceholderAttack : NetworkAttack_Base
             }
         } */
     }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawSphere(transform.position, radius);
-    }
 }
