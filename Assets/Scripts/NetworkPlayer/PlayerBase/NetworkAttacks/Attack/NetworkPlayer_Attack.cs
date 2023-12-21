@@ -6,7 +6,7 @@ using Fusion;
 public class NetworkPlayer_Attack : NetworkBehaviour
 {
     // Control variables
-    private bool canAttack = false;
+    private bool canAttack = true;
 
     [Header("Q Attack Properties")]
     [SerializeField] private SO_NetworkAttack qAttack;
@@ -26,7 +26,7 @@ public class NetworkPlayer_Attack : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputData networkInputData) && !anim.GetBool("isAttacking"))
+        if (GetInput(out NetworkInputData networkInputData) && canAttack)
         {
             if (networkInputData.isQAttack && !qAttackCoolDownTimer.IsRunning) ActivateAttack(qAttack, ref qAttackCoolDownTimer);
             if (networkInputData.isEAttack && !eAttackCoolDownTimer.IsRunning) ActivateAttack(eAttack, ref eAttackCoolDownTimer);
@@ -43,6 +43,7 @@ public class NetworkPlayer_Attack : NetworkBehaviour
 
     private void ActivateAttack(SO_NetworkAttack attack, ref TickTimer attackTimer)
     {
+        canAttack = false;
         anim.SetBool("isAttacking", true);
         anim.CrossFade(attack.attackName, 0.2f);
         attackTimer = TickTimer.CreateFromSeconds(Runner, attack.GetCoolDown());
@@ -81,5 +82,10 @@ public class NetworkPlayer_Attack : NetworkBehaviour
     public ref TickTimer GetEAttackCoolDownTimer()
     {
         return ref eAttackCoolDownTimer;
+    }
+
+    public void ResetCanAttack()
+    {
+        canAttack = true;
     }
 }

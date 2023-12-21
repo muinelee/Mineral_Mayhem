@@ -16,10 +16,7 @@ public class NetworkPlayer_Movement : NetworkBehaviour
     private float turnSmoothVel;
 
     [Header("Dash Properties")]
-    [SerializeField] private bool dashAbility;             // is true if dash, or false if it's a boost
-    [SerializeField] private float dashValue;
-    [SerializeField] private float dashCoolDown;
-    [SerializeField] private float dashDuration;
+    [SerializeField] private SO_NetworkDash dash;
     private TickTimer dashCoolDownTimer = TickTimer.None;
     private TickTimer dashDurationTimer = TickTimer.None;
     private bool isDashing = false;
@@ -30,8 +27,8 @@ public class NetworkPlayer_Movement : NetworkBehaviour
 
     public override void Spawned()
     {
-        if (!anim) anim = GetComponentInChildren<Animator>();
-        if (!networkRigidBody) networkRigidBody = GetComponent<NetworkRigidbody>();
+        if (!anim) Debug.Log("Add Animator through inspector");
+        if (!networkRigidBody) Debug.Log("Add NetworkRigidbody through inspector");
     }
 
     public override void FixedUpdateNetwork()
@@ -63,29 +60,27 @@ public class NetworkPlayer_Movement : NetworkBehaviour
 
     private void Aim()
     {
-        {
-            // Rotate player using the networkplayer_movement
-            float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime);
-            transform.rotation = Quaternion.Euler(0, angle, 0);
-        }
+         // Rotate player using the networkplayer_movement
+         float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
+         float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime);
+         transform.rotation = Quaternion.Euler(0, angle, 0);
     }
 
     private void MobilityAbility(Vector3 moveDirection)
     {
         if (dashCoolDownTimer.IsRunning) return;
 
-        if (dashAbility)
+        if (!dash.GetCanSteer())
         {
-            networkRigidBody.Rigidbody.velocity = moveDirection * dashValue;
+            networkRigidBody.Rigidbody.velocity = moveDirection * dash.GetDashValue();
             isDashing = true;
         }
 
-        else dashSpeed = dashValue;
+        else dashSpeed = dash.GetDashValue();
 
         // Start the timers
-        dashCoolDownTimer = TickTimer.CreateFromSeconds(Runner, dashCoolDown);
-        dashDurationTimer = TickTimer.CreateFromSeconds(Runner, dashDuration);
+        dashCoolDownTimer = TickTimer.CreateFromSeconds(Runner, dash.GetCoolDown());
+        dashDurationTimer = TickTimer.CreateFromSeconds(Runner, dash.GetDashDuration());
     }
 
     private void PlayMovementAnimation(Vector3 moveDirection)
@@ -103,10 +98,20 @@ public class NetworkPlayer_Movement : NetworkBehaviour
         if (dashDurationTimer.Expired(Runner))
         {
             dashSpeed = 0;
-            if (dashAbility) networkRigidBody.Rigidbody.velocity *= 0.2f;
+            if (!dash.GetCanSteer()) networkRigidBody.Rigidbody.velocity *= 0.2f;
             isDashing = false;
             dashDurationTimer = TickTimer.None;
         }
+    }
+
+    public SO_NetworkDash GetDash()
+    {
+        return dash;
+    }
+
+    public ref TickTimer GetDashCoolDownTimer()
+    {
+        return ref dashCoolDownTimer;
     }
 
     public void SetAnimator(Animator animator)
