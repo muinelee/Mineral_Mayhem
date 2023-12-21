@@ -6,11 +6,15 @@ using UnityEngine.UI;
 using Fusion;
 
 public class NetworkPlayer_InGameUI : NetworkBehaviour
-{
+{   
     [SerializeField] private SO_NetworkAttack qAttack;
     [SerializeField] private SO_NetworkAttack eAttack;
 
-    [SerializeField] private NetworkPlayer_Attack playerAttack;
+    private NetworkPlayer_Attack playerAttack;
+    private NetworkPlayer_Health playerHealth;
+
+    [Header("Health bar")]
+    [SerializeField] private Slider healthBar;
 
     // cooldown stuff
     [Header("Q Attack Properties")]
@@ -27,6 +31,9 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+        // Update HealthBar
+        DisplayHealth();
+
         // Update Q Spell UI display
         DisplaySpellCooldown(ref playerAttack.GetQAttackCoolDownTimer(), qImageCooldown, qCooldownText, qAttack.GetCoolDown());
         
@@ -34,7 +41,7 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
         DisplaySpellCooldown(ref playerAttack.GetEAttackCoolDownTimer(), eImageCooldown, eCooldownText, eAttack.GetCoolDown());
     }
 
-    public void DisplaySpellCooldown(ref TickTimer coolDownTimer, Image coolDownImage, Text coolDownText, float maxCoolDown)
+    private void DisplaySpellCooldown(ref TickTimer coolDownTimer, Image coolDownImage, Text coolDownText, float maxCoolDown)
     {
         //display the cooldown
         if (!coolDownTimer.IsRunning)
@@ -47,6 +54,12 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
             coolDownText.text = ((float)coolDownTimer.RemainingTime(Runner)).ToString("F2");
             coolDownImage.fillAmount = (float)coolDownTimer.RemainingTime(Runner) / maxCoolDown;
         }
+    }
+
+    private void DisplayHealth()
+    {
+        if (healthBar.value != playerHealth.HP / playerHealth.GetStartingHP() && healthBar.value > 0) healthBar.value = playerHealth.HP / playerHealth.GetStartingHP();
+        Debug.Log($"Health bar value is {healthBar.value}");
     }
 
     public void PrimeUI()
@@ -68,5 +81,10 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
     public void SetPlayerAttack(NetworkPlayer_Attack playerAttackScript)
     {
         playerAttack = playerAttackScript;
+    }
+
+    public void SetPlayerHealth(NetworkPlayer_Health playerHealthScript)
+    {
+        playerHealth = playerHealthScript;
     }
 }

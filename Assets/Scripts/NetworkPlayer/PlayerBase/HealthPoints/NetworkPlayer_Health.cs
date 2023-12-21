@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 
-public class NetworkHealthHandler : NetworkBehaviour
+public class NetworkPlayer_Health : NetworkBehaviour
 {
     [Networked(OnChanged = nameof(OnHPChanged))]
-    public int HP { get; set; }
+    public float HP { get; set; }
 
     [Networked(OnChanged = nameof(OnStateChanged))]
     public bool isDead { get; set; }
 
-    bool isInitialized = false;
+    private bool isInitialized = false;
 
-    const int startingHP = 100;
+    [SerializeField] private float startingHP = 100;
 
     // Start is called before the first frame update
-    void Start()
+    public override void Spawned()
     {
         HP = startingHP;
         isDead = false;
@@ -30,7 +30,7 @@ public class NetworkHealthHandler : NetworkBehaviour
             return;
         }
 
-        HP -= damageAmount;
+        HP -= (float) damageAmount;
 
         Debug.Log($"{Time.time} {transform.name} took damage and has {HP} HP left");
 
@@ -42,13 +42,18 @@ public class NetworkHealthHandler : NetworkBehaviour
         }
     }
 
-    static void OnHPChanged(Changed<NetworkHealthHandler> changed)
+    static void OnHPChanged(Changed<NetworkPlayer_Health> changed)
     {
         Debug.Log($"{Time.time} OnHPChanged value {changed.Behaviour.HP}");
     }
 
-    static void OnStateChanged(Changed<NetworkHealthHandler> changed)
+    static void OnStateChanged(Changed<NetworkPlayer_Health> changed)
     {
         Debug.Log($"{Time.time} OnStateChanged isDead {changed.Behaviour.isDead}");
+    }
+
+    public float GetStartingHP()
+    {
+        return startingHP;
     }
 }
