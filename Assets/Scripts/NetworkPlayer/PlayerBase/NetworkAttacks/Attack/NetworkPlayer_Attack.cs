@@ -10,9 +10,11 @@ public class NetworkPlayer_Attack : NetworkBehaviour
 
     [Header("Q Attack Properties")]
     [SerializeField] private SO_NetworkAttack qAttack;
+    private TickTimer qAttackCoolDownTimer;
 
     [Header("E Attack Properties")]
     [SerializeField] private SO_NetworkAttack eAttack;
+    private TickTimer eAttackCoolDownTimer;
 
     //Components
     [SerializeField] private Animator anim;
@@ -26,11 +28,11 @@ public class NetworkPlayer_Attack : NetworkBehaviour
     {
         if (GetInput(out NetworkInputData networkInputData) && !anim.GetBool("isAttacking"))
         {
-            if (networkInputData.isQAttack && !qAttack.coolDownTimer.IsRunning) ActivateAttack(qAttack,ref qAttack.coolDownTimer);
-            if (networkInputData.isEAttack && !eAttack.coolDownTimer.IsRunning) ActivateAttack(eAttack,ref eAttack.coolDownTimer);
+            if (networkInputData.isQAttack && !qAttackCoolDownTimer.IsRunning) ActivateAttack(qAttack, ref qAttackCoolDownTimer);
+            if (networkInputData.isEAttack && !eAttackCoolDownTimer.IsRunning) ActivateAttack(eAttack, ref eAttackCoolDownTimer);
         }
 
-        ManageTimers(ref qAttack.coolDownTimer);
+        ManageTimers(ref qAttackCoolDownTimer);
         //ManageTimers(ref eAttack.coolDownTimer);
     }
 
@@ -54,5 +56,25 @@ public class NetworkPlayer_Attack : NetworkBehaviour
     public void FireQAttack()
     {
         Runner.Spawn(qAttack.GetAttack(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+    }
+
+    public SO_NetworkAttack GetQAttack()
+    {
+        return qAttack;
+    }
+
+    public SO_NetworkAttack GetEAttack()
+    {
+        return eAttack;
+    }
+
+    public ref TickTimer GetQAttackCoolDownTimer()
+    {
+        return ref qAttackCoolDownTimer;
+    }
+
+    public ref TickTimer GetEAttackCoolDownTimer()
+    {
+        return ref eAttackCoolDownTimer;
     }
 }

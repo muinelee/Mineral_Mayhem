@@ -17,11 +17,6 @@ public class NetworkPlayer_AnimationLink : NetworkBehaviour
         anim = GetComponent<Animator>();
     }
 
-    public override void FixedUpdateNetwork()
-    {
-
-    }
-
     public void FireQAttack()
     {
         playerAttack.FireQAttack();
