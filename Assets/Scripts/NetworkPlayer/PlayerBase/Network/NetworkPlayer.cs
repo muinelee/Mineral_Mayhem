@@ -25,6 +25,16 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             GetComponent<NetworkPlayer_InputController>().SetCam(FindAnyObjectByType<Camera>());
 
             Debug.Log("Set Camera for local player");
+
+            NetworkPlayer_InGameUI playerUI = FindAnyObjectByType<NetworkPlayer_InGameUI>();
+            NetworkPlayer_Attack playerAttack = GetComponent<NetworkPlayer_Attack>();
+
+            playerUI.SetPlayerAttack(playerAttack);
+            playerUI.SetQAttack(playerAttack.GetQAttack());
+            playerUI.SetEAttack(playerAttack.GetEAttack());
+            playerUI.PrimeUI();
+
+            Debug.Log("Local player abilities linked to player UI");
         }
 
         else

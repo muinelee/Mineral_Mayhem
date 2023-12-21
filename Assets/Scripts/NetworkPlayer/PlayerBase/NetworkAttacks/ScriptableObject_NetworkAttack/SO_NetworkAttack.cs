@@ -13,9 +13,11 @@ public class SO_NetworkAttack : ScriptableObject
     public string attackName;
     public string attackDescription;
 
+    [Header("Attack Icon")]
+    [SerializeField] private Sprite attackIcon;
+
     [Header("Cooldown Properties")]
     [SerializeField] private float coolDown;
-    public TickTimer coolDownTimer;
 
     public NetworkObject GetAttack()
     {
@@ -25,5 +27,10 @@ public class SO_NetworkAttack : ScriptableObject
     public float GetCoolDown()
     {
         return coolDown;
+    }
+
+    public Sprite GetAttackIcon()
+    {
+        return attackIcon;
     }
 }
