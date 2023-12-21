@@ -35,9 +35,14 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             Debug.Log("Local player health linked to player UI");
 
+            NetworkPlayer_Movement playerMovement = GetComponent<NetworkPlayer_Movement>();
+            playerUI.SetPlayerMovement(playerMovement);
+            playerUI.SetDash(playerMovement.GetDash());
+
+            Debug.Log("Local player movement linked to player UI");
+
 
             NetworkPlayer_Attack playerAttack = GetComponent<NetworkPlayer_Attack>();
-
             playerUI.SetPlayerAttack(playerAttack);
             playerUI.SetQAttack(playerAttack.GetQAttack());
             playerUI.SetEAttack(playerAttack.GetEAttack());

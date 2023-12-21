@@ -13,11 +13,11 @@ public class SO_NetworkAttack : ScriptableObject
     public string attackName;
     public string attackDescription;
 
-    [Header("Attack Icon")]
-    [SerializeField] private Sprite attackIcon;
-
     [Header("Cooldown Properties")]
     [SerializeField] private float coolDown;
+
+    [Header("Attack Icon")]
+    [SerializeField] private Sprite attackIcon;
 
     public NetworkObject GetAttackPrefab()
     {

@@ -9,14 +9,21 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
 {   
     [SerializeField] private SO_NetworkAttack qAttack;
     [SerializeField] private SO_NetworkAttack eAttack;
+    [SerializeField] private SO_NetworkDash dash;
 
     private NetworkPlayer_Attack playerAttack;
+    private NetworkPlayer_Movement playerMovement;
     private NetworkPlayer_Health playerHealth;
 
     [Header("Health bar")]
     [SerializeField] private Slider healthBar;
 
     // cooldown stuff
+    [Header("Dash Properties")]
+    [SerializeField] private Image dashIcon;
+    [SerializeField] private Image dashImageCooldown;
+    [SerializeField] private Text dashCooldownText;
+
     [Header("Q Attack Properties")]
     [SerializeField] private Image qAttackIcon;
     [SerializeField] private Image qImageCooldown;
@@ -34,14 +41,17 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
         // Update HealthBar
         DisplayHealth();
 
+        // Update dash UI display
+        DisplayAbilityCooldown(ref playerMovement.GetDashCoolDownTimer(), dashImageCooldown, dashCooldownText, dash.GetCoolDown());
+
         // Update Q Spell UI display
-        DisplaySpellCooldown(ref playerAttack.GetQAttackCoolDownTimer(), qImageCooldown, qCooldownText, qAttack.GetCoolDown());
+        DisplayAbilityCooldown(ref playerAttack.GetQAttackCoolDownTimer(), qImageCooldown, qCooldownText, qAttack.GetCoolDown());
         
         // Update E Spell UI display
-        DisplaySpellCooldown(ref playerAttack.GetEAttackCoolDownTimer(), eImageCooldown, eCooldownText, eAttack.GetCoolDown());
+        DisplayAbilityCooldown(ref playerAttack.GetEAttackCoolDownTimer(), eImageCooldown, eCooldownText, eAttack.GetCoolDown());
     }
 
-    private void DisplaySpellCooldown(ref TickTimer coolDownTimer, Image coolDownImage, Text coolDownText, float maxCoolDown)
+    private void DisplayAbilityCooldown(ref TickTimer coolDownTimer, Image coolDownImage, Text coolDownText, float maxCoolDown)
     {
         //display the cooldown
         if (!coolDownTimer.IsRunning)
@@ -59,13 +69,18 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
     private void DisplayHealth()
     {
         if (healthBar.value != playerHealth.HP / playerHealth.GetStartingHP() && healthBar.value > 0) healthBar.value = playerHealth.HP / playerHealth.GetStartingHP();
-        Debug.Log($"Health bar value is {healthBar.value}");
     }
 
     public void PrimeUI()
     {
+        dashIcon.sprite = dash.GetDashIcon();
         qAttackIcon.sprite = qAttack.GetAttackIcon();
         eAttackIcon.sprite = eAttack.GetAttackIcon();
+    }
+
+    public void SetDash(SO_NetworkDash newDash)
+    {
+        dash = newDash;
     }
 
     public void SetQAttack(SO_NetworkAttack newAttack)
@@ -81,6 +96,11 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
     public void SetPlayerAttack(NetworkPlayer_Attack playerAttackScript)
     {
         playerAttack = playerAttackScript;
+    }
+
+    public void SetPlayerMovement(NetworkPlayer_Movement playerMovementScript)
+    {
+        playerMovement = playerMovementScript;
     }
 
     public void SetPlayerHealth(NetworkPlayer_Health playerHealthScript)
