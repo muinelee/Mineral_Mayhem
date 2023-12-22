@@ -2,24 +2,26 @@ using UnityEngine;
 using TMPro;
 
 [RequireComponent(typeof(CanvasGroup))]
-public class MatchStartText : MonoBehaviour
-{
+public class MatchStartText : MonoBehaviour { 
+
     public float displayDuration = 2f;
     private CanvasGroup canvasGroup;
+    [SerializeField] private TextMeshProUGUI textComponent;
 
     private void Start()
     {
         canvasGroup = GetComponent<CanvasGroup>();
+        textComponent = GetComponentInChildren<TextMeshProUGUI>();
         // Start with the text invisible
         canvasGroup.alpha = 0f;
-
-        // For testing purposes, call DisplayMatchText immediately
-        Invoke("DisplayMatchText", 0f);
     }
 
     // Call this method to trigger the display of the text
-    public void DisplayMatchStartText()
+    public void DisplayMatchStartText(string message)
     {
+        // Set the display text
+        SetMatchText(message);
+
         // Invoke DisplayMatchText after a delay
         Invoke("DisplayMatchText", 0f);
     }
@@ -55,5 +57,11 @@ public class MatchStartText : MonoBehaviour
 
         Debug.Log("Fading complete");
     }
+
+    private void SetMatchText(string message)
+    {
+        textComponent.text = message;
+    }
 }
+
 

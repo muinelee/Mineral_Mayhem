@@ -8,6 +8,8 @@ public class ResolutionManager : MonoBehaviour
 
     [SerializeField] private TMP_Dropdown resolutionDropdown;
 
+    public static ResolutionManager instance;
+
     private Resolution[] resolutions;
     private List<Resolution> filteredResolutions;
 
@@ -16,6 +18,16 @@ public class ResolutionManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
         resolutions = Screen.resolutions;
         filteredResolutions = new List<Resolution>();
 

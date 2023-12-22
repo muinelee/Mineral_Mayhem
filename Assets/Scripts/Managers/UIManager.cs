@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 //add a timer to the game
 public class UIManager : MonoBehaviour
 {
+    private static UIManager instance;
     public int amountKilled;
     public float timeRemaining;
     public bool timerIsRunning = false;
@@ -18,6 +19,15 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         // Starts the timer automatically
         timerIsRunning = true;
     }
