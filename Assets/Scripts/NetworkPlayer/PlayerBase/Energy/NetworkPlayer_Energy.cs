@@ -26,13 +26,18 @@ public class NetworkPlayer_Energy : NetworkBehaviour
         else energy = fullCharge;
     }
 
-    public void addEnergy(float value)
+    public void AddEnergy(float value)
     {
         // Add value by percentage
         energy += value/100 * fullCharge;
     }
 
-    public bool isUltCharged()
+    public float GetEnergyPercentage()
+    {
+        return energy/fullCharge;
+    }
+
+    public bool IsUltCharged()
     {
         if (energy == fullCharge)
         {

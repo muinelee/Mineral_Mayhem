@@ -35,6 +35,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             Debug.Log("Local player health linked to player UI");
 
+
+            playerUI.SetPlayerEnergy(GetComponent<NetworkPlayer_Energy>());
+
+            Debug.Log("Local player energy linked to player UI");
+
+
             NetworkPlayer_Movement playerMovement = GetComponent<NetworkPlayer_Movement>();
             playerUI.SetPlayerMovement(playerMovement);
             playerUI.SetDash(playerMovement.GetDash());
