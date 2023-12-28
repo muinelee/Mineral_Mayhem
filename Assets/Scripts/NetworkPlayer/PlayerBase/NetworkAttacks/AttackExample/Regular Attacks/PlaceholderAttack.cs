@@ -9,8 +9,8 @@ public class PlaceholderAttack : NetworkAttack_Base
     /* 
      Attack Description:
     
-        Spawn an attack in front of the player and produce a particle effect.
-        Get the objects in area of attack and (temporary) display object network ID
+    Spawn an attack in front of the player and produce a particle effect.
+    Get the objects in area of attack and (temporary) display object network ID
     */
 
     // Variables to destroy this gameobject
@@ -38,14 +38,12 @@ public class PlaceholderAttack : NetworkAttack_Base
 
     public override void FixedUpdateNetwork()
     {
-        if (Object.HasStateAuthority)
-        {
+        if (!Object.HasStateAuthority) return;
 
-            if (timer.Expired(Runner))
-            {
-                timer = TickTimer.None;
-                Runner.Despawn(GetComponent<NetworkObject>());
-            }
+        if (timer.Expired(Runner))
+        {
+            timer = TickTimer.None;
+            Runner.Despawn(GetComponent<NetworkObject>());
         }
     }
 
@@ -60,8 +58,6 @@ public class PlaceholderAttack : NetworkAttack_Base
 
             if (healthHandler) healthHandler.OnTakeDamage(damage);
         }
-
-        Debug.Log($"The size of the hit list is  {hits.Count}");
 
  /*       foreach (var hit in hits)
         {

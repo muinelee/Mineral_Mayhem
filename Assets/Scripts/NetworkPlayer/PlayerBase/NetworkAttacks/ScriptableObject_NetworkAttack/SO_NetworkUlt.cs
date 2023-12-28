@@ -1,18 +1,28 @@
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SO_NetworkUlt : MonoBehaviour
+[CreateAssetMenu (fileName = "New Netwokr Ult", menuName = "New Network Ult")]
+public class SO_NetworkUlt : ScriptableObject
 {
-    // Start is called before the first frame update
-    void Start()
+    [Header("Attack Prefab")]
+    [SerializeField] private NetworkObject attack;
+
+    [Header("Name and Description")]
+    public string attackName;
+    public string attackDescription;
+
+    [Header("Attack Icon")]
+    [SerializeField] private Sprite attackIcon;
+
+    public NetworkObject GetAttackPrefab()
     {
-        
+        return attack;
     }
 
-    // Update is called once per frame
-    void Update()
+    public Sprite GetAttackIcon()
     {
-        
+        return attackIcon;
     }
 }

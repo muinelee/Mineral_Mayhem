@@ -9,6 +9,7 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
 {   
     private SO_NetworkAttack qAttack;
     private SO_NetworkAttack eAttack;
+    private SO_NetworkUlt fAttack;
     private SO_NetworkDash dash;
 
     private NetworkPlayer_Health playerHealth;
@@ -40,15 +41,16 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
 
     [Header("F (ULT) Attack Properties")]
     [SerializeField] private Image fAttackIcon;
-    [SerializeField] private Image fImageCooldown;
+    [SerializeField] private Image fImageBlock;
 
     // cooldown comes from Scriptable Objects passed from local player
 
     public override void FixedUpdateNetwork()
     {
-        // Update HealthBar
+        // Update Health Bar
         DisplayHealth();
 
+        // Update Energy Bar
         DisplayEnergy();
 
         // Update dash UI display
@@ -59,22 +61,27 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
         
         // Update E Spell UI display
         DisplayAbilityCooldown(ref playerAttack.GetEAttackCoolDownTimer(), eImageCooldown, eCooldownText, eAttack.GetCoolDown());
+
+        // Update F Spell UI display
+        DisplayAbilityCooldown(fImageBlock, playerEnergy.GetEnergyPercentage());
     }
     public void PrimeUI()
     {
         dashIcon.sprite = dash.GetDashIcon();
         qAttackIcon.sprite = qAttack.GetAttackIcon();
         eAttackIcon.sprite = eAttack.GetAttackIcon();
+        fAttackIcon.sprite = fAttack.GetAttackIcon();
     }
 
     private void DisplayHealth()
     {
-        if (healthBar.value != playerHealth.HP / playerHealth.GetStartingHP() && healthBar.value > 0) healthBar.value = playerHealth.HP / playerHealth.GetStartingHP();
+        if (healthBar.value <= 0) return;
+        healthBar.value = playerHealth.HP / playerHealth.GetStartingHP();
     }
 
     private void DisplayEnergy()
     {
-        if (energyBar.value != playerEnergy.GetEnergyPercentage()) energyBar.value = playerEnergy.GetEnergyPercentage();
+        energyBar.value = playerEnergy.GetEnergyPercentage();
     }
 
     private void DisplayAbilityCooldown(ref TickTimer coolDownTimer, Image coolDownImage, Text coolDownText, float maxCoolDown)
@@ -92,6 +99,11 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
         }
     }
 
+    private void DisplayAbilityCooldown(Image coolDownImage, float energyFill)
+    {
+        coolDownImage.fillAmount = 1- energyFill;
+    }
+
     public void SetDash(SO_NetworkDash newDash)
     {
         dash = newDash;
@@ -105,6 +117,11 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
     public void SetEAttack(SO_NetworkAttack newAttack)
     {
         eAttack = newAttack;
+    }
+
+    public void SetFAttack(SO_NetworkUlt newUlt)
+    {
+        fAttack = newUlt;
     }
 
     public void SetPlayerHealth(NetworkPlayer_Health playerHealthScript)

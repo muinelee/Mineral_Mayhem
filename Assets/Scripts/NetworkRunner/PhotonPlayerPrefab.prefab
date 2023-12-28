@@ -14,13 +14,13 @@ GameObject:
   - component: {fileID: 569291861852959994}
   - component: {fileID: 3114791478887022334}
   - component: {fileID: 5589622251466101637}
+  - component: {fileID: -1653265293756383233}
+  - component: {fileID: 2098500895633039834}
   - component: {fileID: 8986336812292418098}
   - component: {fileID: 2430217939546453825}
   - component: {fileID: 7827230098480810277}
   - component: {fileID: 6903174612733432645}
-  - component: {fileID: 2098500895633039834}
   - component: {fileID: 6451881978930218668}
-  - component: {fileID: -1653265293756383233}
   m_Layer: 7
   m_Name: PhotonPlayerPrefab
   m_TagString: Untagged
@@ -81,13 +81,13 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 5934481008385603267}
   - {fileID: 5589622251466101637}
+  - {fileID: -1653265293756383233}
+  - {fileID: 2098500895633039834}
   - {fileID: 8986336812292418098}
   - {fileID: 2430217939546453825}
   - {fileID: 7827230098480810277}
   - {fileID: 6903174612733432645}
-  - {fileID: 2098500895633039834}
   - {fileID: 6451881978930218668}
-  - {fileID: -1653265293756383233}
   - {fileID: 779764453492850429}
   SimulationBehaviours: []
 --- !u!135 &569291861852959994
@@ -166,6 +166,50 @@ MonoBehaviour:
     RotTeleportRadians: 1.5
   UseLegacySharedModeInterpolation: 0
   TargetInterpolationDelay: 0.03
+--- !u!114 &-1653265293756383233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593386485324816745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13eea1efdbed56447a3452f946f57e81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  fullCharge: 10
+--- !u!114 &2098500895633039834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593386485324816745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  Animator: {fileID: 240942584216921724}
+  TotalWords: 5
+  SyncSettings: 95
+  FloatAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  TimeAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: 1061325578
+  WeightAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  StateHashes: 0000000020e23b685928a8ce26b8da42a4f796c72afa8626a8b5caa3c19962852ffbaaf07bc86b1c95aaa369edf86c6b039aa41ee3bb102dc00b138b3e0381be1db38218d6565164cb519623
+  TriggerHashes: 00000000
 --- !u!114 &8986336812292418098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,7 +223,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  turnTime: 0.01
 --- !u!114 &2430217939546453825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,6 +257,7 @@ MonoBehaviour:
   _interpolationDataSource: 0
   qAttack: {fileID: 11400000, guid: d375536f86bf40b4eb8b028e65145d58, type: 2}
   eAttack: {fileID: 11400000, guid: b726f9d2882ce4c4780c40cfd813e1ec, type: 2}
+  fAttack: {fileID: 11400000, guid: 325223d65b6736a4d8c861cef9794c68, type: 2}
 --- !u!114 &6903174612733432645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,36 +274,6 @@ MonoBehaviour:
   _HP: 0
   _isDead: 0
   startingHP: 100
---- !u!114 &2098500895633039834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593386485324816745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  Animator: {fileID: 240942584216921724}
-  TotalWords: 5
-  SyncSettings: 95
-  FloatAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: -814817977
-  TimeAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: 1061325578
-  WeightAccuracy:
-    _value: 0
-    _inverse: 0
-    _hash: -814817977
-  StateHashes: 0000000020e23b685928a8ce26b8da42a4f796c72afa8626a8b5caa3c19962852ffbaaf07bc86b1c95aaa369edf86c6b039aa41e0eefb1c6cc9d70649bc21372344234e1e3bb102dc00b138b3e0381be1db38218
-  TriggerHashes: 00000000
 --- !u!114 &6451881978930218668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,20 +292,6 @@ MonoBehaviour:
   Offset: {x: 0, y: 0, z: 0}
   GizmosColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   Hitboxes: []
---- !u!114 &-1653265293756383233
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593386485324816745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13eea1efdbed56447a3452f946f57e81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  fullCharge: 10
 --- !u!1001 &8819854362039099607
 PrefabInstance:
   m_ObjectHideFlags: 0

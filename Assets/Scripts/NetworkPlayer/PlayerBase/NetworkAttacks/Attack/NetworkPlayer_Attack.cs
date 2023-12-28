@@ -16,12 +16,17 @@ public class NetworkPlayer_Attack : NetworkBehaviour
     [SerializeField] private SO_NetworkAttack eAttack;
     private TickTimer eAttackCoolDownTimer;
 
+    [Header("(Ult) F Attack Properties")]
+    [SerializeField] private SO_NetworkUlt fAttack;
+
     //Components
     private Animator anim;
+    private NetworkPlayer_Energy playerEnergy;
 
     public override void Spawned()
     {
-        if (!anim) anim = GetComponentInChildren<Animator>();
+        anim = GetComponentInChildren<Animator>();
+        playerEnergy = GetComponent<NetworkPlayer_Energy>();
     }
 
     public override void FixedUpdateNetwork()
@@ -30,6 +35,7 @@ public class NetworkPlayer_Attack : NetworkBehaviour
         {
             if (networkInputData.isQAttack && !qAttackCoolDownTimer.IsRunning) ActivateAttack(qAttack, ref qAttackCoolDownTimer);
             if (networkInputData.isEAttack && !eAttackCoolDownTimer.IsRunning) ActivateAttack(eAttack, ref eAttackCoolDownTimer);
+            if (networkInputData.isFAttack && playerEnergy.IsUltCharged()) ActivateAttack(fAttack);
         }
 
         ManageTimers(ref qAttackCoolDownTimer);
@@ -47,6 +53,14 @@ public class NetworkPlayer_Attack : NetworkBehaviour
         anim.SetBool("isAttacking", true);
         anim.CrossFade(attack.attackName, 0.2f);
         attackTimer = TickTimer.CreateFromSeconds(Runner, attack.GetCoolDown());
+    }
+
+    private void ActivateAttack(SO_NetworkUlt ult)
+    {
+        Debug.Log("BIG BANG ATTACKKKKK");
+
+        //canAttack = false;
+        //anim.CrossFade(ult.attackName, 0.2f);
     }
 
     public bool GetCanAttack()
@@ -72,6 +86,11 @@ public class NetworkPlayer_Attack : NetworkBehaviour
     public SO_NetworkAttack GetEAttack()
     {
         return eAttack;
+    }
+
+    public SO_NetworkUlt GetFAttack()
+    {
+        return fAttack;
     }
 
     public ref TickTimer GetQAttackCoolDownTimer()

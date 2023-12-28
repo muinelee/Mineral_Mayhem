@@ -52,9 +52,10 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             playerUI.SetPlayerAttack(playerAttack);
             playerUI.SetQAttack(playerAttack.GetQAttack());
             playerUI.SetEAttack(playerAttack.GetEAttack());
+            playerUI.SetFAttack(playerAttack.GetFAttack());
             playerUI.PrimeUI();
 
-            Debug.Log("Local player abilities linked to player UI");
+            Debug.Log("Local player Attacks linked to player UI");
         }
 
         else
