@@ -57,10 +57,9 @@ public class NetworkPlayer_Attack : NetworkBehaviour
 
     private void ActivateAttack(SO_NetworkUlt ult)
     {
-        Debug.Log("BIG BANG ATTACKKKKK");
-
-        //canAttack = false;
-        //anim.CrossFade(ult.attackName, 0.2f);
+        canAttack = false;
+        anim.SetBool("isAttacking", true);
+        anim.CrossFade(ult.attackName, 0.2f);
     }
 
     public bool GetCanAttack()
@@ -68,6 +67,7 @@ public class NetworkPlayer_Attack : NetworkBehaviour
         return canAttack;
     }
 
+    // Needs to be linked via NetworkPlayer_AnimationLink Script
     public void FireQAttack()
     {
         Runner.Spawn(qAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
@@ -76,6 +76,11 @@ public class NetworkPlayer_Attack : NetworkBehaviour
     public void FireEAttack()
     {
         Runner.Spawn(eAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+    }
+
+    public void FireFAttack()
+    {
+        Runner.Spawn(fAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
     }
 
     public SO_NetworkAttack GetQAttack()

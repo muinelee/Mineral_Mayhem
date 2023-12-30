@@ -59,7 +59,7 @@ public class PlaceholderAttack : NetworkAttack_Base
             if (healthHandler) healthHandler.OnTakeDamage(damage);
         }
 
- /*       foreach (var hit in hits)
+ /*     foreach (var hit in hits)
         {
             var healthHandler = hit.GameObject.GetComponent<NetworkHealthHandler>();
 

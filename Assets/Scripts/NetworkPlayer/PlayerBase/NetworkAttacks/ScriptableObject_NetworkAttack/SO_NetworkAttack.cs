@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using Unity.VisualScripting;
 
 [CreateAssetMenu(fileName = "New Network Attack", menuName = "New Network Attack")]
 public class SO_NetworkAttack : ScriptableObject

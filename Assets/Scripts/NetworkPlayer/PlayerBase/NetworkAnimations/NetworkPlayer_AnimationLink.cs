@@ -27,6 +27,11 @@ public class NetworkPlayer_AnimationLink : NetworkBehaviour
         playerAttack.FireEAttack();
     }
 
+    public void FireFAttack()
+    {
+        playerAttack.FireFAttack();
+    }
+
     public void ResetAnimation()
     {
         playerAttack.ResetCanAttack();
