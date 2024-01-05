@@ -7,16 +7,21 @@ using Fusion;
 
 public class NetworkPlayer_InGameUI : NetworkBehaviour
 {   
-    [SerializeField] private SO_NetworkAttack qAttack;
-    [SerializeField] private SO_NetworkAttack eAttack;
-    [SerializeField] private SO_NetworkDash dash;
+    private SO_NetworkAttack qAttack;
+    private SO_NetworkAttack eAttack;
+    private SO_NetworkUlt fAttack;
+    private SO_NetworkDash dash;
 
-    private NetworkPlayer_Attack playerAttack;
-    private NetworkPlayer_Movement playerMovement;
     private NetworkPlayer_Health playerHealth;
+    private NetworkPlayer_Energy playerEnergy;
+    private NetworkPlayer_Movement playerMovement;
+    private NetworkPlayer_Attack playerAttack;
 
     [Header("Health bar")]
     [SerializeField] private Slider healthBar;
+
+    [Header("Energy bar")]
+    [SerializeField] private Slider energyBar;
 
     // cooldown stuff
     [Header("Dash Properties")]
@@ -34,12 +39,19 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
     [SerializeField] private Image eImageCooldown;
     [SerializeField] private Text eCooldownText;
 
+    [Header("F (ULT) Attack Properties")]
+    [SerializeField] private Image fAttackIcon;
+    [SerializeField] private Image fImageBlock;
+
     // cooldown comes from Scriptable Objects passed from local player
 
     public override void FixedUpdateNetwork()
     {
-        // Update HealthBar
+        // Update Health Bar
         DisplayHealth();
+
+        // Update Energy Bar
+        DisplayEnergy();
 
         // Update dash UI display
         DisplayAbilityCooldown(ref playerMovement.GetDashCoolDownTimer(), dashImageCooldown, dashCooldownText, dash.GetCoolDown());
@@ -49,6 +61,27 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
         
         // Update E Spell UI display
         DisplayAbilityCooldown(ref playerAttack.GetEAttackCoolDownTimer(), eImageCooldown, eCooldownText, eAttack.GetCoolDown());
+
+        // Update F Spell UI display
+        DisplayAbilityCooldown(fImageBlock, playerEnergy.GetEnergyPercentage());
+    }
+    public void PrimeUI()
+    {
+        dashIcon.sprite = dash.GetDashIcon();
+        qAttackIcon.sprite = qAttack.GetAttackIcon();
+        eAttackIcon.sprite = eAttack.GetAttackIcon();
+        fAttackIcon.sprite = fAttack.GetAttackIcon();
+    }
+
+    private void DisplayHealth()
+    {
+        if (healthBar.value <= 0) return;
+        healthBar.value = playerHealth.HP / playerHealth.GetStartingHP();
+    }
+
+    private void DisplayEnergy()
+    {
+        energyBar.value = playerEnergy.GetEnergyPercentage();
     }
 
     private void DisplayAbilityCooldown(ref TickTimer coolDownTimer, Image coolDownImage, Text coolDownText, float maxCoolDown)
@@ -66,16 +99,9 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
         }
     }
 
-    private void DisplayHealth()
+    private void DisplayAbilityCooldown(Image coolDownImage, float energyFill)
     {
-        if (healthBar.value != playerHealth.HP / playerHealth.GetStartingHP() && healthBar.value > 0) healthBar.value = playerHealth.HP / playerHealth.GetStartingHP();
-    }
-
-    public void PrimeUI()
-    {
-        dashIcon.sprite = dash.GetDashIcon();
-        qAttackIcon.sprite = qAttack.GetAttackIcon();
-        eAttackIcon.sprite = eAttack.GetAttackIcon();
+        coolDownImage.fillAmount = 1- energyFill;
     }
 
     public void SetDash(SO_NetworkDash newDash)
@@ -93,18 +119,27 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
         eAttack = newAttack;
     }
 
-    public void SetPlayerAttack(NetworkPlayer_Attack playerAttackScript)
+    public void SetFAttack(SO_NetworkUlt newUlt)
     {
-        playerAttack = playerAttackScript;
+        fAttack = newUlt;
+    }
+
+    public void SetPlayerHealth(NetworkPlayer_Health playerHealthScript)
+    {
+        playerHealth = playerHealthScript;
+    }
+
+    public void SetPlayerEnergy(NetworkPlayer_Energy playerEnergyScript)
+    {
+        playerEnergy = playerEnergyScript;
     }
 
     public void SetPlayerMovement(NetworkPlayer_Movement playerMovementScript)
     {
         playerMovement = playerMovementScript;
     }
-
-    public void SetPlayerHealth(NetworkPlayer_Health playerHealthScript)
+    public void SetPlayerAttack(NetworkPlayer_Attack playerAttackScript)
     {
-        playerHealth = playerHealthScript;
+        playerAttack = playerAttackScript;
     }
 }

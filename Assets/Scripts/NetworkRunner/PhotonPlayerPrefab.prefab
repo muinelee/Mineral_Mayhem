@@ -14,11 +14,12 @@ GameObject:
   - component: {fileID: 569291861852959994}
   - component: {fileID: 3114791478887022334}
   - component: {fileID: 5589622251466101637}
+  - component: {fileID: -1653265293756383233}
+  - component: {fileID: 2098500895633039834}
   - component: {fileID: 8986336812292418098}
   - component: {fileID: 2430217939546453825}
   - component: {fileID: 7827230098480810277}
   - component: {fileID: 6903174612733432645}
-  - component: {fileID: 2098500895633039834}
   - component: {fileID: 6451881978930218668}
   m_Layer: 7
   m_Name: PhotonPlayerPrefab
@@ -80,11 +81,12 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 5934481008385603267}
   - {fileID: 5589622251466101637}
+  - {fileID: -1653265293756383233}
+  - {fileID: 2098500895633039834}
   - {fileID: 8986336812292418098}
   - {fileID: 2430217939546453825}
   - {fileID: 7827230098480810277}
   - {fileID: 6903174612733432645}
-  - {fileID: 2098500895633039834}
   - {fileID: 6451881978930218668}
   - {fileID: 779764453492850429}
   SimulationBehaviours: []
@@ -164,7 +166,7 @@ MonoBehaviour:
     RotTeleportRadians: 1.5
   UseLegacySharedModeInterpolation: 0
   TargetInterpolationDelay: 0.03
---- !u!114 &8986336812292418098
+--- !u!114 &-1653265293756383233
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -173,61 +175,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 593386485324816745}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4079ce53e463f064a9a8f626212d758c, type: 3}
+  m_Script: {fileID: 11500000, guid: 13eea1efdbed56447a3452f946f57e81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  turnTime: 0.01
---- !u!114 &2430217939546453825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593386485324816745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 954771b7035a54f40b7e3f077cd1f758, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  moveSpeed: 20
-  turnTime: 0.02
-  canMove: 1
-  dash: {fileID: 11400000, guid: cea01a3e636397f40943d85444c70827, type: 2}
-  anim: {fileID: 240942584216921724}
-  networkRigidBody: {fileID: 5589622251466101637}
---- !u!114 &7827230098480810277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593386485324816745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04b2834c711f85c46af8012f7d49bad4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  qAttack: {fileID: 11400000, guid: d375536f86bf40b4eb8b028e65145d58, type: 2}
-  eAttack: {fileID: 11400000, guid: b726f9d2882ce4c4780c40cfd813e1ec, type: 2}
---- !u!114 &6903174612733432645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593386485324816745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d1e92efa2ce3264a87bbc5490a293f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  _HP: 0
-  _isDead: 0
-  startingHP: 100
+  fullCharge: 2
 --- !u!114 &2098500895633039834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,8 +208,72 @@ MonoBehaviour:
     _value: 0
     _inverse: 0
     _hash: -814817977
-  StateHashes: 0000000020e23b685928a8ce26b8da42a4f796c72afa8626a8b5caa3c19962852ffbaaf07bc86b1c95aaa369edf86c6b039aa41e0eefb1c6cc9d70649bc21372344234e1e3bb102dc00b138b3e0381be1db38218
+  StateHashes: 0000000020e23b685928a8ce26b8da42a4f796c72afa8626a8b5caa3c19962852ffbaaf07bc86b1c95aaa369edf86c6b039aa41ee3bb102dc00b138b3e0381be1db38218d6565164cb519623
   TriggerHashes: 00000000
+--- !u!114 &8986336812292418098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593386485324816745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4079ce53e463f064a9a8f626212d758c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+--- !u!114 &2430217939546453825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593386485324816745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 954771b7035a54f40b7e3f077cd1f758, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  moveSpeed: 20
+  turnTime: 0.005
+  canMove: 1
+  dash: {fileID: 11400000, guid: cea01a3e636397f40943d85444c70827, type: 2}
+  anim: {fileID: 240942584216921724}
+  networkRigidBody: {fileID: 5589622251466101637}
+--- !u!114 &7827230098480810277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593386485324816745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04b2834c711f85c46af8012f7d49bad4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  qAttack: {fileID: 11400000, guid: d375536f86bf40b4eb8b028e65145d58, type: 2}
+  eAttack: {fileID: 11400000, guid: b726f9d2882ce4c4780c40cfd813e1ec, type: 2}
+  fAttack: {fileID: 11400000, guid: 325223d65b6736a4d8c861cef9794c68, type: 2}
+--- !u!114 &6903174612733432645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593386485324816745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d1e92efa2ce3264a87bbc5490a293f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  _HP: 0
+  _isDead: 0
+  startingHP: 100
 --- !u!114 &6451881978930218668
 MonoBehaviour:
   m_ObjectHideFlags: 0
