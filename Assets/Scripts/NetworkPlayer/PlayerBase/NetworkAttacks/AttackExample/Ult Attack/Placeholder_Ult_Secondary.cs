@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class Placeholder_Ult_Secondary : NetworkBehaviour
 {
-    [Header("Movement Properties")]
-    [SerializeField] private float moveSpeed;
+    private float moveSpeed;
     private NetworkRigidbody networkRigidBody;
 
     public override void Spawned()
@@ -17,5 +16,10 @@ public class Placeholder_Ult_Secondary : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
         networkRigidBody.Rigidbody.AddForce(transform.forward * moveSpeed);
+    }
+
+    public void SetSpeed(float speed)
+    {
+        moveSpeed = speed;
     }
 }

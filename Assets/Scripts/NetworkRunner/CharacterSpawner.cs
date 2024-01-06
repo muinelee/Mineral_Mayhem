@@ -10,8 +10,6 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private NetworkPlayer_InputController playerInputController;
 
-
-    
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)                          // Spawns player in scene
     {
         if (runner.IsServer)
@@ -95,7 +93,6 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
     {
-        
-    }
 
+    }
 }

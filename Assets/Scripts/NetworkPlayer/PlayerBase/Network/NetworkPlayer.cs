@@ -2,11 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using Fusion;
+using TMPro;
 using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
     public static NetworkPlayer Local { get; private set; }
+
+    [Header("Username UI")]
+    public TextMeshProUGUI playerNameTMP;
+
+    [Networked(OnChanged = nameof(OnPlayerNameChanged))]
+    public NetworkString<_16> playerName { get; private set; }
 
     public override void Spawned()
     {
@@ -70,5 +77,19 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         {
             Runner.Despawn(Object);
         }
+    }
+
+    private static void OnPlayerNameChanged(Changed<NetworkPlayer> player)
+    {
+        Debug.Log($"{Time.time} Player name has been changed to {player.Behaviour.playerName}");
+
+        player.Behaviour.OnPlayerNameChanged();
+    }
+
+    private void OnPlayerNameChanged()
+    {
+        Debug.Log($"Dispalyed name changed for player {gameObject.name} to {playerName}");
+
+        playerNameTMP.text = playerName.ToString();
     }
 }

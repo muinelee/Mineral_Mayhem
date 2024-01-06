@@ -8,23 +8,30 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
 {
     // Fires a cone of secondary attacks in front of player 
 
+    [Header("End Attack properties")]
+    [SerializeField] private float lifetimeDuration;
+    private TickTimer timer = TickTimer.None;
+
     [Header("Projectile Properties")]
     [SerializeField] private NetworkObject projectilePrefab;
+    [SerializeField] private float projectileSpeed;
     [SerializeField] private float projectileNum;
     [SerializeField] private float angleOfCone;
     [SerializeField] private float projectileRadius;
-    private List<Transform> projectileList = new List<Transform>();
+    private List<NetworkObject> projectileList = new List<NetworkObject>();
 
     [Header("List of objects hit")]
     [SerializeField] private LayerMask playerLayer;
-    [SerializeField] private List<Hitbox> objectsHit = new List<Hitbox>();         // Check if object is in the objectsHit list. If not, do damage and add to list
+    [SerializeField] private List<Hitbox> objectsHit = new List<Hitbox>();          // Check if object is in the objectsHit list. If not, do damage and add to list
     [SerializeField] private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
     public override void Spawned()
     {
         if (!Object.HasStateAuthority) return;
 
-        SpawnAttacks();
+        SpawnAttacks();                                                             // Create the projectiles
+
+        timer = TickTimer.CreateFromSeconds(Runner, lifetimeDuration);              // Start timer
     }
 
     public override void FixedUpdateNetwork()
@@ -32,6 +39,8 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
         if (!Object.HasStateAuthority) return;
 
         DealDamaage();
+
+        ManageTimer();
     }
 
     private void SpawnAttacks()
@@ -44,7 +53,8 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
             {
                 float angleOffset = startOfConeAngle + ((angleOfCone / (projectileNum - 1)) * i);
                 NetworkObject spawnedSecondary = Runner.Spawn(projectilePrefab, transform.position + Vector3.up, transform.rotation * Quaternion.Euler(Vector3.up * angleOffset), Object.InputAuthority);
-                projectileList.Add(spawnedSecondary.transform);
+                spawnedSecondary.GetComponent<Placeholder_Ult_Secondary>().SetSpeed(projectileSpeed);
+                projectileList.Add(spawnedSecondary);
             }
         }
 
@@ -55,9 +65,9 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
 
     private void DealDamaage()
     {
-        foreach (Transform projectile in projectileList)
+        foreach (NetworkObject projectile in projectileList)
         {
-            Runner.LagCompensation.OverlapSphere(projectile.position, projectileRadius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
+            Runner.LagCompensation.OverlapSphere(projectile.transform.position, projectileRadius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
             foreach (LagCompensatedHit hit in hits)
             {
                 if (objectsHit.Contains(hit.Hitbox)) continue;
@@ -72,6 +82,19 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
         }
     }
 
+    private void ManageTimer()
+    {
+        if (timer.Expired(Runner))
+        {
+            foreach (NetworkObject projectile in projectileList) Runner.Despawn(projectile);
+       
+            Debug.Log("Attack should be destroyed");
+
+            Runner.Despawn(GetComponent<NetworkObject>());
+        }
+
+    }
+
     public bool HitboxInObjectsHit(Hitbox objectHit)
     {
         if (objectsHit.Contains(objectHit)) return true;
@@ -82,6 +105,10 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
         }
     }
 
+    /*
+    
+    Gizmos to see projectile 
+    
     private void OnDrawGizmos()
     {
         if (projectileList.Count < 1) return;
@@ -91,4 +118,6 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
             Gizmos.DrawSphere(projectile.position, projectileRadius);
         }
     }
+
+    */
 }
