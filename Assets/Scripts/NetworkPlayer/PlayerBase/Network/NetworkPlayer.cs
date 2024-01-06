@@ -24,6 +24,9 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             Debug.Log("Spawned local player");
 
 
+            RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
+
+
             CinemachineVirtualCamera virtualCam = FindAnyObjectByType<CinemachineVirtualCamera>();
             virtualCam.Follow = this.transform;
             virtualCam.LookAt= this.transform;
@@ -91,5 +94,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         Debug.Log($"Dispalyed name changed for player {gameObject.name} to {playerName}");
 
         playerNameTMP.text = playerName.ToString();
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_SetPlayerNames(string newPlayerName, RpcInfo info = default)
+    {
+        Debug.Log($"[RPC] Setting the new player name to {newPlayerName}");
+        this.playerName = newPlayerName;
     }
 }
