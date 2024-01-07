@@ -6,24 +6,27 @@ using UnityEngine.UI;
 using Fusion;
 
 public class NetworkPlayer_InGameUI : NetworkBehaviour
-{   
+{  
+    // Abilities
     private SO_NetworkAttack qAttack;
     private SO_NetworkAttack eAttack;
     private SO_NetworkUlt fAttack;
     private SO_NetworkDash dash;
 
+    // Components
     private NetworkPlayer_Health playerHealth;
     private NetworkPlayer_Energy playerEnergy;
     private NetworkPlayer_Movement playerMovement;
     private NetworkPlayer_Attack playerAttack;
 
+    // UI Properties
     [Header("Health bar")]
     [SerializeField] private Slider healthBar;
 
     [Header("Energy bar")]
     [SerializeField] private Slider energyBar;
 
-    // cooldown stuff
+    // Cooldown stuff
     [Header("Dash Properties")]
     [SerializeField] private Image dashIcon;
     [SerializeField] private Image dashImageCooldown;
@@ -76,6 +79,7 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
     private void DisplayHealth()
     {
         if (healthBar.value <= 0) return;
+
         healthBar.value = playerHealth.HP / playerHealth.GetStartingHP();
     }
 

@@ -17,6 +17,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     public override void Spawned()
     {
+
+
         if (Object.HasInputAuthority)
         {
             Local = this;
@@ -27,7 +29,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
 
 
-            CinemachineVirtualCamera virtualCam = FindAnyObjectByType<CinemachineVirtualCamera>();
+            CinemachineVirtualCamera virtualCam = Camera.main.GetComponentInChildren<CinemachineVirtualCamera>();
             virtualCam.Follow = this.transform;
             virtualCam.LookAt= this.transform;
 
@@ -63,6 +65,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             playerUI.SetQAttack(playerAttack.GetQAttack());
             playerUI.SetEAttack(playerAttack.GetEAttack());
             playerUI.SetFAttack(playerAttack.GetFAttack());
+
             playerUI.PrimeUI();
 
             Debug.Log("Local player Attacks linked to player UI");
