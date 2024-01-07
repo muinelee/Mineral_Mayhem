@@ -17,8 +17,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     public override void Spawned()
     {
-
-
         if (Object.HasInputAuthority)
         {
             Local = this;
@@ -27,6 +25,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
 
             RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
+
+            Debug.Log("Set Player Name");
 
 
             CinemachineVirtualCamera virtualCam = Camera.main.GetComponentInChildren<CinemachineVirtualCamera>();
