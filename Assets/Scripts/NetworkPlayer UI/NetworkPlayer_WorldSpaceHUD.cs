@@ -31,7 +31,7 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
         // Detach from parent to prevent HUD from rotating with gameObject
         playerTransform = transform.parent.transform;
         yOffset = transform.localPosition.y;
-        transform.parent = null;
+        transform.SetParent(null);
 
         // Set Floating HealthBar properties
         if (Object.HasInputAuthority) nonLocalPlayerHealthBar.gameObject.SetActive(false);
