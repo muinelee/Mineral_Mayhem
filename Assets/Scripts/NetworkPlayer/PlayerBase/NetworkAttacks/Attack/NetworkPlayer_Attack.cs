@@ -22,11 +22,13 @@ public class NetworkPlayer_Attack : NetworkBehaviour
     //Components
     private Animator anim;
     private NetworkPlayer_Energy playerEnergy;
+    private NetworkPlayer_Movement playerMovement;
 
     public override void Spawned()
     {
         anim = GetComponentInChildren<Animator>();
         playerEnergy = GetComponent<NetworkPlayer_Energy>();
+        playerMovement = GetComponent<NetworkPlayer_Movement>();
     }
 
     public override void FixedUpdateNetwork()
@@ -49,17 +51,25 @@ public class NetworkPlayer_Attack : NetworkBehaviour
 
     private void ActivateAttack(SO_NetworkAttack attack, ref TickTimer attackTimer)
     {
+        // Start Attack animation
         canAttack = false;
-        anim.SetBool("isAttacking", true);
         anim.CrossFade(attack.attackName, 0.2f);
         attackTimer = TickTimer.CreateFromSeconds(Runner, attack.GetCoolDown());
+
+        // Slow player
+        playerMovement.SetTurnSlow(attack.GetTurnSlow());
+        playerMovement.SetAbilitySlow(attack.GetAbilitySlow());
     }
 
     private void ActivateAttack(SO_NetworkUlt ult)
     {
+        // Start Ult animation
         canAttack = false;
-        anim.SetBool("isAttacking", true);
         anim.CrossFade(ult.attackName, 0.2f);
+
+        // Slow player
+        playerMovement.SetTurnSlow(ult.GetTurnSlow());
+        playerMovement.SetAbilitySlow(ult.GetAbilitySlow());
     }
 
     public bool GetCanAttack()
@@ -108,8 +118,10 @@ public class NetworkPlayer_Attack : NetworkBehaviour
         return ref eAttackCoolDownTimer;
     }
 
-    public void ResetCanAttack()
+    public void ResetAttackCapabilities()
     {
         canAttack = true;
+        playerMovement.ResetTurnSlow();
+        playerMovement.ResetAbilitySlow();
     }
 }

@@ -15,6 +15,11 @@ public class NetworkPlayer_Movement : NetworkBehaviour
     private float dashSpeed = 0;
     private float turnSmoothVel;
 
+    // Variables to apply slow;
+    private float turnSlow = 0;
+    private float abilitySlow = 1;
+    private float statusSlow = 1;
+
     [Header("Dash Properties")]
     [SerializeField] private SO_NetworkDash dash;
     private TickTimer dashCoolDownTimer = TickTimer.None;
@@ -27,15 +32,15 @@ public class NetworkPlayer_Movement : NetworkBehaviour
 
     public override void Spawned()
     {
-        if (!anim) Debug.Log("Add Animator through inspector");
-        if (!networkRigidBody) Debug.Log("Add NetworkRigidbody through inspector");
+        if (!anim) anim = GetComponentInChildren<Animator>();
+        if (!networkRigidBody) networkRigidBody = GetComponent<NetworkRigidbody>();
     }
 
     public override void FixedUpdateNetwork()
     {
         if (GetInput(out NetworkInputData networkInputData))
         {
-            if (canMove && !isDashing && !anim.GetBool("isAttacking"))
+            if (canMove && !isDashing)
             {
                 // Set direction player is looking at
                 targetDirection = (networkInputData.cursorLocation - transform.position).normalized;
@@ -44,7 +49,7 @@ public class NetworkPlayer_Movement : NetworkBehaviour
                 Aim();
 
                 // Move
-                networkRigidBody.Rigidbody.AddForce(networkInputData.moveDirection * (moveSpeed + dashSpeed));
+                networkRigidBody.Rigidbody.AddForce(networkInputData.moveDirection * (moveSpeed + dashSpeed) * abilitySlow * statusSlow);
 
                 // Dash (Can be a boost or buff)
                 if (networkInputData.isDashing) MobilityAbility(networkInputData.moveDirection);
@@ -60,9 +65,9 @@ public class NetworkPlayer_Movement : NetworkBehaviour
 
     private void Aim()
     {
-         // Rotate player using the networkplayer_movement
+         // Rotate player over time to the target angle
          float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
-         float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime);
+         float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime + turnSlow);
          transform.rotation = Quaternion.Euler(0, angle, 0);
     }
 
@@ -114,13 +119,35 @@ public class NetworkPlayer_Movement : NetworkBehaviour
         return ref dashCoolDownTimer;
     }
 
-    public void SetAnimator(Animator animator)
+    public void SetTurnSlow(float slowPercentage)
     {
-        anim = animator;
+        turnSlow = slowPercentage;
     }
 
-    public void SetNetworkRigidbody(NetworkRigidbody networkRb)
+    public void ResetTurnSlow()
     {
-        networkRigidBody = networkRb;
+        turnSlow = 0;
+    }
+
+    public void SetAbilitySlow(float slowPercentage)
+    {
+        Mathf.Clamp(slowPercentage, 0, 1);
+        abilitySlow = 1 - slowPercentage;
+    }
+
+    public void ResetAbilitySlow()
+    {
+        abilitySlow = 1;
+    }
+
+    public void SetStatusSlow(float slowPercentage)
+    {
+        Mathf.Clamp(slowPercentage, 0, 1);
+        statusSlow = 1 - slowPercentage;
+    }
+
+    public void ResetStatusSlow()
+    {
+        statusSlow = 1;
     }
 }

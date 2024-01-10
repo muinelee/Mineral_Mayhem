@@ -87,9 +87,6 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
         if (timer.Expired(Runner))
         {
             foreach (NetworkObject projectile in projectileList) Runner.Despawn(projectile);
-       
-            Debug.Log("Attack should be destroyed");
-
             Runner.Despawn(GetComponent<NetworkObject>());
         }
 
@@ -106,18 +103,16 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
     }
 
     /*
-    
-    Gizmos to see projectile 
+    Gizmos to see projectile area of effect
     
     private void OnDrawGizmos()
     {
         if (projectileList.Count < 1) return;
 
-        foreach (Transform projectile in projectileList)
+        foreach (NetworkObject projectile in projectileList)
         {
-            Gizmos.DrawSphere(projectile.position, projectileRadius);
+            Gizmos.DrawWireSphere(projectile.transform.position, projectileRadius);
         }
     }
-
     */
 }

@@ -34,8 +34,7 @@ public class NetworkPlayer_AnimationLink : NetworkBehaviour
 
     public void ResetAnimation()
     {
-        playerAttack.ResetCanAttack();
-        anim.SetBool("isAttacking", false);
+        playerAttack.ResetAttackCapabilities();
         anim.CrossFade("Run", 0.2f);
     }
 }
