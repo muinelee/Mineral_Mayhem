@@ -27,10 +27,14 @@ public class NetworkPlayer_AnimationLink : NetworkBehaviour
         playerAttack.FireEAttack();
     }
 
+    public void FireFAttack()
+    {
+        playerAttack.FireFAttack();
+    }
+
     public void ResetAnimation()
     {
-        playerAttack.ResetCanAttack();
-        anim.SetBool("isAttacking", false);
+        playerAttack.ResetAttackCapabilities();
         anim.CrossFade("Run", 0.2f);
     }
 }

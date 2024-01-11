@@ -40,6 +40,7 @@ public class NetworkPlayer_Health : NetworkBehaviour
 
             isDead = true;
         }
+        else NetworkCameraEffectsManager.instance.CameraHitEffect(damageAmount);
     }
 
     static void OnHPChanged(Changed<NetworkPlayer_Health> changed)

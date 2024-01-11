@@ -6,7 +6,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(NetworkPlayer_Movement), typeof(NetworkPlayer_Attack), typeof(NetworkRigidbody))]
 public class NetworkPlayer_InputController : NetworkBehaviour
 {
     private Vector3 moveInputVector;
@@ -15,6 +14,7 @@ public class NetworkPlayer_InputController : NetworkBehaviour
     private bool isDashPressed = false;
     private bool isQPressed = false;
     private bool isEPressed = false;
+    private bool isFPressed = false;
 
     // Components
     private Camera cam;
@@ -28,10 +28,6 @@ public class NetworkPlayer_InputController : NetworkBehaviour
         playerMovement = GetComponent<NetworkPlayer_Movement>();
         playerAttack = GetComponent<NetworkPlayer_Attack>();
     }
-
-    // Turning variables
-    private float turnSmoothVel;
-    [SerializeField][Range(0.01f, 1f)] private float turnTime;
 
     private void Update()
     {
@@ -51,11 +47,13 @@ public class NetworkPlayer_InputController : NetworkBehaviour
 
         networkInputData.isQAttack = isQPressed;
         networkInputData.isEAttack = isEPressed;
+        networkInputData.isFAttack = isFPressed;
 
         // reset ability triggers since data has been passed
         isDashPressed = false;
         isQPressed = false;
         isEPressed = false;
+        isFPressed = false;
 
         return networkInputData;
     }
@@ -77,5 +75,6 @@ public class NetworkPlayer_InputController : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.Space)) isDashPressed = true;
         if (Input.GetKeyDown(KeyCode.Q)) isQPressed = true;
         if (Input.GetKeyDown(KeyCode.E)) isEPressed = true;
+        if (Input.GetKeyDown(KeyCode.F)) isFPressed = true;
     }
 }

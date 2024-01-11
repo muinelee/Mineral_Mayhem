@@ -16,12 +16,19 @@ public class NetworkPlayer_Attack : NetworkBehaviour
     [SerializeField] private SO_NetworkAttack eAttack;
     private TickTimer eAttackCoolDownTimer;
 
+    [Header("(Ult) F Attack Properties")]
+    [SerializeField] private SO_NetworkUlt fAttack;
+
     //Components
     private Animator anim;
+    private NetworkPlayer_Energy playerEnergy;
+    private NetworkPlayer_Movement playerMovement;
 
     public override void Spawned()
     {
-        if (!anim) anim = GetComponentInChildren<Animator>();
+        anim = GetComponentInChildren<Animator>();
+        playerEnergy = GetComponent<NetworkPlayer_Energy>();
+        playerMovement = GetComponent<NetworkPlayer_Movement>();
     }
 
     public override void FixedUpdateNetwork()
@@ -30,6 +37,7 @@ public class NetworkPlayer_Attack : NetworkBehaviour
         {
             if (networkInputData.isQAttack && !qAttackCoolDownTimer.IsRunning) ActivateAttack(qAttack, ref qAttackCoolDownTimer);
             if (networkInputData.isEAttack && !eAttackCoolDownTimer.IsRunning) ActivateAttack(eAttack, ref eAttackCoolDownTimer);
+            if (networkInputData.isFAttack && playerEnergy.IsUltCharged()) ActivateAttack(fAttack);
         }
 
         ManageTimers(ref qAttackCoolDownTimer);
@@ -43,10 +51,25 @@ public class NetworkPlayer_Attack : NetworkBehaviour
 
     private void ActivateAttack(SO_NetworkAttack attack, ref TickTimer attackTimer)
     {
+        // Start Attack animation
         canAttack = false;
-        anim.SetBool("isAttacking", true);
         anim.CrossFade(attack.attackName, 0.2f);
         attackTimer = TickTimer.CreateFromSeconds(Runner, attack.GetCoolDown());
+
+        // Slow player
+        playerMovement.SetTurnSlow(attack.GetTurnSlow());
+        playerMovement.SetAbilitySlow(attack.GetAbilitySlow());
+    }
+
+    private void ActivateAttack(SO_NetworkUlt ult)
+    {
+        // Start Ult animation
+        canAttack = false;
+        anim.CrossFade(ult.attackName, 0.2f);
+
+        // Slow player
+        playerMovement.SetTurnSlow(ult.GetTurnSlow());
+        playerMovement.SetAbilitySlow(ult.GetAbilitySlow());
     }
 
     public bool GetCanAttack()
@@ -54,6 +77,7 @@ public class NetworkPlayer_Attack : NetworkBehaviour
         return canAttack;
     }
 
+    // Needs to be linked via NetworkPlayer_AnimationLink Script
     public void FireQAttack()
     {
         Runner.Spawn(qAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
@@ -62,6 +86,11 @@ public class NetworkPlayer_Attack : NetworkBehaviour
     public void FireEAttack()
     {
         Runner.Spawn(eAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+    }
+
+    public void FireFAttack()
+    {
+        Runner.Spawn(fAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
     }
 
     public SO_NetworkAttack GetQAttack()
@@ -74,6 +103,11 @@ public class NetworkPlayer_Attack : NetworkBehaviour
         return eAttack;
     }
 
+    public SO_NetworkUlt GetFAttack()
+    {
+        return fAttack;
+    }
+
     public ref TickTimer GetQAttackCoolDownTimer()
     {
         return ref qAttackCoolDownTimer;
@@ -84,8 +118,10 @@ public class NetworkPlayer_Attack : NetworkBehaviour
         return ref eAttackCoolDownTimer;
     }
 
-    public void ResetCanAttack()
+    public void ResetAttackCapabilities()
     {
         canAttack = true;
+        playerMovement.ResetTurnSlow();
+        playerMovement.ResetAbilitySlow();
     }
 }

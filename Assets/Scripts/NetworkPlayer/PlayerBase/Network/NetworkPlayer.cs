@@ -2,11 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using Fusion;
+using TMPro;
 using UnityEngine;
+
+// Essential Components for player character base
+[RequireComponent(typeof(NetworkObject))]
+[RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
+[RequireComponent(typeof(NetworkPlayer_InputController), typeof(NetworkPlayer_Movement))]
+[RequireComponent(typeof(NetworkPlayer_Attack), typeof(NetworkPlayer_Energy), typeof(NetworkPlayer_Health))]
+[RequireComponent(typeof(NetworkMecanimAnimator), typeof(HitboxRoot))]
+
+/* 
+    Notes when creating new character:
+    
+    Add player model as a child object
+    Add a Floating Health Bar prefab as a child object
+    Add hitbox component to model
+*/
 
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
     public static NetworkPlayer Local { get; private set; }
+
+    [Header("Username UI")]
+    public TextMeshProUGUI playerNameTMP;
+
+    [Networked(OnChanged = nameof(OnPlayerNameChanged))]
+    public NetworkString<_16> playerName { get; private set; }
 
     public override void Spawned()
     {
@@ -17,7 +39,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             Debug.Log("Spawned local player");
 
 
-            CinemachineVirtualCamera virtualCam = FindAnyObjectByType<CinemachineVirtualCamera>();
+            RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
+
+            Debug.Log("Set Player Name");
+
+
+            CinemachineVirtualCamera virtualCam = Camera.main.GetComponentInChildren<CinemachineVirtualCamera>();
             virtualCam.Follow = this.transform;
             virtualCam.LookAt= this.transform;
 
@@ -35,6 +62,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             Debug.Log("Local player health linked to player UI");
 
+
+            playerUI.SetPlayerEnergy(GetComponent<NetworkPlayer_Energy>());
+
+            Debug.Log("Local player energy linked to player UI");
+
+
             NetworkPlayer_Movement playerMovement = GetComponent<NetworkPlayer_Movement>();
             playerUI.SetPlayerMovement(playerMovement);
             playerUI.SetDash(playerMovement.GetDash());
@@ -46,9 +79,11 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             playerUI.SetPlayerAttack(playerAttack);
             playerUI.SetQAttack(playerAttack.GetQAttack());
             playerUI.SetEAttack(playerAttack.GetEAttack());
+            playerUI.SetFAttack(playerAttack.GetFAttack());
+
             playerUI.PrimeUI();
 
-            Debug.Log("Local player abilities linked to player UI");
+            Debug.Log("Local player Attacks linked to player UI");
         }
 
         else
@@ -63,5 +98,26 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         {
             Runner.Despawn(Object);
         }
+    }
+
+    private static void OnPlayerNameChanged(Changed<NetworkPlayer> player)
+    {
+        Debug.Log($"{Time.time} Player name has been changed to {player.Behaviour.playerName}");
+
+        player.Behaviour.OnPlayerNameChanged();
+    }
+
+    private void OnPlayerNameChanged()
+    {
+        Debug.Log($"Dispalyed name changed for player {gameObject.name} to {playerName}");
+
+        playerNameTMP.text = playerName.ToString();
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_SetPlayerNames(string newPlayerName, RpcInfo info = default)
+    {
+        Debug.Log($"[RPC] Setting the new player name to {newPlayerName}");
+        this.playerName = newPlayerName;
     }
 }
