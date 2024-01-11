@@ -6,7 +6,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(NetworkPlayer_Movement), typeof(NetworkPlayer_Attack), typeof(NetworkRigidbody))]
 public class NetworkPlayer_InputController : NetworkBehaviour
 {
     private Vector3 moveInputVector;
