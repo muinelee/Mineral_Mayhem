@@ -12,6 +12,8 @@ public class NetworkPlayer_Health : NetworkBehaviour
     public bool isDead { get; set; }
 
     private bool isInitialized = false;
+    private Animator anim;
+    private Rigidbody rb;
 
     [SerializeField] private float startingHP = 100;
 
@@ -20,6 +22,8 @@ public class NetworkPlayer_Health : NetworkBehaviour
     {
         HP = startingHP;
         isDead = false;
+        anim = GetComponentInChildren<Animator>();
+        rb = GetComponent<Rigidbody>();
     }
 
     // Function only called on the server
@@ -39,8 +43,25 @@ public class NetworkPlayer_Health : NetworkBehaviour
             Debug.Log($"{Time.time} {transform.name} is dead");
 
             isDead = true;
+            HandleDeath();
         }
         else NetworkCameraEffectsManager.instance.CameraHitEffect(damageAmount);
+    }
+
+    private void HandleDeath()
+    {
+        // Disable input
+        GetComponent<NetworkPlayer_InputController>().enabled = false;
+        // Disable movement
+        GetComponent<NetworkPlayer_Movement>().enabled = false;
+        // Disable attack
+        GetComponent<NetworkPlayer_Attack>().enabled = false;
+        // Disable sphere collider
+        GetComponent<SphereCollider>().enabled = false;
+        // Disable gravity
+        rb.useGravity = false;
+
+        anim.CrossFade("Death", 0.2f);
     }
 
     static void OnHPChanged(Changed<NetworkPlayer_Health> changed)
