@@ -20,8 +20,7 @@ public class NetworkPlayer_Health : NetworkBehaviour
     // Start is called before the first frame update
     public override void Spawned()
     {
-        HP = startingHP;
-        isDead = false;
+        if (HP == startingHP) isDead = false;
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
     }

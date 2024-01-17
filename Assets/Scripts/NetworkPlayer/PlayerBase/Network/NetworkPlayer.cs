@@ -29,6 +29,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     [Networked] public int tokenID { get; set; }        // Value is set when spawned by CharacterSpawner
 
+    [Header("Camera Offset")]
+    [SerializeField] private Vector3 cameraOffset;
 
     [Header("Username UI")]
     public TextMeshProUGUI playerNameTMP;
@@ -48,17 +50,20 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             Debug.Log("Set Player Name");
 
+            GetComponent<NetworkPlayer_InputController>().SetCam(Camera.main);
 
+            Debug.Log("Set Camera for local player");
+
+            Camera.main.transform.position = this.transform.position + cameraOffset;
+            Camera.main.transform.rotation = Quaternion.Euler(50, 0, 0);
+            
+            Debug.Log ($"Camera's new position is {Camera.main.transform.position}");
+            
             CinemachineVirtualCamera virtualCam = Camera.main.GetComponentInChildren<CinemachineVirtualCamera>();
             virtualCam.Follow = this.transform;
             virtualCam.LookAt= this.transform;
 
             Debug.Log("Camera made to target local player");
-
-
-            GetComponent<NetworkPlayer_InputController>().SetCam(FindAnyObjectByType<Camera>());
-
-            Debug.Log("Set Camera for local player");
 
 
             NetworkPlayer_InGameUI playerUI = FindAnyObjectByType<NetworkPlayer_InGameUI>();

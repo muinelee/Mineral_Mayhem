@@ -7,19 +7,12 @@ using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
+using Cinemachine;
 
 public class NetworkRunnerHandler : MonoBehaviour
 {
     public NetworkRunner networkRunnerPrefab;
     NetworkRunner networkRunner;
-    /*
-    private void Awake()
-    {
-        NetworkRunner networkRunnerInstance = FindAnyObjectByType<NetworkRunner>();
-
-        if (networkRunnerInstance != null) networkRunner = networkRunnerInstance;
-    }
-    */
 
     void Start()
     {
@@ -114,42 +107,25 @@ public class NetworkRunnerHandler : MonoBehaviour
                         // Store player token for reconnection
                         FindObjectOfType<CharacterSpawner>().AddPlayerToMap(oldNetworkPlayer.tokenID, newNetworkObject.GetComponent<NetworkPlayer>());
                     }
+                    
+                    if (resumeNetworkObject.TryGetBehaviour<NetworkPlayer_Health>(out NetworkPlayer_Health oldHealth))
+                    {
+                        NetworkPlayer_Health newHealth = newNetworkObject.GetComponent<NetworkPlayer_Health>();
+                        newHealth.CopyStateFrom(oldHealth);
+                    }
                 });
             }
         }
 
+        StartCoroutine(CleanUpHostMigrationCO());
+
         Debug.Log($"HostMigrationResume completed");
     }
-    /*
-    public void OnJoinLobby()
+
+    IEnumerator CleanUpHostMigrationCO()
     {
-        var clientTask = JoinLobby();
+        yield return new WaitForSeconds(3f);
+
+        FindObjectOfType<CharacterSpawner>().OnHostMigrationCleanup();
     }
-
-    private async Task JoinLobby()
-    {
-        Debug.Log("Join Lobby Started");
-
-        string lobbyID = "Our Custom Lobby ID";
-
-        var result = await networkRunner.JoinSessionLobby(SessionLobby.Custom, lobbyID);
-
-        if (!result.Ok) Debug.LogError($"Unable to join lobby {lobbyID}");
-        else Debug.Log("Join Lobby OK");
-    }
-
-    public void CreateGame(string sessionName, string sceneName)
-    {
-        Debug.Log($"Created the session {sessionName} in the scene {sceneName}, with a build index of {SceneUtility.GetBuildIndexByScenePath($"scene/{sceneName}")}");
-
-        InitializeNetworkRunner(networkRunner, GameMode.Host, sessionName, NetAddress.Any(), SceneUtility.GetBuildIndexByScenePath($"scene/{sceneName}"), null);
-    }
-
-    public void JoinGame(string sessionName, string sceneName)
-    {
-        Debug.Log($"Joining the session {sessionName}");
-
-        InitializeNetworkRunner(networkRunner, GameMode.Client, sessionName, NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
-    }
-    */
 }

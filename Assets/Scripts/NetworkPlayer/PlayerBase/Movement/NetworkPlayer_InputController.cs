@@ -16,18 +16,7 @@ public class NetworkPlayer_InputController : NetworkBehaviour
     private bool isEPressed = false;
     private bool isFPressed = false;
 
-    // Components
-    private Camera cam;
-    private Animator anim;
-    private NetworkPlayer_Movement playerMovement;
-    private NetworkPlayer_Attack playerAttack;
-
-    private void Start()
-    {
-        anim = GetComponentInChildren<Animator>();
-        playerMovement = GetComponent<NetworkPlayer_Movement>();
-        playerAttack = GetComponent<NetworkPlayer_Attack>();
-    }
+    [SerializeField] private Camera cam;
 
     private void Update()
     {

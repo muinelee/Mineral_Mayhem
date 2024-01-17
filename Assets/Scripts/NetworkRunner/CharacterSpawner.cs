@@ -147,4 +147,22 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
 
     }
+
+    public void OnHostMigrationCleanup()
+    {
+        Debug.Log("Spawner OnHostMigrationCleanup started");
+
+        foreach (KeyValuePair<int, NetworkPlayer> entry in mapTokenIDWithNetworkPlayer)
+        {
+            NetworkObject entryNetworkObject = entry.Value.GetComponent<NetworkObject>();
+
+            if (entryNetworkObject.InputAuthority.IsNone)
+            {
+                Debug.Log($"{Time.time} {entry.Value.playerName} disconnected. Despawning.");
+                entryNetworkObject.Runner.Despawn(entryNetworkObject);
+            }
+        }
+
+        Debug.Log("Spawner OnHostMigrationCleanup completed");
+    }
 }
