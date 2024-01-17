@@ -27,6 +27,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     [Header("Username UI")]
     public TextMeshProUGUI playerNameTMP;
 
+    [Networked] public int tokenID { get; set; }        // Value is set when spawned by CharacterSpawner
+
     [Networked(OnChanged = nameof(OnPlayerNameChanged))]
     public NetworkString<_16> playerName { get; private set; }
 
