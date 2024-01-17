@@ -24,11 +24,14 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
     public static NetworkPlayer Local { get; private set; }
 
-    [Header("Username UI")]
-    public TextMeshProUGUI playerNameTMP;
+    [SerializeField] private NetworkPlayer_WorldSpaceHUD floatingHealthBar;
+
 
     [Networked] public int tokenID { get; set; }        // Value is set when spawned by CharacterSpawner
 
+
+    [Header("Username UI")]
+    public TextMeshProUGUI playerNameTMP;
     [Networked(OnChanged = nameof(OnPlayerNameChanged))]
     public NetworkString<_16> playerName { get; private set; }
 
@@ -121,5 +124,10 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     {
         Debug.Log($"[RPC] Setting the new player name to {newPlayerName}");
         this.playerName = newPlayerName;
+    }
+
+    private void OnDestroy()
+    {
+        if (floatingHealthBar) Destroy(floatingHealthBar.gameObject);
     }
 }

@@ -10,7 +10,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public NetworkPlayer playerPrefab;
 
     // Dictionary for holding player UserIDs
-    private Dictionary<int, NetworkPlayer> mapTokenIDWithNetworkPlayer;
+    private Dictionary<int, NetworkPlayer> mapTokenIDWithNetworkPlayer = new Dictionary<int, NetworkPlayer>();
 
     [Header("Components for UI")]
     private NetworkPlayer_InputController playerInputController;
@@ -51,6 +51,8 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
             {
                 Debug.Log($"Player of token {playerToken} is already in scene. Connecting controls");
                 networkPlayer.GetComponent<NetworkObject>().AssignInputAuthority(player);
+
+                networkPlayer.Spawned();
             }
 
             else

@@ -103,11 +103,17 @@ public class NetworkRunnerHandler : MonoBehaviour
 
         foreach (var resumeNetworkObject in runner.GetResumeSnapshotNetworkObjects())
         {
-            if (resumeNetworkObject.TryGetBehaviour<NetworkRigidbody>(out var playerRigidbody))
+            if (resumeNetworkObject.TryGetBehaviour<NetworkRigidbody>(out NetworkRigidbody playerRigidbody))
             {
                 runner.Spawn(resumeNetworkObject, position: playerRigidbody.ReadPosition(), rotation: playerRigidbody.ReadRotation(), onBeforeSpawned: (runner, newNetworkObject) =>
                 {
                     newNetworkObject.CopyStateFrom(resumeNetworkObject);
+                
+                    if (resumeNetworkObject.TryGetBehaviour<NetworkPlayer>(out NetworkPlayer oldNetworkPlayer))
+                    {
+                        // Store player token for reconnection
+                        FindObjectOfType<CharacterSpawner>().AddPlayerToMap(oldNetworkPlayer.tokenID, newNetworkObject.GetComponent<NetworkPlayer>());
+                    }
                 });
             }
         }
