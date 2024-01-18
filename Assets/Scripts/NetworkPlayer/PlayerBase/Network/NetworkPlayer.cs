@@ -30,7 +30,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     [Networked] public int tokenID { get; set; }        // Value is set when spawned by CharacterSpawner
 
     [Header("Camera Offset")]
-    [SerializeField] private Vector3 cameraOffset;
+    [SerializeField] private float cameraAngle;
 
     [Header("Username UI")]
     public TextMeshProUGUI playerNameTMP;
@@ -45,6 +45,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             Debug.Log("Spawned local player");
 
+            floatingHealthBar.gameObject.SetActive(false);
 
             RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
 
@@ -54,8 +55,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             Debug.Log("Set Camera for local player");
 
-            Camera.main.transform.position = this.transform.position + cameraOffset;
-            Camera.main.transform.rotation = Quaternion.Euler(50, 0, 0);
+            Camera.main.transform.rotation = Quaternion.Euler(cameraAngle, 0, 0);
             
             Debug.Log ($"Camera's new position is {Camera.main.transform.position}");
             
@@ -99,6 +99,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         else
         {
             Debug.Log("Spawned remote player");
+
+            floatingHealthBar.gameObject.SetActive(true);
         }
     }
 

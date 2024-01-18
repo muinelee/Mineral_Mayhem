@@ -68,6 +68,7 @@ public class NetworkPlayer_InGameUI : NetworkBehaviour
         // Update F Spell UI display
         DisplayAbilityCooldown(fImageBlock, playerEnergy.GetEnergyPercentage());
     }
+
     public void PrimeUI()
     {
         dashIcon.sprite = dash.GetDashIcon();
