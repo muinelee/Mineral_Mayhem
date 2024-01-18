@@ -45,7 +45,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             Debug.Log("Spawned local player");
 
-            floatingHealthBar.gameObject.SetActive(false);
+            floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);
 
             RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
 
@@ -100,7 +100,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         {
             Debug.Log("Spawned remote player");
 
-            floatingHealthBar.gameObject.SetActive(true);
+            floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(true);
         }
     }
 
