@@ -24,6 +24,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
     public static NetworkPlayer Local { get; private set; }
 
+    [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
+    
     [SerializeField] private NetworkPlayer_WorldSpaceHUD floatingHealthBar;
 
 
@@ -66,7 +68,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             Debug.Log("Camera made to target local player");
 
 
-            NetworkPlayer_InGameUI playerUI = FindAnyObjectByType<NetworkPlayer_InGameUI>();
+            NetworkPlayer_InGameUI playerUI = Instantiate(playerUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
 
             playerUI.SetPlayerHealth(GetComponent<NetworkPlayer_Health>());
 

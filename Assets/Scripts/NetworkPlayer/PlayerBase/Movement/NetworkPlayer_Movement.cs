@@ -114,9 +114,10 @@ public class NetworkPlayer_Movement : NetworkBehaviour
         return dash;
     }
 
-    public ref TickTimer GetDashCoolDownTimer()
+    public float GetDashCoolDownTimer()
     {
-        return ref dashCoolDownTimer;
+        if (dashCoolDownTimer.IsRunning) return (float)dashCoolDownTimer.RemainingTime(Runner);
+        else return 0;
     }
 
     public void SetTurnSlow(float slowPercentage)

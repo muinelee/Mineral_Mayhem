@@ -108,14 +108,16 @@ public class NetworkPlayer_Attack : NetworkBehaviour
         return fAttack;
     }
 
-    public ref TickTimer GetQAttackCoolDownTimer()
+    public float GetQAttackCoolDownTimer()
     {
-        return ref qAttackCoolDownTimer;
+        if (qAttackCoolDownTimer.IsRunning) return (float)qAttackCoolDownTimer.RemainingTime(Runner);
+        else return 0;
     }
 
-    public ref TickTimer GetEAttackCoolDownTimer()
+    public float GetEAttackCoolDownTimer()
     {
-        return ref eAttackCoolDownTimer;
+        if (eAttackCoolDownTimer.IsRunning) return (float)eAttackCoolDownTimer.RemainingTime(Runner);
+        else return 0;
     }
 
     public void ResetAttackCapabilities()
