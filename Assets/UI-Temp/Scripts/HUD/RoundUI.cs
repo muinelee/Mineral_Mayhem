@@ -27,57 +27,29 @@ public class RoundUI : MonoBehaviour
         gemRed3.gameObject.SetActive(false);
     }
 
-    public void UpdateRoundUI()
-    {
-        if (blueWins == 1)
-        {
-            gemBlue1.gameObject.SetActive(true);
-            gemBlue1.FadeIn();
-        }
-        else if (blueWins == 2)
-        {
-            gemBlue2.gameObject.SetActive(true);
-            gemBlue2.FadeIn();
-        }
-        else if (blueWins >= 3)
-        {
-            gemBlue3.gameObject.SetActive(true);
-            gemBlue3.FadeIn();
-        }
-
-        if (redWins == 1)
-        {
-            gemRed1.gameObject.SetActive(true);
-            gemRed1.FadeIn();
-        }
-        else if (redWins == 2)
-        {
-            gemRed2.gameObject.SetActive(true);
-            gemRed2.FadeIn();
-        }
-        else if (redWins >= 3)
-        {
-            gemRed3.gameObject.SetActive(true);
-            gemRed3.FadeIn();
-        }
-    }
-
     public void BlueWin()
     {
         if (blueWins == 0)
         {
             blueWins = 1;
-            UpdateRoundUI();
+
+            gemBlue1.gameObject.SetActive(true);
+            gemBlue1.FadeIn();
         }
         else if (blueWins == 1)
         {
             blueWins = 2;
-            UpdateRoundUI();
+
+            gemBlue2.gameObject.SetActive(true);
+            gemBlue2.FadeIn();
         }
         else if (blueWins >= 2)
         {
             blueWins = 3;
-            UpdateRoundUI();
+
+            gemBlue3.gameObject.SetActive(true);
+            gemBlue3.FadeIn();
+
             GameOver(true);
         }
     }
@@ -86,17 +58,24 @@ public class RoundUI : MonoBehaviour
         if (redWins == 0)
         {
             redWins = 1;
-            UpdateRoundUI();
+
+            gemRed1.gameObject.SetActive(true);
+            gemRed1.FadeIn();
         }
         else if (redWins == 1)
         {
             redWins = 2;
-            UpdateRoundUI();
+
+            gemRed2.gameObject.SetActive(true);
+            gemRed2.FadeIn();
         }
         else if (redWins >= 2)
         {
             redWins = 3;
-            UpdateRoundUI();
+
+            gemRed3.gameObject.SetActive(true);
+            gemRed3.FadeIn();
+
             GameOver(false);
         }
     }
