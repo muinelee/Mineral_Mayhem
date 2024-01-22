@@ -1,5 +1,7 @@
 public class DataManager
 {
-    public static int blueWins = 0;
-    public static int redWins = 0;
+    // Sound Data
+    public static float masterVolume = 0f;
+    public static float musicVolume = 0f;
+    public static float sfxVolume = 0f;
 }
