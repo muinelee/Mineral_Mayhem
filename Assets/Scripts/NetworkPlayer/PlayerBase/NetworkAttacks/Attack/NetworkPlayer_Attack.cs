@@ -80,17 +80,17 @@ public class NetworkPlayer_Attack : NetworkBehaviour
     // Needs to be linked via NetworkPlayer_AnimationLink Script
     public void FireQAttack()
     {
-        Runner.Spawn(qAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        if (Object.HasStateAuthority) Runner.Spawn(qAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
     }
 
     public void FireEAttack()
     {
-        Runner.Spawn(eAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        if (Object.HasStateAuthority) Runner.Spawn(eAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
     }
 
     public void FireFAttack()
     {
-        Runner.Spawn(fAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        if (Object.HasStateAuthority) Runner.Spawn(fAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
     }
 
     public SO_NetworkAttack GetQAttack()
