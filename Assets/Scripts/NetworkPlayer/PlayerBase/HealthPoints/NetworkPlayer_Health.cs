@@ -20,8 +20,7 @@ public class NetworkPlayer_Health : NetworkBehaviour
     // Start is called before the first frame update
     public override void Spawned()
     {
-        HP = startingHP;
-        isDead = false;
+        if (HP == startingHP) isDead = false;
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
     }
@@ -43,7 +42,6 @@ public class NetworkPlayer_Health : NetworkBehaviour
             Debug.Log($"{Time.time} {transform.name} is dead");
 
             isDead = true;
-            HandleDeath();
         }
         else NetworkCameraEffectsManager.instance.CameraHitEffect(damageAmount);
     }
@@ -72,6 +70,8 @@ public class NetworkPlayer_Health : NetworkBehaviour
     static void OnStateChanged(Changed<NetworkPlayer_Health> changed)
     {
         Debug.Log($"{Time.time} OnStateChanged isDead {changed.Behaviour.isDead}");
+
+        if (changed.Behaviour.isDead) changed.Behaviour.HandleDeath();
     }
 
     public float GetStartingHP()

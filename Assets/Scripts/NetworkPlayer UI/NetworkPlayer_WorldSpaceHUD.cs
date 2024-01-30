@@ -9,7 +9,7 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
     private Transform playerTransform;
     private float yOffset;
 
-    [SerializeField] private Slider nonLocalPlayerHealthBar;
+    public Slider nonLocalPlayerHealthBar;
     [SerializeField] private NetworkPlayer_Health playerHealth;
 
     public override void Spawned()

@@ -24,9 +24,18 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
     public static NetworkPlayer Local { get; private set; }
 
+    [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
+    
+    [SerializeField] private NetworkPlayer_WorldSpaceHUD floatingHealthBar;
+
+
+    [Networked] public int tokenID { get; set; }        // Value is set when spawned by CharacterSpawner
+
+    [Header("Camera Offset")]
+    [SerializeField] private float cameraAngle;
+
     [Header("Username UI")]
     public TextMeshProUGUI playerNameTMP;
-
     [Networked(OnChanged = nameof(OnPlayerNameChanged))]
     public NetworkString<_16> playerName { get; private set; }
 
@@ -38,12 +47,20 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             Debug.Log("Spawned local player");
 
+            floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);
 
             RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
 
             Debug.Log("Set Player Name");
 
+            GetComponent<NetworkPlayer_InputController>().SetCam(Camera.main);
 
+            Debug.Log("Set Camera for local player");
+
+            Camera.main.transform.rotation = Quaternion.Euler(cameraAngle, 0, 0);
+            
+            Debug.Log ($"Camera's new position is {Camera.main.transform.position}");
+            
             CinemachineVirtualCamera virtualCam = Camera.main.GetComponentInChildren<CinemachineVirtualCamera>();
             virtualCam.Follow = this.transform;
             virtualCam.LookAt= this.transform;
@@ -51,12 +68,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             Debug.Log("Camera made to target local player");
 
 
-            GetComponent<NetworkPlayer_InputController>().SetCam(FindAnyObjectByType<Camera>());
-
-            Debug.Log("Set Camera for local player");
-
-
-            NetworkPlayer_InGameUI playerUI = FindAnyObjectByType<NetworkPlayer_InGameUI>();
+            NetworkPlayer_InGameUI playerUI = Instantiate(playerUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
 
             playerUI.SetPlayerHealth(GetComponent<NetworkPlayer_Health>());
 
@@ -89,6 +101,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         else
         {
             Debug.Log("Spawned remote player");
+
+            floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(true);
         }
     }
 
@@ -119,5 +133,10 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     {
         Debug.Log($"[RPC] Setting the new player name to {newPlayerName}");
         this.playerName = newPlayerName;
+    }
+
+    private void OnDestroy()
+    {
+        if (floatingHealthBar) Destroy(floatingHealthBar.gameObject);
     }
 }
