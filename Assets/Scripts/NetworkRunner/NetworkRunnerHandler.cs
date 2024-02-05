@@ -22,14 +22,18 @@ public class NetworkRunnerHandler : MonoBehaviour
 
     void Start()
     {
+        // PROBLEM IS HERE!!!
+
         if (networkRunner) return;
+
+        // Yea, up there! ^
 
         networkRunner = Instantiate(networkRunnerPrefab);
         networkRunner.name = "NetworkRunner";
 
         if (SceneManager.GetActiveScene().name == "RichardCPhoton")     // Change "RichardCPhoton" to game scene name in future
         {
-            var clientTask = InitializeNetworkRunner(networkRunner, GameMode.AutoHostOrClient, "TestSession",NetworkInfoManager.instance.GetConnectionToken() ,NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
+            var clientTask = InitializeNetworkRunner(networkRunner, GameMode.AutoHostOrClient, "TestSession", NetworkInfoManager.instance.GetConnectionToken() ,NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
         }
 
         Debug.Log($"Server NetworkRunner started.");
@@ -165,10 +169,10 @@ public class NetworkRunnerHandler : MonoBehaviour
 
     public void CreateGame(string sessionName, string sceneName)
     {
-        Debug.Log($"Create session {sessionName} scene {sceneName} build index {SceneUtility.GetBuildIndexByScenePath($"scenes/{sceneName}")}");
+        Debug.Log($"Create session {sessionName} scene {sceneName} build index {SceneUtility.GetBuildIndexByScenePath($"_Scenes/{sceneName}")}");
 
         // Create game as a host
-        var clientTask = InitializeNetworkRunner(networkRunner, GameMode.Host, sessionName, NetworkInfoManager.instance.GetConnectionToken(), NetAddress.Any(), SceneUtility.GetBuildIndexByScenePath($"scenes/{sceneName}"), null);
+        var clientTask = InitializeNetworkRunner(networkRunner, GameMode.Host, sessionName, NetworkInfoManager.instance.GetConnectionToken(), NetAddress.Any(), SceneUtility.GetBuildIndexByScenePath($"_Scenes/{sceneName}"), null);
     }
 
     public void JoinGame(SessionInfo sessionInfo)

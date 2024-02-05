@@ -6,6 +6,9 @@ using TMPro;
 
 public class PlayerJoinScreenUI : MonoBehaviour
 {
+    [Header("Network Runner")]
+    [SerializeField] NetworkRunnerHandler networkRunnerHandler;
+
     [Header("Lobby UI Panels")]
     [SerializeField] GameObject playerDetailsPanel;
     [SerializeField] GameObject sessionListPanel;
@@ -39,7 +42,6 @@ public class PlayerJoinScreenUI : MonoBehaviour
         }
 
         PlayerPrefs.SetString("PlayerName", playerName.text);
-        SceneManager.LoadScene("RichardCPhoton");
 
         NetworkRunnerHandler networkRunnerHandler = FindObjectOfType<NetworkRunnerHandler>();
 
