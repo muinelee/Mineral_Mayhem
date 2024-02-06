@@ -3,6 +3,7 @@ using Fusion;
 using Fusion.Sockets;
 using System.Collections.Generic;
 using System;
+using UnityEngine.SceneManagement;
 
 public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -40,6 +41,8 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)                          // Spawns player in scene
     {
+        Debug.Log($"I am in the scene {SceneManager.GetActiveScene().name}");
+
         if (runner.IsServer)
         {
             // Get the player's token
@@ -75,7 +78,6 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnConnectedToServer(NetworkRunner runner)
     {
-        Debug.Log("Connected to Server");
     }
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
@@ -125,7 +127,6 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-        
     }
 
     public void OnSceneLoadStart(NetworkRunner runner)

@@ -22,14 +22,12 @@ public class NetworkRunnerHandler : MonoBehaviour
 
     void Start()
     {
-        // PROBLEM IS HERE!!!
-
-        if (networkRunner) return;
-
-        // Yea, up there! ^
+        if (FindAnyObjectByType<NetworkRunner>()) return;
 
         networkRunner = Instantiate(networkRunnerPrefab);
         networkRunner.name = "NetworkRunner";
+
+        Debug.Log($"Created a network runner at {SceneManager.GetActiveScene().name}");
 
         if (SceneManager.GetActiveScene().name == "RichardCPhoton")     // Change "RichardCPhoton" to game scene name in future
         {
@@ -156,15 +154,9 @@ public class NetworkRunnerHandler : MonoBehaviour
 
         var result = await networkRunner.JoinSessionLobby(SessionLobby.Custom, lobbyID);
 
-        if (!result.Ok)
-        {
-            Debug.LogError($"Unable to join lobby {lobbyID}");
-        }
+        if (!result.Ok) Debug.LogError($"Unable to join lobby {lobbyID}");
 
-        else
-        {
-            Debug.Log("Join Lobby ok");
-        }
+        else Debug.Log("Join Lobby ok");
     }
 
     public void CreateGame(string sessionName, string sceneName)
