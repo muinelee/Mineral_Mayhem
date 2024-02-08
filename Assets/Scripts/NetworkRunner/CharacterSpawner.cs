@@ -10,6 +10,9 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [Header("Placeholder player prefab")]
     public NetworkPlayer playerPrefab;
 
+    [Header("Session Lobby Manager")]
+    [SerializeField] private SessionLobbyManager sessionLobbyManager;
+
     // Dictionary for holding player UserIDs
     private Dictionary<int, NetworkPlayer> mapTokenIDWithNetworkPlayer = new Dictionary<int, NetworkPlayer>();
 
@@ -127,6 +130,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSceneLoadDone(NetworkRunner runner)
     {
+
     }
 
     public void OnSceneLoadStart(NetworkRunner runner)
@@ -136,7 +140,25 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        
+        if (sessionLobbyManager == null) return;
+
+        if (sessionList.Count == 0)
+        {
+            Debug.Log("No sessions running");
+            sessionLobbyManager.OnNoSessionsFound();
+        }
+
+        else
+        {
+            sessionLobbyManager.ClearList();
+
+            foreach (SessionInfo sessionInfo in sessionList)
+            {
+                sessionLobbyManager.AddToList(sessionInfo);
+
+                Debug.Log($"Found session {sessionInfo.Name} with a player count of {sessionInfo.PlayerCount}");
+            }    
+        }
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)

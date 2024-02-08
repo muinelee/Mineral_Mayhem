@@ -11,6 +11,11 @@ public class SessionLobbyManager : MonoBehaviour
     [SerializeField] private SessionListItem sessionListItemPF;
     [SerializeField] private VerticalLayoutGroup sessionList;
 
+    private void Awake()
+    {
+        ClearList();
+    }
+
     public void ClearList()
     {
         // Clear
@@ -33,19 +38,27 @@ public class SessionLobbyManager : MonoBehaviour
         addedSessionListItem.OnJoinSession += AddedSessionListItem_OnJoinSession;
     }
 
-    private void AddedSessionListItem_OnJoinSession(SessionInfo obj)
+    private void AddedSessionListItem_OnJoinSession(SessionInfo sessionInfo)
     {
-        Debug.Log("Added session to lobby list");
+        NetworkRunnerHandler networkRunnerHandler = FindObjectOfType<NetworkRunnerHandler>();
+
+        networkRunnerHandler.JoinGame(sessionInfo);
+
+        FindAnyObjectByType<PlayerJoinScreenUI>().OnJoiningServer();
     }
 
     public void OnNoSessionsFound()
     {
+        ClearList();
+
         statusText.gameObject.SetActive(true);
         statusText.text = "No sessions found";
     }
 
     public void OnLookingForSession()
     {
+        ClearList();
+
         statusText.gameObject.SetActive(true);
         statusText.text = "Looking for gaem sessions";
     }

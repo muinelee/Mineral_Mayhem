@@ -6,14 +6,11 @@ using TMPro;
 
 public class PlayerJoinScreenUI : MonoBehaviour
 {
-    [Header("Network Runner")]
-    [SerializeField] NetworkRunnerHandler networkRunnerHandler;
-
     [Header("Lobby UI Panels")]
-    [SerializeField] GameObject playerDetailsPanel;
-    [SerializeField] GameObject sessionListPanel;
-    [SerializeField] GameObject createSessionPanel;
-    [SerializeField] GameObject statusPanel;
+    [SerializeField] private GameObject playerDetailsPanel;
+    [SerializeField] private GameObject sessionListPanel;
+    [SerializeField] private GameObject createSessionPanel;
+    [SerializeField] private GameObject statusPanel;
 
     [Header("Player Info")]
     public TMP_InputField playerName;
@@ -46,9 +43,11 @@ public class PlayerJoinScreenUI : MonoBehaviour
         NetworkRunnerHandler networkRunnerHandler = FindObjectOfType<NetworkRunnerHandler>();
 
         networkRunnerHandler.OnJoinLobby();
-    
+
         HideAllPanels();
+    
         sessionListPanel.SetActive(true);
+        FindObjectOfType<SessionLobbyManager>(true).OnLookingForSession();
     }
 
     public void OnCreateNewGameClicked()
@@ -64,6 +63,13 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
         networkRunnerHandler.CreateGame(sessionName.text, "RichardCPhoton");
 
+        HideAllPanels();
+
+        statusPanel.SetActive(true);
+    }
+
+    public void OnJoiningServer()
+    {
         HideAllPanels();
 
         statusPanel.SetActive(true);

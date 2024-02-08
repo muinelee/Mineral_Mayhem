@@ -6,7 +6,6 @@ using TMPro;
 using UnityEngine;
 
 // Essential Components for player character base
-[RequireComponent(typeof(NetworkObject))]
 [RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
 [RequireComponent(typeof(NetworkPlayer_InputController), typeof(NetworkPlayer_Movement))]
 [RequireComponent(typeof(NetworkPlayer_Attack), typeof(NetworkPlayer_Energy), typeof(NetworkPlayer_Health))]
