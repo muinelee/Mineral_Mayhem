@@ -52,18 +52,18 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
 
             Debug.Log("Set Player Name");
+            
+            Debug.Log ($"Camera's new position is {Camera.main.transform.position}");
+            
+            CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
+            virtualCam.Follow = this.transform;
+            virtualCam.LookAt= this.transform;
 
             GetComponent<NetworkPlayer_InputController>().SetCam(Camera.main);
 
             Debug.Log("Set Camera for local player");
 
             Camera.main.transform.rotation = Quaternion.Euler(cameraAngle, 0, 0);
-            
-            Debug.Log ($"Camera's new position is {Camera.main.transform.position}");
-            
-            CinemachineVirtualCamera virtualCam = Camera.main.GetComponentInChildren<CinemachineVirtualCamera>();
-            virtualCam.Follow = this.transform;
-            virtualCam.LookAt= this.transform;
 
             Debug.Log("Camera made to target local player");
 
