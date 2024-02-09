@@ -60,6 +60,6 @@ public class SessionLobbyManager : MonoBehaviour
         ClearList();
 
         statusText.gameObject.SetActive(true);
-        statusText.text = "Looking for gaem sessions";
+        statusText.text = "Looking for game sessions";
     }
 }

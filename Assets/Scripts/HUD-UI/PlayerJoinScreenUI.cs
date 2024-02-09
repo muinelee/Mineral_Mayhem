@@ -61,7 +61,7 @@ public class PlayerJoinScreenUI : MonoBehaviour
     {
         NetworkRunnerHandler networkRunnerHandler = FindObjectOfType<NetworkRunnerHandler>();
 
-        networkRunnerHandler.CreateGame(sessionName.text, "RichardCPhoton");
+        networkRunnerHandler.CreateGame(sessionName.text, "RichardCCharacterSelect");
 
         HideAllPanels();
 

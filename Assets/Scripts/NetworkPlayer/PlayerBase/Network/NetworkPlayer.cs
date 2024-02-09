@@ -4,6 +4,7 @@ using Cinemachine;
 using Fusion;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // Essential Components for player character base
 [RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
@@ -27,8 +28,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     
     [SerializeField] private NetworkPlayer_WorldSpaceHUD floatingHealthBar;
 
+    // Ready Up Testing
+    [SerializeField] public bool isReady { get; set; } = false;
+
 
     [Networked] public int tokenID { get; set; }        // Value is set when spawned by CharacterSpawner
+
 
     [Header("Camera Offset")]
     [SerializeField] private float cameraAngle;

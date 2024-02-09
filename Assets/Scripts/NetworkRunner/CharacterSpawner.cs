@@ -45,6 +45,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)                          // Spawns player in scene
     {
         Debug.Log($"I am in the scene {SceneManager.GetActiveScene().name}");
+        if (SceneManager.GetActiveScene().name != "RichardCPhoton") return;
 
         if (runner.IsServer)
         {
