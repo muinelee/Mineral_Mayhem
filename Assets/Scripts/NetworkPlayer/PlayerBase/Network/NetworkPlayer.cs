@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
@@ -22,12 +23,26 @@ using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
+    public enum GameState
+    {
+        Lobby,
+        GameReady,
+        Cutscene,
+        Disabled,
+    }
+
+    public static readonly List<NetworkPlayer> Players = new List<NetworkPlayer>();
+
+    public static event Action<NetworkPlayer> OnPlayerJoined;
+    public static event Action<NetworkPlayer> OnPlayerChanged;
+    public static event Action<NetworkPlayer> OnPlayerLeave;
     public static NetworkPlayer Local { get; private set; }
+
+
 
     [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
     
     [SerializeField] private NetworkPlayer_WorldSpaceHUD floatingHealthBar;
-
 
     [Networked] public int tokenID { get; set; }        // Value is set when spawned by CharacterSpawner
 
@@ -41,6 +56,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     public override void Spawned()
     {
+        base.Spawned();
+
         if (Object.HasInputAuthority)
         {
             Local = this;
