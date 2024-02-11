@@ -20,6 +20,7 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
     private void Start()
     {
+        //Testing
         if (PlayerPrefs.HasKey("PlayerName")) playerName.text = PlayerPrefs.GetString("PlayerName");
     }
     private void HideAllPanels()
