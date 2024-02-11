@@ -30,7 +30,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     // Ready Up Testing
     [SerializeField] public bool isReady { get; set; } = false;
-
+    public PlayerRef playerRef { get; private set; }
 
     [Networked] public int tokenID { get; set; }        // Value is set when spawned by CharacterSpawner
 
@@ -48,6 +48,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         if (Object.HasInputAuthority)
         {
             Local = this;
+            playerRef = Object.InputAuthority;
 
             Debug.Log("Spawned local player");
 
