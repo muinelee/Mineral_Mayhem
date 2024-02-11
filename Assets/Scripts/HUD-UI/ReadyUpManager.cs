@@ -27,6 +27,8 @@ public class ReadyUpManager : NetworkBehaviour
         this.Object.AssignInputAuthority(NetworkPlayer.Local.playerRef);
 
         Debug.Log(this.Object.InputAuthority);
+
+        RPC_ReadyUp();
     }
 
     public void OnStartGame()
@@ -53,5 +55,6 @@ public class ReadyUpManager : NetworkBehaviour
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
     public void RPC_ReadyUp(RpcInfo info = default)
     {
+        readyUpText.text = "This is working now";
     }
 }
