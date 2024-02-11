@@ -22,7 +22,7 @@ public class CharacterSelect : MonoBehaviour
     private GameObject currentCharacterInstance;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         for (int i = 0; i < characterButtons.Length; i++)
         {
@@ -31,7 +31,7 @@ public class CharacterSelect : MonoBehaviour
         }
     }
 
-    void SelectCharacter (SO_Character character)
+    private void SelectCharacter (SO_Character character)
     {
         if (currentCharacterInstance != null)
         {
@@ -47,7 +47,7 @@ public class CharacterSelect : MonoBehaviour
         UpdateAbilityDescription(character.characterBasicAbilityDescription);
     }
 
-    void SetupAbilityUI(SO_Character character)
+    private void SetupAbilityUI(SO_Character character)
     {
         Sprite[] abilityPortraits =
         {
@@ -74,7 +74,7 @@ public class CharacterSelect : MonoBehaviour
         }
     }
 
-    void UpdateAbilityDescription(string description)
+    private void UpdateAbilityDescription(string description)
     {
         currentAbilityDescription.text = description;
     }
