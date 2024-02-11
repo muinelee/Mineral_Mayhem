@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 
 // Essential Components for player character base
-[RequireComponent(typeof(NetworkObject))]
+//[RequireComponent(typeof(NetworkObject))]
 [RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
 [RequireComponent(typeof(NetworkPlayer_InputController), typeof(NetworkPlayer_Movement))]
 [RequireComponent(typeof(NetworkPlayer_Attack), typeof(NetworkPlayer_Energy), typeof(NetworkPlayer_Health))]
@@ -23,12 +23,12 @@ using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
-    public enum GameState
+    public enum EnumGameState
     {
         Lobby,
         GameReady,
+        CharacterSelection,
         Cutscene,
-        Disabled,
     }
 
     public static readonly List<NetworkPlayer> Players = new List<NetworkPlayer>();
@@ -38,7 +38,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public static event Action<NetworkPlayer> OnPlayerLeave;
     public static NetworkPlayer Local { get; private set; }
 
-
+    [Networked] public NetworkPlayer_InputController Avatar { get; set; }
+    [Networked] public EnumGameState GameState { get; set; }
 
     [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
     

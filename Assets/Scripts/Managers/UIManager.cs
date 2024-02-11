@@ -69,10 +69,7 @@ public class UIManager : MonoBehaviour
 
     private void DisplayNPCKilled()
     {
-        //get amountKilled from GameManager prefab
-        amountKilled = FindObjectOfType<GameManager>().amountKilled;
-        //display the amountKilled
-        amountKilledText.text = "You killed " + amountKilled + " enemies!";
+
 
     }
 
