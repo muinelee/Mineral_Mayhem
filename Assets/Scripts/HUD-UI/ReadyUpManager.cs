@@ -23,6 +23,9 @@ public class ReadyUpManager : NetworkBehaviour
     public void OnReadyUp()
     {
         NetworkRunner runner = FindAnyObjectByType<NetworkRunner>();
+
+        this.Object.AssignInputAuthority(NetworkPlayer.Local.playerRef);
+
         Debug.Log(this.Object.InputAuthority);
     }
 
