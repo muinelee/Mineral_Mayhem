@@ -50,6 +50,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             Local = this;
             playerRef = Object.InputAuthority;
 
+
             Debug.Log("Spawned local player");
 
             floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);

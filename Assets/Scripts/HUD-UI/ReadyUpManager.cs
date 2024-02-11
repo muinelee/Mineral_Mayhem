@@ -23,8 +23,7 @@ public class ReadyUpManager : NetworkBehaviour
     public void OnReadyUp()
     {
         NetworkRunner runner = FindAnyObjectByType<NetworkRunner>();
-        Object.AssignInputAuthority(Runner.LocalPlayer);
-        RPC_ReadyUp();
+        Debug.Log(this.Object.InputAuthority);
     }
 
     public void OnStartGame()
@@ -51,6 +50,5 @@ public class ReadyUpManager : NetworkBehaviour
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
     public void RPC_ReadyUp(RpcInfo info = default)
     {
-        Debug.Log("This IS WORKING YOOOOOOOOOOOOOOOOOOO");
     }
 }
