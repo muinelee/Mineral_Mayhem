@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 6903174612733432645}
   - component: {fileID: 2098500895633039834}
   - component: {fileID: 6451881978930218668}
+  - component: {fileID: 7216373537079420129}
   m_Layer: 7
   m_Name: Luna
   m_TagString: Untagged
@@ -74,6 +75,7 @@ MonoBehaviour:
   - {fileID: 6903174612733432645}
   - {fileID: 2098500895633039834}
   - {fileID: 6451881978930218668}
+  - {fileID: 7216373537079420129}
   - {fileID: 779764453492850429}
   - {fileID: 6932017674382772014}
   SimulationBehaviours: []
@@ -167,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   cam: {fileID: 0}
+  _NetworkUser: {fileID: 0}
 --- !u!114 &2430217939546453825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,6 +283,20 @@ MonoBehaviour:
   Offset: {x: 0, y: 0, z: 0}
   GizmosColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   Hitboxes: []
+--- !u!114 &7216373537079420129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593386485324816745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c9c413ec25a7984885b96a3beff9e19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  hasDespawned: 0
 --- !u!1001 &1671281869410326247
 PrefabInstance:
   m_ObjectHideFlags: 0

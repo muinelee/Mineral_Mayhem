@@ -42,13 +42,17 @@ public class LevelManager : NetworkSceneManagerBase
         //  Delay 1 frame for safety
         yield return null;
 
+        Debug.Log("Checking spawn logic");
         //  Spawn Character Logic Here  -   Edit as need be
         if (GameManager.CurrentArena != null && newScene >= ARENA_PREGAME)
         {
+            Debug.Log("Checking host credentials");
             if (Runner.GameMode == GameMode.Host)
             {
+                Debug.Log("Trying to spawn per player");
                 foreach (var player in NetworkPlayer.Players)
                 {
+                    Debug.Log("Do the spawn thing");
                     player.GameState = NetworkPlayer.EnumGameState.CharacterSelection;
                     GameManager.CurrentArena.SpawnCharacter(Runner, player);
                 }

@@ -18,6 +18,9 @@ public class Arena : NetworkBehaviour
     private void Awake()
     {
         Current = this;
+
+        //  Give GameManager a reference to the Arena we're on;
+        GameManager.SetArena(this);
     }
 
     public override void Spawned()
@@ -28,9 +31,6 @@ public class Arena : NetworkBehaviour
         {
 
         }*/
-
-        //  Give GameManager a reference to the Arena we're on;
-        GameManager.SetArena(this);
     }
 
     private void OnDestroy()

@@ -21,7 +21,7 @@ public class CharacterSelect : MonoBehaviour
     [Header("Spawn Points")]
     public Transform[] spawnPoints;
 
-    private GameObject currentCharacterInstance;
+    private CharacterEntity currentCharacterInstance;
 
     // Start is called before the first frame update
     private void Start()
@@ -37,10 +37,10 @@ public class CharacterSelect : MonoBehaviour
     {
         if (currentCharacterInstance != null)
         {
-            Destroy(currentCharacterInstance);
+            Destroy(currentCharacterInstance.gameObject);
         }
 
-        currentCharacterInstance = Instantiate(character.characterPrefab, spawnPoints[0].position, spawnPoints[0].rotation);        
+        currentCharacterInstance = Instantiate(character.prefab, spawnPoints[0].position, spawnPoints[0].rotation);        
 
         // Update character backstory text
         backstory.text = character.backstory;

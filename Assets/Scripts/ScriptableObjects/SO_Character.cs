@@ -4,10 +4,10 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Character", menuName = "Character")]
+[CreateAssetMenu(fileName = "New Character", menuName = "Scriptable Object/Character")]
 public class SO_Character : ScriptableObject
 {
-    public GameObject characterPrefab;
+    public CharacterEntity prefab;
 
     public Sprite characterBasicAbilityPortrait;
     public Sprite characterQAbilityPortrait;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class ResourceManager : MonoBehaviour
 {
     //  Feel free to use ths for references to UI prefabs that will be important later
-    public CharacterDefinition[] charDefinitions;
+    public SO_Character[] charDefinitions;
     public ArenaDefinition[] arenas;
     public GameModeType[] gameModes;
 
