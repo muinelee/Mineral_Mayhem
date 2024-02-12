@@ -53,9 +53,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         {
             Local = this;
 
-            ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
-            readyUpUI.PrimeReadyUpUI(this);
-
             Debug.Log("Spawned local player");
 
             floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);
@@ -63,6 +60,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
 
             Debug.Log("Set Player Name");
+
+            ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
+            readyUpUI.PrimeReadyUpUI(this);
+            RPC_JoinUndecided();
+
+            Debug.Log("Ready Up UI set");
 
             GetComponent<NetworkPlayer_InputController>().SetCam(Camera.main);
 
@@ -163,13 +166,14 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         ReadyUpManager.instance.JoinRedTeam(this);
     }
 
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_JoinUndecided()
+    {
+        ReadyUpManager.instance.JoinUndecided(this);
+    }
+
     #endregion
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void RPC_SpawnPlayerCharacter()
-    {
-        
-    }
 
     private void OnDestroy()
     {
