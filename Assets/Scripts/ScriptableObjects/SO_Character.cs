@@ -8,15 +8,23 @@ using UnityEngine;
 public class SO_Character : ScriptableObject
 {
     public GameObject characterPrefab;
-    public string characterName;
-    public string backstory;
-    public string characterRace;
+
     public Sprite characterBasicAbilityPortrait;
-    public string characterBasicAbilityDescription;
     public Sprite characterQAbilityPortrait;
-    public string characterQAbilityDescription;
     public Sprite characterEAbilityPortrait;
-    public string characterEAbilityDescription;
     public Sprite characterFAbilityPortrait;
+
+    public string characterName;
+    public string characterRace;
+
+    [TextArea(3, 10)]
+    public string backstory;
+    [TextArea(3, 10)]
+    public string characterBasicAbilityDescription;
+    [TextArea(3, 10)]
+    public string characterQAbilityDescription;
+    [TextArea(3, 10)]
+    public string characterEAbilityDescription;
+    [TextArea(3, 10)]
     public string characterFAbilityDescription;
 }
