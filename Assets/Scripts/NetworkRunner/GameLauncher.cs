@@ -40,6 +40,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     public void JoinOrCreateLobby()
     {
+        // Defining Logic for this script - Creates the runner, and assigns this scripts callbacks to it on the spot.
+
         SetConnectionStatus(ConnectionStatus.Connecting);
 
         if (Runner != null) LeaveSession();
@@ -77,13 +79,14 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     public void LeaveSession()
     {
+        //  Defining Logic as well - when session is over, Runner.Shutdown() will disable all NetworkBehaviours in scene.
         if (Runner != null) Runner.Shutdown();
         else SetConnectionStatus(ConnectionStatus.Disconnected);
     }
 
 
 
-
+    #region INetworkRunnerCallbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         Debug.Log($"Player {player} joined!");
@@ -99,22 +102,29 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        // PICK UP HERE YOU FUCK
+        Debug.Log($"{player.PlayerId} diconnected");
+
+        NetworkPlayer.RemovePlayer(runner, player);
+
+        SetConnectionStatus(ConnectionStatus);
     }
 
-    public void OnInput(NetworkRunner runner, NetworkInput input)
-    {
-        throw new NotImplementedException();
-    }
+    public void OnInput(NetworkRunner runner, NetworkInput input) { }
 
-    public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
-    {
-        throw new NotImplementedException();
-    }
+    public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        throw new NotImplementedException();
+        SetConnectionStatus(ConnectionStatus.Disconnected);
+
+        NetworkPlayer.Players.Clear();
+
+        if (Runner) Destroy(Runner.gameObject);
+
+        //  IF we use object pooling later, would be a place to reset those here
+
+
+        Runner = null;
     }
 
     public void OnConnectedToServer(NetworkRunner runner)
@@ -143,38 +153,18 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         SetConnectionStatus(ConnectionStatus.Failed);
     }
 
-    public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
-    {
-        throw new NotImplementedException();
-    }
+    public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
 
-    public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
-    {
-        throw new NotImplementedException();
-    }
+    public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
 
-    public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
-    {
-        throw new NotImplementedException();
-    }
+    public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
 
-    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
-    {
-        throw new NotImplementedException();
-    }
+    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
 
-    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
-    {
-        throw new NotImplementedException();
-    }
+    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
 
-    public void OnSceneLoadDone(NetworkRunner runner)
-    {
-        throw new NotImplementedException();
-    }
+    public void OnSceneLoadDone(NetworkRunner runner) { }
 
-    public void OnSceneLoadStart(NetworkRunner runner)
-    {
-        throw new NotImplementedException();
-    }
+    public void OnSceneLoadStart(NetworkRunner runner) { }
+    #endregion
 }

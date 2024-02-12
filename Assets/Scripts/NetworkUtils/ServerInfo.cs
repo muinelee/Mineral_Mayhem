@@ -13,6 +13,12 @@ public static class ServerInfo
         set => PlayerPrefs.SetInt("Server_GameMode", value);
     }
 
+    public static int ArenaID
+    {
+        get => PlayerPrefs.GetInt("Server_ArenaID", 0);
+        set => PlayerPrefs.SetInt("Server_ArenaID", value);
+    }
+
     public static int MaxUsers
     {
         get => PlayerPrefs.GetInt("Server_MaxUsers", 0);
