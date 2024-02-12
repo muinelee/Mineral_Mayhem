@@ -4,6 +4,7 @@ using UnityEngine;
 using Fusion;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 public class ReadyUpManager : MonoBehaviour
 {
@@ -69,6 +70,7 @@ public class ReadyUpManager : MonoBehaviour
             // Display team colors if players not ready
             if (netPlayer.team == NetworkPlayer.Team.Blue) JoinBlueTeam(netPlayer);
             else if (netPlayer.team == NetworkPlayer.Team.Red) JoinRedTeam(netPlayer);
+            else if (netPlayer.team == NetworkPlayer.Team.Undecided && netPlayer != playerRef) JoinUndecided(netPlayer);
 
 
             // Display that players are ready
@@ -89,9 +91,8 @@ public class ReadyUpManager : MonoBehaviour
 
         if (undecidedTeamList.Contains(player)) return;
 
-        Debug.Log($"The player is ready? {player.isReady}");
-
         if (player.isReady == false) playerTeamDisplayPair[player].GetComponent<Image>().color = Color.green;
+
         else
         {
             if (player.team == NetworkPlayer.Team.Blue) playerTeamDisplayPair[player].GetComponent<Image>().color = Color.blue;
@@ -129,7 +130,6 @@ public class ReadyUpManager : MonoBehaviour
         readyUpName.SetPlayer(player);
 
         readyUpName.GetComponent<Image>().color = Color.blue;
-        readyUpName.GetComponentInChildren<TextMeshProUGUI>().text = player.playerName.ToString();
 
         // Destroy player display name if one is already present in the other team list
         if (playerTeamDisplayPair.ContainsKey(player)) Destroy(playerTeamDisplayPair[player].gameObject);
@@ -154,7 +154,6 @@ public class ReadyUpManager : MonoBehaviour
         readyUpName.SetPlayer(player);
 
         readyUpName.GetComponent<Image>().color = Color.red;
-        readyUpName.GetComponentInChildren<TextMeshProUGUI>().text = player.playerName.ToString();
 
         // Destroy player display name if one is already present in the other team list
         if (playerTeamDisplayPair.ContainsKey(player)) Destroy(playerTeamDisplayPair[player].gameObject);
@@ -171,7 +170,8 @@ public class ReadyUpManager : MonoBehaviour
         readyUpName.SetPlayer(player);
 
         readyUpName.GetComponent<Image>().color = Color.grey;
-        readyUpName.GetComponentInChildren<TextMeshProUGUI>().text = player.playerName.ToString();
+
+        Debug.Log(player.playerName.ToString());
 
         playerTeamDisplayPair[player] = readyUpName;
 
@@ -190,5 +190,20 @@ public class ReadyUpManager : MonoBehaviour
 
         Destroy(playerTeamDisplayPair[player].gameObject);
         playerTeamDisplayPair.Remove(player);
+    }
+
+    public void PlayerLeft()
+    {
+        NetworkPlayer[] players = FindObjectsOfType<NetworkPlayer>();
+
+        foreach (NetworkPlayer player in players)
+        {
+            if (playerTeamDisplayPair.ContainsKey(player)) continue;
+
+            // Destroy players not in game
+            Destroy(playerTeamDisplayPair[player].gameObject);
+        }
+
+        Debug.Log("Player UI should be updated");
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using UnityEngine.UI;
+using TMPro;
 public class ReadyUpName : MonoBehaviour
 {
     private NetworkPlayer player;
@@ -17,6 +18,8 @@ public class ReadyUpName : MonoBehaviour
     public void SetPlayer(NetworkPlayer player)
     {
         this.player = player;
+        Debug.Log($"Player name is {player.playerName}");
+        GetComponentInChildren<TextMeshProUGUI>().text = player.playerName.ToString();
         if (player.HasStateAuthority && player.HasInputAuthority) kickButton.gameObject.SetActive(false);
     }
 

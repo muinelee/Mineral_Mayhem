@@ -58,12 +58,15 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);
 
             RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
+            playerName = PlayerPrefs.GetString("PlayerName");
 
             Debug.Log("Set Player Name");
 
             ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
             readyUpUI.PrimeReadyUpUI(this);
             RPC_JoinUndecided();
+
+            Debug.Log(PlayerPrefs.GetString("PlayerName"));
 
             Debug.Log("Ready Up UI set");
 
@@ -80,7 +83,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             virtualCam.LookAt= this.transform;
 
             Debug.Log("Camera made to target local player");
-
 
             NetworkPlayer_InGameUI playerUI = Instantiate(playerUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
 
