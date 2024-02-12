@@ -10,10 +10,12 @@ public class CharacterSelect : MonoBehaviour
     public List<SO_Character> characters;
 
     [Header("UI Elements")]
-    public Button[] characterButtons;
-    public Button[] abilityPortraits;
-    public TMP_Text currentAbilityDescription;
-    public TMP_Text backstory;
+    [SerializeField] private Button[] characterButtons;
+    [SerializeField] private Button[] abilityPortraits;
+    [SerializeField] private TMP_Text currentAbilityDescription;
+    [SerializeField] private TMP_Text backstory;
+    private Button currentSelectedCharacterButton;
+    private Button currentSelectedAbilityButton;
 
     // Can decouple into the Arena Manager script
     [Header("Spawn Points")]
@@ -27,20 +29,32 @@ public class CharacterSelect : MonoBehaviour
         for (int i = 0; i < characterButtons.Length; i++)
         {
             int index = i;
-            characterButtons[i].onClick.AddListener(() => SelectCharacter(characters[index]));
+            characterButtons[i].onClick.AddListener(() => SelectCharacter(characters[index], characterButtons[index]));
         }
     }
 
-    private void SelectCharacter (SO_Character character)
+    private void SelectCharacter (SO_Character character, Button selectedButton)
     {
         if (currentCharacterInstance != null)
         {
             Destroy(currentCharacterInstance);
         }
 
-        currentCharacterInstance = Instantiate(character.characterPrefab, spawnPoints[0].position, spawnPoints[0].rotation);
-        
+        currentCharacterInstance = Instantiate(character.characterPrefab, spawnPoints[0].position, spawnPoints[0].rotation);        
+
+        // Update character backstory text
         backstory.text = character.backstory;
+
+        // Update UI for selected character button
+        if (currentSelectedCharacterButton != null)
+        {
+            // Reset the previous selected button to its normal state
+            ResetButtonVisual(currentSelectedCharacterButton);
+        }
+
+        // Update the current selection and its visual state
+        currentSelectedCharacterButton = selectedButton;
+        SetButtonAsSelected(currentSelectedCharacterButton);
 
         // Setup ability portraits and descriptions
         SetupAbilityUI(character);
@@ -72,6 +86,16 @@ public class CharacterSelect : MonoBehaviour
             this.abilityPortraits[i].onClick.RemoveAllListeners();
             this.abilityPortraits[i].onClick.AddListener(() => UpdateAbilityDescription(abilityDescriptions[index]));
         }
+    }
+
+    private void SetButtonAsSelected(Button button)
+    {
+        button.interactable = false;
+    }
+
+    private void ResetButtonVisual(Button button)
+    {
+        button.interactable = true;
     }
 
     private void UpdateAbilityDescription(string description)
