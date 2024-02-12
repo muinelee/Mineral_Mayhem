@@ -22,18 +22,22 @@ using UnityEngine.SceneManagement;
 
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
-    public static NetworkPlayer Local { get; private set; }
+    public static NetworkPlayer Local { get; set; }
 
+    [Header("UI to spawn")]
     [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
-    
+    [SerializeField] private ReadyUpManager readyUpUIPF;
     [SerializeField] private NetworkPlayer_WorldSpaceHUD floatingHealthBar;
 
-    // Ready Up Testing
-    [SerializeField] public bool isReady { get; set; } = false;
-    public PlayerRef playerRef { get; private set; }
+
+    public NetworkBool isReady { get; set; } = false;
+
+    public enum Team { Undecided, Red, Blue};
+    [Networked] public Team team { get; set; } = Team.Undecided;
 
     [Networked] public int tokenID { get; set; }        // Value is set when spawned by CharacterSpawner
 
+    [Header("Team Properties")]
 
     [Header("Camera Offset")]
     [SerializeField] private float cameraAngle;
@@ -48,8 +52,9 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         if (Object.HasInputAuthority)
         {
             Local = this;
-            playerRef = Object.InputAuthority;
 
+            ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
+            readyUpUI.PrimeReadyUpUI(this);
 
             Debug.Log("Spawned local player");
 
@@ -114,10 +119,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     public void PlayerLeft(PlayerRef player)
     {
-        if (player == Object.InputAuthority)
-        {
-            Runner.Despawn(Object);
-        }
+        if (player == Object.InputAuthority) Runner.Despawn(Object);
     }
 
     private static void OnPlayerNameChanged(Changed<NetworkPlayer> player)
@@ -139,6 +141,34 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     {
         Debug.Log($"[RPC] Setting the new player name to {newPlayerName}");
         this.playerName = newPlayerName;
+    }
+
+    #region <----- Ready Up functions ----->
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_ReadyUp()
+    {
+        ReadyUpManager.instance.ReadyUp(this);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_JoinBlueTeam()
+    {
+        ReadyUpManager.instance.JoinBlueTeam(this);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_JoinRedTeam()
+    {
+        ReadyUpManager.instance.JoinRedTeam(this);
+    }
+
+    #endregion
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_SpawnPlayerCharacter()
+    {
+        
     }
 
     private void OnDestroy()

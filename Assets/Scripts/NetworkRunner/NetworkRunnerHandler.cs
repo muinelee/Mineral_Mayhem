@@ -71,7 +71,7 @@ public class NetworkRunnerHandler : MonoBehaviour
             Scene = scene,
             Initialized = initialized,
             SceneManager = sceneManager,
-            PlayerCount = 4,
+            PlayerCount = 2,
             ConnectionToken = connectionToken
         });
     }

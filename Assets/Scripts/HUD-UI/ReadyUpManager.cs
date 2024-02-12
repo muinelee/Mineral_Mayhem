@@ -5,56 +5,160 @@ using Fusion;
 using UnityEngine.UI;
 using TMPro;
 
-public class ReadyUpManager : NetworkBehaviour
+public class ReadyUpManager : MonoBehaviour
 {
+    public static ReadyUpManager instance;
+
+    private NetworkPlayer playerRef;
+
     [SerializeField] private Button readyUp;
     [SerializeField] private TextMeshProUGUI readyUpText;
     [SerializeField] private Button startGame;
 
-    private bool isReady = false;
+    [Header("Blue Team properties")]
+    [SerializeField] private List<NetworkPlayer> blueTeamList;
+    [SerializeField] private VerticalLayoutGroup blueTeamLayoutGroup;
 
-    [SerializeField] private TextMeshProUGUI[] playerList;
+    [Header("Red Team properties")]
+    [SerializeField] private List<NetworkPlayer> redTeamList;
+    [SerializeField] private VerticalLayoutGroup redTeamLayoutGroup;
 
-    public override void Spawned()
+    [Header("Item List Prefabs")]
+    [SerializeField] private Image playerTeamDisplayPF;
+
+
+    // Keep track of which player is at team list
+    private Dictionary<NetworkPlayer, Image> playerTeamDisplayPair = new Dictionary<NetworkPlayer, Image>();
+
+    private void Awake()
     {
-        if (Object.HasStateAuthority) startGame.gameObject.SetActive(true);
-    }
-
-    public void OnReadyUp()
-    {
-        NetworkRunner runner = FindAnyObjectByType<NetworkRunner>();
-
-        this.Object.AssignInputAuthority(NetworkPlayer.Local.playerRef);
-
-        Debug.Log(this.Object.InputAuthority);
-
-        RPC_ReadyUp();
+        instance = this;
     }
 
     public void OnStartGame()
     {
-        if (!Object.HasStateAuthority) return;
+        if (!playerRef.HasStateAuthority) return;
 
+        //Check to see if there are enough players
         NetworkRunner runner = FindAnyObjectByType<NetworkRunner>();
-
-        if (runner.IsServer)
+        if (runner.SessionInfo.PlayerCount != runner.SessionInfo.MaxPlayers)
         {
-            foreach (TextMeshProUGUI playerName in playerList)
-            {
-                if (playerName.text == "Player")
-                {
-                    Debug.Log("There is an empty slot");
-                    return;
-                }
+            Debug.Log("There are not enough players");
+            return;
+        }
 
-                else Debug.Log($"{playerName.text} is ready");
+        if (blueTeamList.Count != redTeamList.Count)
+        {
+            Debug.Log("The teams are uneven");
+            return;
+        }
+
+        for (int i = 0; i < runner.SessionInfo.MaxPlayers/2; i++)
+        {
+            if (!blueTeamList[i].isReady || !redTeamList[i].isReady)
+            {
+                Debug.Log($"Blue team player {i} is {blueTeamList[i].isReady}");
+                Debug.Log($"Red team player {i} is {redTeamList[i].isReady}");
+                
+                return;
             }
         }
+
+        Debug.Log("Start the game!!");
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    public void RPC_ReadyUp(RpcInfo info = default)
+    public void PrimeReadyUpUI(NetworkPlayer player)
     {
-        this.readyUpText.text = "This is working now";
+        playerRef = player;
+        if (player.HasStateAuthority) startGame.gameObject.SetActive(true);
+
+        NetworkPlayer[] players = FindObjectsOfType<NetworkPlayer>();
+        foreach (NetworkPlayer netPlayer in players)
+        {
+            Debug.Log($"{netPlayer.playerName.ToString()}'s team is {netPlayer.team}");
+
+            if (netPlayer.team == NetworkPlayer.Team.Blue) JoinBlueTeam(netPlayer);
+            else if (netPlayer.team == NetworkPlayer.Team.Red) JoinRedTeam(netPlayer);
+        }
+
+        Debug.Log(players.Length);
     }
+
+    public void OnReadyUp()
+    {
+        playerRef.RPC_ReadyUp();
+    }
+
+    public void ReadyUp(NetworkPlayer player)
+    {
+        if (!playerTeamDisplayPair.ContainsKey(player) || player.isReady) return;
+
+        if (!player.isReady) playerTeamDisplayPair[player].color = Color.green;
+
+        // Revert to team colors
+        else
+        {
+            if (player.team == NetworkPlayer.Team.Blue) playerTeamDisplayPair[player].color = Color.blue;
+            else playerTeamDisplayPair[player].color = Color.red;
+        }
+
+        player.isReady = !playerRef.isReady;
+    }
+
+    #region <----- Join Functionality ----->
+
+    public void OnJoinBlueTeam()
+    {
+        playerRef.RPC_JoinBlueTeam();
+    }
+
+    public void OnJoinRedTeam()
+    {
+        playerRef.RPC_JoinRedTeam();
+    }
+
+    public void JoinBlueTeam(NetworkPlayer player)
+    {
+        // Manage player in team lists
+        if (blueTeamList.Contains(player)) return;
+
+        if (redTeamList.Contains(player)) redTeamList.Remove(player);
+        player.isReady = false;
+
+        // Create player name display
+        Image playerDisplay = Instantiate(playerTeamDisplayPF, blueTeamLayoutGroup.transform);
+        playerDisplay.color = Color.blue;
+        playerDisplay.GetComponentInChildren<TextMeshProUGUI>().text = player.playerName.ToString();
+
+        // Destroy player display name if one is already present in the other team list
+        if (playerTeamDisplayPair.ContainsKey(player)) Destroy(playerTeamDisplayPair[player].gameObject);
+        playerTeamDisplayPair[player] = playerDisplay;
+
+        // Add player to the blue team
+        blueTeamList.Add(player);
+        player.team = NetworkPlayer.Team.Blue;
+    }
+
+    public void  JoinRedTeam(NetworkPlayer player)
+    {
+        if (redTeamList.Contains(player)) return;
+
+        if (blueTeamList.Contains(player)) blueTeamList.Remove(player);
+        player.isReady = false;
+
+        // Create player name display in UI
+        Image playerDisplay = Instantiate(playerTeamDisplayPF, redTeamLayoutGroup.transform);
+        playerDisplay.color = Color.red;
+        playerDisplay.GetComponentInChildren<TextMeshProUGUI>().text = player.playerName.ToString();
+
+        // Destroy player display name if one is already present in the other team list
+        if (playerTeamDisplayPair.ContainsKey(player)) Destroy(playerTeamDisplayPair[player].gameObject);
+        playerTeamDisplayPair[player] = playerDisplay;
+
+        // Add playre to the red team
+        redTeamList.Add(player);
+        player.team = NetworkPlayer.Team.Red;
+    }
+
+    #endregion
 }
