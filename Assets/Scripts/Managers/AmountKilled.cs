@@ -16,7 +16,6 @@ public class AmountKilled : MonoBehaviour
 
         if (gameManager != null)
         {
-            Killed = gameManager.amountKilled;
             Debug.Log("I did it");
             Debug.Log("Amount killed is " + Killed);
         }
@@ -24,7 +23,6 @@ public class AmountKilled : MonoBehaviour
         {
             Debug.Log("I failed");
         }
-        amountKilledText.text = "You killed " + Killed + " enemies!";
     }
 
 }

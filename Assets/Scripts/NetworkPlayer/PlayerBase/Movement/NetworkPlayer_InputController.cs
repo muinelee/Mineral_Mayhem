@@ -18,6 +18,8 @@ public class NetworkPlayer_InputController : NetworkBehaviour
 
     [SerializeField] private Camera cam;
 
+    [Networked] public NetworkPlayer NetworkUser { get; set; }
+
     private void Update()
     {
         if (!Object.HasInputAuthority) return;
