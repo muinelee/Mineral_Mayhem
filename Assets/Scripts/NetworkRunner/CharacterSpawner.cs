@@ -3,11 +3,15 @@ using Fusion;
 using Fusion.Sockets;
 using System.Collections.Generic;
 using System;
+using UnityEngine.SceneManagement;
 
 public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     [Header("Placeholder player prefab")]
     public NetworkPlayer playerPrefab;
+
+    [Header("Session Lobby Manager")]
+    [SerializeField] private SessionLobbyManager sessionLobbyManager;
 
     // Dictionary for holding player UserIDs
     private Dictionary<int, NetworkPlayer> mapTokenIDWithNetworkPlayer = new Dictionary<int, NetworkPlayer>();
@@ -40,6 +44,9 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)                          // Spawns player in scene
     {
+        Debug.Log($"I am in the scene {SceneManager.GetActiveScene().name}");
+        if (SceneManager.GetActiveScene().name != "RichardCPhoton") return;
+
         if (runner.IsServer)
         {
             // Get the player's token
@@ -75,7 +82,6 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnConnectedToServer(NetworkRunner runner)
     {
-        Debug.Log("Connected to Server");
     }
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
@@ -95,7 +101,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
-        
+        SceneManager.LoadScene("RichardCPlayerLobby");
     }
 
     public async void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
@@ -125,7 +131,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-        
+
     }
 
     public void OnSceneLoadStart(NetworkRunner runner)
@@ -135,7 +141,25 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        
+        if (sessionLobbyManager == null) return;
+
+        if (sessionList.Count == 0)
+        {
+            Debug.Log("No sessions running");
+            sessionLobbyManager.OnNoSessionsFound();
+        }
+
+        else
+        {
+            sessionLobbyManager.ClearList();
+
+            foreach (SessionInfo sessionInfo in sessionList)
+            {
+                sessionLobbyManager.AddToList(sessionInfo);
+
+                Debug.Log($"Found session {sessionInfo.Name} with a player count of {sessionInfo.PlayerCount}");
+            }    
+        }
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)

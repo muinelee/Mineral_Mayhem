@@ -6,8 +6,10 @@ using Cinemachine;
 using Fusion;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // Essential Components for player character base
+[RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
 //[RequireComponent(typeof(NetworkObject))]
 /*[RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
 [RequireComponent(typeof(NetworkPlayer_InputController), typeof(NetworkPlayer_Movement))]
@@ -24,6 +26,9 @@ using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
+    public static NetworkPlayer Local { get; set; }
+
+    [Header("UI to spawn")]
     public enum EnumGameState
     {
         Lobby,
@@ -46,10 +51,18 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public bool IsLeader => Object != null && Object.IsValid && Object.HasStateAuthority;
 
     [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
-    
+    [SerializeField] private ReadyUpManager readyUpUIPF;
     [SerializeField] private NetworkPlayer_WorldSpaceHUD floatingHealthBar;
 
+
+    public NetworkBool isReady { get; set; } = false;
+
+    public enum Team { Undecided, Red, Blue};
+    [Networked] public Team team { get; set; } = Team.Undecided;
+
     [Networked] public int tokenID { get; set; }        // Value is set when spawned by CharacterSpawner
+
+    [Header("Team Properties")]
 
     [Header("Camera Offset")]
     [SerializeField] private float cameraAngle;
@@ -75,6 +88,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             //floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);
 
+            RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
+            playerName = PlayerPrefs.GetString("PlayerName");
             /*RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
 
             Debug.Log("Set Player Name");
@@ -85,6 +100,14 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             virtualCam.Follow = this.transform;
             virtualCam.LookAt= this.transform;
 
+            ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
+            readyUpUI.PrimeReadyUpUI(this);
+            RPC_JoinUndecided();
+
+            Debug.Log(PlayerPrefs.GetString("PlayerName"));
+
+            Debug.Log("Ready Up UI set");
+
             GetComponent<NetworkPlayer_InputController>().SetCam(Camera.main);
 
             Debug.Log("Set Camera for local player");
@@ -92,7 +115,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             Camera.main.transform.rotation = Quaternion.Euler(cameraAngle, 0, 0);
 
             Debug.Log("Camera made to target local player");
-
 
             NetworkPlayer_InGameUI playerUI = Instantiate(playerUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
 
@@ -138,10 +160,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     public void PlayerLeft(PlayerRef player)
     {
-        if (player == Object.InputAuthority)
-        {
-            Runner.Despawn(Object);
-        }
+        if (player == Object.InputAuthority) Runner.Despawn(Object);
     }
 
     private static void OnPlayerNameChanged(Changed<NetworkPlayer> player)
@@ -164,6 +183,35 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         Debug.Log($"[RPC] Setting the new player name to {newPlayerName}");
         this.playerName = newPlayerName;
     }
+
+    #region <----- Ready Up functions ----->
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_ReadyUp()
+    {
+        ReadyUpManager.instance.ReadyUp(this);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_JoinBlueTeam()
+    {
+        ReadyUpManager.instance.JoinBlueTeam(this);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_JoinRedTeam()
+    {
+        ReadyUpManager.instance.JoinRedTeam(this);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_JoinUndecided()
+    {
+        ReadyUpManager.instance.JoinUndecided(this);
+    }
+
+    #endregion
+
 
     private void OnDestroy()
     {

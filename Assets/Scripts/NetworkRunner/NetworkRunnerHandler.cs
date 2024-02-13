@@ -7,21 +7,32 @@ using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
-using Cinemachine;
 
 public class NetworkRunnerHandler : MonoBehaviour
 {
     public NetworkRunner networkRunnerPrefab;
     static NetworkRunner networkRunner = null;
 
+    private void Awake()
+    {
+        NetworkRunner networkRunnerInScene = FindObjectOfType<NetworkRunner>();
+
+        if (networkRunnerInScene != null) networkRunner = networkRunnerInScene;
+    }
+
     void Start()
     {
-        if (networkRunner) return;
+        if (FindAnyObjectByType<NetworkRunner>()) return;
 
         networkRunner = Instantiate(networkRunnerPrefab);
         networkRunner.name = "NetworkRunner";
 
-        InitializeNetworkRunner(networkRunner, GameMode.AutoHostOrClient, NetworkInfoManager.instance.GetConnectionToken() ,NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
+        Debug.Log($"Created a network runner at {SceneManager.GetActiveScene().name}");
+
+        if (SceneManager.GetActiveScene().name == "RichardCPhoton")     // Change "RichardCPhoton" to game scene name in future
+        {
+            var clientTask = InitializeNetworkRunner(networkRunner, GameMode.AutoHostOrClient, "TestSession", NetworkInfoManager.instance.GetConnectionToken() ,NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
+        }
 
         Debug.Log($"Server NetworkRunner started.");
     }
@@ -45,7 +56,7 @@ public class NetworkRunnerHandler : MonoBehaviour
         return sceneManager;
     }
 
-    protected virtual Task InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, byte[] connectionToken, NetAddress address, SceneRef scene, Action<NetworkRunner> initialized)
+    protected virtual Task InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, string sessionName, byte[] connectionToken, NetAddress address, SceneRef scene, Action<NetworkRunner> initialized)
     {
         var sceneManager = GetSceneManager(runner);
 
@@ -55,10 +66,12 @@ public class NetworkRunnerHandler : MonoBehaviour
         {
             GameMode = gameMode,
             Address = address,
-            SessionName = "Test Room",
+            SessionName = sessionName,
+            CustomLobbyName = "OurLobbyID",
             Scene = scene,
             Initialized = initialized,
             SceneManager = sceneManager,
+            PlayerCount = 2,
             ConnectionToken = connectionToken
         });
     }
@@ -124,8 +137,41 @@ public class NetworkRunnerHandler : MonoBehaviour
 
     IEnumerator CleanUpHostMigrationCO()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
 
         FindObjectOfType<CharacterSpawner>().OnHostMigrationCleanup();
+    }
+
+    public void OnJoinLobby()
+    {
+        var clientTask = JoinLobby();
+    }
+
+    private async Task JoinLobby()
+    {
+        Debug.Log("Join Lobby started");
+
+        string lobbyID = "OurLobbyID";
+
+        var result = await networkRunner.JoinSessionLobby(SessionLobby.Custom, lobbyID);
+
+        if (!result.Ok) Debug.LogError($"Unable to join lobby {lobbyID}");
+
+        else Debug.Log("Join Lobby ok");
+    }
+
+    public void CreateGame(string sessionName, string sceneName)
+    {
+        Debug.Log($"Create session {sessionName} scene {sceneName} build index {SceneUtility.GetBuildIndexByScenePath($"_Scenes/{sceneName}")}");
+
+        // Create game as a host
+        var clientTask = InitializeNetworkRunner(networkRunner, GameMode.Host, sessionName, NetworkInfoManager.instance.GetConnectionToken(), NetAddress.Any(), SceneUtility.GetBuildIndexByScenePath($"_Scenes/{sceneName}"), null);
+    }
+
+    public void JoinGame(SessionInfo sessionInfo)
+    {
+        // Join existing game as client
+        // NOTE: When joining game, the scene argument will be passing the current active scene because it will be overriten by the host
+        var clientTask = InitializeNetworkRunner(networkRunner, GameMode.Client, sessionInfo.Name, NetworkInfoManager.instance.GetConnectionToken(), NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
     }
 }

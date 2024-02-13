@@ -36,8 +36,8 @@ public class NetworkPlayer_Attack : NetworkBehaviour
         if (GetInput(out NetworkInputData networkInputData) && canAttack)
         {
             if (networkInputData.isQAttack && !qAttackCoolDownTimer.IsRunning) ActivateAttack(qAttack, ref qAttackCoolDownTimer);
-            if (networkInputData.isEAttack && !eAttackCoolDownTimer.IsRunning) ActivateAttack(eAttack, ref eAttackCoolDownTimer);
-            if (networkInputData.isFAttack && playerEnergy.IsUltCharged()) ActivateAttack(fAttack);
+            else if (networkInputData.isEAttack && !eAttackCoolDownTimer.IsRunning) ActivateAttack(eAttack, ref eAttackCoolDownTimer);
+            else if (networkInputData.isFAttack && playerEnergy.IsUltCharged()) ActivateAttack(fAttack);
         }
 
         ManageTimers(ref qAttackCoolDownTimer);
