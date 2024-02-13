@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 // Essential Components for player character base
-[RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
+//[RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
 //[RequireComponent(typeof(NetworkObject))]
 /*[RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
 [RequireComponent(typeof(NetworkPlayer_InputController), typeof(NetworkPlayer_Movement))]

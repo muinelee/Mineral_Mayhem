@@ -12,7 +12,7 @@ public class Arena : NetworkBehaviour
     public GameObject altPickup;    // at time of writing I forget name of other collectible in-game lol - there may also be more than one, can create list
     public GameObject core;
 
-    public ArenaDefinition definition;    //Will have information relative to the specific arena we are on (music/name/index/icon/image, etc)
+    public SO_ArenaDefinition definition;    //Will have information relative to the specific arena we are on (music/name/index/icon/image, etc)
 
 
     private void Awake()

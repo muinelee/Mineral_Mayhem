@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : NetworkSceneManagerBase
 {
-    public const int ARENA_PREGAME = 6;
-    public const int ARENA_TEST = 7;
+    public const int ARENA_PREGAME = 3;
+    public const int ARENA_TEST = 4;
     public static LevelManager Instance => Singleton<LevelManager>.Instance;
 
     public static void LoadMenu()
