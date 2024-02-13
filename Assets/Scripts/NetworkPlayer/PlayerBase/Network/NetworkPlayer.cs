@@ -1,16 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cinemachine;
 using Fusion;
 using TMPro;
 using UnityEngine;
 
 // Essential Components for player character base
-[RequireComponent(typeof(NetworkObject))]
-[RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
+//[RequireComponent(typeof(NetworkObject))]
+/*[RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
 [RequireComponent(typeof(NetworkPlayer_InputController), typeof(NetworkPlayer_Movement))]
 [RequireComponent(typeof(NetworkPlayer_Attack), typeof(NetworkPlayer_Energy), typeof(NetworkPlayer_Health))]
-[RequireComponent(typeof(NetworkMecanimAnimator), typeof(HitboxRoot))]
+[RequireComponent(typeof(NetworkMecanimAnimator), typeof(HitboxRoot))]*/
 
 /* 
     Notes when creating new character:
@@ -22,12 +24,30 @@ using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
+    public enum EnumGameState
+    {
+        Lobby,
+        GameReady,
+        CharacterSelection,
+        Cutscene,
+    }
+
+    public static readonly List<NetworkPlayer> Players = new List<NetworkPlayer>();
+
+    public static event Action<NetworkPlayer> OnPlayerJoined;
+    public static event Action<NetworkPlayer> OnPlayerChanged;
+    public static event Action<NetworkPlayer> OnPlayerLeave;
     public static NetworkPlayer Local { get; private set; }
+
+    [Networked] public NetworkPlayer_InputController Avatar { get; set; }
+    [Networked] public EnumGameState GameState { get; set; }
+    [Networked] public int CharacterID { get; set; }
+
+    public bool IsLeader => Object != null && Object.IsValid && Object.HasStateAuthority;
 
     [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
     
     [SerializeField] private NetworkPlayer_WorldSpaceHUD floatingHealthBar;
-
 
     [Networked] public int tokenID { get; set; }        // Value is set when spawned by CharacterSpawner
 
@@ -36,20 +56,26 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     [Header("Username UI")]
     public TextMeshProUGUI playerNameTMP;
-    [Networked(OnChanged = nameof(OnPlayerNameChanged))]
-    public NetworkString<_16> playerName { get; private set; }
+    [Networked(OnChanged = nameof(OnStateChanged))] public NetworkBool IsReady {  get; set; }
+    [Networked(OnChanged = nameof(OnPlayerNameChanged))] public NetworkString<_16> playerName { get; private set; }
 
     public override void Spawned()
     {
+        // *** Must take a look at decoupling this later - can be much smaller, when removing most physical parts of the character.avatar from the player ***
+        base.Spawned();
+
         if (Object.HasInputAuthority)
         {
             Local = this;
 
+            OnPlayerChanged?.Invoke(this);
+            RPC_SetPlayerStats(ClientInfo.Username, ClientInfo.CharacterID);
+
             Debug.Log("Spawned local player");
 
-            floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);
+            //floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);
 
-            RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
+            /*RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
 
             Debug.Log("Set Player Name");
             
@@ -95,15 +121,19 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             playerUI.PrimeUI();
 
-            Debug.Log("Local player Attacks linked to player UI");
+            Debug.Log("Local player Attacks linked to player UI");*/
         }
 
         else
         {
-            Debug.Log("Spawned remote player");
+            /*Debug.Log("Spawned remote player");
 
-            floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(true);
+            floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(true);*/
         }
+        Players.Add(this);
+        OnPlayerJoined?.Invoke(this);
+
+        DontDestroyOnLoad(gameObject);
     }
 
     public void PlayerLeft(PlayerRef player)
@@ -139,4 +169,31 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     {
         if (floatingHealthBar) Destroy(floatingHealthBar.gameObject);
     }
+
+    public static void RemovePlayer(NetworkRunner runner, PlayerRef p)
+    {
+        var roomPlayer = Players.FirstOrDefault(x => x.Object.InputAuthority == p);
+        // Despawns the avatar controlled character
+        if (roomPlayer != null) runner.Despawn(roomPlayer.Avatar.Object);
+
+        // Despawns the network player
+        Players.Remove(roomPlayer);
+        runner.Despawn(roomPlayer.Object);
+    }
+
+    [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.StateAuthority, InvokeResim = true)]
+    private void RPC_SetPlayerStats(NetworkString<_16> username, int charID)
+    {
+        playerName = username;
+        CharacterID = charID;
+    }
+
+    [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.StateAuthority)]
+    public void RPC_ChangeReadyState(NetworkBool state)
+    {
+        Debug.Log($"Setting {Object.Name} ready state to {state}");
+        IsReady = state;
+    }
+
+    private static void OnStateChanged(Changed<NetworkPlayer> changed) => OnPlayerChanged?.Invoke(changed.Behaviour);
 }
