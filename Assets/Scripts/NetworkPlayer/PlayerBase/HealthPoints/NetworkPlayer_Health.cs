@@ -78,4 +78,9 @@ public class NetworkPlayer_Health : NetworkBehaviour
     {
         return startingHP;
     }
+
+    public void Heal(float amount)
+    {
+        HP = Mathf.Min(HP + amount, startingHP);
+    }
 }
