@@ -202,6 +202,7 @@ public class ReadyUpManager : MonoBehaviour
 
             // Destroy players not in game
             Destroy(playerTeamDisplayPair[player].gameObject);
+            playerTeamDisplayPair.Remove(player);
         }
 
         Debug.Log("Player UI should be updated");
