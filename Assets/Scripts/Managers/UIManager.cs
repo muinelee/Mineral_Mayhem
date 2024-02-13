@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using Unity.Entities.UI;
 
 
 //add a timer to the game
@@ -13,6 +15,13 @@ public class UIManager : MonoBehaviour
     public bool timerIsRunning = false;
     public TextMeshProUGUI timeText;
     public TextMeshProUGUI amountKilledText;
+
+    //cooldown stuff
+    public Image EimageCooldown;
+    public Image QimageCooldown;
+    public Text EcooldownText;
+    public Text QcooldownText;
+    //cooldown time comes from player_attackController script in the function
 
     //testing purposes
 
@@ -32,6 +41,7 @@ public class UIManager : MonoBehaviour
                 timeRemaining -= Time.deltaTime;
                 DisplayTime(timeRemaining);
                 DisplayNPCKilled();
+                spellCooldown();
             }
             if (timeRemaining <= 0)
             {
@@ -59,10 +69,61 @@ public class UIManager : MonoBehaviour
 
     private void DisplayNPCKilled()
     {
-        //get amountKilled from GameManager
-        amountKilled = FindObjectOfType<GameManager>().amountKilled;
-        //display the amountKilled
-        amountKilledText.text = "You killed " + amountKilled + " enemies!";
 
+
+    }
+
+    public void spellCooldown()
+    {
+        //find the player
+        GameObject player = GameObject.FindGameObjectWithTag("Participant");
+
+        if (player != null)
+        {
+            //reference the player attack controller
+            Player_AttackController playerAttackController = player.GetComponent<Player_AttackController>();
+            //find spell cooldown
+            float eSpellCooldownTimer = playerAttackController.eAttackTimer;
+            float eSpellCooldown = playerAttackController.eAttack.coolDown;
+            float qSpellCooldown = playerAttackController.qAttackTimer;
+            float qSpellCooldownTimer = playerAttackController.qAttack.coolDown;
+            //send cooldown to uimanager
+            DisplayESpellCooldown(eSpellCooldown, eSpellCooldownTimer);
+            DisplayQSpellCooldown(qSpellCooldown, qSpellCooldownTimer);
+
+            if (player == null)
+            {
+                Debug.Log("Player not found");
+            }
+        }
+    }
+    public void DisplayESpellCooldown(float eSpellCooldown, float eSpellCooldownTimer)
+    {
+        //display the cooldown
+        EcooldownText.text = (eSpellCooldown - eSpellCooldownTimer).ToString("F2");
+        if (eSpellCooldown - eSpellCooldownTimer <= 0)
+        {
+            EcooldownText.text = "";
+            EimageCooldown.fillAmount = 0;
+        }
+        else
+        {
+            EimageCooldown.fillAmount = (eSpellCooldown - eSpellCooldownTimer) / eSpellCooldown;
+        }
+    }
+
+    public void DisplayQSpellCooldown(float qSpellCooldown, float qSpellCooldownTimer)
+    {
+        //display the cooldown
+        QcooldownText.text = (qSpellCooldown - qSpellCooldownTimer).ToString("F2");
+        if (qSpellCooldown - qSpellCooldownTimer <= 0)
+        {
+            QcooldownText.text = "";
+            QimageCooldown.fillAmount = 0;
+        }
+        else
+        {
+            QimageCooldown.fillAmount = (qSpellCooldown - qSpellCooldownTimer) / qSpellCooldown;
+        }
     }
 }
