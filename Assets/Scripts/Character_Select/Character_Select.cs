@@ -32,7 +32,10 @@ public class Character_Select : MonoBehaviour {
 
     [Header("Spawn Point")]
     //reference the spawn point
-    public Transform spawnPoint;
+    public Transform redSpawnPoint1;
+    public Transform redSpawnPoint2;
+    public Transform blueSpawnPoint1;
+    public Transform blueSpawnPoint2;
 
     void Start() {
         Debug.Log("Character Select Loaded");
@@ -51,7 +54,6 @@ public class Character_Select : MonoBehaviour {
         if (lunaButton) {
             lunaButton.onClick.AddListener(LunaButton);
         }
-
     }
 
     //when clicking the Pyre button, call this function
@@ -62,7 +64,7 @@ public class Character_Select : MonoBehaviour {
             Destroy(GameObject.Find("Network_Player(Clone)"));
         }
         //spawn the prefab at the position of the spawn point
-        Instantiate(PyrePrefab, spawnPoint.position, spawnPoint.rotation);
+        Instantiate(PyrePrefab, redSpawnPoint1.position, redSpawnPoint1.rotation);
 
         //gameManager.UpdateSelectedClass("Pyre"); leaving as a hook for possible use
     }
@@ -74,7 +76,7 @@ public class Character_Select : MonoBehaviour {
         }
         Debug.Log("Crystra Button Clicked");
         //spawn the crystra prefab at the position of the spawn point
-        Instantiate(CrystraPrefab, spawnPoint.position, spawnPoint.rotation);
+        Instantiate(CrystraPrefab, redSpawnPoint2.position, redSpawnPoint2.rotation);
 
         //gameManager.UpdateSelectedClass("Crystra"); leaving as a hook for possible use
     }
@@ -86,7 +88,7 @@ public class Character_Select : MonoBehaviour {
         }
         Debug.Log("Terran Button Clicked");
         //spawn the terran prefab at the position of the spawn point
-        Instantiate(TerranPrefab, spawnPoint.position, spawnPoint.rotation);
+        Instantiate(TerranPrefab, blueSpawnPoint1.position, blueSpawnPoint1.rotation);
 
         //gameManager.UpdateSelectedClass("Terran"); leaving as a hook for possible use
     }
@@ -98,7 +100,7 @@ public class Character_Select : MonoBehaviour {
         }
         Debug.Log("Luna Button Clicked");
         //spawn the luna prefab at the position of the spawn point
-        Instantiate(LunaPrefab, spawnPoint.position, spawnPoint.rotation);
+        Instantiate(LunaPrefab, blueSpawnPoint2.position, blueSpawnPoint2.rotation);
 
         //gameManager.UpdateSelectedClass("Luna"); leaving as a hook for possible use
     }

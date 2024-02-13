@@ -12,7 +12,7 @@ using Cinemachine;
 public class NetworkRunnerHandler : MonoBehaviour
 {
     public NetworkRunner networkRunnerPrefab;
-    NetworkRunner networkRunner;
+    static NetworkRunner networkRunner = null;
 
     void Start()
     {
@@ -21,7 +21,7 @@ public class NetworkRunnerHandler : MonoBehaviour
         networkRunner = Instantiate(networkRunnerPrefab);
         networkRunner.name = "NetworkRunner";
 
-        var clientTask = InitializeNetworkRunner(networkRunner, GameMode.AutoHostOrClient, NetworkInfoManager.instance.GetConnectionToken() ,NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
+        InitializeNetworkRunner(networkRunner, GameMode.AutoHostOrClient, NetworkInfoManager.instance.GetConnectionToken() ,NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
 
         Debug.Log($"Server NetworkRunner started.");
     }
