@@ -169,5 +169,23 @@ public class Player_Movement : NetworkBehaviour
         statusEffectSlow = 1;
     }
 
-#endregion
+    #endregion
+
+    #region <----- Speed Boost ----->
+    public void ApplySpeedBoost(float boostAmount, float boostDuration)
+    {
+        StartCoroutine(SpeedBoostCoroutine(boostAmount, boostDuration));
+    }
+
+    private IEnumerator SpeedBoostCoroutine(float boostAmount, float boostDuration)
+    {
+        float originalMovSpd = movSpd;
+
+        movSpd += boostAmount;
+
+        yield return new WaitForSeconds(boostDuration);
+
+        movSpd = originalMovSpd;
+    }
+    #endregion
 }

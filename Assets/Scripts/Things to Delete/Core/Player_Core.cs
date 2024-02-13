@@ -114,6 +114,7 @@ public class Player_Core : MonoBehaviour
         SceneManager.LoadScene("GameOver");
     }
 
+<<<<<<< HEAD
     public void ResetHealth()
     {
         playerStats.currentHP = playerStats.maxHP;
@@ -122,5 +123,10 @@ public class Player_Core : MonoBehaviour
     public bool IsDead()
     {
         return playerStats.currentHP <= 0;
+=======
+    public void RestoreHealth(float amount)
+    {
+        playerStats.currentHP = Mathf.Min(playerStats.currentHP + amount, playerStats.maxHP);
+>>>>>>> e5ea38fc82ab154a467afcece8273f581a3d5fa0
     }
 }
