@@ -1,7 +1,16 @@
 public class DataManager
 {
-    // Sound Data
-    public static float masterVolume = 0f;
-    public static float musicVolume = 0f;
-    public static float sfxVolume = 0f;
+
+
+    /*------------------*/
+    // Data to not be saved
+
+    // Settings Data
+    public static int fullScreen = 1;
+
+    public static float brightness = 0.5f;
+
+    public static float volumeMaster = 1f;
+    public static float volumeMusic = 0.75f;
+    public static float volumeSFX = 0.75f;
 }

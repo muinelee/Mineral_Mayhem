@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class RoundUI : MonoBehaviour
 {
+    public static RoundUI instance;
+
     int blueWins = 0;
     int redWins = 0;
 
@@ -17,6 +19,13 @@ public class RoundUI : MonoBehaviour
 
     //------------------------------//
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
     private void Start()
     {
         gemBlue1.gameObject.SetActive(false);
@@ -43,7 +52,7 @@ public class RoundUI : MonoBehaviour
             gemBlue2.gameObject.SetActive(true);
             gemBlue2.FadeIn();
         }
-        else if (blueWins >= 2)
+        else if (blueWins == 2)
         {
             blueWins = 3;
 
@@ -69,7 +78,7 @@ public class RoundUI : MonoBehaviour
             gemRed2.gameObject.SetActive(true);
             gemRed2.FadeIn();
         }
-        else if (redWins >= 2)
+        else if (redWins == 2)
         {
             redWins = 3;
 

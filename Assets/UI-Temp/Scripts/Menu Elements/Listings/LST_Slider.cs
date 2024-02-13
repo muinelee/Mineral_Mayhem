@@ -9,6 +9,7 @@ public class LST_Slider : MonoBehaviour
 {
     public enum ListingType
     {
+        Brightness,
         Master,
         Music,
         SFX,
@@ -29,15 +30,15 @@ public class LST_Slider : MonoBehaviour
     {
         if (listingType == ListingType.Master)
         {
-            slider.value = (DataManager.masterVolume + 30) / 30;
+            slider.value = (DataManager.volumeMaster + 30) / 30;
         }
         else if (listingType == ListingType.Music)
         {
-            slider.value = (DataManager.musicVolume + 30) / 30;
+            slider.value = (DataManager.volumeMusic + 30) / 30;
         }
         else if (listingType == ListingType.SFX)
         {
-            slider.value = (DataManager.sfxVolume + 30) / 30;
+            slider.value = (DataManager.volumeSFX + 30) / 30;
         }
     }
 
@@ -50,18 +51,18 @@ public class LST_Slider : MonoBehaviour
 
         if (listingType == ListingType.Master)
         {
-            DataManager.masterVolume = slider.value * 30 - 30;
-            mixer.SetFloat("master", DataManager.masterVolume);
+            DataManager.volumeMaster = slider.value * 30 - 30;
+            mixer.SetFloat("master", DataManager.volumeMaster);
         }
         else if (listingType == ListingType.Music)
         {
-            DataManager.musicVolume = slider.value * 30 - 30;
-            mixer.SetFloat("music", DataManager.musicVolume);
+            DataManager.volumeMusic = slider.value * 30 - 30;
+            mixer.SetFloat("music", DataManager.volumeMusic);
         }
         else if (listingType == ListingType.SFX)
         {
-            DataManager.sfxVolume = slider.value * 30 - 30;
-            mixer.SetFloat("sfx", DataManager.sfxVolume);
+            DataManager.volumeSFX = slider.value * 30 - 30;
+            mixer.SetFloat("sfx", DataManager.volumeSFX);
         }
 
         valueChanged?.Invoke();
