@@ -26,9 +26,6 @@ using UnityEngine.SceneManagement;
 
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
-    public static NetworkPlayer Local { get; set; }
-
-    [Header("UI to spawn")]
     public enum EnumGameState
     {
         Lobby,
@@ -86,19 +83,18 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             Debug.Log("Spawned local player");
 
-            //floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);
+            floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);
 
-            RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
             playerName = PlayerPrefs.GetString("PlayerName");
-            /*RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
+            RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
 
             Debug.Log("Set Player Name");
-            
-            Debug.Log ($"Camera's new position is {Camera.main.transform.position}");
-            
+
+            Debug.Log($"Camera's new position is {Camera.main.transform.position}");
+
             CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
             virtualCam.Follow = this.transform;
-            virtualCam.LookAt= this.transform;
+            virtualCam.LookAt = this.transform;
 
             ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
             readyUpUI.PrimeReadyUpUI(this);
@@ -143,7 +139,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             playerUI.PrimeUI();
 
-            Debug.Log("Local player Attacks linked to player UI");*/
+            Debug.Log("Local player Attacks linked to player UI");
         }
 
         else
