@@ -151,4 +151,20 @@ public class NetworkPlayer_Movement : NetworkBehaviour
     {
         statusSlow = 1;
     }
+
+    public void ApplySpeedBoost(float boostAmount, float boostDuration)
+    {
+        StartCoroutine(SpeedBoostCoroutine(boostAmount, boostDuration));
+    }
+
+    private IEnumerator SpeedBoostCoroutine(float boostAmount, float boostDuration)
+    {
+        float originalMoveSpeed = moveSpeed;
+
+        moveSpeed += boostAmount;
+
+        yield return new WaitForSeconds(boostDuration);
+
+        moveSpeed = originalMoveSpeed;
+    }
 }

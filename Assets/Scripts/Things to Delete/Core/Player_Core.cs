@@ -113,4 +113,9 @@ public class Player_Core : MonoBehaviour
     {
         SceneManager.LoadScene("GameOver");
     }
+
+    public void RestoreHealth(float amount)
+    {
+        playerStats.currentHP = Mathf.Min(playerStats.currentHP + amount, playerStats.maxHP);
+    }
 }
