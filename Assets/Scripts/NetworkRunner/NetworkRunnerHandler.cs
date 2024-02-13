@@ -11,7 +11,7 @@ using System.Linq;
 public class NetworkRunnerHandler : MonoBehaviour
 {
     public NetworkRunner networkRunnerPrefab;
-    NetworkRunner networkRunner;
+    static NetworkRunner networkRunner = null;
 
     private void Awake()
     {

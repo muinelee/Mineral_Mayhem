@@ -17,6 +17,9 @@ public class NetworkPlayer_Health : NetworkBehaviour
 
     [SerializeField] private float startingHP = 100;
 
+    //Base dmg reduction multiplier 1 = normal damage
+    [SerializeField] public float dmgReduction = 1.0f;
+
     // Start is called before the first frame update
     public override void Spawned()
     {
@@ -33,7 +36,10 @@ public class NetworkPlayer_Health : NetworkBehaviour
             return;
         }
 
-        HP -= (float) damageAmount;
+        //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
+        int currDamageAmount = (int) (damageAmount * dmgReduction);
+
+        HP -= (float) currDamageAmount;
 
         Debug.Log($"{Time.time} {transform.name} took damage and has {HP} HP left");
 
@@ -43,7 +49,7 @@ public class NetworkPlayer_Health : NetworkBehaviour
 
             isDead = true;
         }
-        else NetworkCameraEffectsManager.instance.CameraHitEffect(damageAmount);
+        else NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
     }
 
     private void HandleDeath()
@@ -77,5 +83,10 @@ public class NetworkPlayer_Health : NetworkBehaviour
     public float GetStartingHP()
     {
         return startingHP;
+    }
+
+    public void Heal(float amount)
+    {
+        HP = Mathf.Min(HP + amount, startingHP);
     }
 }

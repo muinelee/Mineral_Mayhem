@@ -71,4 +71,12 @@ public class Player_AttackController : NetworkBehaviour
     {
         equippedAttack = replacementAttack;
     }
+
+    public void ReplenishEnergy(float amount)
+    {
+        // Replenish the player's energy by the specified amount
+        // For example:
+        // energy += amount;
+        // You need to adapt this line based on how you implement energy management in your game.
+    }
 }
