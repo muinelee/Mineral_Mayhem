@@ -7,21 +7,28 @@ using Unity.VisualScripting;
 public class PickupHandler : NetworkBehaviour
 {
     NetworkObject networkObject;
-
-    PlayerRef playerThatPickedUp;
-    string playerThatPickedUpName; 
-
     TickTimer disappearFromAllPlayersTimer = TickTimer.None;
+
+    [Header("Speed Components")] 
+    [SerializeField] private float speedBoostAmount = 2f;
+    [SerializeField] private float duration = 5f;
+
+    [Header("Health Components")] 
+    [SerializeField] private int healthAmount = 20;
+
+    public enum Pickups
+    {
+        Health,
+        Speed,
+        Damage
+    }
+
+    public Pickups pickups; 
 
     protected virtual void Start()
     {
         networkObject = GetComponent<NetworkObject>();
         disappearFromAllPlayersTimer = TickTimer.CreateFromSeconds(Runner, 5); // Limited Timer that 
-    }
-
-    protected virtual void OnPickup(PlayerRef playerPickedUp, string playerPickupedName)
-    {
-        
     }
 
     public override void FixedUpdateNetwork()
@@ -37,8 +44,29 @@ public class PickupHandler : NetworkBehaviour
         }
     }
 
-    protected virtual void OnTriggerEnter(Collider other)
+    protected void OnTriggerEnter(Collider other)
     {
-        Runner.Despawn(networkObject); 
+        if (pickups == Pickups.Health)
+        {
+            NetworkPlayer_Health playerHealth = other.GetComponent<NetworkPlayer_Health>(); 
+            if (playerHealth != null) playerHealth.Heal(healthAmount);
+            
+        }
+
+        if (pickups == Pickups.Speed)
+        {
+            NetworkPlayer_Movement playerMovement = other.GetComponent<NetworkPlayer_Movement>();
+            if (playerMovement != null) playerMovement.ApplySpeedBoost(speedBoostAmount, duration);
+            
+        }
+
+        if (pickups == Pickups.Damage)
+        {
+            NetworkPlayer_Health playerHealth = other.GetComponent<NetworkPlayer_Health>();
+            if (playerHealth != null) playerHealth.OnTakeDamage(healthAmount);
+        }
+
+        Debug.Log("Despawn Object");
+        Runner.Despawn(networkObject);
     }
 }
