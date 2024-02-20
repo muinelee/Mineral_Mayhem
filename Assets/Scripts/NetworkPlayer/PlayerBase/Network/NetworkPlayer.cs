@@ -1,0 +1,252 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Cinemachine;
+using Fusion;
+using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+// Essential Components for player character base
+//[RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
+//[RequireComponent(typeof(NetworkObject))]
+/*[RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
+[RequireComponent(typeof(NetworkPlayer_InputController), typeof(NetworkPlayer_Movement))]
+[RequireComponent(typeof(NetworkPlayer_Attack), typeof(NetworkPlayer_Energy), typeof(NetworkPlayer_Health))]
+[RequireComponent(typeof(NetworkMecanimAnimator), typeof(HitboxRoot))]*/
+
+/* 
+    Notes when creating new character:
+    
+    Add player model as a child object
+    Add a Floating Health Bar prefab as a child object
+    Add hitbox component to model
+*/
+
+public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
+{
+    public enum EnumGameState
+    {
+        Lobby,
+        GameReady,
+        CharacterSelection,
+        Cutscene,
+    }
+
+    public static readonly List<NetworkPlayer> Players = new List<NetworkPlayer>();
+
+    public static event Action<NetworkPlayer> OnPlayerJoined;
+    public static event Action<NetworkPlayer> OnPlayerChanged;
+    public static event Action<NetworkPlayer> OnPlayerLeave;
+    public static NetworkPlayer Local { get; private set; }
+
+    [Networked] public NetworkPlayer_InputController Avatar { get; set; }
+    [Networked] public EnumGameState GameState { get; set; }
+    [Networked] public int CharacterID { get; set; }
+
+    public bool IsLeader => Object != null && Object.IsValid && Object.HasStateAuthority;
+
+    public bool IsDecoupled = false;    // If true, this is for Jeremy's decoupling testing
+
+    [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
+    [SerializeField] private ReadyUpManager readyUpUIPF;
+    [SerializeField] private NetworkPlayer_WorldSpaceHUD floatingHealthBar;
+
+
+    public NetworkBool isReady { get; set; } = false;
+
+    public enum Team { Undecided, Red, Blue};
+    [Networked] public Team team { get; set; } = Team.Undecided;
+
+    [Networked] public int tokenID { get; set; }        // Value is set when spawned by CharacterSpawner
+
+    [Header("Team Properties")]
+
+    [Header("Camera Offset")]
+    [SerializeField] private float cameraAngle;
+
+    [Header("Username UI")]
+    public TextMeshProUGUI playerNameTMP;
+    [Networked(OnChanged = nameof(OnStateChanged))] public NetworkBool IsReady {  get; set; }
+    [Networked(OnChanged = nameof(OnPlayerNameChanged))] public NetworkString<_16> playerName { get; private set; }
+
+    public override void Spawned()
+    {
+        // *** Must take a look at decoupling this later - can be much smaller, when removing most physical parts of the character.avatar from the player ***
+        base.Spawned();
+
+        if (Object.HasInputAuthority)
+        {
+            Local = this;
+
+            OnPlayerChanged?.Invoke(this);
+            RPC_SetPlayerStats(ClientInfo.Username, ClientInfo.CharacterID);
+
+            Debug.Log("Spawned local player");
+
+            if (!IsDecoupled)
+            {
+
+                floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);
+
+                playerName = PlayerPrefs.GetString("PlayerName");
+                RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
+
+                Debug.Log("Set Player Name");
+
+                Debug.Log($"Camera's new position is {Camera.main.transform.position}");
+
+                CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
+                virtualCam.Follow = this.transform;
+                virtualCam.LookAt = this.transform;
+
+                ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
+                readyUpUI.PrimeReadyUpUI(this);
+                RPC_JoinUndecided();
+
+                Debug.Log(PlayerPrefs.GetString("PlayerName"));
+
+                Debug.Log("Ready Up UI set");
+
+                GetComponent<NetworkPlayer_InputController>().SetCam(Camera.main);
+
+                Debug.Log("Set Camera for local player");
+
+                Camera.main.transform.rotation = Quaternion.Euler(cameraAngle, 0, 0);
+
+                Debug.Log("Camera made to target local player");
+
+                NetworkPlayer_InGameUI playerUI = Instantiate(playerUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
+
+                playerUI.SetPlayerHealth(GetComponent<NetworkPlayer_Health>());
+
+                Debug.Log("Local player health linked to player UI");
+
+
+                playerUI.SetPlayerEnergy(GetComponent<NetworkPlayer_Energy>());
+
+                Debug.Log("Local player energy linked to player UI");
+
+
+                NetworkPlayer_Movement playerMovement = GetComponent<NetworkPlayer_Movement>();
+                playerUI.SetPlayerMovement(playerMovement);
+                playerUI.SetDash(playerMovement.GetDash());
+
+                Debug.Log("Local player movement linked to player UI");
+
+
+                NetworkPlayer_Attack playerAttack = GetComponent<NetworkPlayer_Attack>();
+                playerUI.SetPlayerAttack(playerAttack);
+                playerUI.SetQAttack(playerAttack.GetQAttack());
+                playerUI.SetEAttack(playerAttack.GetEAttack());
+                playerUI.SetFAttack(playerAttack.GetFAttack());
+
+                playerUI.PrimeUI();
+
+                Debug.Log("Local player Attacks linked to player UI");
+            }
+        }
+
+        else
+        {
+            if (!IsDecoupled)
+            {
+                Debug.Log("Spawned remote player");
+
+                floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(true);
+            }
+        }
+        Players.Add(this);
+        OnPlayerJoined?.Invoke(this);
+
+        if (IsDecoupled) DontDestroyOnLoad(gameObject);
+    }
+
+    public void PlayerLeft(PlayerRef player)
+    {
+        if (player == Object.InputAuthority) Runner.Despawn(Object);
+    }
+
+    private static void OnPlayerNameChanged(Changed<NetworkPlayer> player)
+    {
+        Debug.Log($"{Time.time} Player name has been changed to {player.Behaviour.playerName}");
+
+        player.Behaviour.OnPlayerNameChanged();
+    }
+
+    private void OnPlayerNameChanged()
+    {
+        Debug.Log($"Dispalyed name changed for player {gameObject.name} to {playerName}");
+
+        playerNameTMP.text = playerName.ToString();
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_SetPlayerNames(string newPlayerName, RpcInfo info = default)
+    {
+        Debug.Log($"[RPC] Setting the new player name to {newPlayerName}");
+        this.playerName = newPlayerName;
+    }
+
+    #region <----- Ready Up functions ----->
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_ReadyUp()
+    {
+        ReadyUpManager.instance.ReadyUp(this);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_JoinBlueTeam()
+    {
+        ReadyUpManager.instance.JoinBlueTeam(this);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_JoinRedTeam()
+    {
+        ReadyUpManager.instance.JoinRedTeam(this);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_JoinUndecided()
+    {
+        ReadyUpManager.instance.JoinUndecided(this);
+    }
+
+    #endregion
+
+
+    private void OnDestroy()
+    {
+        if (floatingHealthBar) Destroy(floatingHealthBar.gameObject);
+    }
+
+    public static void RemovePlayer(NetworkRunner runner, PlayerRef p)
+    {
+        var roomPlayer = Players.FirstOrDefault(x => x.Object.InputAuthority == p);
+        // Despawns the avatar controlled character
+        if (roomPlayer != null) runner.Despawn(roomPlayer.Avatar.Object);
+
+        // Despawns the network player
+        Players.Remove(roomPlayer);
+        runner.Despawn(roomPlayer.Object);
+    }
+
+    [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.StateAuthority, InvokeResim = true)]
+    private void RPC_SetPlayerStats(NetworkString<_16> username, int charID)
+    {
+        playerName = username;
+        CharacterID = charID;
+    }
+
+    [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.StateAuthority)]
+    public void RPC_ChangeReadyState(NetworkBool state)
+    {
+        Debug.Log($"Setting {Object.Name} ready state to {state}");
+        IsReady = state;
+    }
+
+    private static void OnStateChanged(Changed<NetworkPlayer> changed) => OnPlayerChanged?.Invoke(changed.Behaviour);
+}

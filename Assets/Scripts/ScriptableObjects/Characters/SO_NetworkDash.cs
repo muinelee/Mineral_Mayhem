@@ -1,0 +1,45 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "New Network Dash", menuName = "New Network Dash")]
+public class SO_NetworkDash : ScriptableObject
+{
+    [Header("Name and Description")]
+    public string dashName;
+    public string dashDescription;
+
+    [Header("Dash properties")]
+    [SerializeField] private bool canSteer;
+    [SerializeField] private float dashValue;
+    [SerializeField] private float dashDuration;
+    [SerializeField] private float coolDown;
+
+    [Header("Dash Icon")]
+    [SerializeField] private Sprite dashIcon;
+
+    public bool GetCanSteer()
+    {
+        return canSteer;
+    }
+
+    public float GetDashValue()
+    {
+        return dashValue;
+    }
+
+    public float GetDashDuration()
+    {
+        return dashDuration;
+    }
+
+    public float GetCoolDown()
+    {
+        return coolDown;
+    }
+
+    public Sprite GetDashIcon()
+    {
+        return dashIcon;
+    }
+}
