@@ -1,15 +1,17 @@
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterSelect : MonoBehaviour
+public class CharacterSelect : NetworkBehaviour
 {
     [Header("Character Select")]
     public List<SO_Character> characters;
 
     [Header("UI Elements")]
+    [SerializeField] private GameObject characterSelectScreen;
     [SerializeField] private Button[] characterButtons;
     [SerializeField] private Button[] abilityPortraits;
     [SerializeField] private TMP_Text currentAbilityDescription;
@@ -40,7 +42,9 @@ public class CharacterSelect : MonoBehaviour
             Destroy(currentCharacterInstance.gameObject);
         }
 
-        currentCharacterInstance = Instantiate(character.prefab, spawnPoints[0].position, spawnPoints[0].rotation);        
+        // Rplace instantiate with Spawn    Instantiate(character.prefab, spawnPoints[0].position, spawnPoints[0].rotation);        
+        currentCharacterInstance = Runner.Spawn(character.prefab, spawnPoints[0].position, spawnPoints[0].rotation, Object.InputAuthority);
+            
 
         // Update character backstory text
         backstory.text = character.backstory;
@@ -107,5 +111,10 @@ public class CharacterSelect : MonoBehaviour
     public void LockInCharacter()
     {
         // Implement logic to lock in character, disable character selection UI
+    }
+
+    public void ActivateCharacterSelect()
+    {
+        characterSelectScreen.SetActive(true);
     }
 }

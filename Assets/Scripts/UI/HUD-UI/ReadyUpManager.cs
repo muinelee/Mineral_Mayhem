@@ -51,12 +51,12 @@ public class ReadyUpManager : MonoBehaviour
 
         if (blueTeamList.Count != redTeamList.Count) return;
 
-        for (int i = 0; i < runner.SessionInfo.MaxPlayers/2; i++)
+        for (int i = 0; i < runner.SessionInfo.MaxPlayers / 2; i++)
         {
             if (!blueTeamList[i].isReady || !redTeamList[i].isReady) return;
         }
 
-        Debug.Log("Start the game!!");
+        playerRef.RPC_StartGame();
     }
 
     public void PrimeReadyUpUI(NetworkPlayer player)
@@ -72,6 +72,13 @@ public class ReadyUpManager : MonoBehaviour
             else if (netPlayer.team == NetworkPlayer.Team.Red) JoinRedTeam(netPlayer);
             else if (netPlayer.team == NetworkPlayer.Team.Undecided && netPlayer != playerRef) JoinUndecided(netPlayer);
 
+            Debug.Log($"THE PLAYER IS: {netPlayer.isReady}");
+
+            if (netPlayer.isReady)
+            {
+                Debug.Log("Player is Ready");
+                playerTeamDisplayPair[netPlayer].GetComponent<Image>().color = Color.green;
+            }
 
             // Display that players are ready
             if (netPlayer.isReady) ReadyUp(netPlayer);
@@ -140,7 +147,7 @@ public class ReadyUpManager : MonoBehaviour
         player.team = NetworkPlayer.Team.Blue;
     }
 
-    public void  JoinRedTeam(NetworkPlayer player)
+    public void JoinRedTeam(NetworkPlayer player)
     {
         // Manager player in team lists
         if (redTeamList.Contains(player)) return;
@@ -162,6 +169,12 @@ public class ReadyUpManager : MonoBehaviour
         // Add playre to the red team
         redTeamList.Add(player);
         player.team = NetworkPlayer.Team.Red;
+    }
+
+    public void StartGame()
+    {
+        FindAnyObjectByType<CharacterSelect>().ActivateCharacterSelect();
+        this.gameObject.SetActive(false);
     }
 
     public void JoinUndecided(NetworkPlayer player)
