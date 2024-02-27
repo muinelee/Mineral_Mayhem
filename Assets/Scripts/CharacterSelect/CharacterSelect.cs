@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class CharacterSelect : NetworkBehaviour
 {
+    // Instance
+    public static CharacterSelect instance;
+
     [Header("Character Select")]
     public List<SO_Character> characters;
 
@@ -33,18 +36,25 @@ public class CharacterSelect : NetworkBehaviour
             int index = i;
             characterButtons[i].onClick.AddListener(() => SelectCharacter(characters[index], characterButtons[index]));
         }
+
+        instance = this;
     }
 
     private void SelectCharacter (SO_Character character, Button selectedButton)
     {
-        if (currentCharacterInstance != null)
+        if (!Object.HasStateAuthority) RPC_SpawnCharacter(character.prefab, Object.InputAuthority);
+        /*
+        if (Runner.IsServer)
         {
-            Destroy(currentCharacterInstance.gameObject);
-        }
+            if (currentCharacterInstance != null)
+            {
+                Runner.Despawn(currentCharacterInstance.GetComponent<NetworkObject>());
+            }
 
-        // Rplace instantiate with Spawn    Instantiate(character.prefab, spawnPoints[0].position, spawnPoints[0].rotation);        
-        currentCharacterInstance = Runner.Spawn(character.prefab, spawnPoints[0].position, spawnPoints[0].rotation, Object.InputAuthority);
-            
+            // Rplace instantiate with Spawn    Instantiate(character.prefab, spawnPoints[0].position, spawnPoints[0].rotation);        
+            currentCharacterInstance = Runner.Spawn(character.prefab, spawnPoints[0].position, spawnPoints[0].rotation, Object.InputAuthority);
+        }
+        */
 
         // Update character backstory text
         backstory.text = character.backstory;
@@ -63,6 +73,13 @@ public class CharacterSelect : NetworkBehaviour
         // Setup ability portraits and descriptions
         SetupAbilityUI(character);
         UpdateAbilityDescription(character.characterBasicAbilityDescription);
+    }
+
+    public void SpawnCharacter(CharacterEntity character, PlayerRef player)
+    {
+        if (!Runner.IsServer) return;
+
+        Runner.Spawn(character, spawnPoints[0].position, spawnPoints[0].rotation, player);
     }
 
     private void SetupAbilityUI(SO_Character character)
@@ -116,5 +133,11 @@ public class CharacterSelect : NetworkBehaviour
     public void ActivateCharacterSelect()
     {
         characterSelectScreen.SetActive(true);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_SpawnCharacter(CharacterEntity character, PlayerRef player)
+    {
+        CharacterSelect.instance.SpawnCharacter(character, player);
     }
 }

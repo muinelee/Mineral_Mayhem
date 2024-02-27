@@ -84,8 +84,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         else SetConnectionStatus(ConnectionStatus.Disconnected);
     }
 
-
-
     #region INetworkRunnerCallbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
