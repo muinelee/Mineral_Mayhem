@@ -16,6 +16,7 @@ public class PickupHandler : NetworkBehaviour
     [Header("Health Components")] 
     [SerializeField] private int healthAmount = 20;
 
+    private bool isPickedUp = false; 
     public enum Pickups
     {
         Health,
@@ -33,40 +34,46 @@ public class PickupHandler : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     { 
-        if (Object.HasStateAuthority)
+        if (Object.HasStateAuthority && !isPickedUp)
         {
             if (disappearFromAllPlayersTimer.Expired(Runner))
             {
                 Runner.Despawn(networkObject); 
                 //Stop from being triggered again
-                disappearFromAllPlayersTimer = TickTimer.None;
             }
         }
     }
 
     protected void OnTriggerEnter(Collider other)
     {
-        if (pickups == Pickups.Health)
+        // if we're in the server (then these will be called) 
+        // if not, do nothing 
+        //if (Runner.IsServer)  
+        if (Object.HasStateAuthority && !isPickedUp)
         {
-            NetworkPlayer_Health playerHealth = other.GetComponent<NetworkPlayer_Health>(); 
-            if (playerHealth != null) playerHealth.Heal(healthAmount);
-            
-        }
+            isPickedUp = true; 
+            if (pickups == Pickups.Health)
+            {
+                NetworkPlayer_Health playerHealth = other.GetComponent<NetworkPlayer_Health>();
+                if (playerHealth != null) playerHealth.Heal(healthAmount);
 
-        if (pickups == Pickups.Speed)
-        {
-            NetworkPlayer_Movement playerMovement = other.GetComponent<NetworkPlayer_Movement>();
-            if (playerMovement != null) playerMovement.ApplySpeedBoost(speedBoostAmount, duration);
-            
-        }
+            }
 
-        if (pickups == Pickups.Damage)
-        {
-            NetworkPlayer_Health playerHealth = other.GetComponent<NetworkPlayer_Health>();
-            if (playerHealth != null) playerHealth.OnTakeDamage(healthAmount);
-        }
+            if (pickups == Pickups.Speed)
+            {
+                NetworkPlayer_Movement playerMovement = other.GetComponent<NetworkPlayer_Movement>();
+                if (playerMovement != null) playerMovement.ApplySpeedBoost(speedBoostAmount, duration);
 
-        Debug.Log("Despawn Object");
-        Runner.Despawn(networkObject);
+            }
+
+            if (pickups == Pickups.Damage)
+            {
+                NetworkPlayer_Health playerHealth = other.GetComponent<NetworkPlayer_Health>();
+                if (playerHealth != null) playerHealth.OnTakeDamage(healthAmount);
+            }
+
+            Debug.Log("Despawn Object");
+            Runner.Despawn(networkObject);
+        }
     }
 }
