@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 
-public class NetworkPlayer_Health : NetworkBehaviour
+public class NetworkPlayer_Health : CharacterComponent
 {
     [Networked(OnChanged = nameof(OnHPChanged))]
     public float HP { get; set; }
