@@ -31,6 +31,11 @@ public class CharacterComponent : NetworkBehaviour
     public virtual void OnStatused() { }
 
     /// <summary>
+    /// Called when a player affliction ends (Parameters need to be changed when statuses will be implemented, most likely)
+    /// </summary>
+    public virtual void OnStatusEnded() { }
+
+    /// <summary>
     /// Called when a player dies
     /// </summary>
     public virtual void OnCharacterDeath() { }
