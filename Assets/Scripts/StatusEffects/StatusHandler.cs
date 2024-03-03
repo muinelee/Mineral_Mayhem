@@ -47,6 +47,8 @@ public class StatusHandler : MonoBehaviour
         data.duration = effect.duration;
         data.timeUntilNextTick = effect.tickRate;
 
+        statuses.Add(data);
+
         effect.OnStatusApplied(this);
     }
 
@@ -62,10 +64,5 @@ public class StatusHandler : MonoBehaviour
         {
             //networkPlayer_Movement.SetSpeed(speed.GetValue());
         }
-    }
-
-    private void SetSpeed()
-    {
-        //TODO Getter setter for speed
     }
 }
