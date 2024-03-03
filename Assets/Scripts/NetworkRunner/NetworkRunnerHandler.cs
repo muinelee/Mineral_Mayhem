@@ -13,9 +13,7 @@ public class NetworkRunnerHandler : MonoBehaviour
     public NetworkRunner networkRunnerPrefab;
     static NetworkRunner networkRunner = null;
 
-    private int roomSize = 0;
-    public enum GameMap { Undecided, Main, Training };
-    private GameMap gameMap = GameMap.Undecided;
+    private int roomSize = 1;
 
     private void Awake()
     {
@@ -75,7 +73,7 @@ public class NetworkRunnerHandler : MonoBehaviour
             Scene = scene,
             Initialized = initialized,
             SceneManager = sceneManager,
-            PlayerCount = 2,
+            PlayerCount = roomSize,
             ConnectionToken = connectionToken
         });
     }
@@ -166,17 +164,6 @@ public class NetworkRunnerHandler : MonoBehaviour
 
     public void CreateGame(string sessionName, string sceneName)
     {
-        if (gameMap == GameMap.Undecided)
-        {
-            Debug.Log("No game map selected");
-            return;
-        }
-
-        if (roomSize == 0)
-        {
-            Debug.Log("Choose Room Size");
-        }
-
         // Create game as a host
         var clientTask = InitializeNetworkRunner(networkRunner, GameMode.Host, sessionName, NetworkInfoManager.instance.GetConnectionToken(), NetAddress.Any(), SceneUtility.GetBuildIndexByScenePath($"_Scenes/{sceneName}"), null);
     }
@@ -188,13 +175,13 @@ public class NetworkRunnerHandler : MonoBehaviour
         var clientTask = InitializeNetworkRunner(networkRunner, GameMode.Client, sessionInfo.Name, NetworkInfoManager.instance.GetConnectionToken(), NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
     }
 
-    public GameMap GetGameMap()
+    public int GetRoomSize()
     {
-        return gameMap;
+        return roomSize;
     }
 
-    public void SetGameMap(GameMap map)
+    public void SetRoomSize(int size)
     {
-        gameMap = map;
+        roomSize = size;
     }
 }

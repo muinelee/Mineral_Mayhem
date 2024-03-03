@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Linq;
 
 public class PlayerJoinScreenUI : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class PlayerJoinScreenUI : MonoBehaviour
     public TMP_InputField sessionName;
 
     private NetworkRunnerHandler networkRunnerHandler;
+    private string[] roomAddress = new string[] { "RaeLeda/RaeLedaTrainingRoom", "RichardCPhoton" };
+    private string map;
 
     private void Start()
     {
@@ -62,13 +65,19 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
     public void OnStartNewSessionClicked()
     {
-        if (networkRunnerHandler.GetGameMap() == NetworkRunnerHandler.GameMap.Undecided) return;
-
         networkRunnerHandler.CreateGame(sessionName.text, "RichardCPhoton");
+        /*
+        // Training Map
+        if (map == roomAddress[0]) networkRunnerHandler.CreateGame(sessionName.text, map);
 
+        // Arena Map
+        else if (map == roomAddress[1] && networkRunnerHandler.GetRoomSize() > 1) networkRunnerHandler.CreateGame(sessionName.text, map);
+
+        else return;
+        // Display Status Panel
         HideAllPanels();
-
         statusPanel.SetActive(true);
+         */
     }
 
     public void OnBackClicked()
@@ -76,6 +85,9 @@ public class PlayerJoinScreenUI : MonoBehaviour
         HideAllPanels();
 
         playerDetailsPanel.SetActive(true);
+
+        networkRunnerHandler.SetRoomSize(1);
+        map = "";
     }
 
     public void OnJoiningServer()
@@ -83,5 +95,20 @@ public class PlayerJoinScreenUI : MonoBehaviour
         HideAllPanels();
 
         statusPanel.SetActive(true);
+    }
+
+    public void SetRoomSize(int size)
+    {
+        networkRunnerHandler.SetRoomSize(size);
+    }
+
+    public void OnTrainingClicked()
+    {
+        map = roomAddress[0];
+    }
+
+    public void OnArenaClicked()
+    {
+        map = roomAddress[1];
     }
 }
