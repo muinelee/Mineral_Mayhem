@@ -13,6 +13,13 @@ public class CharacterComponent : NetworkBehaviour
     public virtual void Init(CharacterEntity character)
     {
         Character = character;
+        Character.OnHitEvent += OnHit;
+        Character.OnHealEvent += OnHeal;
+        Character.OnStatusBeginEvent += OnStatusBegin;
+        Character.OnStatusEndedEvent += OnStatusEnded;
+        Character.OnPickupEvent += OnPickup;
+        Character.OnCharacterDeathEvent += OnCharacterDeath;
+        Character.OnRoundEndEvent += OnRoundEnd;
     }
 
     /// <summary>
@@ -28,12 +35,12 @@ public class CharacterComponent : NetworkBehaviour
     /// <summary>
     /// Called when a player gets afflicted (Parameters need to be changed when statuses will be implemented, most likely)
     /// </summary>
-    public virtual void OnStatused() { }
+    public virtual void OnStatusBegin(StatusEffect status) { }
 
     /// <summary>
     /// Called when a player affliction ends (Parameters need to be changed when statuses will be implemented, most likely)
     /// </summary>
-    public virtual void OnStatusEnded() { }
+    public virtual void OnStatusEnded(StatusEffect status) { }
 
     /// <summary>
     /// Called when a player dies
@@ -43,7 +50,7 @@ public class CharacterComponent : NetworkBehaviour
     /// <summary>
     /// Called when the round is complete
     /// </summary>
-    public virtual void OnRoundComplete() { }
+    public virtual void OnRoundEnd() { }
 
     /// <summary>
     /// Called when a character picks something up
