@@ -5,6 +5,7 @@ using Fusion;
 using Unity.Entities.UniversalDelegates;
 using Unity.Entities;
 using System;
+using Unity.VisualScripting;
 
 public class Placeholder_Ult_Primary : NetworkAttack_Base
 {
@@ -86,6 +87,12 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
                 {
                     NetworkPlayer_Health networkPlayer_Health = hit.GameObject.GetComponentInParent<NetworkPlayer_Health>();
                     networkPlayer_Health.OnTakeDamage(damage);
+
+                    StatusHandler statusHandler = hit.GameObject.GetComponentInParent<StatusHandler>();
+                    foreach (StatusEffect status in statusEffectSO)
+                    {
+                        statusHandler.AddStatus(status);
+                    }
                 }
 
                 if (statusEffectSO.Count > 0 && characterEntity)

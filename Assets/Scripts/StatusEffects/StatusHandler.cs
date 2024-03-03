@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StatusHandler : MonoBehaviour
+public class StatusHandler : CharacterComponent
 {
     List<StatusData> statuses = new List<StatusData>();
 
@@ -48,8 +48,7 @@ public class StatusHandler : MonoBehaviour
         data.timeUntilNextTick = effect.tickRate;
 
         statuses.Add(data);
-
-        effect.OnStatusApplied(this);
+        data.status.OnStatusApplied(this);
     }
 
     public void RemoveStatus(StatusData data)
