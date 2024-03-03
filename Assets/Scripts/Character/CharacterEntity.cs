@@ -9,6 +9,14 @@ public class CharacterEntity : CharacterComponent
     public static event Action<CharacterEntity> OnCharacterSpawned;
     public static event Action<CharacterEntity> OnCharacterDespawned;
 
+    public event Action<float> OnHitEvent;
+    public event Action<float> OnHealEvent;
+    public event Action<StatusEffect> OnStatusBeginEvent;
+    public event Action<StatusEffect> OnStatusEndedEvent;
+    public event Action OnPickupEvent;
+    public event Action OnCharacterDeathEvent;
+    public event Action OnRoundEndEvent;
+
 
     // *** Important - can set all character components to be derived from CharacterComponent -> Allows a simple initialization on Awake
     public NetworkPlayer_AnimationLink Animator { get; private set; }
@@ -29,8 +37,8 @@ public class CharacterEntity : CharacterComponent
 
 
         // *** If all components do this instead, allows for very reader friendly method of initialization
-        /*var components = GetComponentsInChildren<CharacterComponent>();
-        foreach (var component in components) component.Init(this);*/
+        var components = GetComponentsInChildren<CharacterComponent>();
+        foreach (var component in components) component.Init(this);
     }
 
     public static readonly List<CharacterEntity> Characters = new List<CharacterEntity>();
