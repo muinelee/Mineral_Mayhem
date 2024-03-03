@@ -4,6 +4,7 @@ using UnityEngine;
 using Fusion;
 using Unity.Entities.UniversalDelegates;
 using Unity.Entities;
+using System;
 
 public class Placeholder_Ult_Primary : NetworkAttack_Base
 {
@@ -77,9 +78,10 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
                 objectsHit.Add(hit.Hitbox);
                 Debug.Log($"This was hit: {hit.GameObject.name}");
 
-                NetworkPlayer_Health healthHandler = hit.GameObject.GetComponentInParent<NetworkPlayer_Health>();
+                CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
+                //NetworkPlayer_Health healthHandler = hit.GameObject.GetComponentInParent<NetworkPlayer_Health>();
 
-                if (healthHandler) healthHandler.OnTakeDamage(damage);
+                if (characterEntity) characterEntity.OnHitEvent?.Invoke(damage);
                 // TODO: Apply status effect to the CharacterEntity class - IL
                 //if (statusEffectSO.Count > 0) for... Entity.CharacterEntity.OnStatusBegin(statusEffectSO, Object.InputAuthority);
             }
