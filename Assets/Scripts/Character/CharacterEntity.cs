@@ -17,6 +17,37 @@ public class CharacterEntity : CharacterComponent
     public event Action OnCharacterDeathEvent;
     public event Action OnRoundEndEvent;
 
+    #region Exposed Delegate Function Calls
+    public override void OnHit(float x)
+    {
+        OnHitEvent?.Invoke(x);
+    }
+    public override void OnHeal(float x)
+    {
+        OnHealEvent?.Invoke(x);
+    }
+    public override void OnStatusBegin(StatusEffect status)
+    {
+        OnStatusBeginEvent?.Invoke(status);
+    }
+    public override void OnStatusEnded(StatusEffect status)
+    {
+        OnStatusEndedEvent?.Invoke(status);
+    }
+
+    public override void OnCharacterDeath()
+    {
+        OnCharacterDeathEvent?.Invoke();
+    }
+    public override void OnRoundEnd()
+    {
+        OnRoundEndEvent?.Invoke();
+    }
+    public override void OnPickup()
+    {
+        OnPickupEvent?.Invoke();
+    }
+    #endregion
 
     // *** Important - can set all character components to be derived from CharacterComponent -> Allows a simple initialization on Awake
     public NetworkPlayer_AnimationLink Animator { get; private set; }
