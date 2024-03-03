@@ -28,6 +28,12 @@ public class NetworkPlayer_Health : NetworkBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
+    public override void OnHit(float x)
+    {
+        base.OnHit(x);
+        OnTakeDamage((int)x);
+    }
+
     // Function only called on the server
     public void OnTakeDamage(int damageAmount)
     {
