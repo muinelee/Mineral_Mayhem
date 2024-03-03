@@ -18,10 +18,14 @@ public class PlayerJoinScreenUI : MonoBehaviour
     [Header("New Game Info")]
     public TMP_InputField sessionName;
 
+    private NetworkRunnerHandler networkRunnerHandler;
+
     private void Start()
     {
         //Testing
         if (PlayerPrefs.HasKey("PlayerName")) playerName.text = PlayerPrefs.GetString("PlayerName");
+
+        networkRunnerHandler = FindObjectOfType<NetworkRunnerHandler>();
     }
     private void HideAllPanels()
     {
@@ -41,8 +45,6 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
         PlayerPrefs.SetString("PlayerName", playerName.text);
 
-        NetworkRunnerHandler networkRunnerHandler = FindObjectOfType<NetworkRunnerHandler>();
-
         networkRunnerHandler.OnJoinLobby();
 
         HideAllPanels();
@@ -60,13 +62,20 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
     public void OnStartNewSessionClicked()
     {
-        NetworkRunnerHandler networkRunnerHandler = FindObjectOfType<NetworkRunnerHandler>();
+        if (networkRunnerHandler.GetGameMap() == NetworkRunnerHandler.GameMap.Undecided) return;
 
         networkRunnerHandler.CreateGame(sessionName.text, "RichardCPhoton");
 
         HideAllPanels();
 
         statusPanel.SetActive(true);
+    }
+
+    public void OnBackClicked()
+    {
+        HideAllPanels();
+
+        playerDetailsPanel.SetActive(true);
     }
 
     public void OnJoiningServer()

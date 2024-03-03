@@ -13,6 +13,10 @@ public class NetworkRunnerHandler : MonoBehaviour
     public NetworkRunner networkRunnerPrefab;
     static NetworkRunner networkRunner = null;
 
+    private int roomSize = 0;
+    public enum GameMap { Undecided, Main, Training };
+    private GameMap gameMap = GameMap.Undecided;
+
     private void Awake()
     {
         NetworkRunner networkRunnerInScene = FindObjectOfType<NetworkRunner>();
@@ -162,7 +166,16 @@ public class NetworkRunnerHandler : MonoBehaviour
 
     public void CreateGame(string sessionName, string sceneName)
     {
-        Debug.Log($"Create session {sessionName} scene {sceneName} build index {SceneUtility.GetBuildIndexByScenePath($"_Scenes/{sceneName}")}");
+        if (gameMap == GameMap.Undecided)
+        {
+            Debug.Log("No game map selected");
+            return;
+        }
+
+        if (roomSize == 0)
+        {
+            Debug.Log("Choose Room Size");
+        }
 
         // Create game as a host
         var clientTask = InitializeNetworkRunner(networkRunner, GameMode.Host, sessionName, NetworkInfoManager.instance.GetConnectionToken(), NetAddress.Any(), SceneUtility.GetBuildIndexByScenePath($"_Scenes/{sceneName}"), null);
@@ -173,5 +186,15 @@ public class NetworkRunnerHandler : MonoBehaviour
         // Join existing game as client
         // NOTE: When joining game, the scene argument will be passing the current active scene because it will be overriten by the host
         var clientTask = InitializeNetworkRunner(networkRunner, GameMode.Client, sessionInfo.Name, NetworkInfoManager.instance.GetConnectionToken(), NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
+    }
+
+    public GameMap GetGameMap()
+    {
+        return gameMap;
+    }
+
+    public void SetGameMap(GameMap map)
+    {
+        gameMap = map;
     }
 }

@@ -49,8 +49,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     public bool IsDecoupled = false;    // If true, this is for Jeremy's decoupling testing
 
-    [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
     [SerializeField] private ReadyUpManager readyUpUIPF;
+    [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
     [SerializeField] private NetworkPlayer_WorldSpaceHUD floatingHealthBar;
 
 
@@ -117,25 +117,27 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
                 Debug.Log("Camera made to target local player");
 
+
                 NetworkPlayer_InGameUI playerUI = Instantiate(playerUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
 
+                // Local player health linked to player UI
                 playerUI.SetPlayerHealth(GetComponent<NetworkPlayer_Health>());
 
-                Debug.Log("Local player health linked to player UI");
 
 
+                // Local player energy linked to player UI
                 playerUI.SetPlayerEnergy(GetComponent<NetworkPlayer_Energy>());
 
-                Debug.Log("Local player energy linked to player UI");
 
 
+                // Local player movement linked to player UI
                 NetworkPlayer_Movement playerMovement = GetComponent<NetworkPlayer_Movement>();
                 playerUI.SetPlayerMovement(playerMovement);
                 playerUI.SetDash(playerMovement.GetDash());
 
-                Debug.Log("Local player movement linked to player UI");
 
 
+                // Local player Attacks linked to player UI
                 NetworkPlayer_Attack playerAttack = GetComponent<NetworkPlayer_Attack>();
                 playerUI.SetPlayerAttack(playerAttack);
                 playerUI.SetQAttack(playerAttack.GetQAttack());
@@ -144,7 +146,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
                 playerUI.PrimeUI();
 
-                Debug.Log("Local player Attacks linked to player UI");
             }
         }
 

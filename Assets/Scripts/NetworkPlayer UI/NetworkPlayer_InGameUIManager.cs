@@ -19,19 +19,13 @@ public class NetworkPlayer_InGameUIManager : CharacterComponent
             // Local player health linked to player UI
             playerUI.SetPlayerHealth(GetComponent<NetworkPlayer_Health>());
 
-
-
             // Local player energy linked to player UI
             playerUI.SetPlayerEnergy(GetComponent<NetworkPlayer_Energy>());
-
-
 
             // Local player movement linked to player UI
             NetworkPlayer_Movement playerMovement = GetComponent<NetworkPlayer_Movement>();
             playerUI.SetPlayerMovement(playerMovement);
             playerUI.SetDash(playerMovement.GetDash());
-
-
 
             // Local player Attacks linked to player UI
             NetworkPlayer_Attack playerAttack = GetComponent<NetworkPlayer_Attack>();
@@ -41,6 +35,12 @@ public class NetworkPlayer_InGameUIManager : CharacterComponent
             playerUI.SetFAttack(playerAttack.GetFAttack());
 
             playerUI.PrimeUI();
+        }
+
+        else
+        {
+            // Spawned remote player
+            floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(true);
         }
     }
 }
