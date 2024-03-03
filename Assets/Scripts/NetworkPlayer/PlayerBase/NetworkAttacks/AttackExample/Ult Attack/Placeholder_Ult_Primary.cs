@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using Unity.Entities.UniversalDelegates;
+using Unity.Entities;
 
 public class Placeholder_Ult_Primary : NetworkAttack_Base
 {
@@ -10,6 +11,7 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
 
     [Header("End Attack properties")]
     [SerializeField] private float lifetimeDuration;
+
     private TickTimer timer = TickTimer.None;
 
     [Header("Projectile Properties")]
@@ -38,7 +40,7 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
     {
         if (!Object.HasStateAuthority) return;
 
-        DealDamaage();
+        DealDamage();
 
         ManageTimer();
     }
@@ -63,7 +65,7 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
         else Debug.Log("This ult does not produce any projectiles");
     }
 
-    private void DealDamaage()
+    protected override void DealDamage()
     {
         foreach (NetworkObject projectile in projectileList)
         {
@@ -78,6 +80,8 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
                 NetworkPlayer_Health healthHandler = hit.GameObject.GetComponentInParent<NetworkPlayer_Health>();
 
                 if (healthHandler) healthHandler.OnTakeDamage(damage);
+                // TODO: Apply status effect to the CharacterEntity class - IL
+                //if (statusEffectSO.Count > 0) for... Entity.CharacterEntity.OnStatusBegin(statusEffectSO, Object.InputAuthority);
             }
         }
     }

@@ -47,7 +47,7 @@ public class PlaceholderAttack : NetworkAttack_Base
         }
     }
 
-    private void DealDamage()
+    protected override void DealDamage()
     {
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
 

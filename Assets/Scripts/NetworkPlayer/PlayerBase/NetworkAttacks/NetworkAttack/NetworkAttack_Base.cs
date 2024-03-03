@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 
-public class NetworkAttack_Base : NetworkBehaviour
+public abstract class NetworkAttack_Base : NetworkBehaviour
 {
     // Source of attack
-    private PlayerRef playerRef;
+    //private PlayerRef playerRef;
 
-    [Header("Damage")]
+    [Header("Base Attack Properties")]
     [SerializeField] protected int damage;
+    [SerializeField] protected AudioClip SFX;
+    [SerializeField] protected List<StatusEffect> statusEffectSO;
 
-    [Header("SFX")]
-    [SerializeField] private AudioClip sfx;
+    protected virtual void DealDamage() { }
 }
