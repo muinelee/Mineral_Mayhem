@@ -19,6 +19,11 @@ public class DamageOverTimeStatus : StatusEffect
 
     public override void OnStatusUpdate(StatusHandler handler)
     {
-        //NetworkPlayer_Health.HP.OnTakeDamage(damage);
+        if (handler.Character) handler.Character.OnHit(damage);
+        // Temporary solution for between refactoring
+        else
+        {
+            handler.GetComponentInParent<NetworkPlayer_Health>().OnTakeDamage(damage);
+        }
     }
 }
