@@ -9,6 +9,8 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     [Header("Placeholder player prefab")]
     public NetworkPlayer playerPrefab;
+    public CharacterEntity character;
+    public NetworkRunner networkRunner;
 
     [Header("Session Lobby Manager")]
     [SerializeField] private SessionLobbyManager sessionLobbyManager;
@@ -65,12 +67,17 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
             else
             {
                 NetworkPlayer newPlayer = runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
+                runner.Spawn(character, transform.position, Quaternion.identity, player);
 
                 newPlayer.tokenID = playerToken;
                 mapTokenIDWithNetworkPlayer[playerToken] = newPlayer;
             }
         }
         else Debug.Log("OnPlayerJoined");
+    }
+
+    public void SpawnCharacter()
+    {
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)

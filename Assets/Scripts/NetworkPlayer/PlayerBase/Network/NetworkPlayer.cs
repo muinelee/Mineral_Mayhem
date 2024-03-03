@@ -54,7 +54,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     [SerializeField] private NetworkPlayer_WorldSpaceHUD floatingHealthBar;
 
 
-    public NetworkBool isReady { get; set; } = false;
+    [Networked] public NetworkBool isReady { get; set; } = false;
 
     public enum Team { Undecided, Red, Blue};
     [Networked] public Team team { get; set; } = Team.Undecided;
@@ -215,6 +215,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         ReadyUpManager.instance.JoinUndecided(this);
     }
 
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_StartGame()
+    {
+        ReadyUpManager.instance.StartGame();
+    }
+
     #endregion
 
 
@@ -247,6 +253,5 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         Debug.Log($"Setting {Object.Name} ready state to {state}");
         IsReady = state;
     }
-
     private static void OnStateChanged(Changed<NetworkPlayer> changed) => OnPlayerChanged?.Invoke(changed.Behaviour);
 }
