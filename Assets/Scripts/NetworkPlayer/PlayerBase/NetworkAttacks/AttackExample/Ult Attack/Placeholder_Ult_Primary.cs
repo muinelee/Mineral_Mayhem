@@ -79,11 +79,16 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
                 Debug.Log($"This was hit: {hit.GameObject.name}");
 
                 CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
-                //NetworkPlayer_Health healthHandler = hit.GameObject.GetComponentInParent<NetworkPlayer_Health>();
 
-                if (characterEntity) characterEntity.OnHitEvent?.Invoke(damage);
-                // TODO: Apply status effect to the CharacterEntity class - IL
-                //if (statusEffectSO.Count > 0) for... Entity.CharacterEntity.OnStatusBegin(statusEffectSO, Object.InputAuthority);
+                if (characterEntity) characterEntity.OnHit(damage);
+
+                if (statusEffectSO.Count > 0 && characterEntity)
+                {
+                    foreach (StatusEffect status in statusEffectSO)
+                    {
+                        characterEntity.OnStatusBegin(status);
+                    }
+                }
             }
         }
     }
