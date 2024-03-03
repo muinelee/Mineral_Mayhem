@@ -81,6 +81,12 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
                 CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
 
                 if (characterEntity) characterEntity.OnHit(damage);
+                // Temporary solution for between refactoring
+                else
+                {
+                    NetworkPlayer_Health networkPlayer_Health = hit.GameObject.GetComponentInParent<NetworkPlayer_Health>();
+                    networkPlayer_Health.OnTakeDamage(damage);
+                }
 
                 if (statusEffectSO.Count > 0 && characterEntity)
                 {
