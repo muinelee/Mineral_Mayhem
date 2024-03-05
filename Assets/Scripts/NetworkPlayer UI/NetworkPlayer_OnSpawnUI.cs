@@ -1,12 +1,21 @@
+using Cinemachine;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using static UnityEngine.CullingGroup;
 
-public class NetworkPlayer_InGameUIManager : CharacterComponent
+public class NetworkPlayer_OnSpawnUI : NetworkBehaviour
 {
+
+    [Header("Player UI Elements")]
     [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
+    private NetworkPlayer_InGameUI playerUI;
     [SerializeField] private NetworkPlayer_WorldSpaceHUD floatingHealthBar;
+
+    [Header("Camera Offset")]
+    [SerializeField] private float cameraAngle;
 
     public override void Spawned()
     {
@@ -14,13 +23,26 @@ public class NetworkPlayer_InGameUIManager : CharacterComponent
 
         if (Object.HasInputAuthority)
         {
-            NetworkPlayer_InGameUI playerUI = Instantiate(playerUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
+            // Disable floating health bar if local player
+            floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);
+
+            // Link Cinemachine
+            CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
+            virtualCam.Follow = this.transform;
+            virtualCam.LookAt = this.transform;
+
+            GetComponent<NetworkPlayer_InputController>().SetCam(Camera.main);
+
+            Camera.main.transform.rotation = Quaternion.Euler(cameraAngle, 0, 0);
+
+            playerUI = Instantiate(playerUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
 
             // Local player health linked to player UI
             playerUI.SetPlayerHealth(GetComponent<NetworkPlayer_Health>());
 
             // Local player energy linked to player UI
             playerUI.SetPlayerEnergy(GetComponent<NetworkPlayer_Energy>());
+
 
             // Local player movement linked to player UI
             NetworkPlayer_Movement playerMovement = GetComponent<NetworkPlayer_Movement>();
@@ -39,8 +61,16 @@ public class NetworkPlayer_InGameUIManager : CharacterComponent
 
         else
         {
-            // Spawned remote player
+            // Eneable floating health bar if non-local player
             floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(true);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (Object.HasInputAuthority)
+        {
+            Destroy(playerUI);
         }
     }
 }

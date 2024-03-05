@@ -49,10 +49,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     public bool IsDecoupled = false;    // If true, this is for Jeremy's decoupling testing
 
-    [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
     [SerializeField] private ReadyUpManager readyUpUIPF;
-    [SerializeField] private NetworkPlayer_WorldSpaceHUD floatingHealthBar;
-
 
     [Networked] public NetworkBool isReady { get; set; } = false;
 
@@ -83,80 +80,14 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             OnPlayerChanged?.Invoke(this);
             RPC_SetPlayerStats(ClientInfo.Username, ClientInfo.CharacterID);
 
-            Debug.Log("Spawned local player");
+            playerName = PlayerPrefs.GetString("PlayerName");
+            RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
 
-            if (!IsDecoupled)
-            {
-
-                floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);
-
-                playerName = PlayerPrefs.GetString("PlayerName");
-                RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
-
-                Debug.Log("Set Player Name");
-
-                Debug.Log($"Camera's new position is {Camera.main.transform.position}");
-
-                CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
-                virtualCam.Follow = this.transform;
-                virtualCam.LookAt = this.transform;
-
-                ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
-                readyUpUI.PrimeReadyUpUI(this);
-                RPC_JoinUndecided();
-
-                Debug.Log(PlayerPrefs.GetString("PlayerName"));
-
-                Debug.Log("Ready Up UI set");
-
-                GetComponent<NetworkPlayer_InputController>().SetCam(Camera.main);
-
-                Debug.Log("Set Camera for local player");
-
-                Camera.main.transform.rotation = Quaternion.Euler(cameraAngle, 0, 0);
-
-                Debug.Log("Camera made to target local player");
-
-                NetworkPlayer_InGameUI playerUI = Instantiate(playerUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
-
-                playerUI.SetPlayerHealth(GetComponent<NetworkPlayer_Health>());
-
-                Debug.Log("Local player health linked to player UI");
-
-
-                playerUI.SetPlayerEnergy(GetComponent<NetworkPlayer_Energy>());
-
-                Debug.Log("Local player energy linked to player UI");
-
-
-                NetworkPlayer_Movement playerMovement = GetComponent<NetworkPlayer_Movement>();
-                playerUI.SetPlayerMovement(playerMovement);
-                playerUI.SetDash(playerMovement.GetDash());
-
-                Debug.Log("Local player movement linked to player UI");
-
-
-                NetworkPlayer_Attack playerAttack = GetComponent<NetworkPlayer_Attack>();
-                playerUI.SetPlayerAttack(playerAttack);
-                playerUI.SetQAttack(playerAttack.GetQAttack());
-                playerUI.SetEAttack(playerAttack.GetEAttack());
-                playerUI.SetFAttack(playerAttack.GetFAttack());
-
-                playerUI.PrimeUI();
-
-                Debug.Log("Local player Attacks linked to player UI");
-            }
+            ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
+            readyUpUI.PrimeReadyUpUI(this);
+            RPC_JoinUndecided();
         }
 
-        else
-        {
-            if (!IsDecoupled)
-            {
-                Debug.Log("Spawned remote player");
-
-                floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(true);
-            }
-        }
         Players.Add(this);
         OnPlayerJoined?.Invoke(this);
 
@@ -170,22 +101,17 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     private static void OnPlayerNameChanged(Changed<NetworkPlayer> player)
     {
-        Debug.Log($"{Time.time} Player name has been changed to {player.Behaviour.playerName}");
-
         player.Behaviour.OnPlayerNameChanged();
     }
 
     private void OnPlayerNameChanged()
     {
-        Debug.Log($"Dispalyed name changed for player {gameObject.name} to {playerName}");
-
-        playerNameTMP.text = playerName.ToString();
+        //playerNameTMP.text = playerName.ToString();
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     public void RPC_SetPlayerNames(string newPlayerName, RpcInfo info = default)
     {
-        Debug.Log($"[RPC] Setting the new player name to {newPlayerName}");
         this.playerName = newPlayerName;
     }
 
@@ -223,12 +149,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     #endregion
 
-
-    private void OnDestroy()
-    {
-        if (floatingHealthBar) Destroy(floatingHealthBar.gameObject);
-    }
-
     public static void RemovePlayer(NetworkRunner runner, PlayerRef p)
     {
         var roomPlayer = Players.FirstOrDefault(x => x.Object.InputAuthority == p);
@@ -253,5 +173,17 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         Debug.Log($"Setting {Object.Name} ready state to {state}");
         IsReady = state;
     }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_SetCharacterID(int newID)
+    {
+        CharacterID = newID;
+    }
+
     private static void OnStateChanged(Changed<NetworkPlayer> changed) => OnPlayerChanged?.Invoke(changed.Behaviour);
+
+    public CharacterEntity SpawnCharacter(CharacterEntity character, PlayerRef player)
+    {
+        return Runner.Spawn(character, Vector3.zero, Quaternion.identity, player);
+    }
 }
