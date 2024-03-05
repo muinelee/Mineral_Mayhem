@@ -58,6 +58,9 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
     public void OnCreateNewGameClicked()
     {
+
+        PlayerPrefs.SetString("PlayerName", playerName.text);
+
         HideAllPanels();
 
         createSessionPanel.SetActive(true);

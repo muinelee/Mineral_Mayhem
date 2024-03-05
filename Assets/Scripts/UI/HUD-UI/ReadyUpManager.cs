@@ -72,13 +72,8 @@ public class ReadyUpManager : MonoBehaviour
             else if (netPlayer.team == NetworkPlayer.Team.Red) JoinRedTeam(netPlayer);
             else if (netPlayer.team == NetworkPlayer.Team.Undecided && netPlayer != playerRef) JoinUndecided(netPlayer);
 
-            Debug.Log($"THE PLAYER IS: {netPlayer.isReady}");
 
-            if (netPlayer.isReady)
-            {
-                Debug.Log("Player is Ready");
-                playerTeamDisplayPair[netPlayer].GetComponent<Image>().color = Color.green;
-            }
+            if (netPlayer.isReady) playerTeamDisplayPair[netPlayer].GetComponent<Image>().color = Color.green;
 
             // Display that players are ready
             if (netPlayer.isReady) ReadyUp(netPlayer);
@@ -181,10 +176,7 @@ public class ReadyUpManager : MonoBehaviour
     {
         ReadyUpName readyUpName = Instantiate(playerTeamDisplayPF, undecidedTeamLayoutGroup.transform);
         readyUpName.SetPlayer(player);
-
         readyUpName.GetComponent<Image>().color = Color.grey;
-
-        Debug.Log(player.playerName.ToString());
 
         playerTeamDisplayPair[player] = readyUpName;
 
@@ -217,7 +209,5 @@ public class ReadyUpManager : MonoBehaviour
             Destroy(playerTeamDisplayPair[player].gameObject);
             playerTeamDisplayPair.Remove(player);
         }
-
-        Debug.Log("Player UI should be updated");
     }
 }

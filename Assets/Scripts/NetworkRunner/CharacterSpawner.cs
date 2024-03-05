@@ -4,6 +4,7 @@ using Fusion.Sockets;
 using System.Collections.Generic;
 using System;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -20,6 +21,9 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     [Header("Components for UI")]
     private NetworkPlayer_InputController playerInputController;
+
+
+    private string[] roomAddress = new string[] { "RaeLeda/RaeLedaTrainingRoom", "RichardCPhoton" };
 
     private int GetPlayerGUID(NetworkRunner runner, PlayerRef player)
     {
@@ -47,7 +51,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)                          // Spawns player in scene
     {
         Debug.Log($"I am in the scene {SceneManager.GetActiveScene().name}");
-        if (SceneManager.GetActiveScene().name != "RichardCPhoton") return;
+        if (!roomAddress.Contains(SceneManager.GetActiveScene().name)) return;
 
         if (runner.IsServer)
         {
@@ -67,7 +71,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
             else
             {
                 NetworkPlayer newPlayer = runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
-                runner.Spawn(character, transform.position, Quaternion.identity, player);
+                //runner.Spawn(character, transform.position, Quaternion.identity, player);
 
                 newPlayer.tokenID = playerToken;
                 mapTokenIDWithNetworkPlayer[playerToken] = newPlayer;
