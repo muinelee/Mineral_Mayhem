@@ -37,7 +37,7 @@ public class CharacterSelect : NetworkBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        for (int i = 0; i < characterButtons.Length; i++)
+        for (int i = 0; i < characterButtons.Length - 1; i++)
         {
             characterButtons[i].onClick.AddListener(() => SelectCharacter(i, characterButtons[i]));
         }
