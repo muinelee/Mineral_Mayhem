@@ -43,7 +43,6 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
     {
         CinemachineVirtualCamera cam = Camera.main.GetComponentInChildren<CinemachineBrain>().ActiveVirtualCamera as CinemachineVirtualCamera;
         // Update HUD position and values
-        transform.position = playerTransform.position + Vector3.up * yOffset;
 
         nonLocalPlayerHealthBar.value = playerHealth.HP / playerHealth.GetStartingHP();
 
