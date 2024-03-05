@@ -17,8 +17,7 @@ public class Projectile : MonoBehaviour
   public float timeBtwShots = 2;
   private float timeOfLastshot = 0f; 
  
-
- 
+  
   void Start()
   {
     effectToSpawn = vfx [0]; 
@@ -34,7 +33,7 @@ public class Projectile : MonoBehaviour
     }
     if(Input.GetMouseButtonDown(1))
     {
-      
+   
       if (Time.deltaTime - timeOfLastshot >= timeBtwShots)
       {
         SpawnVFX();
