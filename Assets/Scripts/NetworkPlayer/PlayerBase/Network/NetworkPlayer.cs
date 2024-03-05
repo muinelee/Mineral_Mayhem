@@ -173,5 +173,17 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
         Debug.Log($"Setting {Object.Name} ready state to {state}");
         IsReady = state;
     }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_SetCharacterID(int newID)
+    {
+        CharacterID = newID;
+    }
+
     private static void OnStateChanged(Changed<NetworkPlayer> changed) => OnPlayerChanged?.Invoke(changed.Behaviour);
+
+    public CharacterEntity SpawnCharacter(CharacterEntity character, PlayerRef player)
+    {
+        return Runner.Spawn(character, Vector3.zero, Quaternion.identity, player);
+    }
 }

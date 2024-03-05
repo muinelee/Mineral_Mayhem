@@ -10,8 +10,14 @@ public class CharacterSelect : NetworkBehaviour
     // Instance
     public static CharacterSelect instance;
 
+    // Test
+    public NetworkObject playerPF;
+    public NetworkObject curPlayerObject;
+
     [Header("Character Select")]
     public List<SO_Character> characters;
+
+    public Dictionary<NetworkPlayer, CharacterEntity> characterLookup = new Dictionary<NetworkPlayer, CharacterEntity>();
 
     [Header("UI Elements")]
     [SerializeField] private GameObject characterSelectScreen;
@@ -33,16 +39,20 @@ public class CharacterSelect : NetworkBehaviour
     {
         for (int i = 0; i < characterButtons.Length; i++)
         {
-            int index = i;
-            characterButtons[i].onClick.AddListener(() => SelectCharacter(characters[index], characterButtons[index]));
+            characterButtons[i].onClick.AddListener(() => SelectCharacter(i, characterButtons[i]));
         }
 
         instance = this;
     }
 
-    private void SelectCharacter (SO_Character character, Button selectedButton)
+    private void SelectCharacter (int characterIndex, Button selectedButton)
     {
-        if (!Object.HasStateAuthority) RPC_SpawnCharacter(character.prefab, Object.InputAuthority);
+        int index = NetworkPlayer.Players.IndexOf(NetworkPlayer.Local);
+
+        NetworkPlayer.Local.RPC_SetCharacterID(characterIndex);
+
+        RPC_SpawnCharacter(index);
+
         /*
         if (Runner.IsServer)
         {
@@ -54,7 +64,9 @@ public class CharacterSelect : NetworkBehaviour
             // Rplace instantiate with Spawn    Instantiate(character.prefab, spawnPoints[0].position, spawnPoints[0].rotation);        
             currentCharacterInstance = Runner.Spawn(character.prefab, spawnPoints[0].position, spawnPoints[0].rotation, Object.InputAuthority);
         }
-        */
+         */
+
+        SO_Character character = characters[NetworkPlayer.Local.CharacterID];
 
         // Update character backstory text
         backstory.text = character.backstory;
@@ -73,6 +85,14 @@ public class CharacterSelect : NetworkBehaviour
         // Setup ability portraits and descriptions
         SetupAbilityUI(character);
         UpdateAbilityDescription(character.characterBasicAbilityDescription);
+    }
+
+    private void OnEnable()
+    {
+        foreach (NetworkPlayer player in NetworkPlayer.Players)
+        {
+            characterLookup.Add(player, null);
+        }
     }
 
     public void SpawnCharacter(CharacterEntity character, PlayerRef player)
@@ -135,9 +155,21 @@ public class CharacterSelect : NetworkBehaviour
         characterSelectScreen.SetActive(true);
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    public void RPC_SpawnCharacter(CharacterEntity character, PlayerRef player)
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_SpawnCharacter(int playerIndex)
     {
-        CharacterSelect.instance.SpawnCharacter(character, player);
+        if (!Runner.IsServer) return;
+
+        NetworkPlayer player = NetworkPlayer.Players[playerIndex];
+
+        if (characterLookup.ContainsKey(player) == false) characterLookup.Add(player, null);
+
+        if (characterLookup[player] == null) characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
+
+        else
+        {
+            Runner.Despawn(characterLookup[player].Object);
+            characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
+        }
     }
 }

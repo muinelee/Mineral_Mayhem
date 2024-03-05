@@ -50,14 +50,12 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)                          // Spawns player in scene
     {
-        Debug.Log($"I am in the scene {SceneManager.GetActiveScene().name}");
         if (!roomAddress.Contains(SceneManager.GetActiveScene().name)) return;
 
         if (runner.IsServer)
         {
             // Get the player's token
             int playerToken = GetPlayerGUID(runner, player);
-            Debug.Log($"OnPlayerJoined we are server. Spawning player {playerToken}");
 
             // Check dictionary if player already exists in the scene - important for Host Migration and disconnection
             if (mapTokenIDWithNetworkPlayer.TryGetValue(playerToken, out NetworkPlayer networkPlayer))
@@ -77,7 +75,6 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
                 mapTokenIDWithNetworkPlayer[playerToken] = newPlayer;
             }
         }
-        else Debug.Log("OnPlayerJoined");
     }
 
     public void SpawnCharacter()
