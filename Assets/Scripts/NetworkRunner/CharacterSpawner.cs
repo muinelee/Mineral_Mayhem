@@ -69,7 +69,8 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
             else
             {
                 NetworkPlayer newPlayer = runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
-                //runner.Spawn(character, transform.position, Quaternion.identity, player);
+
+                if (character) runner.Spawn(character, transform.position, Quaternion.identity, player);
 
                 newPlayer.tokenID = playerToken;
                 mapTokenIDWithNetworkPlayer[playerToken] = newPlayer;

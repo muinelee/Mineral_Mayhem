@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 2098500895633039834}
   - component: {fileID: 6451881978930218668}
   - component: {fileID: -7992575015647194575}
+  - component: {fileID: 6483842530147728359}
   m_Layer: 7
   m_Name: P_Pyre
   m_TagString: Untagged
@@ -76,6 +77,7 @@ MonoBehaviour:
   - {fileID: 2098500895633039834}
   - {fileID: 6451881978930218668}
   - {fileID: -7992575015647194575}
+  - {fileID: 6483842530147728359}
   - {fileID: 779764453492850429}
   - {fileID: 6932017674382772014}
   SimulationBehaviours: []
@@ -298,6 +300,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   hasDespawned: 0
+--- !u!114 &6483842530147728359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593386485324816745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbff765976cf56f469db7c843db4c5fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  health:
+    baseValue: 10
+    Modifiers: []
+  speed:
+    baseValue: 10
+    Modifiers: []
 --- !u!1001 &1671281869410326247
 PrefabInstance:
   m_ObjectHideFlags: 0
