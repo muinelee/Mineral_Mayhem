@@ -4,15 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static UnityEngine.CullingGroup;
 
 public class NetworkPlayer_OnSpawnUI : NetworkBehaviour
 {
 
     [Header("Player UI Elements")]
     [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
-    private NetworkPlayer_InGameUI playerUI;
-    [SerializeField] private NetworkPlayer_WorldSpaceHUD floatingHealthBar;
+    public NetworkPlayer_InGameUI playerUI;
+    [SerializeField] public NetworkPlayer_WorldSpaceHUD floatingHealthBar;
 
     [Header("Camera Offset")]
     [SerializeField] private float cameraAngle;
@@ -63,14 +62,6 @@ public class NetworkPlayer_OnSpawnUI : NetworkBehaviour
         {
             // Eneable floating health bar if non-local player
             floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(true);
-        }
-    }
-
-    private void OnDestroy()
-    {
-        if (Object.HasInputAuthority)
-        {
-            Destroy(playerUI);
         }
     }
 }

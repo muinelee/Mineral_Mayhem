@@ -39,17 +39,23 @@ public class CharacterSelect : NetworkBehaviour
     {
         for (int i = 0; i < characterButtons.Length; i++)
         {
-            characterButtons[i].onClick.AddListener(() => SelectCharacter(i, characterButtons[i]));
+            int index = i;
+            characterButtons[index].onClick.AddListener(() => SelectCharacter(index, characterButtons[index]));
         }
-
         instance = this;
     }
 
     private void SelectCharacter (int characterIndex, Button selectedButton)
     {
         int index = NetworkPlayer.Players.IndexOf(NetworkPlayer.Local);
-
         NetworkPlayer.Local.RPC_SetCharacterID(characterIndex);
+
+        // Needing for removing monobehaviour HUD before RPC call
+        NetworkPlayer player = NetworkPlayer.Players[index];
+        if (characterLookup.ContainsKey(player) == true)
+        {
+            Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
+        }
 
         RPC_SpawnCharacter(index);
 
@@ -67,7 +73,6 @@ public class CharacterSelect : NetworkBehaviour
          */
 
         SO_Character character = characters[NetworkPlayer.Local.CharacterID];
-
         // Update character backstory text
         backstory.text = character.backstory;
 
@@ -80,6 +85,7 @@ public class CharacterSelect : NetworkBehaviour
 
         // Update the current selection and its visual state
         currentSelectedCharacterButton = selectedButton;
+
         SetButtonAsSelected(currentSelectedCharacterButton);
 
         // Setup ability portraits and descriptions
@@ -164,12 +170,28 @@ public class CharacterSelect : NetworkBehaviour
 
         if (characterLookup.ContainsKey(player) == false) characterLookup.Add(player, null);
 
-        if (characterLookup[player] == null) characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
+        if (characterLookup[player] == null)
+        {
+            characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
+        }
 
         else
         {
+            //Temporary test fr desawning/destroying health bars
+            //Runner.Despawn(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().floatingHealthBar.Object);
             Runner.Despawn(characterLookup[player].Object);
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
         }
+        RPC_UpdateCharacterLookupForClients(player, characterLookup[player]);
+    }
+    /// <summary>
+    /// Syncs CharacterLookup  across all clients from the original RPC_SpawnCharacter call
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="character"></param>
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_UpdateCharacterLookupForClients(NetworkPlayer player, CharacterEntity character)
+    {
+        characterLookup[player] = character;
     }
 }
