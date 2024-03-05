@@ -65,10 +65,11 @@ public class NetworkPlayer_Movement : NetworkBehaviour
 
     private void Aim()
     {
-         // Rotate player over time to the target angle
-         float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
-         float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime + turnSlow);
-         transform.rotation = Quaternion.Euler(0, angle, 0);
+        // Rotate player over time to the target angle
+        float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
+        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime + turnSlow);
+        Quaternion rotation = Quaternion.Euler(0, angle, 0);
+        transform.rotation = rotation;
     }
 
     private void MobilityAbility(Vector3 moveDirection)
