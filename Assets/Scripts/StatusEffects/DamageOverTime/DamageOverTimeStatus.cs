@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Status Effect", menuName = "Scriptable Object/Status Effect/Damage Over Time")]
 public class DamageOverTimeStatus : StatusEffect
 {
-    [SerializeField] private int damage = 2;
+    [SerializeField] private float damage = 2;
 
     public override void OnStatusApplied(StatusHandler handler)
     {
@@ -23,7 +23,7 @@ public class DamageOverTimeStatus : StatusEffect
         // Temporary solution for between refactoring
         else
         {
-            handler.GetComponentInParent<NetworkPlayer_Health>().OnTakeDamage(damage);
+            handler.GetComponentInParent<NetworkPlayer_Health>().OnTakeDamage((int)damage);
         }
     }
 }
