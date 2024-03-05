@@ -50,6 +50,7 @@ public class CharacterSelect : NetworkBehaviour
         int index = NetworkPlayer.Players.IndexOf(NetworkPlayer.Local);
         NetworkPlayer.Local.RPC_SetCharacterID(characterIndex);
 
+        Destroy(characterLookup[NetworkPlayer.Players[index]].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
         RPC_SpawnCharacter(index);
 
         /*
@@ -169,7 +170,6 @@ public class CharacterSelect : NetworkBehaviour
         {
             //Temporary test fr desawning/destroying health bars
             //Runner.Despawn(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().floatingHealthBar.Object);
-            Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
             Runner.Despawn(characterLookup[player].Object);
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
         }
