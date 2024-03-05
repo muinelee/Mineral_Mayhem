@@ -22,6 +22,8 @@ public class StatusHandler : CharacterComponent
 
     private void Update()
     {
+        List<StatusData> statusesToRemove = new List<StatusData>();
+
         foreach (StatusData data in statuses)
         {
             data.timeUntilNextTick -= Time.deltaTime;
@@ -35,8 +37,12 @@ public class StatusHandler : CharacterComponent
             if (data.duration <= 0)
             {
                 data.status.OnStatusEnded(this);
-                RemoveStatus(data);
+                statusesToRemove.Add(data);
             }
+        }
+        foreach(StatusData data in statusesToRemove)
+        {
+            RemoveStatus(data);
         }
     }
 
