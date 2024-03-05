@@ -52,8 +52,10 @@ public class CharacterSelect : NetworkBehaviour
 
         // Needing for removing monobehaviour HUD before RPC call
         NetworkPlayer player = NetworkPlayer.Players[index];
-        if (characterLookup.ContainsKey(player) == false) characterLookup.Add(player, null);
-        if (characterLookup[player] != null) Destroy(NetworkPlayer.Local.GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
+        if (characterLookup[player] != null)
+        {
+            Destroy(NetworkPlayer.Local.GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
+        }
 
         RPC_SpawnCharacter(index);
 
@@ -168,7 +170,10 @@ public class CharacterSelect : NetworkBehaviour
 
         if (characterLookup.ContainsKey(player) == false) characterLookup.Add(player, null);
 
-        if (characterLookup[player] == null) characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
+        if (characterLookup[player] == null)
+        {
+            characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
+        }
 
         else
         {
@@ -177,5 +182,12 @@ public class CharacterSelect : NetworkBehaviour
             Runner.Despawn(characterLookup[player].Object);
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
         }
+        RPC_UpdateCharacterLookupForClients(player, characterLookup[player]);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_UpdateCharacterLookupForClients(NetworkPlayer player, CharacterEntity character)
+    {
+        characterLookup[player] = character;
     }
 }
