@@ -71,6 +71,7 @@ public class NetworkPlayer_OnSpawnUI : NetworkBehaviour
         if (Object.HasInputAuthority)
         {
             Destroy(playerUI);
+            Destroy(floatingHealthBar);
         }
     }
 }
