@@ -54,7 +54,7 @@ public class CharacterSelect : NetworkBehaviour
         NetworkPlayer player = NetworkPlayer.Players[index];
         if (characterLookup.ContainsKey(player) == true)
         {
-            Destroy(NetworkPlayer.Local.GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
+            Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
         }
 
         RPC_SpawnCharacter(index);
