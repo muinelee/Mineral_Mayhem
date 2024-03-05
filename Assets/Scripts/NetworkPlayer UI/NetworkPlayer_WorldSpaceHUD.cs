@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Fusion;
+using Cinemachine;
 
 public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
 {
@@ -25,13 +26,13 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
     private void PrimeUI()
     {
         // Set proper canvas rotation
-        Camera cam = Camera.main;
+        CinemachineVirtualCamera cam = Camera.main.GetComponentInChildren<CinemachineBrain>().ActiveVirtualCamera as CinemachineVirtualCamera;
         transform.rotation = cam.transform.rotation;
         
         // Detach from parent to prevent HUD from rotating with gameObject
-        playerTransform = transform.parent.transform;
+        /*playerTransform = transform.parent.transform;
         yOffset = transform.localPosition.y;
-        transform.SetParent(null);
+        transform.SetParent(null);*/
 
         // Set Floating HealthBar properties
         if (Object.HasInputAuthority) nonLocalPlayerHealthBar.gameObject.SetActive(false);
@@ -40,9 +41,12 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
 
     private void DisplayHUD()
     {
+        CinemachineVirtualCamera cam = Camera.main.GetComponentInChildren<CinemachineBrain>().ActiveVirtualCamera as CinemachineVirtualCamera;
         // Update HUD position and values
         transform.position = playerTransform.position + Vector3.up * yOffset;
 
         nonLocalPlayerHealthBar.value = playerHealth.HP / playerHealth.GetStartingHP();
+
+        transform.LookAt(cam.transform.rotation * Vector3.forward + transform.position, cam.transform.rotation * Vector3.up);
     }
 }
