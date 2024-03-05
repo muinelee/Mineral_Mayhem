@@ -37,18 +37,17 @@ public class CharacterSelect : NetworkBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        for (int i = 0; i < characterButtons.Length - 1; i++)
+        for (int i = 0; i < characterButtons.Length; i++)
         {
-            characterButtons[i].onClick.AddListener(() => SelectCharacter(i, characterButtons[i]));
+            int index = i;
+            characterButtons[index].onClick.AddListener(() => SelectCharacter(index, characterButtons[index]));
         }
-
         instance = this;
     }
 
     private void SelectCharacter (int characterIndex, Button selectedButton)
     {
         int index = NetworkPlayer.Players.IndexOf(NetworkPlayer.Local);
-
         NetworkPlayer.Local.RPC_SetCharacterID(characterIndex);
 
         RPC_SpawnCharacter(index);
@@ -67,7 +66,6 @@ public class CharacterSelect : NetworkBehaviour
          */
 
         SO_Character character = characters[NetworkPlayer.Local.CharacterID];
-
         // Update character backstory text
         backstory.text = character.backstory;
 
@@ -80,6 +78,7 @@ public class CharacterSelect : NetworkBehaviour
 
         // Update the current selection and its visual state
         currentSelectedCharacterButton = selectedButton;
+
         SetButtonAsSelected(currentSelectedCharacterButton);
 
         // Setup ability portraits and descriptions
