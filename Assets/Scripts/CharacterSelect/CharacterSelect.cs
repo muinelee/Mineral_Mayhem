@@ -184,7 +184,11 @@ public class CharacterSelect : NetworkBehaviour
         }
         RPC_UpdateCharacterLookupForClients(player, characterLookup[player]);
     }
-
+    /// <summary>
+    /// Syncs CharacterLookup  across all clients from the original RPC_SpawnCharacter call
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="character"></param>
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_UpdateCharacterLookupForClients(NetworkPlayer player, CharacterEntity character)
     {
