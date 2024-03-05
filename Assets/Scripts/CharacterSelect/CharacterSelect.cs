@@ -51,7 +51,7 @@ public class CharacterSelect : NetworkBehaviour
         NetworkPlayer.Local.RPC_SetCharacterID(characterIndex);
 
         // Needing for removing monobehaviour HUD before RPC call
-        NetworkPlayer player = NetworkPlayer.Players[characterIndex];
+        NetworkPlayer player = NetworkPlayer.Players[index];
         if (characterLookup.ContainsKey(player) == false) characterLookup.Add(player, null);
         Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
 
