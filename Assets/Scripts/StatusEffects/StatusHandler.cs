@@ -36,14 +36,21 @@ public class StatusHandler : CharacterComponent
             data.duration -= Time.deltaTime;
             if (data.duration <= 0)
             {
-                data.status.OnStatusEnded(this);
                 statusesToRemove.Add(data);
             }
         }
         foreach(StatusData data in statusesToRemove)
         {
             RemoveStatus(data);
+            if (Character) Character.OnStatusEnded(data.status);
+            // Temporary solution for between 
+            else data.status.OnStatusEnded(this);
         }
+    }
+
+    public override void OnStatusBegin(StatusEffect status)
+    {
+        AddStatus(status);
     }
 
     public void AddStatus(StatusEffect effect)
