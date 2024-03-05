@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static UnityEngine.CullingGroup;
 
 public class NetworkPlayer_OnSpawnUI : NetworkBehaviour
 {
@@ -68,10 +67,7 @@ public class NetworkPlayer_OnSpawnUI : NetworkBehaviour
 
     private void OnDestroy()
     {
-        if (Object.HasInputAuthority)
-        {
-            Destroy(playerUI);
-            Destroy(floatingHealthBar);
-        }
+       Destroy(playerUI);
+       Destroy(floatingHealthBar);
     }
 }
