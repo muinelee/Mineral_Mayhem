@@ -169,7 +169,7 @@ public class CharacterSelect : NetworkBehaviour
         {
             //Temporary test fr desawning/destroying health bars
             //Runner.Despawn(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().floatingHealthBar.Object);
-            Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI);
+            Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
             Runner.Despawn(characterLookup[player].Object);
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
         }
