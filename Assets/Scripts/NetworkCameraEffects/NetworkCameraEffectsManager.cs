@@ -9,7 +9,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     public static NetworkCameraEffectsManager instance;
 
     [Header("Camera Component")]
-    [SerializeField] private CinemachineVirtualCamera cam;
+    [SerializeField] private CinemachineBrain cam;
 
     [Header("Hit Effect Trigger")]
     [SerializeField] private int hitEffectThreshold;
@@ -60,7 +60,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     void Start()
     {
         instance = this;
-        cam = Camera.main.GetComponentInChildren<CinemachineVirtualCamera>();
+        cam = Camera.main.GetComponentInChildren<CinemachineBrain>();
     }
 
     public void CameraHitEffect(int damage)
@@ -147,7 +147,8 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     IEnumerator ApplyScreenShake()
     {
         // Access Virtual Camera properties
-        CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        CinemachineVirtualCamera virtualCam = cam.ActiveVirtualCamera as CinemachineVirtualCamera;
+        CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = virtualCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = screenShakeIntensity;
 
         yield return new WaitForSecondsRealtime(screenShakeDuration);

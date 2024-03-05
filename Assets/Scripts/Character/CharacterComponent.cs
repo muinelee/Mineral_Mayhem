@@ -7,10 +7,53 @@ public class CharacterComponent : NetworkBehaviour
 {
     public CharacterEntity Character { get; private set; }
 
+    /// <summary>
+    /// Called when the character entity is initialized
+    /// </summary>
     public virtual void Init(CharacterEntity character)
     {
         Character = character;
+        Character.OnHitEvent += OnHit;
+        Character.OnHealEvent += OnHeal;
+        Character.OnStatusBeginEvent += OnStatusBegin;
+        Character.OnStatusEndedEvent += OnStatusEnded;
+        Character.OnPickupEvent += OnPickup;
+        Character.OnCharacterDeathEvent += OnCharacterDeath;
+        Character.OnRoundEndEvent += OnRoundEnd;
     }
 
-    //  Can implement any other virtual functions we might need the character components to have
+    /// <summary>
+    /// Called when a player takes damage
+    /// </summary>
+    public virtual void OnHit(float x) { }
+
+    /// <summary>
+    /// Called when a player gets healed
+    /// </summary>
+    public virtual void OnHeal(float x) { }
+
+    /// <summary>
+    /// Called when a player gets afflicted (Parameters need to be changed when statuses will be implemented, most likely)
+    /// </summary>
+    public virtual void OnStatusBegin(StatusEffect status) { }
+
+    /// <summary>
+    /// Called when a player affliction ends (Parameters need to be changed when statuses will be implemented, most likely)
+    /// </summary>
+    public virtual void OnStatusEnded(StatusEffect status) { }
+
+    /// <summary>
+    /// Called when a player dies
+    /// </summary>
+    public virtual void OnCharacterDeath() { }
+
+    /// <summary>
+    /// Called when the round is complete
+    /// </summary>
+    public virtual void OnRoundEnd() { }
+
+    /// <summary>
+    /// Called when a character picks something up
+    /// </summary>
+    public virtual void OnPickup() { }
 }

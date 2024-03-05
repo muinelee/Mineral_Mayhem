@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 6903174612733432645}
   - component: {fileID: 2098500895633039834}
   - component: {fileID: 6451881978930218668}
+  - component: {fileID: -3121531050699632275}
   m_Layer: 7
   m_Name: P_PhotonPlayerPrefab
   m_TagString: Untagged
@@ -61,9 +62,12 @@ MonoBehaviour:
   _Avatar: {fileID: 0}
   _GameState: 0
   _CharacterID: 0
+  IsDecoupled: 0
   playerUIPF: {fileID: 2018398355284987020, guid: 07a4e68738063bb44a1e1f9c0dd509b5, type: 3}
   readyUpUIPF: {fileID: 1784343105237884254, guid: 5936b8419fe087a40a7e227dea31d5aa, type: 3}
   floatingHealthBar: {fileID: 6932017674382772014}
+  _isReady:
+    _value: 0
   _team: 0
   _tokenID: 0
   cameraAngle: 50
@@ -105,6 +109,7 @@ MonoBehaviour:
   - {fileID: 6903174612733432645}
   - {fileID: 2098500895633039834}
   - {fileID: 6451881978930218668}
+  - {fileID: -3121531050699632275}
   - {fileID: 779764453492850429}
   - {fileID: 6932017674382772014}
   SimulationBehaviours: []
@@ -212,7 +217,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  moveSpeed: 20
   turnTime: 0.005
   canMove: 1
   dash: {fileID: 11400000, guid: cea01a3e636397f40943d85444c70827, type: 2}
@@ -313,6 +317,25 @@ MonoBehaviour:
   Offset: {x: 0, y: 0, z: 0}
   GizmosColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   Hitboxes: []
+--- !u!114 &-3121531050699632275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593386485324816745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbff765976cf56f469db7c843db4c5fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  health:
+    baseValue: 10
+    Modifiers: []
+  speed:
+    baseValue: 20
+    Modifiers: []
 --- !u!1001 &1671281869410326247
 PrefabInstance:
   m_ObjectHideFlags: 0

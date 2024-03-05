@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 
-public class NetworkPlayer_Health : NetworkBehaviour
+public class NetworkPlayer_Health : CharacterComponent
 {
     [Networked(OnChanged = nameof(OnHPChanged))]
     public float HP { get; set; }
@@ -26,6 +26,12 @@ public class NetworkPlayer_Health : NetworkBehaviour
         if (HP == startingHP) isDead = false;
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
+    }
+
+    public override void OnHit(float x)
+    {
+        base.OnHit(x);
+        OnTakeDamage((int)x);
     }
 
     // Function only called on the server

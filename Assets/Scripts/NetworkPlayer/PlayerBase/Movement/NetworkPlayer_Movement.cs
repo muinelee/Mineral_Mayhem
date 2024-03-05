@@ -4,16 +4,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NetworkPlayer_Movement : NetworkBehaviour
+public class NetworkPlayer_Movement : CharacterComponent
 {
-
     [Header("Movement properties")]
-    [SerializeField] private float moveSpeed;
     [SerializeField] private float turnTime;
+    private Stat speed;
     public bool canMove = true;
     private Vector3 targetDirection;
     private float dashSpeed = 0;
     private float turnSmoothVel;
+    private float currentBoostValue = 0;
 
     // Variables to apply slow;
     private float turnSlow = 0;
@@ -34,6 +34,9 @@ public class NetworkPlayer_Movement : NetworkBehaviour
     {
         if (!anim) anim = GetComponentInChildren<Animator>();
         if (!networkRigidBody) networkRigidBody = GetComponent<NetworkRigidbody>();
+        // Temporary solution for between refactoring
+        if (Character) speed = Character.StatusHandler.speed;
+        else speed = GetComponent<StatusHandler>().speed;
     }
 
     public override void FixedUpdateNetwork()
@@ -49,7 +52,7 @@ public class NetworkPlayer_Movement : NetworkBehaviour
                 Aim();
 
                 // Move
-                networkRigidBody.Rigidbody.AddForce(networkInputData.moveDirection * (moveSpeed + dashSpeed) * abilitySlow * statusSlow);
+                networkRigidBody.Rigidbody.AddForce(networkInputData.moveDirection * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
 
                 // Dash (Can be a boost or buff)
                 if (networkInputData.isDashing) MobilityAbility(networkInputData.moveDirection);
@@ -65,10 +68,11 @@ public class NetworkPlayer_Movement : NetworkBehaviour
 
     private void Aim()
     {
-         // Rotate player over time to the target angle
-         float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
-         float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime + turnSlow);
-         transform.rotation = Quaternion.Euler(0, angle, 0);
+        // Rotate player over time to the target angle
+        float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
+        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime + turnSlow);
+        Quaternion rotation = Quaternion.Euler(0, angle, 0);
+        transform.rotation = rotation;
     }
 
     private void MobilityAbility(Vector3 moveDirection)
@@ -159,12 +163,20 @@ public class NetworkPlayer_Movement : NetworkBehaviour
 
     private IEnumerator SpeedBoostCoroutine(float boostAmount, float boostDuration)
     {
-        float originalMoveSpeed = moveSpeed;
+        float originalMoveSpeed = 0;
 
-        moveSpeed += boostAmount;
+        currentBoostValue += boostAmount;
 
         yield return new WaitForSeconds(boostDuration);
 
-        moveSpeed = originalMoveSpeed;
+        currentBoostValue = originalMoveSpeed;
+    }
+
+    /// <summary>
+    ///Temporary function - to use for getting current speed in between refactoring statuses and abilities
+    /// </summary>
+    private float GetCombinedSpeed()
+    {
+        return speed.GetValue() + currentBoostValue;
     }
 }
