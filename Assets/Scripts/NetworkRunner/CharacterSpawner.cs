@@ -4,11 +4,14 @@ using Fusion.Sockets;
 using System.Collections.Generic;
 using System;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     [Header("Placeholder player prefab")]
     public NetworkPlayer playerPrefab;
+    public CharacterEntity character;
+    public NetworkRunner networkRunner;
 
     [Header("Session Lobby Manager")]
     [SerializeField] private SessionLobbyManager sessionLobbyManager;
@@ -18,6 +21,9 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     [Header("Components for UI")]
     private NetworkPlayer_InputController playerInputController;
+
+
+    private string[] roomAddress = new string[] { "RaeLeda/RaeLedaTrainingRoom", "RichardCPhoton" };
 
     private int GetPlayerGUID(NetworkRunner runner, PlayerRef player)
     {
@@ -44,14 +50,12 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)                          // Spawns player in scene
     {
-        Debug.Log($"I am in the scene {SceneManager.GetActiveScene().name}");
-        if (SceneManager.GetActiveScene().name != "RichardCPhoton") return;
+        if (!roomAddress.Contains(SceneManager.GetActiveScene().name)) return;
 
         if (runner.IsServer)
         {
             // Get the player's token
             int playerToken = GetPlayerGUID(runner, player);
-            Debug.Log($"OnPlayerJoined we are server. Spawning player {playerToken}");
 
             // Check dictionary if player already exists in the scene - important for Host Migration and disconnection
             if (mapTokenIDWithNetworkPlayer.TryGetValue(playerToken, out NetworkPlayer networkPlayer))
@@ -66,11 +70,16 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
             {
                 NetworkPlayer newPlayer = runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
 
+                if (character) runner.Spawn(character, transform.position, Quaternion.identity, player);
+
                 newPlayer.tokenID = playerToken;
                 mapTokenIDWithNetworkPlayer[playerToken] = newPlayer;
             }
         }
-        else Debug.Log("OnPlayerJoined");
+    }
+
+    public void SpawnCharacter()
+    {
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)

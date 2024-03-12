@@ -28,7 +28,7 @@ public class Melee_Template : NetworkAttack_Base
         if (lifetimeTimer.Expired(Runner)) Runner.Despawn(GetComponent<NetworkObject>());
     }
 
-    private void DealDamage()
+    protected override void DealDamage()
     {
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
 

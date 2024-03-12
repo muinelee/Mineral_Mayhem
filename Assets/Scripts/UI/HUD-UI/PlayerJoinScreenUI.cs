@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Linq;
 
 public class PlayerJoinScreenUI : MonoBehaviour
 {
@@ -18,10 +19,16 @@ public class PlayerJoinScreenUI : MonoBehaviour
     [Header("New Game Info")]
     public TMP_InputField sessionName;
 
+    private NetworkRunnerHandler networkRunnerHandler;
+    private string[] roomAddress = new string[] { "RaeLeda/RaeLedaTrainingRoom", "RichardCPhoton" };
+    private string map;
+
     private void Start()
     {
         //Testing
         if (PlayerPrefs.HasKey("PlayerName")) playerName.text = PlayerPrefs.GetString("PlayerName");
+
+        networkRunnerHandler = FindObjectOfType<NetworkRunnerHandler>();
     }
     private void HideAllPanels()
     {
@@ -41,8 +48,6 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
         PlayerPrefs.SetString("PlayerName", playerName.text);
 
-        NetworkRunnerHandler networkRunnerHandler = FindObjectOfType<NetworkRunnerHandler>();
-
         networkRunnerHandler.OnJoinLobby();
 
         HideAllPanels();
@@ -53,6 +58,9 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
     public void OnCreateNewGameClicked()
     {
+
+        PlayerPrefs.SetString("PlayerName", playerName.text);
+
         HideAllPanels();
 
         createSessionPanel.SetActive(true);
@@ -60,13 +68,29 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
     public void OnStartNewSessionClicked()
     {
-        NetworkRunnerHandler networkRunnerHandler = FindObjectOfType<NetworkRunnerHandler>();
-
         networkRunnerHandler.CreateGame(sessionName.text, "RichardCPhoton");
+        /*
+        // Training Map
+        if (map == roomAddress[0]) networkRunnerHandler.CreateGame(sessionName.text, map);
 
+        // Arena Map
+        else if (map == roomAddress[1] && networkRunnerHandler.GetRoomSize() > 1) networkRunnerHandler.CreateGame(sessionName.text, map);
+
+        else return;
+        // Display Status Panel
+        HideAllPanels();
+        statusPanel.SetActive(true);
+         */
+    }
+
+    public void OnBackClicked()
+    {
         HideAllPanels();
 
-        statusPanel.SetActive(true);
+        playerDetailsPanel.SetActive(true);
+
+        networkRunnerHandler.SetRoomSize(1);
+        map = "";
     }
 
     public void OnJoiningServer()
@@ -74,5 +98,20 @@ public class PlayerJoinScreenUI : MonoBehaviour
         HideAllPanels();
 
         statusPanel.SetActive(true);
+    }
+
+    public void SetRoomSize(int size)
+    {
+        networkRunnerHandler.SetRoomSize(size);
+    }
+
+    public void OnTrainingClicked()
+    {
+        map = roomAddress[0];
+    }
+
+    public void OnArenaClicked()
+    {
+        map = roomAddress[1];
     }
 }

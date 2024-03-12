@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: 2098500895633039834}
   - component: {fileID: 6451881978930218668}
   - component: {fileID: 24995875719937971}
+  - component: {fileID: -7638892514825570798}
+  - component: {fileID: -2703648273344077821}
   m_Layer: 7
   m_Name: P_Terran
   m_TagString: Untagged
@@ -76,6 +78,8 @@ MonoBehaviour:
   - {fileID: 2098500895633039834}
   - {fileID: 6451881978930218668}
   - {fileID: 24995875719937971}
+  - {fileID: -7638892514825570798}
+  - {fileID: -2703648273344077821}
   - {fileID: 779764453492850429}
   - {fileID: 6932017674382772014}
   SimulationBehaviours: []
@@ -183,7 +187,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  moveSpeed: 20
   turnTime: 0.005
   canMove: 1
   dash: {fileID: 11400000, guid: cea01a3e636397f40943d85444c70827, type: 2}
@@ -298,6 +301,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   hasDespawned: 0
+--- !u!114 &-7638892514825570798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593386485324816745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbff765976cf56f469db7c843db4c5fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  health:
+    baseValue: 10
+    Modifiers: []
+  speed:
+    baseValue: 10
+    Modifiers: []
+--- !u!114 &-2703648273344077821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593386485324816745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cc73fa1011bccc41ba94946eed4cd59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  playerUIPF: {fileID: 2018398355284987020, guid: 07a4e68738063bb44a1e1f9c0dd509b5, type: 3}
+  floatingHealthBar: {fileID: 6932017674382772014}
+  cameraAngle: 0
 --- !u!1001 &1671281869410326247
 PrefabInstance:
   m_ObjectHideFlags: 0

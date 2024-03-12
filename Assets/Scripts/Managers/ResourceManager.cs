@@ -8,6 +8,7 @@ public class ResourceManager : MonoBehaviour
     public SO_Character[] charDefinitions;
     public SO_ArenaDefinition[] arenas;
     public SO_GameMode[] gameModes;
+    //public SO_StatusEffects[] statusEffects;
 
     public static ResourceManager Instance => Singleton<ResourceManager>.Instance;
 

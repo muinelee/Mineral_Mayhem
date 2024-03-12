@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using Unity.Entities.UniversalDelegates;
+using Unity.Entities;
+using System;
+using Unity.VisualScripting;
 
 public class Placeholder_Ult_Primary : NetworkAttack_Base
 {
@@ -10,6 +13,7 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
 
     [Header("End Attack properties")]
     [SerializeField] private float lifetimeDuration;
+
     private TickTimer timer = TickTimer.None;
 
     [Header("Projectile Properties")]
@@ -38,7 +42,7 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
     {
         if (!Object.HasStateAuthority) return;
 
-        DealDamaage();
+        DealDamage();
 
         ManageTimer();
     }
@@ -63,7 +67,7 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
         else Debug.Log("This ult does not produce any projectiles");
     }
 
-    private void DealDamaage()
+    protected override void DealDamage()
     {
         foreach (NetworkObject projectile in projectileList)
         {
@@ -75,9 +79,29 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
                 objectsHit.Add(hit.Hitbox);
                 Debug.Log($"This was hit: {hit.GameObject.name}");
 
-                NetworkPlayer_Health healthHandler = hit.GameObject.GetComponentInParent<NetworkPlayer_Health>();
+                CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
 
-                if (healthHandler) healthHandler.OnTakeDamage(damage);
+                if (characterEntity) characterEntity.OnHit(damage);
+                // Temporary solution for between refactoring
+                else
+                {
+                    NetworkPlayer_Health networkPlayer_Health = hit.GameObject.GetComponentInParent<NetworkPlayer_Health>();
+                    networkPlayer_Health.OnTakeDamage(damage);
+
+                    StatusHandler statusHandler = hit.GameObject.GetComponentInParent<StatusHandler>();
+                    foreach (StatusEffect status in statusEffectSO)
+                    {
+                        statusHandler.AddStatus(status);
+                    }
+                }
+
+                if (statusEffectSO.Count > 0 && characterEntity)
+                {
+                    foreach (StatusEffect status in statusEffectSO)
+                    {
+                        characterEntity.OnStatusBegin(status);
+                    }
+                }
             }
         }
     }

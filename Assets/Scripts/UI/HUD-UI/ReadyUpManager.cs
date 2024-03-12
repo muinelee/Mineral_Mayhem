@@ -51,12 +51,12 @@ public class ReadyUpManager : MonoBehaviour
 
         if (blueTeamList.Count != redTeamList.Count) return;
 
-        for (int i = 0; i < runner.SessionInfo.MaxPlayers/2; i++)
+        for (int i = 0; i < runner.SessionInfo.MaxPlayers / 2; i++)
         {
             if (!blueTeamList[i].isReady || !redTeamList[i].isReady) return;
         }
 
-        Debug.Log("Start the game!!");
+        playerRef.RPC_StartGame();
     }
 
     public void PrimeReadyUpUI(NetworkPlayer player)
@@ -72,6 +72,8 @@ public class ReadyUpManager : MonoBehaviour
             else if (netPlayer.team == NetworkPlayer.Team.Red) JoinRedTeam(netPlayer);
             else if (netPlayer.team == NetworkPlayer.Team.Undecided && netPlayer != playerRef) JoinUndecided(netPlayer);
 
+
+            if (netPlayer.isReady) playerTeamDisplayPair[netPlayer].GetComponent<Image>().color = Color.green;
 
             // Display that players are ready
             if (netPlayer.isReady) ReadyUp(netPlayer);
@@ -140,7 +142,7 @@ public class ReadyUpManager : MonoBehaviour
         player.team = NetworkPlayer.Team.Blue;
     }
 
-    public void  JoinRedTeam(NetworkPlayer player)
+    public void JoinRedTeam(NetworkPlayer player)
     {
         // Manager player in team lists
         if (redTeamList.Contains(player)) return;
@@ -164,14 +166,17 @@ public class ReadyUpManager : MonoBehaviour
         player.team = NetworkPlayer.Team.Red;
     }
 
+    public void StartGame()
+    {
+        FindAnyObjectByType<CharacterSelect>().ActivateCharacterSelect();
+        this.gameObject.SetActive(false);
+    }
+
     public void JoinUndecided(NetworkPlayer player)
     {
         ReadyUpName readyUpName = Instantiate(playerTeamDisplayPF, undecidedTeamLayoutGroup.transform);
         readyUpName.SetPlayer(player);
-
         readyUpName.GetComponent<Image>().color = Color.grey;
-
-        Debug.Log(player.playerName.ToString());
 
         playerTeamDisplayPair[player] = readyUpName;
 
@@ -204,7 +209,5 @@ public class ReadyUpManager : MonoBehaviour
             Destroy(playerTeamDisplayPair[player].gameObject);
             playerTeamDisplayPair.Remove(player);
         }
-
-        Debug.Log("Player UI should be updated");
     }
 }

@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class NetworkPlayer_InputController : NetworkBehaviour
+public class NetworkPlayer_InputController : CharacterComponent
 {
     private Vector3 moveInputVector;
     private Vector3 cursorLocation;

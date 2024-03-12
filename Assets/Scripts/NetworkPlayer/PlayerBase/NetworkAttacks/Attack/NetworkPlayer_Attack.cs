@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 
-public class NetworkPlayer_Attack : NetworkBehaviour
+public class NetworkPlayer_Attack : CharacterComponent
 {
     // Control variables
     private bool canAttack = true;
