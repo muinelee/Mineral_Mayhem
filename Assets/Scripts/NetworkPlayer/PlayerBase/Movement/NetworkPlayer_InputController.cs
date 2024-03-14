@@ -22,6 +22,11 @@ public class NetworkPlayer_InputController : CharacterComponent
 
     private void Update()
     {
+        // TESTING UNTIL WE CAN CONTROL SPAWNED CHARACTERS
+        if (!cam) cam = Camera.main;
+        // TESTING
+
+
         if (!Object.HasInputAuthority) return;
 
         GetInput();
