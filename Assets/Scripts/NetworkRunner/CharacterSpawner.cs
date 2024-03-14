@@ -54,6 +54,8 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         if (runner.IsServer)
         {
+            runner.Spawn(playerPrefab, Vector3.zero, Quaternion.identity, player);
+
             // Get the player's token
             int playerToken = GetPlayerGUID(runner, player);
 
