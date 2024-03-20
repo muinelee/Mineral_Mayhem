@@ -10,13 +10,8 @@ public class CharacterSelect : NetworkBehaviour
     // Instance
     public static CharacterSelect instance;
 
-    // Test
-    public NetworkObject playerPF;
-    public NetworkObject curPlayerObject;
-
     [Header("Character Select")]
     public List<SO_Character> characters;
-
     public Dictionary<NetworkPlayer, CharacterEntity> characterLookup = new Dictionary<NetworkPlayer, CharacterEntity>();
 
     [Header("UI Elements")]
@@ -73,6 +68,7 @@ public class CharacterSelect : NetworkBehaviour
          */
 
         SO_Character character = characters[NetworkPlayer.Local.CharacterID];
+
         // Update character backstory text
         backstory.text = character.backstory;
 
@@ -91,6 +87,8 @@ public class CharacterSelect : NetworkBehaviour
         // Setup ability portraits and descriptions
         SetupAbilityUI(character);
         UpdateAbilityDescription(character.characterBasicAbilityDescription);
+
+        characterSelectScreen.SetActive(false);
     }
 
     private void OnEnable()
@@ -182,8 +180,10 @@ public class CharacterSelect : NetworkBehaviour
             Runner.Despawn(characterLookup[player].Object);
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
         }
+
         RPC_UpdateCharacterLookupForClients(player, characterLookup[player]);
     }
+
     /// <summary>
     /// Syncs CharacterLookup  across all clients from the original RPC_SpawnCharacter call
     /// </summary>
