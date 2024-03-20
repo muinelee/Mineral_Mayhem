@@ -6,6 +6,7 @@ using Fusion;
 public class GravityBarrel : NetworkBehaviour
 {
     NetworkObject networkObject; 
+    [SerializeField] private float requiredVelocity = 10f;
     [SerializeField] private float explosionForce = 1000f;
     [SerializeField] private float explosionRadius = 5f;
     [SerializeField] private float zeroGravityDuration = 3f;
@@ -24,8 +25,9 @@ public class GravityBarrel : NetworkBehaviour
         if (!exploded && collision.gameObject.CompareTag("Player"))
         {
             NetworkRigidbody networkRigidbody = collision.gameObject.GetComponent<NetworkRigidbody>();
-
-            if (networkRigidbody && networkRigidbody.Rigidbody.velocity.magnitude > explosionForce)
+            Debug.Log("Collided with player");
+            Debug.Log("Velocity:" + networkRigidbody.Rigidbody.velocity.magnitude); 
+            if (networkRigidbody && networkRigidbody.Rigidbody.velocity.magnitude > requiredVelocity)
             {
                 Explode(networkRigidbody);
             }
