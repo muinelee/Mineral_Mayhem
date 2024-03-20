@@ -84,9 +84,10 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        if (playerInputController == null && NetworkPlayer.Local != null) playerInputController = NetworkPlayer.Local.GetComponent<NetworkPlayer_InputController>();
-
-        if (playerInputController != null) input.Set(playerInputController.GetNetworkInput());
+        if (playerInputController == null) return; 
+        
+        // playerInputController is set from NetworkPlayer_InputController when character is spawned
+        input.Set(playerInputController.GetNetworkInput());
     }
 
     public void OnConnectedToServer(NetworkRunner runner)
@@ -197,5 +198,10 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         }
 
         Debug.Log("Spawner OnHostMigrationCleanup completed");
+    }
+
+    public void SetInputController(NetworkPlayer_InputController controller)
+    {
+        playerInputController = controller;
     }
 }

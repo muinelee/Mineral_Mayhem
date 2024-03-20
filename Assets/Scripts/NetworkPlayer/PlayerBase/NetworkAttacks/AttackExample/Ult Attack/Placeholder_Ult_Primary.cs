@@ -113,7 +113,6 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
             foreach (NetworkObject projectile in projectileList) Runner.Despawn(projectile);
             Runner.Despawn(GetComponent<NetworkObject>());
         }
-
     }
 
     public bool HitboxInObjectsHit(Hitbox objectHit)

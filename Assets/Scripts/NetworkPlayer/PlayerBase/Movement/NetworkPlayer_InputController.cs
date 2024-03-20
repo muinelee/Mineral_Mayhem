@@ -20,6 +20,13 @@ public class NetworkPlayer_InputController : CharacterComponent
 
     [Networked] public NetworkPlayer NetworkUser { get; set; }
 
+    public override void Spawned()
+    {
+        if (!Object.HasInputAuthority) return;
+
+        FindAnyObjectByType<CharacterSpawner>().SetInputController(this);
+    }
+
     private void Update()
     {
         if (!Object.HasInputAuthority) return;

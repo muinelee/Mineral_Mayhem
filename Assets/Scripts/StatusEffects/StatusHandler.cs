@@ -42,6 +42,7 @@ public class StatusHandler : CharacterComponent
         foreach(StatusData data in statusesToRemove)
         {
             RemoveStatus(data);
+
             if (Character) Character.OnStatusEnded(data.status);
             // Temporary solution for between 
             else data.status.OnStatusEnded(this);
@@ -66,6 +67,7 @@ public class StatusHandler : CharacterComponent
 
     public void RemoveStatus(StatusData data)
     {
+        data.status.OnStatusEnded(this);
         statuses.Remove(data);
     }
 
