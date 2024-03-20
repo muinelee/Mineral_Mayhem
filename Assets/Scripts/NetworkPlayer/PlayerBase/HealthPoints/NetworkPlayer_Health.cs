@@ -30,7 +30,6 @@ public class NetworkPlayer_Health : CharacterComponent
 
     public override void OnHit(float x)
     {
-        base.OnHit(x);
         OnTakeDamage((int)x);
     }
 
@@ -47,7 +46,7 @@ public class NetworkPlayer_Health : CharacterComponent
 
         HP -= (float) currDamageAmount;
 
-        Debug.Log($"{Time.time} {transform.name} took damage and has {HP} HP left");
+        //Debug.Log($"{Time.time} {transform.name} took damage and has {HP} HP left");
 
         if (HP <= 0)
         {
@@ -76,7 +75,7 @@ public class NetworkPlayer_Health : CharacterComponent
 
     static void OnHPChanged(Changed<NetworkPlayer_Health> changed)
     {
-        Debug.Log($"{Time.time} OnHPChanged value {changed.Behaviour.HP}");
+        // Debug.Log($"{Time.time} OnHPChanged value {changed.Behaviour.HP}");
     }
 
     static void OnStateChanged(Changed<NetworkPlayer_Health> changed)

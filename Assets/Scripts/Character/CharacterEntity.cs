@@ -66,7 +66,11 @@ public class CharacterEntity : CharacterComponent
 
         // *** If all components do this instead, allows for very reader friendly method of initialization
         var components = GetComponentsInChildren<CharacterComponent>();
-        foreach (var component in components) component.Init(this);
+        foreach (var component in components)
+        {
+            if (component == this) continue;
+            component.Init(this);
+        }
     }
 
     public static readonly List<CharacterEntity> Characters = new List<CharacterEntity>();
