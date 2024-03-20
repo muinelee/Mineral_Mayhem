@@ -87,6 +87,8 @@ public class CharacterSelect : NetworkBehaviour
         // Setup ability portraits and descriptions
         SetupAbilityUI(character);
         UpdateAbilityDescription(character.characterBasicAbilityDescription);
+
+        characterSelectScreen.SetActive(false);
     }
 
     private void OnEnable()
