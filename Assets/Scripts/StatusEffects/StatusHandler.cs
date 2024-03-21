@@ -3,12 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ControlState
+{
+    Stun = 1 << 0,
+    Root = 1 << 1,
+    Silence = 1 << 2,
+}
+
 public class StatusHandler : CharacterComponent
 {
     List<StatusData> statuses = new List<StatusData>();
 
     public Stat health;
     public Stat speed;
+    public ControlState controlState = 0;
 
     private void Start()
     {
@@ -23,6 +31,8 @@ public class StatusHandler : CharacterComponent
     private void Update()
     {
         List<StatusData> statusesToRemove = new List<StatusData>();
+
+        controlState = 0;
 
         foreach (StatusData data in statuses)
         {
@@ -54,6 +64,11 @@ public class StatusHandler : CharacterComponent
         AddStatus(status);
     }
 
+    public override void OnStatusEnded(StatusEffect status)
+    {
+        status.OnStatusEnded(this);       
+    }
+
     public void AddStatus(StatusEffect effect)
     {
         StatusData data = new StatusData();
@@ -67,7 +82,7 @@ public class StatusHandler : CharacterComponent
 
     public void RemoveStatus(StatusData data)
     {
-        data.status.OnStatusEnded(this);
+        //data.status.OnStatusEnded(this);
         statuses.Remove(data);
     }
 
