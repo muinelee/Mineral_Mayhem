@@ -1,23 +1,107 @@
 using System.Collections;
 using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
+using UnityEngine.ProBuilder;
 
 public class Physics_ZeroGravity : NetworkAttack_Base
 {
+    [Header("End Attack Properties")]
+    [SerializeField] private float lifetimeDuration;
+
+    private TickTimer spellDuration = TickTimer.None;
+
     [Header("Spell Properties")]
-    [SerializeField] private float lifetime;
     [SerializeField] private Vector3 offset;
+    [SerializeField] private float disableGravityDuration = 3.0f;
+    [SerializeField] private float gravityDownForce = 20.0f;
+    [SerializeField] private float spellRaidus = 3.0f;
 
-    private float lifeTimer = 0;
+    [Header("List of objects hit")]
+    [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private List<Hitbox> objectsHit = new List<Hitbox>();          // Check if object is in the objectsHit list. If not, do damage and add to list
+    [SerializeField] private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
-    private void Start()
+    public override void Spawned()
     {
+        if (!Object.HasStateAuthority) return;
+        spellDuration = TickTimer.CreateFromSeconds(Runner, lifetimeDuration);
         transform.position += transform.up * offset.y + transform.forward * offset.z;
     }
 
-    private void FixedUpdate()
+    public override void FixedUpdateNetwork()
     {
-        lifeTimer += Time.deltaTime;
-        if (lifeTimer > lifetime) Destroy(gameObject);
+        if (!Object.HasStateAuthority) return;
+
+        ManageTimer();
+        TurnOffGravity();
+    }
+
+    private void TurnOffGravity()
+    {
+        Vector3 center = transform.position;
+
+        Runner.LagCompensation.OverlapSphere(center, spellRaidus, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
+        
+        foreach (LagCompensatedHit hit in hits)
+        {
+            if (objectsHit.Contains(hit.Hitbox)) continue;
+
+            objectsHit.Add(hit.Hitbox);
+            Debug.Log($"This was hit: {hit.GameObject.name}");
+
+            CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
+
+            if (characterEntity)
+            {
+                StartCoroutine(DisableGravity(characterEntity));
+            }
+
+
+            if (statusEffectSO.Count > 0 && characterEntity)
+            {
+                foreach (StatusEffect status in statusEffectSO)
+                {
+                    characterEntity.OnStatusBegin(status);
+                }
+            }
+        }
+    }
+
+    private IEnumerator DisableGravity(CharacterEntity entity)
+    {
+        NetworkRigidbody networkRigidbody = entity.gameObject.GetComponent<NetworkRigidbody>();
+
+        if (networkRigidbody == null) yield break;
+
+        networkRigidbody.Rigidbody.useGravity = false;
+        networkRigidbody.Rigidbody.AddForce(Vector3.up);
+        yield return new WaitForSeconds(disableGravityDuration);
+        networkRigidbody.Rigidbody.useGravity = true;
+
+
+    }
+
+    protected override void DealDamage()
+    {
+
+    }
+
+    private void ManageTimer()
+    {
+        if (spellDuration.Expired(Runner))
+        {
+            Runner.Despawn(GetComponent<NetworkObject>());
+        }
+    }
+
+    public bool HitboxInObjectsHit(Hitbox objectHit)
+    {
+        if (objectsHit.Contains(objectHit)) return true;
+        else
+        {
+            objectsHit.Add(objectHit);
+            return false;
+        }
     }
 }

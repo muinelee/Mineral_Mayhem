@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Status Effect", menuName = "Scriptable Object/Status Effect/Stop Status")]
+[CreateAssetMenu(fileName = "New Status Effect", menuName = "Scriptable Object/Status Effect/Stun Status")]
 public class StunStatus : StatusEffect
 {
     public override void OnStatusApplied(StatusHandler handler)
