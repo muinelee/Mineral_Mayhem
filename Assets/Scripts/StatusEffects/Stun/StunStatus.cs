@@ -7,15 +7,22 @@ public class StunStatus : StatusEffect
 {
     public override void OnStatusApplied(StatusHandler handler)
     {
-        handler.controlState |= ControlState.Stun;
+        handler.Character.Movement.canMove = false;
+        handler.Character.Attack.canAttack = false;
     }
 
     public override void OnStatusEnded(StatusHandler handler)
-    {
+    {        
+        if (handler.CheckIfStunned())
+        {            
+            handler.Character.Movement.canMove = true;
+            handler.Character.Attack.canAttack = true;
+        }
     }
 
     public override void OnStatusUpdate(StatusHandler handler)
     {
-        handler.controlState |= ControlState.Stun;
+        handler.stun += 1;
+        Debug.Log(handler.stun);
     }
 }

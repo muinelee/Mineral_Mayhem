@@ -31,10 +31,7 @@ public class NetworkPlayer_InputController : CharacterComponent
     {
         if (!Object.HasInputAuthority) return;
 
-        if (ControlState.Stun == Character.StatusHandler.controlState) return;
-        GetLook();
-        if (ControlState.Root != Character.StatusHandler.controlState) GetMove();
-        if (ControlState.Silence != Character.StatusHandler.controlState) GetAbility();
+        GetInput();
     }
 
     public NetworkInputData GetNetworkInput()
@@ -64,20 +61,14 @@ public class NetworkPlayer_InputController : CharacterComponent
         cam = camera;
     }
 
-    private void GetLook()
+    private void GetInput()
     {
         // Apply Cursor location
         if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out RaycastHit raycastHit)) cursorLocation = raycastHit.point;
-    }
 
-    private void GetMove()
-    {
         // Apply Move Input
         moveInputVector = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-    }
 
-    private void GetAbility()
-    {
         // Apply Attack Input
         if (Input.GetKeyDown(KeyCode.Space)) isDashPressed = true;
         if (Input.GetKeyDown(KeyCode.Q)) isQPressed = true;

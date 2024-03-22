@@ -7,15 +7,18 @@ using UnityEngine.ProBuilder;
 public class Physics_ZeroGravity : NetworkAttack_Base
 {
     [Header("End Attack Properties")]
-    [SerializeField] private float lifetimeDuration;
+    [SerializeField] private float spellDuration;
 
-    private TickTimer spellDuration = TickTimer.None;
+    private TickTimer spellTimer = TickTimer.None;
 
     [Header("Spell Properties")]
     [SerializeField] private Vector3 offset;
     [SerializeField] private float disableGravityDuration = 3.0f;
-    [SerializeField] private float gravityDownForce = 20.0f;
+    [SerializeField] private float gravityUpForce = 500.0f;
+    [SerializeField] private float gravityDownForce = 500.0f;
     [SerializeField] private float spellRaidus = 3.0f;
+
+    private TickTimer gravityTimer = TickTimer.None;
 
     [Header("List of objects hit")]
     [SerializeField] private LayerMask playerLayer;
@@ -25,24 +28,23 @@ public class Physics_ZeroGravity : NetworkAttack_Base
     public override void Spawned()
     {
         if (!Object.HasStateAuthority) return;
-        spellDuration = TickTimer.CreateFromSeconds(Runner, lifetimeDuration);
+        spellTimer = TickTimer.CreateFromSeconds(Runner, spellDuration);
         transform.position += transform.up * offset.y + transform.forward * offset.z;
     }
 
     public override void FixedUpdateNetwork()
     {
         if (!Object.HasStateAuthority) return;
-
-        ManageTimer();
         TurnOffGravity();
+        ManageTimer();
     }
 
     private void TurnOffGravity()
     {
-        Vector3 center = transform.position;
+        Vector3 center = this.transform.position;
 
         Runner.LagCompensation.OverlapSphere(center, spellRaidus, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
-        
+
         foreach (LagCompensatedHit hit in hits)
         {
             if (objectsHit.Contains(hit.Hitbox)) continue;
@@ -52,12 +54,6 @@ public class Physics_ZeroGravity : NetworkAttack_Base
 
             CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
 
-            if (characterEntity)
-            {
-                StartCoroutine(DisableGravity(characterEntity));
-            }
-
-
             if (statusEffectSO.Count > 0 && characterEntity)
             {
                 foreach (StatusEffect status in statusEffectSO)
@@ -65,21 +61,31 @@ public class Physics_ZeroGravity : NetworkAttack_Base
                     characterEntity.OnStatusBegin(status);
                 }
             }
+
+            Rigidbody rb = hit.GameObject.GetComponentInParent<Rigidbody>();
+
+            if (rb)
+            {
+/*                gravityTimer = TickTimer.CreateFromSeconds(Runner, disableGravityDuration);
+
+                rb.useGravity = false;
+                rb.AddForce(Vector3.up * gravityUpForce);
+
+                GravityTimer(rb);*/
+                StartCoroutine(EnableGravity(rb));
+            }
         }
     }
 
-    private IEnumerator DisableGravity(CharacterEntity entity)
+    private IEnumerator EnableGravity(Rigidbody rb)
     {
-        NetworkRigidbody networkRigidbody = entity.gameObject.GetComponent<NetworkRigidbody>();
+        rb.useGravity = false;
+        rb.AddForce(Vector3.up * gravityUpForce);
 
-        if (networkRigidbody == null) yield break;
-
-        networkRigidbody.Rigidbody.useGravity = false;
-        networkRigidbody.Rigidbody.AddForce(Vector3.up);
         yield return new WaitForSeconds(disableGravityDuration);
-        networkRigidbody.Rigidbody.useGravity = true;
 
-
+        rb.useGravity = true;
+        rb.AddForce(Vector3.down * gravityDownForce);
     }
 
     protected override void DealDamage()
@@ -89,9 +95,18 @@ public class Physics_ZeroGravity : NetworkAttack_Base
 
     private void ManageTimer()
     {
-        if (spellDuration.Expired(Runner))
+        if (spellTimer.Expired(Runner))
         {
             Runner.Despawn(GetComponent<NetworkObject>());
+        }
+    }
+
+    private void GravityTimer(Rigidbody rb)
+    {
+        if (gravityTimer.Expired(Runner) && rb != null)
+        {
+            rb.useGravity = true;
+            rb.AddForce(Vector3.down * gravityDownForce);
         }
     }
 

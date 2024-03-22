@@ -6,7 +6,7 @@ using Fusion;
 public class NetworkPlayer_Attack : CharacterComponent
 {
     // Control variables
-    private bool canAttack = true;
+    public bool canAttack = true;
 
     [Header("Q Attack Properties")]
     [SerializeField] private SO_NetworkAttack qAttack;
@@ -70,11 +70,6 @@ public class NetworkPlayer_Attack : CharacterComponent
         // Slow player
         playerMovement.SetTurnSlow(ult.GetTurnSlow());
         playerMovement.SetAbilitySlow(ult.GetAbilitySlow());
-    }
-
-    public bool GetCanAttack()
-    {
-        return canAttack;
     }
 
     // Needs to be linked via NetworkPlayer_AnimationLink Script

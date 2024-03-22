@@ -53,6 +53,8 @@ public class CharacterEntity : CharacterComponent
     public NetworkRigidbody Rigidbody { get; private set; }
     public NetworkPlayer_AnimationLink Animator { get; private set; }
     public NetworkPlayer_InputController Controller { get; private set; }
+    public NetworkPlayer_Movement Movement { get; private set; }
+    public NetworkPlayer_Attack Attack { get; private set; }
     public StatusHandler StatusHandler { get; private set; }
 
     public bool hasDespawned = false;
@@ -63,6 +65,8 @@ public class CharacterEntity : CharacterComponent
         Animator = GetComponentInChildren<NetworkPlayer_AnimationLink>();
         Controller = GetComponent<NetworkPlayer_InputController>();
         StatusHandler = GetComponent<StatusHandler>();
+        Movement = GetComponent<NetworkPlayer_Movement>();
+        Attack = GetComponent<NetworkPlayer_Attack>();
 
         // *** If all components do this instead, allows for very reader friendly method of initialization
         var components = GetComponentsInChildren<CharacterComponent>();
