@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using Unity.Entities;
 
 public class NetworkPlayer_Health : CharacterComponent
 {
@@ -60,13 +61,17 @@ public class NetworkPlayer_Health : CharacterComponent
     private void HandleDeath()
     {
         // Disable input
-        GetComponent<NetworkPlayer_InputController>().enabled = false;
+        //GetComponent<NetworkPlayer_InputController>().enabled = false;
+        Character.Controller.enabled = false;
         // Disable movement
-        GetComponent<NetworkPlayer_Movement>().enabled = false;
+        //GetComponent<NetworkPlayer_Movement>().enabled = false;
+        Character.Movement.enabled = false;
         // Disable attack
-        GetComponent<NetworkPlayer_Attack>().enabled = false;
+        //GetComponent<NetworkPlayer_Attack>().enabled = false;
+        Character.Attack.enabled = false;
         // Disable sphere collider
-        GetComponent<SphereCollider>().enabled = false;
+        //GetComponent<SphereCollider>().enabled = false;
+        Character.Collider.enabled = false;
         // Disable gravity
         rb.useGravity = false;
 

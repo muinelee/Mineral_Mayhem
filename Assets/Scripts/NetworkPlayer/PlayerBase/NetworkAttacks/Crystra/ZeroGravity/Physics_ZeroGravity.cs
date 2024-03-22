@@ -18,8 +18,6 @@ public class Physics_ZeroGravity : NetworkAttack_Base
     [SerializeField] private float gravityDownForce = 500.0f;
     [SerializeField] private float spellRaidus = 3.0f;
 
-    private TickTimer gravityTimer = TickTimer.None;
-
     [Header("List of objects hit")]
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private List<Hitbox> objectsHit = new List<Hitbox>();          // Check if object is in the objectsHit list. If not, do damage and add to list
@@ -66,18 +64,12 @@ public class Physics_ZeroGravity : NetworkAttack_Base
 
             if (rb)
             {
-/*                gravityTimer = TickTimer.CreateFromSeconds(Runner, disableGravityDuration);
-
-                rb.useGravity = false;
-                rb.AddForce(Vector3.up * gravityUpForce);
-
-                GravityTimer(rb);*/
-                StartCoroutine(EnableGravity(rb));
+                StartCoroutine(EnableGravity(rb, characterEntity));
             }
         }
     }
 
-    private IEnumerator EnableGravity(Rigidbody rb)
+    private IEnumerator EnableGravity(Rigidbody rb, CharacterEntity character)
     {
         rb.useGravity = false;
         rb.AddForce(Vector3.up * gravityUpForce);
@@ -86,11 +78,7 @@ public class Physics_ZeroGravity : NetworkAttack_Base
 
         rb.useGravity = true;
         rb.AddForce(Vector3.down * gravityDownForce);
-    }
-
-    protected override void DealDamage()
-    {
-
+        character.OnHit(damage);
     }
 
     private void ManageTimer()
@@ -98,15 +86,6 @@ public class Physics_ZeroGravity : NetworkAttack_Base
         if (spellTimer.Expired(Runner))
         {
             Runner.Despawn(GetComponent<NetworkObject>());
-        }
-    }
-
-    private void GravityTimer(Rigidbody rb)
-    {
-        if (gravityTimer.Expired(Runner) && rb != null)
-        {
-            rb.useGravity = true;
-            rb.AddForce(Vector3.down * gravityDownForce);
         }
     }
 

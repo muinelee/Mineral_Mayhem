@@ -51,6 +51,7 @@ public class CharacterEntity : CharacterComponent
 
     // *** Important - can set all character components to be derived from CharacterComponent -> Allows a simple initialization on Awake
     public NetworkRigidbody Rigidbody { get; private set; }
+    public Collider Collider { get; private set; }
     public NetworkPlayer_AnimationLink Animator { get; private set; }
     public NetworkPlayer_InputController Controller { get; private set; }
     public NetworkPlayer_Movement Movement { get; private set; }
@@ -62,6 +63,7 @@ public class CharacterEntity : CharacterComponent
     private void Awake()
     {
         Rigidbody = GetComponent<NetworkRigidbody>();
+        Collider = GetComponent<Collider>();
         Animator = GetComponentInChildren<NetworkPlayer_AnimationLink>();
         Controller = GetComponent<NetworkPlayer_InputController>();
         StatusHandler = GetComponent<StatusHandler>();

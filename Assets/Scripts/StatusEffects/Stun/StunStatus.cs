@@ -5,24 +5,28 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Status Effect", menuName = "Scriptable Object/Status Effect/Stun Status")]
 public class StunStatus : StatusEffect
 {
+    [SerializeField] public string animationName = "GravityStun";
     public override void OnStatusApplied(StatusHandler handler)
     {
+        handler.Character.Animator.anim.CrossFade(animationName, 0.2f);
         handler.Character.Movement.canMove = false;
         handler.Character.Attack.canAttack = false;
     }
 
     public override void OnStatusEnded(StatusHandler handler)
     {        
-        if (handler.CheckIfStunned())
+        handler.stun--;
+        if (handler.stun < 1)
         {            
             handler.Character.Movement.canMove = true;
             handler.Character.Attack.canAttack = true;
+            handler.Character.Animator.ResetAnimation();
         }
     }
 
     public override void OnStatusUpdate(StatusHandler handler)
     {
-        handler.stun += 1;
+        handler.stun++;
         Debug.Log(handler.stun);
     }
 }

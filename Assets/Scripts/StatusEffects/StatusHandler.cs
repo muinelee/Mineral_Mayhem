@@ -33,7 +33,7 @@ public class StatusHandler : CharacterComponent
             if (data.timeUntilNextTick <= 0)
             {
                 data.status.OnStatusUpdate(this);
-                data.timeUntilNextTick = data.status.tickRate;
+                data.timeUntilNextTick += data.status.tickRate;
             }
 
             data.duration -= Time.deltaTime;
@@ -49,18 +49,6 @@ public class StatusHandler : CharacterComponent
             if (Character) Character.OnStatusEnded(data.status);
             // Temporary solution for between 
             else data.status.OnStatusEnded(this);
-        }
-    }
-
-    public bool CheckIfStunned()
-    {
-        if (statuses.Contains(statuses.Find(x => x.status is StunStatus)))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
         }
     }
 
@@ -83,7 +71,6 @@ public class StatusHandler : CharacterComponent
 
         statuses.Add(data);
         data.status.OnStatusApplied(this);
-        Debug.Log("Stun Status Applied");
     }
 
     public void RemoveStatus(StatusData data)
