@@ -18,6 +18,7 @@ public class CharacterSelect : NetworkBehaviour
     [SerializeField] private GameObject characterSelectScreen;
     [SerializeField] private Button[] characterButtons;
     [SerializeField] private Button[] abilityPortraits;
+    [SerializeField] private Button selectButton;
     [SerializeField] private TMP_Text currentAbilityDescription;
     [SerializeField] private TMP_Text backstory;
     private Button currentSelectedCharacterButton;
@@ -40,7 +41,10 @@ public class CharacterSelect : NetworkBehaviour
             int index = i;
             characterButtons[index].onClick.AddListener(() => SelectCharacter(index, characterButtons[index]));
         }
-        //instance = this;
+        if (selectButton)
+        {
+            selectButton.onClick.AddListener(FinalizeChoice);
+        }
     }
 
     private void SelectCharacter (int characterIndex, Button selectedButton)
@@ -55,7 +59,7 @@ public class CharacterSelect : NetworkBehaviour
             Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
         }
 
-        RPC_SpawnCharacter(index ,spawnPoint);
+        RPC_SpawnCharacter(index, spawnPoint);
 
         /*
         if (Runner.IsServer)
@@ -90,8 +94,6 @@ public class CharacterSelect : NetworkBehaviour
         // Setup ability portraits and descriptions
         SetupAbilityUI(character);
         UpdateAbilityDescription(character.characterBasicAbilityDescription);
-
-        characterSelectScreen.SetActive(false);
     }
 
     private void OnEnable()
@@ -203,5 +205,12 @@ public class CharacterSelect : NetworkBehaviour
     private void RPC_UpdateCharacterLookupForClients(NetworkPlayer player, CharacterEntity character)
     {
         characterLookup[player] = character;
+    }
+
+    public void FinalizeChoice()
+    {
+        characterLookup[NetworkPlayer.Local].Controller.characterHasBeenSelected = true;
+        NetworkCameraEffectsManager.instance.GoToTopCamera();
+        characterSelectScreen.SetActive(false);
     }
 }

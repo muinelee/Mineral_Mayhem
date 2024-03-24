@@ -16,6 +16,7 @@ public class NetworkPlayer_InputController : CharacterComponent
     private bool isQPressed = false;
     private bool isEPressed = false;
     private bool isFPressed = false;
+    public bool characterHasBeenSelected = false;
 
     [SerializeField] private Camera cam;
 
@@ -36,7 +37,7 @@ public class NetworkPlayer_InputController : CharacterComponent
     private void Update()
     {
         if (!Object.HasInputAuthority) return;
-
+        if (!characterHasBeenSelected) return;
         GetInput();
     }
 
