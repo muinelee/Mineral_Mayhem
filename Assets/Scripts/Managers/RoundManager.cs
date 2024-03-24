@@ -105,12 +105,10 @@ public class RoundManager : NetworkBehaviour
         if (redRoundsWon > blueRoundsWon)
         {
             Debug.Log("Red Wins the game!");
-            RPC_UpdateRoundUIForClients(true); 
         }
         else if (blueRoundsWon > redRoundsWon) 
         {
             Debug.Log("Blue Wins the game!");
-            RPC_UpdateRoundUIForClients(false); 
         }
         else
         {
