@@ -21,7 +21,7 @@ public class RoundManager : NetworkBehaviour
     private int currentRound = 0;    
     private int redRoundsWon;
     private int blueRoundsWon;
-    private int maxRounds = 3;
+    private int maxRounds = 5;
     public static RoundManager Instance { get; private set; }
     //public static event Action<NetworkPlayer> OnPlayerDeath;
 
@@ -64,7 +64,7 @@ public class RoundManager : NetworkBehaviour
 
     public void LoadRound()
     {
-        if (currentRound == 3)
+        if (currentRound == maxRounds)
         {
             MatchEnd();
             return; 
