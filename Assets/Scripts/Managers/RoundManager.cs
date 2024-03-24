@@ -64,11 +64,7 @@ public class RoundManager : NetworkBehaviour
 
     public void LoadRound()
     {
-        if (currentRound == maxRounds)
-        {
-            MatchEnd();
-            return; 
-        }
+        if (currentRound == maxRounds) return; 
         currentRound++;
         // Round start based on if its round 1, then its 30s, if not, 10s 
         float startDuration = (currentRound == 1) ? gameStartDuration : roundStartDuration;
@@ -100,6 +96,7 @@ public class RoundManager : NetworkBehaviour
         }
 
         if (currentRound != maxRounds) roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
+        else MatchEnd();
     }
 
     public void MatchEnd()
