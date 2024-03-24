@@ -105,7 +105,9 @@ public class NetworkPlayer_Health : CharacterComponent
 
     public void HandleRespawn()
     {
+        Debug.Log("Player should be respawning");
         HP = startingHP;
-        anim.Play("Idle");
+        isDead = false;
+        anim.CrossFade("Idle", 0.2f);
     }
 }
