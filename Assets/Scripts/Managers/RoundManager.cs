@@ -102,6 +102,8 @@ public class RoundManager : NetworkBehaviour
 
     public void MatchEnd()
     {
+        ResetRound -= LoadRound;
+        
         if (redRoundsWon > blueRoundsWon)
         {
             Debug.Log("Red Wins the game!");
