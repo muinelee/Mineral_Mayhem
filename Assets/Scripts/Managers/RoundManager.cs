@@ -24,6 +24,9 @@ public class RoundManager : NetworkBehaviour
     private int maxRounds = 3;
     public static RoundManager Instance { get; private set; }
     //public static event Action<NetworkPlayer> OnPlayerDeath;
+
+    public event Action ResetRound;
+
     public override void Spawned() 
     {
         if (Instance == null)
@@ -34,7 +37,9 @@ public class RoundManager : NetworkBehaviour
         {
             Destroy(gameObject);
             return;
-        } 
+        }
+
+        ResetRound += LoadRound;
     }
     
     public void RedPlayersDies()
@@ -121,9 +126,14 @@ public class RoundManager : NetworkBehaviour
         if (roundEndTimer.Expired(Runner))
         {
             roundEndTimer = TickTimer.None; 
-            LoadRound();
+            ResetRound?.Invoke();
         }
     } 
+
+    public void OnResetRound()
+    {
+        ResetRound?.Invoke();
+    }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_UpdateRoundUIForClients(bool isRedWin)

@@ -28,6 +28,8 @@ public class NetworkPlayer_Health : CharacterComponent
         if (HP == startingHP) isDead = false;
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
+
+        RoundManager.Instance.ResetRound += HandleRespawn;
     }
 
     public override void OnHit(float x)
@@ -99,5 +101,11 @@ public class NetworkPlayer_Health : CharacterComponent
     public void Heal(float amount)
     {
         HP = Mathf.Min(HP + amount, startingHP);
+    }
+
+    public void HandleRespawn()
+    {
+        HP = startingHP;
+        anim.Play("Idle");
     }
 }
