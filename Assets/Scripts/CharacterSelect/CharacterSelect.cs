@@ -7,9 +7,6 @@ using UnityEngine.UI;
 
 public class CharacterSelect : NetworkBehaviour
 {
-    // Instance
-    //public static CharacterSelect instance;
-
     [Header("Character Select")]
     public List<SO_Character> characters;
     public Dictionary<NetworkPlayer, CharacterEntity> characterLookup = new Dictionary<NetworkPlayer, CharacterEntity>();
@@ -23,18 +20,12 @@ public class CharacterSelect : NetworkBehaviour
     [SerializeField] private TMP_Text currentAbilityDescription;
     [SerializeField] private TMP_Text backstory;
     private Button currentSelectedCharacterButton;
-    private Button currentSelectedAbilityButton;
 
     // Can decouple into the Arena Manager script
     [Header("Spawn Points")]
     public Transform[] spawnPoints;
-    private bool firstSpotTakenRed = false;
-    private bool firstSpotTakenBlue = false;
     private int spawnPoint;
 
-    private CharacterEntity currentCharacterInstance;
-
-    // Start is called before the first frame update
     private void Start()
     {
         for (int i = 0; i < characterButtons.Length; i++)
@@ -66,19 +57,6 @@ public class CharacterSelect : NetworkBehaviour
 
         RPC_SpawnCharacter(index, spawnPoint);
 
-        /*
-        if (Runner.IsServer)
-        {
-            if (currentCharacterInstance != null)
-            {
-                Runner.Despawn(currentCharacterInstance.GetComponent<NetworkObject>());
-            }
-
-            // Rplace instantiate with Spawn    Instantiate(character.prefab, spawnPoints[0].position, spawnPoints[0].rotation);        
-            currentCharacterInstance = Runner.Spawn(character.prefab, spawnPoints[0].position, spawnPoints[0].rotation, Object.InputAuthority);
-        }
-         */
-
         SO_Character character = characters[NetworkPlayer.Local.CharacterID];
 
         // Update character backstory text
@@ -99,13 +77,6 @@ public class CharacterSelect : NetworkBehaviour
         // Setup ability portraits and descriptions
         SetupAbilityUI(character);
         UpdateAbilityDescription(character.characterBasicAbilityDescription);
-    }
-
-    public void SpawnCharacter(CharacterEntity character, PlayerRef player)
-    {
-        if (!Runner.IsServer) return;
-
-        Runner.Spawn(character, spawnPoints[0].position, spawnPoints[0].rotation, player);
     }
 
     private void SetupAbilityUI(SO_Character character)
@@ -150,12 +121,6 @@ public class CharacterSelect : NetworkBehaviour
         currentAbilityDescription.text = description;
     }
 
-    // TODO: Lock In Character
-    public void LockInCharacter()
-    {
-        // Implement logic to lock in character, disable character selection UI
-    }
-
     public void ActivateCharacterSelect()
     {
         characterSelectScreen.SetActive(true);
@@ -183,8 +148,6 @@ public class CharacterSelect : NetworkBehaviour
 
         else
         {
-            //Temporary test fr desawning/destroying health bars
-            //Runner.Despawn(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().floatingHealthBar.Object);
             Runner.Despawn(characterLookup[player].Object);
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnLocation].position, Quaternion.identity, player.Object.InputAuthority);
         }
