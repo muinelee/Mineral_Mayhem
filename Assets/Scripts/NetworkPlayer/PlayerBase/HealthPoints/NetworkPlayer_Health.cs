@@ -105,6 +105,17 @@ public class NetworkPlayer_Health : CharacterComponent
 
     public void HandleRespawn()
     {
+        // Disable input
+        GetComponent<NetworkPlayer_InputController>().enabled = true;
+        // Disable movement
+        GetComponent<NetworkPlayer_Movement>().enabled = true;
+        // Disable attack
+        GetComponent<NetworkPlayer_Attack>().enabled = true;
+        // Disable sphere collider
+        GetComponent<SphereCollider>().enabled = true;
+        // Disable gravity
+        rb.useGravity = true;
+
         Debug.Log("Player should be respawning");
         HP = startingHP;
         isDead = false;
