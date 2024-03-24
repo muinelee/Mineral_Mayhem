@@ -23,7 +23,7 @@ public class NetworkPlayer_OnSpawnUI : NetworkBehaviour
         if (Object.HasInputAuthority)
         {
             // Disable floating health bar if local player
-            floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);
+            //floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);
 
             // Link Cinemachine
             CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
@@ -61,7 +61,7 @@ public class NetworkPlayer_OnSpawnUI : NetworkBehaviour
         else
         {
             // Eneable floating health bar if non-local player
-            floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(true);
+            //floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(true);
         }
     }
 }

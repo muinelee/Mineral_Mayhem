@@ -57,6 +57,7 @@ public class CharacterEntity : CharacterComponent
     public NetworkPlayer_Movement Movement { get; private set; }
     public NetworkPlayer_Attack Attack { get; private set; }
     public StatusHandler StatusHandler { get; private set; }
+    public NetworkPlayer_Health Health { get; private set; }
 
     public bool hasDespawned = false;
 
@@ -69,6 +70,7 @@ public class CharacterEntity : CharacterComponent
         StatusHandler = GetComponent<StatusHandler>();
         Movement = GetComponent<NetworkPlayer_Movement>();
         Attack = GetComponent<NetworkPlayer_Attack>();
+        Health = GetComponent<NetworkPlayer_Health>();
 
         // *** If all components do this instead, allows for very reader friendly method of initialization
         var components = GetComponentsInChildren<CharacterComponent>();

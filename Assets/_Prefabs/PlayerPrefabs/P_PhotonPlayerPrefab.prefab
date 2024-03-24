@@ -233,6 +233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  canAttack: 1
   qAttack: {fileID: 11400000, guid: 169387f7ae7a67f438c58a02428eea9d, type: 2}
   eAttack: {fileID: 11400000, guid: 30985dba2b0883b46aef86c380316a54, type: 2}
   fAttack: {fileID: 11400000, guid: 1edd8eea6b7dcef4ebcf08088f864308, type: 2}
@@ -295,7 +296,7 @@ MonoBehaviour:
     _value: 0
     _inverse: 0
     _hash: -814817977
-  StateHashes: 0000000020e23b685928a8ce26b8da42a4f796c72afa8626a8b5caa3c19962852ffbaaf07bc86b1c95aaa369edf86c6b039aa41ee3bb102dc00b138b3e0381be1db38218d6565164cb5196237ef1a54a4d42807d7d223a39bf50fb9b4022c943ae400136790d3cdf4abe19e8d81ab74cfbaab4ea79610a19dc25eda6
+  StateHashes: 0000000020e23b685928a8ce26b8da42a4f796c72afa8626a8b5caa3c19962852ffbaaf07bc86b1c95aaa369edf86c6b039aa41ee3bb102dc00b138b3e0381be1db38218d6565164cb5196237ef1a54a4d42807d7d223a39bf50fb9b4022c943ae400136790d3cdf4abe19e8d81ab74cfbaab4ea79610a19dc25eda6a680324f03c4d5f0
   TriggerHashes: 00000000
 --- !u!114 &6451881978930218668
 MonoBehaviour:
@@ -334,6 +335,7 @@ MonoBehaviour:
   speed:
     baseValue: 20
     Modifiers: []
+  stun: 0
 --- !u!1001 &1671281869410326247
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1491,6 +1493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  anim: {fileID: 0}
 --- !u!114 &7767866730218010280
 MonoBehaviour:
   m_ObjectHideFlags: 0
