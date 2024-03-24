@@ -31,6 +31,8 @@ public class ReadyUpManager : MonoBehaviour
     [Header("Item List Prefabs")]
     [SerializeField] private ReadyUpName playerTeamDisplayPF;
 
+    [Header("Round Manager")]
+    [SerializeField] private RoundManager roundManagerPF;
 
     // Keep track of which player is at team list
     private Dictionary<NetworkPlayer, ReadyUpName> playerTeamDisplayPair = new Dictionary<NetworkPlayer, ReadyUpName>();
@@ -55,6 +57,8 @@ public class ReadyUpManager : MonoBehaviour
         {
             if (!blueTeamList[i].isReady || !redTeamList[i].isReady) return;
         }
+
+        runner.Spawn(roundManagerPF, Vector3.zero, Quaternion.identity);
 
         playerRef.RPC_StartGame();
     }
