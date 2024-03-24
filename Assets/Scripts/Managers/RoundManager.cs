@@ -104,6 +104,7 @@ public class RoundManager : NetworkBehaviour
 
     public void MatchEnd()
     {
+        Debug.Log("Match End"); 
         if (redRoundsWon > blueRoundsWon)
         {
             Debug.Log("Red Wins the game!");
