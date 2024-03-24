@@ -44,9 +44,7 @@ public class RoundManager : NetworkBehaviour
         redPlayersAlive--;
 
         if (redPlayersAlive != 0) return; 
-        if (currentRound == 3) MatchEnd();
-        else RoundEnd();
-        
+        RoundEnd();
     }
 
     public void BluePlayersDies()
@@ -56,19 +54,22 @@ public class RoundManager : NetworkBehaviour
         bluePlayersAlive--;
 
         if (bluePlayersAlive != 0) return;
-        if (currentRound == 3) MatchEnd();
-        else RoundEnd();
+        RoundEnd();
     }
 
     public void LoadRound()
     {
+        if (currentRound == 3)
+        {
+            MatchEnd();
+            return; 
+        }
         currentRound++;
-        // Resetting Timer
-        roundStartTimer = TickTimer.None;
-        // Round start based on if its round 1, then its 30s, if not, 15s 
+        // Round start based on if its round 1, then its 30s, if not, 10s 
         float startDuration = (currentRound == 1) ? gameStartDuration : roundStartDuration;
         roundStartTimer = TickTimer.CreateFromSeconds(Runner, startDuration);
         // Spawning/Setting players back into their own positions 
+
         // Resetting health and lives 
         // 10 second wait time for game to start for doors to open OR input to be enabled 
         redPlayersAlive = teammSize; 
@@ -81,17 +82,17 @@ public class RoundManager : NetworkBehaviour
         // Blueplayer and red playerdies already checks if all members on team dies 
         if (redPlayersAlive > bluePlayersAlive)
         {
+            roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
             Debug.Log("Red Wins the round!");
-            RPC_UpdateCharacterRoundUIForClients(true);
+            RPC_UpdateRoundUIForClients(true);
 
         }
         else if (bluePlayersAlive > redPlayersAlive)
         {
+            roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration); 
             Debug.Log("Blue Wins the round!");
-            RPC_UpdateCharacterRoundUIForClients(false);
+            RPC_UpdateRoundUIForClients(false);
         }
-
-        LoadRound(); 
     }
 
     public void MatchEnd()
@@ -100,13 +101,13 @@ public class RoundManager : NetworkBehaviour
         {
             roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
             Debug.Log("Red Wins the game!");
-            RPC_UpdateCharacterRoundUIForClients(true); 
+            RPC_UpdateRoundUIForClients(true); 
         }
         else if (blueRoundsWon > redRoundsWon) 
         {
             roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration); 
             Debug.Log("Blue Wins the game!");
-            RPC_UpdateCharacterRoundUIForClients(false); 
+            RPC_UpdateRoundUIForClients(false); 
         }
         else
         {
@@ -115,8 +116,17 @@ public class RoundManager : NetworkBehaviour
         }
     }
 
+    public override void FixedUpdateNetwork()
+    {
+        if (roundEndTimer.Expired(Runner))
+        {
+            roundEndTimer = TickTimer.None; 
+            LoadRound();
+        }
+    } 
+
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_UpdateCharacterRoundUIForClients(bool isRedWin)
+    private void RPC_UpdateRoundUIForClients(bool isRedWin)
     {
         if (isRedWin) RoundUI.instance.RedWin(); 
         else RoundUI.instance.BlueWin(); 
