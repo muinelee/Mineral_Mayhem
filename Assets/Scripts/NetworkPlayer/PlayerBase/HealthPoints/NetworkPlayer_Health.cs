@@ -73,6 +73,10 @@ public class NetworkPlayer_Health : CharacterComponent
         rb.useGravity = false;
 
         anim.CrossFade("Death", 0.2f);
+
+        if (!NetworkPlayer.Local.HasStateAuthority) return;
+        if (team == NetworkPlayer.Team.Red) RoundManager.Instance.RedPlayersDies();
+        else RoundManager.Instance.BluePlayersDies(); 
     }
 
     static void OnHPChanged(Changed<NetworkPlayer_Health> changed)

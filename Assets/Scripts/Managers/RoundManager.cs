@@ -14,10 +14,10 @@ public class RoundManager : NetworkBehaviour
     [SerializeField] private float roundStartDuration = 10f; 
     [SerializeField] private float roundEndDuration = 10f; 
     private bool isRoundEnd;
-    private int redPlayers;
-    private int bluePlayers;
+    private int redPlayersAlive;
+    private int bluePlayersAlive;
 
-    private int currentRound = 1;    
+    private int currentRound = 0;    
     private int redRoundsWon;
     private int blueRoundsWon;
     private int maxRounds = 3;
@@ -46,26 +46,40 @@ public class RoundManager : NetworkBehaviour
         Debug.Log($"Blue wins round {currentRound}!");
     }
     
-    public void RedPlayersDies(NetworkPlayer player)
+    public void RedPlayersDies()
     {
         //OnPlayerDeath?.Invoke(player); 
         Debug.Log("Red player died!");
+        redPlayersAlive--;  
+        if (currentRound == 3) CheckMatchEnd();
+        else CheckRoundEnd(); 
     }
 
-    public void BluePlayersDies(NetworkPlayer player)
+    public void BluePlayersDies()
     {
         //OnPlayerDeath?.Invoke(player);   
         Debug.Log("Blue player died!");
+        bluePlayersAlive--;
+        if (currentRound == 3) CheckMatchEnd();
+        else CheckRoundEnd();
     }
 
-    public void LoadNextRound()
+    public void LoadRound()
     {
+        
+        currentRound++;
         // Resetting Timer
-        roundStartTimer = TickTimer.None; 
-        roundStartTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
+        roundStartTimer = TickTimer.None;
+        // Round start based on if its round 1, then its 30s, if not, 15s 
+        float startDuration = (currentRound == 1) ? gameStartDuration : roundStartDuration;
+        roundStartTimer = TickTimer.CreateFromSeconds(Runner, startDuration);
         // Spawning/Setting players back into their own positions 
         // Resetting health and lives 
         // 10 second wait time for game to start for doors to open OR input to be enabled 
+    }
+    private void CheckRoundEnd()
+    {
+
     }
 
     public void CheckMatchEnd()
