@@ -55,7 +55,7 @@ public class CharacterSelect : NetworkBehaviour
             Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
         }
 
-        RPC_SpawnCharacter(index);
+        RPC_SpawnCharacter(index ,spawnPoint);
 
         /*
         if (Runner.IsServer)
@@ -170,7 +170,7 @@ public class CharacterSelect : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    private void RPC_SpawnCharacter(int playerIndex)
+    private void RPC_SpawnCharacter(int playerIndex, int spawnLocation)
     {
         if (!Runner.IsServer) return;
 
@@ -180,7 +180,7 @@ public class CharacterSelect : NetworkBehaviour
 
         if (characterLookup[player] == null)
         {
-            characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnPoint].position, Quaternion.identity, player.Object.InputAuthority);
+            characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnLocation].position, Quaternion.identity, player.Object.InputAuthority);
         }
 
         else
