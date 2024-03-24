@@ -181,6 +181,8 @@ public class CharacterSelect : NetworkBehaviour
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
         }
 
+        characterLookup[player].GetComponent<NetworkPlayer_Health>().team = player.team;
+
         RPC_UpdateCharacterLookupForClients(player, characterLookup[player]);
     }
 

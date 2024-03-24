@@ -20,6 +20,8 @@ public class NetworkPlayer_Health : CharacterComponent
     //Base dmg reduction multiplier 1 = normal damage
     [SerializeField] public float dmgReduction = 1.0f;
 
+    public NetworkPlayer.Team team;
+
     // Start is called before the first frame update
     public override void Spawned()
     {
