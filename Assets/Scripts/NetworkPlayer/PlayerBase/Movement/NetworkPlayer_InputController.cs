@@ -2,6 +2,7 @@ using Cinemachine;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Entities;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -23,6 +24,11 @@ public class NetworkPlayer_InputController : CharacterComponent
     public override void Spawned()
     {
         if (!Object.HasInputAuthority) return;
+
+        CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
+        virtualCam.Follow = this.transform;
+        virtualCam.LookAt = this.transform;
+        SetCam(Camera.main);
 
         FindAnyObjectByType<CharacterSpawner>().SetInputController(this);
     }

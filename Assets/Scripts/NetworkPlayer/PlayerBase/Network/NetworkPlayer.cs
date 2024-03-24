@@ -184,14 +184,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     public CharacterEntity SpawnCharacter(CharacterEntity character, PlayerRef player)
     {
-        CharacterEntity entity = Runner.Spawn(character, Vector3.zero, Quaternion.identity, player);
-
-        //Temporary solution for testing - will be placed elsewhere
-        CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
-        virtualCam.Follow = entity.transform;
-        virtualCam.LookAt = entity.transform;
-        entity.Controller.SetCam(Camera.main);
-
-        return entity;
+        return Runner.Spawn(character, Vector3.zero, Quaternion.identity, player);
     }
 }

@@ -26,6 +26,8 @@ public class CharacterSelect : NetworkBehaviour
     // Can decouple into the Arena Manager script
     [Header("Spawn Points")]
     public Transform[] spawnPoints;
+    private bool firstSpotTakenRed = false;
+    private bool firstSpotTakenBlue = false;
 
     private CharacterEntity currentCharacterInstance;
 
@@ -170,8 +172,37 @@ public class CharacterSelect : NetworkBehaviour
 
         if (characterLookup[player] == null)
         {
-            //characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
-            characterLookup[player] = player.SpawnCharacter(characters[player.CharacterID].prefab, player.Object.InputAuthority);
+            int spawnPoint = 0;
+            switch(player.team)
+            {
+                case NetworkPlayer.Team.Blue:
+                    if (firstSpotTakenBlue)
+                    {
+                        spawnPoint = 3;
+                    }
+                    else
+                    {
+                        firstSpotTakenBlue = true;
+                        spawnPoint = 2;
+                    }
+                    break;
+                case NetworkPlayer.Team.Red:
+                    if (firstSpotTakenRed)
+                    {
+                        spawnPoint = 1;
+                    }
+                    else
+                    {
+                        firstSpotTakenBlue = true;
+                        spawnPoint = 0;
+                    }
+                    break;
+                default:
+                    spawnPoint = 0;
+                    break;
+            }
+
+            characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnPoint].position, Quaternion.identity, player.Object.InputAuthority);
         }
 
         else
