@@ -18,10 +18,10 @@ public class RoundManager : NetworkBehaviour
     private int redPlayersAlive;
     private int bluePlayersAlive;
 
-    private int currentRound = 0;    
+    public int currentRound = 0;    
     private int redRoundsWon;
     private int blueRoundsWon;
-    private int maxRounds = 5;
+    public int maxRounds = 3;
     public static RoundManager Instance { get; private set; }
     //public static event Action<NetworkPlayer> OnPlayerDeath;
 
