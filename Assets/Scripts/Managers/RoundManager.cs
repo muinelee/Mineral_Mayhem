@@ -50,9 +50,12 @@ public class RoundManager : NetworkBehaviour
     {
         //OnPlayerDeath?.Invoke(player); 
         Debug.Log("Red player died!");
-        redPlayersAlive--;  
+        redPlayersAlive--;
+
+        if (redPlayersAlive != 0) return; 
         if (currentRound == 3) CheckMatchEnd();
-        else CheckRoundEnd(); 
+        else CheckRoundEnd();
+        
     }
 
     public void BluePlayersDies()
@@ -60,13 +63,14 @@ public class RoundManager : NetworkBehaviour
         //OnPlayerDeath?.Invoke(player);   
         Debug.Log("Blue player died!");
         bluePlayersAlive--;
+
+        if (bluePlayersAlive != 0) return;
         if (currentRound == 3) CheckMatchEnd();
         else CheckRoundEnd();
     }
 
     public void LoadRound()
     {
-        
         currentRound++;
         // Resetting Timer
         roundStartTimer = TickTimer.None;
@@ -79,7 +83,18 @@ public class RoundManager : NetworkBehaviour
     }
     private void CheckRoundEnd()
     {
-
+        // Checks which team has more players alive
+        // Blueplayer and red playerdies already checks if all members on team dies 
+        if (redPlayersAlive > bluePlayersAlive)
+        {
+            Debug.Log("Red Wins the round!");
+            RoundUI.instance.RedWin(); 
+        }
+        else if (bluePlayersAlive > redPlayersAlive)
+        {
+            Debug.Log("Blue Wins the round!");
+            RoundUI.instance.BlueWin();
+        }
     }
 
     public void CheckMatchEnd()
@@ -87,12 +102,14 @@ public class RoundManager : NetworkBehaviour
         if (redRoundsWon > blueRoundsWon)
         {
             roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
-            Debug.Log("Red Wins the game!"); 
+            Debug.Log("Red Wins the game!");
+            RoundUI.instance.RedWin(); 
         }
         else if (blueRoundsWon > redRoundsWon) 
         {
             roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration); 
             Debug.Log("Blue Wins the game!");
+            RoundUI.instance.BlueWin();
         }
         else
         {
