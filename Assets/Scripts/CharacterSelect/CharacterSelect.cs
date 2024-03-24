@@ -101,7 +101,6 @@ public class CharacterSelect : NetworkBehaviour
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
             characterLookup.Add(player, null);
-
         }
     }
 
@@ -207,10 +206,31 @@ public class CharacterSelect : NetworkBehaviour
         characterLookup[player] = character;
     }
 
+    /// <summary>
+    /// Designed for the Character Select button, to finalize your character selection
+    /// </summary>
     public void FinalizeChoice()
     {
         characterLookup[NetworkPlayer.Local].Controller.characterHasBeenSelected = true;
         NetworkCameraEffectsManager.instance.GoToTopCamera();
         characterSelectScreen.SetActive(false);
+    }
+
+    /// <summary>
+    /// This feature will be for when we want to test different characters before we begin the first round, to re-enable character select
+    /// </summary>
+    public void RenableCharacterSelect()
+    {
+        characterSelectScreen.SetActive(false);
+        RPC_CharacterReselect(NetworkPlayer.Local);
+        if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
+        else NetworkCameraEffectsManager.instance.GoToBlueCamera();
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_CharacterReselect(NetworkPlayer player)
+    {
+        Runner.Despawn(characterLookup[player].Object);
+        characterLookup[player] = null;
     }
 }
