@@ -99,7 +99,7 @@ public class RoundManager : NetworkBehaviour
             RPC_UpdateRoundUIForClients(false);
         }
 
-        if (currentRound <= maxRounds) roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
+        if (currentRound != maxRounds) roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
     }
 
     public void MatchEnd()
