@@ -229,6 +229,7 @@ public class CharacterSelect : NetworkBehaviour
     {
         characterSelectScreen.SetActive(true);
         reselectButton.gameObject.SetActive(false);
+        Destroy(characterLookup[NetworkPlayer.Local].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
         RPC_CharacterReselect(NetworkPlayer.Local);
         if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
         else NetworkCameraEffectsManager.instance.GoToBlueCamera();
