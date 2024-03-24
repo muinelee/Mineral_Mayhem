@@ -101,10 +101,6 @@ public class CharacterSelect : NetworkBehaviour
             characterLookup.Add(player, null);
 
         }
-        spawnPoint = (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) ? 0 : 2;
-        spawnPoint += ReadyUpManager.instance.GetIndex(NetworkPlayer.Local);
-        if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
-        else NetworkCameraEffectsManager.instance.GoToBlueCamera();
     }
 
     public void SpawnCharacter(CharacterEntity character, PlayerRef player)
@@ -165,6 +161,12 @@ public class CharacterSelect : NetworkBehaviour
     public void ActivateCharacterSelect()
     {
         characterSelectScreen.SetActive(true);
+
+        // Set camera location
+        spawnPoint = (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) ? 0 : 2;
+        spawnPoint += ReadyUpManager.instance.GetIndex(NetworkPlayer.Local);
+        if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
+        else NetworkCameraEffectsManager.instance.GoToBlueCamera();
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
