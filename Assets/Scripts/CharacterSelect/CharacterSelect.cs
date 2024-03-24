@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class CharacterSelect : NetworkBehaviour
 {
     // Instance
-    public static CharacterSelect instance;
+    //public static CharacterSelect instance;
 
     [Header("Character Select")]
     public List<SO_Character> characters;
@@ -28,6 +28,7 @@ public class CharacterSelect : NetworkBehaviour
     public Transform[] spawnPoints;
     private bool firstSpotTakenRed = false;
     private bool firstSpotTakenBlue = false;
+    private int spawnPoint;
 
     private CharacterEntity currentCharacterInstance;
 
@@ -39,7 +40,7 @@ public class CharacterSelect : NetworkBehaviour
             int index = i;
             characterButtons[index].onClick.AddListener(() => SelectCharacter(index, characterButtons[index]));
         }
-        instance = this;
+        //instance = this;
     }
 
     private void SelectCharacter (int characterIndex, Button selectedButton)
@@ -98,6 +99,11 @@ public class CharacterSelect : NetworkBehaviour
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
             characterLookup.Add(player, null);
+
+            spawnPoint = (player.team == NetworkPlayer.Team.Red) ? 0 : 2;
+            spawnPoint += ReadyUpManager.instance.GetIndex(player);
+            if (player.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
+            else NetworkCameraEffectsManager.instance.GoToBlueCamera();
         }
     }
 
@@ -172,36 +178,6 @@ public class CharacterSelect : NetworkBehaviour
 
         if (characterLookup[player] == null)
         {
-            int spawnPoint = 0;
-            switch(player.team)
-            {
-                case NetworkPlayer.Team.Blue:
-                    if (firstSpotTakenBlue)
-                    {
-                        spawnPoint = 3;
-                    }
-                    else
-                    {
-                        firstSpotTakenBlue = true;
-                        spawnPoint = 2;
-                    }
-                    break;
-                case NetworkPlayer.Team.Red:
-                    if (firstSpotTakenRed)
-                    {
-                        spawnPoint = 1;
-                    }
-                    else
-                    {
-                        firstSpotTakenBlue = true;
-                        spawnPoint = 0;
-                    }
-                    break;
-                default:
-                    spawnPoint = 0;
-                    break;
-            }
-
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnPoint].position, Quaternion.identity, player.Object.InputAuthority);
         }
 
