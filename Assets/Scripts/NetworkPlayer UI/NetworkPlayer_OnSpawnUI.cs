@@ -11,10 +11,6 @@ public class NetworkPlayer_OnSpawnUI : NetworkBehaviour
     [Header("Player UI Elements")]
     [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
     public NetworkPlayer_InGameUI playerUI;
-    [SerializeField] public NetworkPlayer_WorldSpaceHUD floatingHealthBar;
-
-    [Header("Camera Offset")]
-    [SerializeField] private float cameraAngle;
 
     public override void Spawned()
     {
@@ -22,14 +18,12 @@ public class NetworkPlayer_OnSpawnUI : NetworkBehaviour
 
         if (Object.HasInputAuthority)
         {
-           /* // Link Cinemachine
-            CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
+            // Link Cinemachine
+            /*CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
             virtualCam.Follow = this.transform;
             virtualCam.LookAt = this.transform;
 
-            GetComponent<NetworkPlayer_InputController>().SetCam(Camera.main);
-
-            //Camera.main.transform.rotation = Quaternion.Euler(cameraAngle, 0, 0);*/
+            GetComponent<NetworkPlayer_InputController>().SetCam(Camera.main);*/
 
             playerUI = Instantiate(playerUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
 

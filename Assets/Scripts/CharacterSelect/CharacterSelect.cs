@@ -170,7 +170,8 @@ public class CharacterSelect : NetworkBehaviour
 
         if (characterLookup[player] == null)
         {
-            characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
+            //characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
+            characterLookup[player] = player.SpawnCharacter(characters[player.CharacterID].prefab, player.Object.InputAuthority);
         }
 
         else
