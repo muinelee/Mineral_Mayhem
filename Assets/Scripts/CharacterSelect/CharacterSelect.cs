@@ -100,11 +100,11 @@ public class CharacterSelect : NetworkBehaviour
         {
             characterLookup.Add(player, null);
 
-            spawnPoint = (player.team == NetworkPlayer.Team.Red) ? 0 : 2;
-            spawnPoint += ReadyUpManager.instance.GetIndex(player);
-            if (player.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
-            else NetworkCameraEffectsManager.instance.GoToBlueCamera();
         }
+        spawnPoint = (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) ? 0 : 2;
+        spawnPoint += ReadyUpManager.instance.GetIndex(NetworkPlayer.Local);
+        if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
+        else NetworkCameraEffectsManager.instance.GoToBlueCamera();
     }
 
     public void SpawnCharacter(CharacterEntity character, PlayerRef player)
