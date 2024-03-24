@@ -19,6 +19,7 @@ public class CharacterSelect : NetworkBehaviour
     [SerializeField] private Button[] characterButtons;
     [SerializeField] private Button[] abilityPortraits;
     [SerializeField] private Button selectButton;
+    [SerializeField] private Button reselectButton;
     [SerializeField] private TMP_Text currentAbilityDescription;
     [SerializeField] private TMP_Text backstory;
     private Button currentSelectedCharacterButton;
@@ -44,6 +45,10 @@ public class CharacterSelect : NetworkBehaviour
         if (selectButton)
         {
             selectButton.onClick.AddListener(FinalizeChoice);
+        }
+        if (reselectButton)
+        {
+            reselectButton.onClick.AddListener(RenableCharacterSelect);
         }
     }
 
@@ -214,6 +219,7 @@ public class CharacterSelect : NetworkBehaviour
         characterLookup[NetworkPlayer.Local].Controller.characterHasBeenSelected = true;
         NetworkCameraEffectsManager.instance.GoToTopCamera();
         characterSelectScreen.SetActive(false);
+        reselectButton.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -221,7 +227,8 @@ public class CharacterSelect : NetworkBehaviour
     /// </summary>
     public void RenableCharacterSelect()
     {
-        characterSelectScreen.SetActive(false);
+        characterSelectScreen.SetActive(true);
+        reselectButton.gameObject.SetActive(false);
         RPC_CharacterReselect(NetworkPlayer.Local);
         if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
         else NetworkCameraEffectsManager.instance.GoToBlueCamera();
