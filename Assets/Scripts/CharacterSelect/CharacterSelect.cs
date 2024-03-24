@@ -65,7 +65,6 @@ public class CharacterSelect : NetworkBehaviour
         }
 
         RPC_SpawnCharacter(index, spawnPoint);
-        Debug.Log("PlayerCharacter Lookup: " + characterLookup[player]);
 
         /*
         if (Runner.IsServer)
@@ -241,5 +240,6 @@ public class CharacterSelect : NetworkBehaviour
     {
         Runner.Despawn(characterLookup[player].Object);
         characterLookup[player] = null;
+        RPC_UpdateCharacterLookupForClients(player, characterLookup[player]);
     }
 }
