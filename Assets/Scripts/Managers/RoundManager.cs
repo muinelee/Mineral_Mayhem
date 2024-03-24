@@ -19,8 +19,8 @@ public class RoundManager : NetworkBehaviour
     private int bluePlayersAlive;
 
     public int currentRound = 0;    
-    private int redRoundsWon;
-    private int blueRoundsWon;
+    private int redRoundsWon = 0;
+    private int blueRoundsWon = 0;
     public int maxRounds = 3;
     public static RoundManager Instance { get; private set; }
     //public static event Action<NetworkPlayer> OnPlayerDeath;
@@ -88,12 +88,14 @@ public class RoundManager : NetworkBehaviour
         if (redPlayersAlive > bluePlayersAlive)
         {
             Debug.Log("Red Wins the round!");
+            redRoundsWon++; 
             RPC_UpdateRoundUIForClients(true);
 
         }
         else if (bluePlayersAlive > redPlayersAlive)
         {
             Debug.Log("Blue Wins the round!");
+            blueRoundsWon++; 
             RPC_UpdateRoundUIForClients(false);
         }
 
