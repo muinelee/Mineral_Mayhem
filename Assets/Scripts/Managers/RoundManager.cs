@@ -87,23 +87,21 @@ public class RoundManager : NetworkBehaviour
         // Blueplayer and red playerdies already checks if all members on team dies 
         if (redPlayersAlive > bluePlayersAlive)
         {
-            roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
             Debug.Log("Red Wins the round!");
             RPC_UpdateRoundUIForClients(true);
 
         }
         else if (bluePlayersAlive > redPlayersAlive)
         {
-            roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration); 
             Debug.Log("Blue Wins the round!");
             RPC_UpdateRoundUIForClients(false);
         }
+
+        if (currentRound != maxRounds) roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
     }
 
     public void MatchEnd()
     {
-        ResetRound -= LoadRound;
-        
         if (redRoundsWon > blueRoundsWon)
         {
             Debug.Log("Red Wins the game!");
