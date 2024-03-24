@@ -29,7 +29,7 @@ public class NetworkPlayer_Health : CharacterComponent
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
 
-        RoundManager.Instance.ResetRound += HandleRespawn;
+        RoundManager.Instance.ResetRound += Respawn;
     }
 
     public override void OnHit(float x)
@@ -91,6 +91,7 @@ public class NetworkPlayer_Health : CharacterComponent
         Debug.Log($"{Time.time} OnStateChanged isDead {changed.Behaviour.isDead}");
 
         if (changed.Behaviour.isDead) changed.Behaviour.HandleDeath();
+        else changed.Behaviour.HandleRespawn();
     }
 
     public float GetStartingHP()
@@ -118,7 +119,11 @@ public class NetworkPlayer_Health : CharacterComponent
 
         Debug.Log("Player should be respawning");
         HP = startingHP;
-        isDead = false;
         anim.CrossFade("Run", 0.2f);
+    }
+
+    public void Respawn()
+    {
+        isDead = false;
     }
 }
