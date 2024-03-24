@@ -59,7 +59,7 @@ public class CharacterSelect : NetworkBehaviour
 
         // Needing for removing monobehaviour HUD before RPC call
         NetworkPlayer player = NetworkPlayer.Players[index];
-        if (characterLookup.ContainsKey(player) == true)
+        if (characterLookup.ContainsKey(player) == true || characterLookup[player] != null)
         {
             Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
         }
@@ -99,14 +99,6 @@ public class CharacterSelect : NetworkBehaviour
         // Setup ability portraits and descriptions
         SetupAbilityUI(character);
         UpdateAbilityDescription(character.characterBasicAbilityDescription);
-    }
-
-    private void OnEnable()
-    {
-        foreach (NetworkPlayer player in NetworkPlayer.Players)
-        {
-            characterLookup.Add(player, null);
-        }
     }
 
     public void SpawnCharacter(CharacterEntity character, PlayerRef player)
@@ -208,7 +200,8 @@ public class CharacterSelect : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_UpdateCharacterLookupForClients(NetworkPlayer player, CharacterEntity character)
     {
-        characterLookup[player] = character;
+        if (character != null) characterLookup[player] = character;
+        else characterLookup.Remove(player);
     }
 
     /// <summary>
@@ -239,7 +232,6 @@ public class CharacterSelect : NetworkBehaviour
     private void RPC_CharacterReselect(NetworkPlayer player)
     {
         Runner.Despawn(characterLookup[player].Object);
-        characterLookup[player] = null;
-        RPC_UpdateCharacterLookupForClients(player, characterLookup[player]);
+        RPC_UpdateCharacterLookupForClients(player, null);
     }
 }
