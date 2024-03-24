@@ -104,13 +104,11 @@ public class RoundManager : NetworkBehaviour
     {
         if (redRoundsWon > blueRoundsWon)
         {
-            roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
             Debug.Log("Red Wins the game!");
             RPC_UpdateRoundUIForClients(true); 
         }
         else if (blueRoundsWon > redRoundsWon) 
         {
-            roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration); 
             Debug.Log("Blue Wins the game!");
             RPC_UpdateRoundUIForClients(false); 
         }
