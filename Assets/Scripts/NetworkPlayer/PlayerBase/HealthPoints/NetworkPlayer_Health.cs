@@ -124,7 +124,7 @@ public class NetworkPlayer_Health : CharacterComponent
 
     public void Respawn()
     {
-        if (RoundManager.Instance.currentRound == RoundManager.Instance.maxRounds) return;
+        if (RoundManager.Instance.currentRound == RoundManager.Instance.maxRounds + 1) return;
         isDead = false;
     }
 }
