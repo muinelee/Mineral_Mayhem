@@ -84,10 +84,10 @@ public class RoundManager : NetworkBehaviour
         if (redPlayersAlive > bluePlayersAlive)
         {
             Debug.Log("Red Wins the round!");
-            redRoundsWon++; 
+            redRoundsWon++;
             RPC_UpdateRoundUIForClients(true);
-
         }
+
         else if (bluePlayersAlive > redPlayersAlive)
         {
             Debug.Log("Blue Wins the round!");
@@ -95,8 +95,13 @@ public class RoundManager : NetworkBehaviour
             RPC_UpdateRoundUIForClients(false);
         }
 
-        if (currentRound != maxRounds) roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
-        else MatchEnd();
+        if (redRoundsWon == Mathf.CeilToInt(maxRounds / 2) || blueRoundsWon == Mathf.CeilToInt(maxRounds / 2))
+        {
+            MatchEnd();
+            return;
+        }
+
+        roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
     }
 
     public void MatchEnd()

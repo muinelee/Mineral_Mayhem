@@ -126,11 +126,13 @@ public class ReadyUpManager : MonoBehaviour
     public void OnJoinBlueTeam()
     {
         NetworkPlayer.Local.RPC_JoinBlueTeam();
+        unReadyUp.gameObject.SetActive(false);
     }
 
     public void OnJoinRedTeam()
     {
         NetworkPlayer.Local.RPC_JoinRedTeam();
+        unReadyUp.gameObject.SetActive(false);
     }
 
     public void JoinBlueTeam(NetworkPlayer player)
