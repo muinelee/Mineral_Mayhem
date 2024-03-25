@@ -97,7 +97,8 @@ public class RoundManager : NetworkBehaviour
             RPC_UpdateRoundUIForClients(false);
         }
 
-        if (redRoundsWon == Mathf.CeilToInt(maxRounds / 2) || blueRoundsWon == Mathf.CeilToInt(maxRounds / 2))
+        int roundsToWin = Mathf.CeilToInt((float)maxRounds / 2);
+        if (redRoundsWon == roundsToWin || blueRoundsWon == roundsToWin)
         {
             MatchEnd();
             return;
