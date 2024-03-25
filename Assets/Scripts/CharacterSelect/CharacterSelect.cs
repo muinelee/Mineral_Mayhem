@@ -57,10 +57,10 @@ public class CharacterSelect : NetworkBehaviour
 
         RPC_SpawnCharacter(index, spawnPoint);
 
-        SO_Character character = characters[NetworkPlayer.Local.CharacterID];
+        //SO_Character character = characters[NetworkPlayer.Local.CharacterID];
 
         // Update character backstory text
-        backstory.text = character.backstory;
+        //backstory.text = character.backstory;
 
         // Update UI for selected character button
         if (currentSelectedCharacterButton != null)
@@ -72,11 +72,11 @@ public class CharacterSelect : NetworkBehaviour
         // Update the current selection and its visual state
         currentSelectedCharacterButton = selectedButton;
 
-        SetButtonAsSelected(currentSelectedCharacterButton);
+        /*SetButtonAsSelected(currentSelectedCharacterButton);
 
         // Setup ability portraits and descriptions
         SetupAbilityUI(character);
-        UpdateAbilityDescription(character.characterBasicAbilityDescription);
+        UpdateAbilityDescription(character.characterBasicAbilityDescription);*/
     }
 
     private void SetupAbilityUI(SO_Character character)
@@ -166,7 +166,18 @@ public class CharacterSelect : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_UpdateCharacterLookupForClients(NetworkPlayer player, CharacterEntity character)
     {
-        if (character != null) characterLookup[player] = character;
+        if (character != null)
+        {
+            characterLookup[player] = character;
+            SO_Character characterSO = characters[NetworkPlayer.Local.CharacterID];
+
+            // Update character backstory text
+            backstory.text = characterSO.backstory;
+
+            // Setup ability portraits and descriptions
+            SetupAbilityUI(characterSO);
+            UpdateAbilityDescription(characterSO.characterBasicAbilityDescription);
+        }
         else characterLookup.Remove(player);
     }
 
