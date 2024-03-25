@@ -31,6 +31,7 @@ public class NetworkPlayer_Health : CharacterComponent
         rb = GetComponent<Rigidbody>();
 
         RoundManager.Instance.ResetRound += Respawn;
+        RoundManager.Instance.MatchEndEvent += DisableControls;
     }
 
     public override void OnHit(float x)
@@ -64,26 +65,18 @@ public class NetworkPlayer_Health : CharacterComponent
 
     private void HandleDeath()
     {
-        // Disable input
-        //GetComponent<NetworkPlayer_InputController>().enabled = false;
-        Character.Controller.enabled = false;
-        // Disable movement
-        //GetComponent<NetworkPlayer_Movement>().enabled = false;
-        Character.Movement.enabled = false;
-        // Disable attack
-        //GetComponent<NetworkPlayer_Attack>().enabled = false;
-        Character.Attack.enabled = false;
-        // Disable sphere collider
-        //GetComponent<SphereCollider>().enabled = false;
-        Character.Collider.enabled = false;
-        // Disable gravity
-        rb.useGravity = false;
+        DisableControls();
 
         anim.CrossFade("Death", 0.2f);
 
         if (!NetworkPlayer.Local.HasStateAuthority) return;
         if (team == NetworkPlayer.Team.Red) RoundManager.Instance.RedPlayersDies();
         else RoundManager.Instance.BluePlayersDies(); 
+    }
+    public void HandleRespawn()
+    {
+        EnableControls();
+        anim.CrossFade("Run", 0.2f);
     }
 
     static void OnHPChanged(Changed<NetworkPlayer_Health> changed)
@@ -109,9 +102,27 @@ public class NetworkPlayer_Health : CharacterComponent
         HP = Mathf.Min(HP + amount, startingHP);
     }
 
-    public void HandleRespawn()
+    public void Respawn()
     {
-        // Disable input
+        isDead = false;
+        HP = startingHP;
+    }
+
+    public void DisableControls()
+    {
+        GetComponent<NetworkPlayer_InputController>().enabled = false;
+        // Disable movement
+        GetComponent<NetworkPlayer_Movement>().enabled = false;
+        // Disable attack
+        GetComponent<NetworkPlayer_Attack>().enabled = false;
+        // Disable sphere collider
+        GetComponent<SphereCollider>().enabled = false;
+        // Disable gravity
+        rb.useGravity = false;
+    }
+
+    public void EnableControls()
+    {
         GetComponent<NetworkPlayer_InputController>().enabled = true;
         // Disable movement
         GetComponent<NetworkPlayer_Movement>().enabled = true;
@@ -121,13 +132,5 @@ public class NetworkPlayer_Health : CharacterComponent
         GetComponent<SphereCollider>().enabled = true;
         // Disable gravity
         rb.useGravity = true;
-
-        anim.CrossFade("Run", 0.2f);
-    }
-
-    public void Respawn()
-    {
-        isDead = false;
-        HP = startingHP;
     }
 }

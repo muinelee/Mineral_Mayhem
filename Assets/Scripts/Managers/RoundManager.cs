@@ -26,6 +26,7 @@ public class RoundManager : NetworkBehaviour
     //public static event Action<NetworkPlayer> OnPlayerDeath;
 
     public event Action ResetRound;
+    public event Action MatchEndEvent;
 
     public override void Spawned() 
     {
@@ -40,6 +41,7 @@ public class RoundManager : NetworkBehaviour
         }
 
         ResetRound += LoadRound;
+        MatchEndEvent += MatchEnd;
     }
     
     public void RedPlayersDies()
@@ -95,9 +97,9 @@ public class RoundManager : NetworkBehaviour
             RPC_UpdateRoundUIForClients(false);
         }
 
-        if (redRoundsWon == Mathf.CeilToInt(maxRounds / 2) || blueRoundsWon == Mathf.CeilToInt(maxRounds / 2))
+        if (redRoundsWon == Mathf.CeilToInt((float)maxRounds / 2) || blueRoundsWon == Mathf.CeilToInt((float)maxRounds / 2))
         {
-            MatchEnd();
+            MatchEndEvent?.Invoke();
             return;
         }
 
@@ -106,20 +108,9 @@ public class RoundManager : NetworkBehaviour
 
     public void MatchEnd()
     {
-        Debug.Log("Match End"); 
-        if (redRoundsWon > blueRoundsWon)
-        {
-            Debug.Log("Red Wins the game!");
-        }
-        else if (blueRoundsWon > redRoundsWon) 
-        {
-            Debug.Log("Blue Wins the game!");
-        }
-        else
-        {
-            roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
-            Debug.Log("Tie!");
-        }
+        if (redRoundsWon > blueRoundsWon) RPC_DisplayGameOver(true);
+        else if (blueRoundsWon > redRoundsWon) RPC_DisplayGameOver(false);
+        else Debug.Log("Tie!");
     }
 
     public override void FixedUpdateNetwork()
@@ -140,6 +131,12 @@ public class RoundManager : NetworkBehaviour
     private void RPC_UpdateRoundUIForClients(bool isRedWin)
     {
         if (isRedWin) RoundUI.instance.RedWin(); 
-        else RoundUI.instance.BlueWin(); 
-    } 
+        else RoundUI.instance.BlueWin();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_DisplayGameOver(bool isRedWins)
+    {
+        GameOverManager.Instance.DisplayWinners(isRedWins);
+    }
 }
