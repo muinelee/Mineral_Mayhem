@@ -124,7 +124,7 @@ public class CharacterSelect : NetworkBehaviour
     public void ActivateCharacterSelect()
     {
         characterSelectScreen.SetActive(true);
-        RoundManager.Instance.ResetRound += SetPlayerToSpawn;
+        RoundManager.Instance.ResetRound += RPC_SetPlayerToSpawn;
 
         // Set camera location
         spawnPoint = (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) ? 0 : 2;
@@ -207,9 +207,11 @@ public class CharacterSelect : NetworkBehaviour
         return spawnPoints[spawnPoint].position;
     }
 
-    private void SetPlayerToSpawn()
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_SetPlayerToSpawn()
     {
         Vector3 spawnPos = FindRespawnPoint();
+        Debug.Log(NetworkPlayer.Local.name + " is respawning");
         characterLookup[NetworkPlayer.Local].gameObject.transform.position = spawnPos;
     }
 }
