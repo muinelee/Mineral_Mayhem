@@ -41,7 +41,6 @@ public class CharacterSelect : NetworkBehaviour
         {
             reselectButton.onClick.AddListener(RenableCharacterSelect);
         }
-        RoundManager.Instance.ResetRound += SetPlayerToSpawn;
     }
 
     private void SelectCharacter (int characterIndex, Button selectedButton)
@@ -125,6 +124,7 @@ public class CharacterSelect : NetworkBehaviour
     public void ActivateCharacterSelect()
     {
         characterSelectScreen.SetActive(true);
+        RoundManager.Instance.ResetRound += SetPlayerToSpawn;
 
         // Set camera location
         spawnPoint = (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) ? 0 : 2;
