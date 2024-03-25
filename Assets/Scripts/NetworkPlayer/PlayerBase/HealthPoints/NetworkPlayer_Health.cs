@@ -130,4 +130,9 @@ public class NetworkPlayer_Health : CharacterComponent
         isDead = false;
         HP = startingHP;
     }
+
+    public void OnDestroy()
+    {
+        RoundManager.Instance.ResetRound -= Respawn;
+    }
 }

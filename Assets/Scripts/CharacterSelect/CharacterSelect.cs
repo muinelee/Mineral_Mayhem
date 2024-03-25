@@ -41,6 +41,7 @@ public class CharacterSelect : NetworkBehaviour
         {
             reselectButton.onClick.AddListener(RenableCharacterSelect);
         }
+        RoundManager.Instance.ResetRound += SetPlayerToSpawn;
     }
 
     private void SelectCharacter (int characterIndex, Button selectedButton)
@@ -199,5 +200,16 @@ public class CharacterSelect : NetworkBehaviour
     {
         Runner.Despawn(characterLookup[player].Object);
         RPC_UpdateCharacterLookupForClients(player, null);
+    }
+
+    public Vector3 FindRespawnPoint()
+    {
+        return spawnPoints[spawnPoint].position;
+    }
+
+    private void SetPlayerToSpawn()
+    {
+        Vector3 spawnPos = FindRespawnPoint();
+        characterLookup[NetworkPlayer.Local].gameObject.transform.position = spawnPos;
     }
 }
