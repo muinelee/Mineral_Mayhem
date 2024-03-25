@@ -9,6 +9,7 @@ public class StatusHandler : CharacterComponent
 
     public Stat health;
     public Stat speed;
+    public int stun = 0;
 
     private void Start()
     {
@@ -24,13 +25,15 @@ public class StatusHandler : CharacterComponent
     {
         List<StatusData> statusesToRemove = new List<StatusData>();
 
+        stun = 0;
+
         foreach (StatusData data in statuses)
         {
             data.timeUntilNextTick -= Time.deltaTime;
             if (data.timeUntilNextTick <= 0)
             {
                 data.status.OnStatusUpdate(this);
-                data.timeUntilNextTick = data.status.tickRate;
+                data.timeUntilNextTick += data.status.tickRate;
             }
 
             data.duration -= Time.deltaTime;
@@ -54,6 +57,11 @@ public class StatusHandler : CharacterComponent
         AddStatus(status);
     }
 
+    public override void OnStatusEnded(StatusEffect status)
+    {
+        status.OnStatusEnded(this);
+    }
+
     public void AddStatus(StatusEffect effect)
     {
         StatusData data = new StatusData();
@@ -67,7 +75,7 @@ public class StatusHandler : CharacterComponent
 
     public void RemoveStatus(StatusData data)
     {
-        data.status.OnStatusEnded(this);
+        //data.status.OnStatusEnded(this);
         statuses.Remove(data);
     }
 

@@ -225,4 +225,17 @@ public class ReadyUpManager : MonoBehaviour
             playerTeamDisplayPair.Remove(player);
         }
     }
+
+    public int GetIndex(NetworkPlayer player)
+    {
+        if (player.team == NetworkPlayer.Team.Blue)
+        {
+            return blueTeamList.IndexOf(player);
+        }
+        else if (player.team == NetworkPlayer.Team.Red)
+        {
+            return redTeamList.IndexOf(player);
+        }
+        return 0;
+    }
 }

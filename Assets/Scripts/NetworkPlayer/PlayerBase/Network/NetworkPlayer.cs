@@ -47,8 +47,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     public bool IsLeader => Object != null && Object.IsValid && Object.HasStateAuthority;
 
-    public bool IsDecoupled = false;    // If true, this is for Jeremy's decoupling testing
-
     [SerializeField] private ReadyUpManager readyUpUIPF;
 
     [Networked] public NetworkBool isReady { get; set; } = false;
@@ -90,8 +88,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
         Players.Add(this);
         OnPlayerJoined?.Invoke(this);
-
-        if (IsDecoupled) DontDestroyOnLoad(gameObject);
     }
 
     public void PlayerLeft(PlayerRef player)
