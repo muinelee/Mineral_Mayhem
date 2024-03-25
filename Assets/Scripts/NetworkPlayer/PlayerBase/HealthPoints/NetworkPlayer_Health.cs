@@ -21,12 +21,16 @@ public class NetworkPlayer_Health : CharacterComponent
     //Base dmg reduction multiplier 1 = normal damage
     [SerializeField] public float dmgReduction = 1.0f;
 
+    public NetworkPlayer.Team team;
+
     // Start is called before the first frame update
     public override void Spawned()
     {
         if (HP == startingHP) isDead = false;
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
+
+        RoundManager.Instance.ResetRound += Respawn;
     }
 
     public override void OnHit(float x)
@@ -76,11 +80,15 @@ public class NetworkPlayer_Health : CharacterComponent
         rb.useGravity = false;
 
         anim.CrossFade("Death", 0.2f);
+
+        if (!NetworkPlayer.Local.HasStateAuthority) return;
+        if (team == NetworkPlayer.Team.Red) RoundManager.Instance.RedPlayersDies();
+        else RoundManager.Instance.BluePlayersDies(); 
     }
 
     static void OnHPChanged(Changed<NetworkPlayer_Health> changed)
     {
-        // Debug.Log($"{Time.time} OnHPChanged value {changed.Behaviour.HP}");
+        //Debug.Log($"{Time.time} OnHPChanged value {changed.Behaviour.HP}");
     }
 
     static void OnStateChanged(Changed<NetworkPlayer_Health> changed)
@@ -88,6 +96,7 @@ public class NetworkPlayer_Health : CharacterComponent
         Debug.Log($"{Time.time} OnStateChanged isDead {changed.Behaviour.isDead}");
 
         if (changed.Behaviour.isDead) changed.Behaviour.HandleDeath();
+        else changed.Behaviour.HandleRespawn();
     }
 
     public float GetStartingHP()
@@ -98,5 +107,27 @@ public class NetworkPlayer_Health : CharacterComponent
     public void Heal(float amount)
     {
         HP = Mathf.Min(HP + amount, startingHP);
+    }
+
+    public void HandleRespawn()
+    {
+        // Disable input
+        GetComponent<NetworkPlayer_InputController>().enabled = true;
+        // Disable movement
+        GetComponent<NetworkPlayer_Movement>().enabled = true;
+        // Disable attack
+        GetComponent<NetworkPlayer_Attack>().enabled = true;
+        // Disable sphere collider
+        GetComponent<SphereCollider>().enabled = true;
+        // Disable gravity
+        rb.useGravity = true;
+
+        anim.CrossFade("Run", 0.2f);
+    }
+
+    public void Respawn()
+    {
+        isDead = false;
+        HP = startingHP;
     }
 }

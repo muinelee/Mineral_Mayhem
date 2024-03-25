@@ -120,6 +120,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_UnReadyUp()
+    {
+        ReadyUpManager.instance.UnReadyUp(this);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
     public void RPC_JoinBlueTeam()
     {
         ReadyUpManager.instance.JoinBlueTeam(this);

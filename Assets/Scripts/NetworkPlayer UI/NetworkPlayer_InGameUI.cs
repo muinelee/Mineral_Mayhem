@@ -78,7 +78,7 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
 
     private void DisplayHealth()
     {
-        if (healthBar.value <= 0) return;
+        if (healthBar.value <= 0) healthBar.value = 0;
 
         healthBar.value = playerHealth.HP / playerHealth.GetStartingHP();
     }
