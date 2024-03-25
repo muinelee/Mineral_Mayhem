@@ -57,11 +57,6 @@ public class CharacterSelect : NetworkBehaviour
 
         RPC_SpawnCharacter(index, spawnPoint);
 
-        //SO_Character character = characters[NetworkPlayer.Local.CharacterID];
-
-        // Update character backstory text
-        //backstory.text = character.backstory;
-
         // Update UI for selected character button
         if (currentSelectedCharacterButton != null)
         {
@@ -71,12 +66,6 @@ public class CharacterSelect : NetworkBehaviour
 
         // Update the current selection and its visual state
         currentSelectedCharacterButton = selectedButton;
-
-        /*SetButtonAsSelected(currentSelectedCharacterButton);
-
-        // Setup ability portraits and descriptions
-        SetupAbilityUI(character);
-        UpdateAbilityDescription(character.characterBasicAbilityDescription);*/
     }
 
     private void SetupAbilityUI(SO_Character character)
@@ -124,7 +113,14 @@ public class CharacterSelect : NetworkBehaviour
     public void ActivateCharacterSelect()
     {
         characterSelectScreen.SetActive(true);
-        RoundManager.Instance.ResetRound += RPC_SetPlayerToSpawn;
+        RoundManager.Instance.ResetRound += SetPlayerToSpawn;
+        foreach (NetworkPlayer player in NetworkPlayer.Players)
+        {
+            int spawnLocation = (player.team == NetworkPlayer.Team.Red) ? 0 : 2;
+            spawnLocation += ReadyUpManager.instance.GetIndex(player);
+            Vector3 spawnVector = spawnPoints[spawnLocation].position;
+            RoundManager.Instance.respawnPoints.Add(player, spawnVector);
+        }
 
         // Set camera location
         spawnPoint = (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) ? 0 : 2;
@@ -213,16 +209,12 @@ public class CharacterSelect : NetworkBehaviour
         RPC_UpdateCharacterLookupForClients(player, null);
     }
 
-    public Vector3 FindRespawnPoint()
+    private void SetPlayerToSpawn()
     {
-        return spawnPoints[spawnPoint].position;
-    }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_SetPlayerToSpawn()
-    {
-        Vector3 spawnPos = FindRespawnPoint();
-        Debug.Log(NetworkPlayer.Local.name + " is respawning");
-        characterLookup[NetworkPlayer.Local].gameObject.transform.position = spawnPos;
+        foreach (NetworkPlayer player in NetworkPlayer.Players)
+        {
+            Vector3 spawnPos = RoundManager.Instance.respawnPoints[player];
+            characterLookup[player].gameObject.transform.position = spawnPos;
+        }
     }
 }
