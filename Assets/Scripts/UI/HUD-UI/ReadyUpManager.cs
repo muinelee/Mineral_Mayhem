@@ -4,15 +4,13 @@ using UnityEngine;
 using Fusion;
 using UnityEngine.UI;
 using TMPro;
-using System.Linq;
 
 public class ReadyUpManager : MonoBehaviour
 {
-    public static ReadyUpManager instance;
-
-    private NetworkPlayer playerRef;
+    public static ReadyUpManager instance { get; set; }
 
     [SerializeField] private Button readyUp;
+    [SerializeField] private Button unReadyUp;
     [SerializeField] private TextMeshProUGUI readyUpText;
     [SerializeField] private Button startGame;
 
@@ -44,7 +42,7 @@ public class ReadyUpManager : MonoBehaviour
 
     public void OnStartGame()
     {
-        if (!playerRef.HasStateAuthority) return;
+        if (!NetworkPlayer.Local.HasStateAuthority) return;
 
         //Check to see if there are enough players
         NetworkRunner runner = FindAnyObjectByType<NetworkRunner>();
@@ -63,12 +61,11 @@ public class ReadyUpManager : MonoBehaviour
         RoundManager.Instance.teammSize = blueTeamList.Count;
         RoundManager.Instance.OnResetRound();
 
-        playerRef.RPC_StartGame();
+        NetworkPlayer.Local.RPC_StartGame();
     }
 
     public void PrimeReadyUpUI(NetworkPlayer player)
     {
-        playerRef = player;
         if (player.HasStateAuthority) startGame.gameObject.SetActive(true);
 
         NetworkPlayer[] players = FindObjectsOfType<NetworkPlayer>();
@@ -77,13 +74,13 @@ public class ReadyUpManager : MonoBehaviour
             // Display team colors if players not ready
             if (netPlayer.team == NetworkPlayer.Team.Blue) JoinBlueTeam(netPlayer);
             else if (netPlayer.team == NetworkPlayer.Team.Red) JoinRedTeam(netPlayer);
-            else if (netPlayer.team == NetworkPlayer.Team.Undecided && netPlayer != playerRef) JoinUndecided(netPlayer);
+            else if (netPlayer.team == NetworkPlayer.Team.Undecided && netPlayer != NetworkPlayer.Local) JoinUndecided(netPlayer);
 
-
-            if (netPlayer.isReady) playerTeamDisplayPair[netPlayer].GetComponent<Image>().color = Color.green;
-
-            // Display that players are ready
-            if (netPlayer.isReady) ReadyUp(netPlayer);
+            if (netPlayer.isReady)
+            {
+                playerTeamDisplayPair[netPlayer].GetComponent<Image>().color = Color.green;
+                ReadyUp(netPlayer);
+            }
         }
     }
 
@@ -91,7 +88,16 @@ public class ReadyUpManager : MonoBehaviour
 
     public void OnReadyUp()
     {
-        playerRef.RPC_ReadyUp();
+        if (NetworkPlayer.Local.team == NetworkPlayer.Team.Undecided) return;
+
+        NetworkPlayer.Local.RPC_ReadyUp();
+        unReadyUp.gameObject.SetActive(true);
+    }
+
+    public void OnUnreadyUp()
+    {
+        NetworkPlayer.Local.RPC_UnReadyUp();
+        unReadyUp.gameObject.SetActive(false);
     }
 
     public void ReadyUp(NetworkPlayer player)
@@ -100,15 +106,17 @@ public class ReadyUpManager : MonoBehaviour
 
         if (undecidedTeamList.Contains(player)) return;
 
-        if (player.isReady == false) playerTeamDisplayPair[player].GetComponent<Image>().color = Color.green;
+        playerTeamDisplayPair[player].GetComponent<Image>().color = Color.green;
 
-        else
-        {
-            if (player.team == NetworkPlayer.Team.Blue) playerTeamDisplayPair[player].GetComponent<Image>().color = Color.blue;
-            else if (player.team == NetworkPlayer.Team.Red) playerTeamDisplayPair[player].GetComponent<Image>().color = Color.red;
-        }
+        player.isReady = true;
+    }
 
-        player.isReady = !player.isReady;
+    public void UnReadyUp(NetworkPlayer player)
+    {
+        if (player.team == NetworkPlayer.Team.Blue) playerTeamDisplayPair[player].GetComponent<Image>().color = Color.blue;
+        else if (player.team == NetworkPlayer.Team.Red) playerTeamDisplayPair[player].GetComponent<Image>().color = Color.red;
+
+        player.isReady = false;
     }
 
     #endregion
@@ -117,12 +125,12 @@ public class ReadyUpManager : MonoBehaviour
 
     public void OnJoinBlueTeam()
     {
-        playerRef.RPC_JoinBlueTeam();
+        NetworkPlayer.Local.RPC_JoinBlueTeam();
     }
 
     public void OnJoinRedTeam()
     {
-        playerRef.RPC_JoinRedTeam();
+        NetworkPlayer.Local.RPC_JoinRedTeam();
     }
 
     public void JoinBlueTeam(NetworkPlayer player)

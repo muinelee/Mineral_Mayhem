@@ -83,7 +83,7 @@ public class NetworkPlayer_Health : CharacterComponent
 
     static void OnHPChanged(Changed<NetworkPlayer_Health> changed)
     {
-        // Debug.Log($"{Time.time} OnHPChanged value {changed.Behaviour.HP}");
+        //Debug.Log($"{Time.time} OnHPChanged value {changed.Behaviour.HP}");
     }
 
     static void OnStateChanged(Changed<NetworkPlayer_Health> changed)
@@ -117,13 +117,12 @@ public class NetworkPlayer_Health : CharacterComponent
         // Disable gravity
         rb.useGravity = true;
 
-        Debug.Log("Player should be respawning");
-        HP = startingHP;
         anim.CrossFade("Run", 0.2f);
     }
 
     public void Respawn()
     {
         isDead = false;
+        HP = startingHP;
     }
 }
