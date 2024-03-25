@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NetworkPlayer_AnimationLink : NetworkBehaviour
+public class NetworkPlayer_AnimationLink : CharacterComponent
 {
     private NetworkPlayer_Movement playerMovement;
     private NetworkPlayer_Attack playerAttack;
-    private Animator anim;
+    public Animator anim;
 
     // Start is called before the first frame update
     public override void Spawned()

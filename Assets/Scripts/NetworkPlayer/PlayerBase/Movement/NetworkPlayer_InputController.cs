@@ -2,6 +2,7 @@ using Cinemachine;
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Entities;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -15,6 +16,7 @@ public class NetworkPlayer_InputController : CharacterComponent
     private bool isQPressed = false;
     private bool isEPressed = false;
     private bool isFPressed = false;
+    public bool characterHasBeenSelected = false;
 
     [SerializeField] private Camera cam;
 
@@ -24,18 +26,18 @@ public class NetworkPlayer_InputController : CharacterComponent
     {
         if (!Object.HasInputAuthority) return;
 
+        CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
+        virtualCam.Follow = this.transform;
+        virtualCam.LookAt = this.transform;
+        SetCam(Camera.main);
+
         FindAnyObjectByType<CharacterSpawner>().SetInputController(this);
     }
 
     private void Update()
     {
-        // TESTING UNTIL WE CAN CONTROL SPAWNED CHARACTERS
-        if (!cam) cam = Camera.main;
-        // TESTING
-
-
         if (!Object.HasInputAuthority) return;
-
+        if (!characterHasBeenSelected) return;
         GetInput();
     }
 
@@ -68,11 +70,11 @@ public class NetworkPlayer_InputController : CharacterComponent
 
     private void GetInput()
     {
-        // Apply Move Input
-        moveInputVector = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-
         // Apply Cursor location
         if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out RaycastHit raycastHit)) cursorLocation = raycastHit.point;
+
+        // Apply Move Input
+        moveInputVector = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
         // Apply Attack Input
         if (Input.GetKeyDown(KeyCode.Space)) isDashPressed = true;
