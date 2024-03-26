@@ -155,7 +155,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     {
         var roomPlayer = Players.FirstOrDefault(x => x.Object.InputAuthority == p);
         // Despawns the avatar controlled character
-        if (roomPlayer != null) runner.Despawn(roomPlayer.Avatar.Object);
+        //if (roomPlayer != null) runner.Despawn(roomPlayer.Avatar.Object);
 
         // Despawns the network player
         Players.Remove(roomPlayer);

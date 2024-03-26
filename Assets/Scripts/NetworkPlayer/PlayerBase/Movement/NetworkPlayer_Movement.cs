@@ -129,6 +129,12 @@ public class NetworkPlayer_Movement : CharacterComponent
         turnSlow = slowPercentage;
     }
 
+    public void ApplyAbility(SO_NetworkAttack ult)
+    {
+        SetTurnSlow(ult.GetTurnSlow());
+        SetAbilitySlow(ult.GetAbilitySlow());
+    }
+
     public void ResetTurnSlow()
     {
         turnSlow = 0;

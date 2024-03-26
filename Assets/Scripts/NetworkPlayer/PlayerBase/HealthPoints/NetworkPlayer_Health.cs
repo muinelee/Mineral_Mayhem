@@ -42,7 +42,13 @@ public class NetworkPlayer_Health : CharacterComponent
     // Function only called on the server
     public void OnTakeDamage(int damageAmount)
     {
-        if (isDead)
+        if (damageAmount < 0)
+        {
+            Debug.Log("Damage is negative");
+            return;
+        }
+
+            if (isDead)
         {
             return;
         }

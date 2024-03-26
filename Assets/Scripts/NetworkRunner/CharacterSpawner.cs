@@ -57,24 +57,13 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
             // Get the player's token
             int playerToken = GetPlayerGUID(runner, player);
 
-            // Check dictionary if player already exists in the scene - important for Host Migration and disconnection
-            if (mapTokenIDWithNetworkPlayer.TryGetValue(playerToken, out NetworkPlayer networkPlayer))
-            {
-                Debug.Log($"Player of token {playerToken} is already in scene. Connecting controls");
-                networkPlayer.GetComponent<NetworkObject>().AssignInputAuthority(player);
 
-                networkPlayer.Spawned();
-            }
-
-            else
-            {
                 NetworkPlayer newPlayer = runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
 
                 if (character) runner.Spawn(character, transform.position, Quaternion.identity, player);
 
                 newPlayer.tokenID = playerToken;
                 mapTokenIDWithNetworkPlayer[playerToken] = newPlayer;
-            }
         }
     }
 
@@ -111,6 +100,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
+        FindAnyObjectByType<NetworkRunner>().Shutdown();
         SceneManager.LoadScene("RichardCPlayerLobby");
     }
 
@@ -121,7 +111,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         await runner.Shutdown(shutdownReason: ShutdownReason.HostMigration);
 
         // Find Network Runner Handler and start the host migration
-        FindObjectOfType<NetworkRunnerHandler>().StartHostMigration(hostMigrationToken);
+        //FindObjectOfType<NetworkRunnerHandler>().StartHostMigration(hostMigrationToken);
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
@@ -174,7 +164,6 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
