@@ -54,7 +54,6 @@ public class GameOverManager : NetworkBehaviour
 
     public void ReturnToLobby()
     {
-        Runner.Disconnect(NetworkPlayer.Local.GetComponent<NetworkObject>().InputAuthority);
-        SceneManager.LoadScene("RichardCPlayerLobby");
+        LevelManager.LoadScene(0);
     }
 }
