@@ -58,12 +58,12 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
             int playerToken = GetPlayerGUID(runner, player);
 
 
-                NetworkPlayer newPlayer = runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
+            NetworkPlayer newPlayer = runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
 
-                if (character) runner.Spawn(character, transform.position, Quaternion.identity, player);
+            if (character) runner.Spawn(character, transform.position, Quaternion.identity, player);
 
-                newPlayer.tokenID = playerToken;
-                mapTokenIDWithNetworkPlayer[playerToken] = newPlayer;
+            newPlayer.tokenID = playerToken;
+            mapTokenIDWithNetworkPlayer[playerToken] = newPlayer;
         }
     }
 
@@ -100,6 +100,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
+        NetworkPlayer.Players.Clear();
         FindAnyObjectByType<NetworkRunner>().Shutdown();
         SceneManager.LoadScene("RichardCPlayerLobby");
     }
