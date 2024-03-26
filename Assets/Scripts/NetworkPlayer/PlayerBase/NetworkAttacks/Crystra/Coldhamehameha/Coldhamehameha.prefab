@@ -116,6 +116,7 @@ GameObject:
   - component: {fileID: 4957368268842533985}
   - component: {fileID: 305885395899519680}
   - component: {fileID: 4515608588109709183}
+  - component: {fileID: -3118133387319900706}
   m_Layer: 0
   m_Name: Coldhamehameha
   m_TagString: Untagged
@@ -162,6 +163,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 4515608588109709183}
+  - {fileID: -3118133387319900706}
   SimulationBehaviours: []
 --- !u!114 &4515608588109709183
 MonoBehaviour:
@@ -191,3 +193,22 @@ MonoBehaviour:
     RotTeleportRadians: 1.5
   UseLegacySharedModeInterpolation: 0
   TargetInterpolationDelay: 0.03
+--- !u!114 &-3118133387319900706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8734847245921348362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f913c17775760540ad4fab11c02fc96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  damage: 2
+  SFX: {fileID: 0}
+  statusEffectSO: []
+  beamDuration: 1.8
+  startDelay: 2
+  offset: 1

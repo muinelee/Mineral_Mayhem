@@ -172,6 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  characterHasBeenSelected: 0
   cam: {fileID: 0}
   _NetworkUser: {fileID: 0}
 --- !u!114 &2430217939546453825
@@ -208,7 +209,7 @@ MonoBehaviour:
   canAttack: 1
   qAttack: {fileID: 11400000, guid: 169387f7ae7a67f438c58a02428eea9d, type: 2}
   eAttack: {fileID: 11400000, guid: 30985dba2b0883b46aef86c380316a54, type: 2}
-  fAttack: {fileID: 11400000, guid: 1edd8eea6b7dcef4ebcf08088f864308, type: 2}
+  fAttack: {fileID: 11400000, guid: 7a93d2c7bc185c74f87d14d34329d69a, type: 2}
 --- !u!114 &-1653265293756383233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,6 +241,7 @@ MonoBehaviour:
   _isDead: 0
   startingHP: 100
   dmgReduction: 1
+  team: 0
 --- !u!114 &2098500895633039834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,8 +339,6 @@ MonoBehaviour:
   _interpolationDataSource: 0
   playerUIPF: {fileID: 2018398355284987020, guid: 07a4e68738063bb44a1e1f9c0dd509b5, type: 3}
   playerUI: {fileID: 0}
-  floatingHealthBar: {fileID: 6932017674382772014}
-  cameraAngle: 0
 --- !u!1001 &1671281869410326247
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -853,6 +853,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  anim: {fileID: 0}
 --- !u!114 &7767866730218010280
 MonoBehaviour:
   m_ObjectHideFlags: 0
