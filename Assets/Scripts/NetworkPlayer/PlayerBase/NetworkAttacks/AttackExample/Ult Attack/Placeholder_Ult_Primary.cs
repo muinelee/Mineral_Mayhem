@@ -77,7 +77,6 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
                 if (objectsHit.Contains(hit.Hitbox)) continue;
 
                 objectsHit.Add(hit.Hitbox);
-                Debug.Log($"This was hit: {hit.GameObject.name}");
 
                 CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
 

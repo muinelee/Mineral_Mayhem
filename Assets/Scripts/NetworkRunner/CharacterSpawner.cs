@@ -98,8 +98,10 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         
     }
 
-    public void OnDisconnectedFromServer(NetworkRunner runner)
+    void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner)
     {
+        Debug.Log("I got disconnected from server");
+
         NetworkPlayer.Players.Clear();
         FindAnyObjectByType<NetworkRunner>().Shutdown();
         SceneManager.LoadScene("RichardCPlayerLobby");
@@ -107,12 +109,16 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public async void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
     {
-        Debug.Log("Migrating Host");
+        //Debug.Log("Migrating Host");
 
-        await runner.Shutdown(shutdownReason: ShutdownReason.HostMigration);
+        //await runner.Shutdown(shutdownReason: ShutdownReason.HostMigration);
 
-        // Find Network Runner Handler and start the host migration
+        //Find Network Runner Handler and start the host migration
         //FindObjectOfType<NetworkRunnerHandler>().StartHostMigration(hostMigrationToken);
+
+        NetworkPlayer.Players.Clear();
+        await FindAnyObjectByType<NetworkRunner>().Shutdown();
+        SceneManager.LoadScene("RichardCPlayerLobby");
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)

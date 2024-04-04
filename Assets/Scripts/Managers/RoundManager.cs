@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class RoundManager : NetworkBehaviour
 {
@@ -130,7 +129,7 @@ public class RoundManager : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_UpdateRoundUIForClients(bool isRedWin)
     {
-        if (isRedWin) RoundUI.instance.RedWin(); 
+        if (isRedWin) RoundUI.instance.RedWin();
         else RoundUI.instance.BlueWin();
     }
 
@@ -138,5 +137,6 @@ public class RoundManager : NetworkBehaviour
     private void RPC_DisplayGameOver(bool isRedWins)
     {
         GameOverManager.Instance.DisplayWinners(isRedWins);
+        NetworkPlayer_InGameUI.instance.enabled = false;
     }
 }

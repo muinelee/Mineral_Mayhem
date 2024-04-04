@@ -54,6 +54,22 @@ public class GameOverManager : NetworkBehaviour
 
     public void ReturnToLobby()
     {
-        LevelManager.LoadScene(0);
+        if (!Runner.IsServer) return;
+
+        gameOverTimer = TickTimer.None;
+
+        NetworkRunner runner = FindAnyObjectByType<NetworkRunner>();
+
+        foreach (NetworkPlayer player in NetworkPlayer.Players)
+        {
+            if (player.GetComponent<NetworkObject>().HasStateAuthority) continue;
+            runner.Disconnect(player.GetComponent<NetworkObject>().InputAuthority);
+        }
+
+        NetworkPlayer.Players.Clear();
+
+        runner.Shutdown();
+
+        SceneManager.LoadScene(1);
     }
 }

@@ -137,9 +137,6 @@ public class CharacterSelect : NetworkBehaviour
     {
         if (!Runner.IsServer) return;
 
-        Debug.Log($"Players List's length is: {NetworkPlayer.Players.Count}");
-        Debug.Log($"Player index being called  is {playerIndex}");
-
         NetworkPlayer player = NetworkPlayer.Players[playerIndex];
 
         if (characterLookup.ContainsKey(player) == false) characterLookup.Add(player, null);
