@@ -16,6 +16,7 @@ public class NetworkPlayer_InputController : CharacterComponent
     private bool isQPressed = false;
     private bool isEPressed = false;
     private bool isFPressed = false;
+    private bool isBasicAttackPressed = false;
     public bool characterHasBeenSelected = false;
 
     [SerializeField] private Camera cam;
@@ -53,12 +54,14 @@ public class NetworkPlayer_InputController : CharacterComponent
         networkInputData.isQAttack = isQPressed;
         networkInputData.isEAttack = isEPressed;
         networkInputData.isFAttack = isFPressed;
+        networkInputData.isBasicAttack = isBasicAttackPressed;
 
         // reset ability triggers since data has been passed
         isDashPressed = false;
         isQPressed = false;
         isEPressed = false;
         isFPressed = false;
+        isBasicAttackPressed = false;
 
         return networkInputData;
     }
@@ -81,5 +84,6 @@ public class NetworkPlayer_InputController : CharacterComponent
         if (Input.GetKeyDown(KeyCode.Q)) isQPressed = true;
         if (Input.GetKeyDown(KeyCode.E)) isEPressed = true;
         if (Input.GetKeyDown(KeyCode.F)) isFPressed = true;
+        if (Input.GetKeyDown(KeyCode.Mouse0)) isBasicAttackPressed = true;
     }
 }

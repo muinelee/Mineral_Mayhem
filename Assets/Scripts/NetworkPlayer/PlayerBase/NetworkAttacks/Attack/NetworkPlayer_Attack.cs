@@ -8,6 +8,11 @@ public class NetworkPlayer_Attack : CharacterComponent
     // Control variables
     public bool canAttack = true;
 
+    [Header("Basic Attacks Properties")]
+    [SerializeField] private SO_NetworkBasicAttack[] basicAttacks;
+    private bool canBasicAttack = true;
+    private int basicAttackCount = 0;
+
     [Header("Q Attack Properties")]
     [SerializeField] private SO_NetworkAttack qAttack;
     private TickTimer qAttackCoolDownTimer;
@@ -35,9 +40,10 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (GetInput(out NetworkInputData networkInputData) && canAttack)
         {
-            if (networkInputData.isQAttack && !qAttackCoolDownTimer.IsRunning) ActivateAttack(qAttack, ref qAttackCoolDownTimer);
+            if (networkInputData.isFAttack && playerEnergy.IsUltCharged()) ActivateUlt();
+            else if (networkInputData.isQAttack && !qAttackCoolDownTimer.IsRunning) ActivateAttack(qAttack, ref qAttackCoolDownTimer);
             else if (networkInputData.isEAttack && !eAttackCoolDownTimer.IsRunning) ActivateAttack(eAttack, ref eAttackCoolDownTimer);
-            else if (networkInputData.isFAttack && playerEnergy.IsUltCharged()) ActivateAttack(fAttack);
+            else if (networkInputData.isBasicAttack && basicAttackCount < basicAttacks.Length && canBasicAttack) ActivateBasicAttack();
         }
 
         ManageTimers(ref qAttackCoolDownTimer);
@@ -60,34 +66,68 @@ public class NetworkPlayer_Attack : CharacterComponent
         playerMovement.ApplyAbility(attack);
     }
 
-    private void ActivateAttack(SO_NetworkUlt ult)
+    private void ActivateUlt()
     {
         // Start Ult animation
         canAttack = false;
-        anim.CrossFade(ult.attackName, 0.2f);
+        anim.CrossFade(fAttack.attackName, 0.2f);
 
         // Slow player
-        playerMovement.ApplyAbility(ult);
+        playerMovement.ApplyAbility(fAttack);
+    }
+
+    private void ActivateBasicAttack()
+    {
+        canBasicAttack = false;
+
+        if (basicAttackCount == 0)
+        {
+            anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.1f);
+            playerMovement.ApplyAbility(basicAttacks[basicAttackCount]);
+        }
+    }
+
+    public void AllowChainBasicAttack()
+    {
+        canBasicAttack = true;
+    }
+
+    public void ChainBasicAttack()
+    {
+        if (canBasicAttack) return;
+
+        anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.1f);
+        playerMovement.ApplyAbility(basicAttacks[basicAttackCount]);
     }
 
     // Needs to be linked via NetworkPlayer_AnimationLink Script
     public void FireQAttack()
     {
-        if (Object.HasStateAuthority) Runner.Spawn(qAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        if (Object.HasStateAuthority) return;
+            
+        Runner.Spawn(qAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
     }
 
     public void FireEAttack()
     {
-        if (Object.HasStateAuthority) Runner.Spawn(eAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        if (!Object.HasStateAuthority) return;
+        
+        Runner.Spawn(eAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
     }
 
     public void FireFAttack()
     {
-        if (Object.HasStateAuthority)
-        {
-            Transform attackTransform = transform;
-            Runner.Spawn(fAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
-        }
+        if (!Object.HasStateAuthority) return;
+            
+        Runner.Spawn(fAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+    }
+
+    public void FireBasicAttack()
+    {
+        if (!Object.HasStateAuthority) return;
+
+        Runner.Spawn(basicAttacks[basicAttackCount].GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        basicAttackCount++;
     }
 
     public SO_NetworkAttack GetQAttack()
@@ -105,6 +145,11 @@ public class NetworkPlayer_Attack : CharacterComponent
         return fAttack;
     }
 
+    public SO_NetworkBasicAttack GetBasicAttack(int index)
+    {
+        return basicAttacks[index];
+    }
+
     public float GetQAttackCoolDownTimer()
     {
         if (qAttackCoolDownTimer.IsRunning) return (float)qAttackCoolDownTimer.RemainingTime(Runner);
@@ -120,7 +165,8 @@ public class NetworkPlayer_Attack : CharacterComponent
     public void ResetAttackCapabilities()
     {
         canAttack = true;
-        playerMovement.ResetTurnSlow();
-        playerMovement.ResetAbilitySlow();
+        canBasicAttack = true;
+        basicAttackCount = 0;
+        playerMovement.ResetSlows();
     }
 }
