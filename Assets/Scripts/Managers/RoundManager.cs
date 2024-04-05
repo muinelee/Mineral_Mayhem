@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class RoundManager : NetworkBehaviour
 {
+    public Dictionary<NetworkPlayer, Vector3> respawnPoints = new Dictionary<NetworkPlayer, Vector3>();
+
     private TickTimer gameStartTimer = TickTimer.None;
     private TickTimer roundStartTimer = TickTimer.None;  
     private TickTimer roundEndTimer = TickTimer.None;

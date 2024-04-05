@@ -138,4 +138,9 @@ public class NetworkPlayer_Health : CharacterComponent
         // Disable gravity
         rb.useGravity = true;
     }
+
+    public void OnDestroy()
+    {
+        RoundManager.Instance.ResetRound -= Respawn;
+    }
 }
