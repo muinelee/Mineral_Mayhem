@@ -12,6 +12,7 @@ public struct NetworkInputData : INetworkInput
     public NetworkBool isQAttack;
     public NetworkBool isEAttack;
     public NetworkBool isFAttack;
+    public NetworkBool isBasicAttack;
 
     public NetworkBool canAttack;
     public NetworkBool canMove;

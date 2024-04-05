@@ -135,6 +135,12 @@ public class NetworkPlayer_Movement : CharacterComponent
         SetAbilitySlow(ult.GetAbilitySlow());
     }
 
+    public void ResetSlows()
+    {
+        turnSlow = 0;
+        abilitySlow = 1;
+    }
+
     public void ResetTurnSlow()
     {
         turnSlow = 0;
