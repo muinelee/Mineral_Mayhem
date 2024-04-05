@@ -57,8 +57,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         attackTimer = TickTimer.CreateFromSeconds(Runner, attack.GetCoolDown());
 
         // Slow player
-        playerMovement.SetTurnSlow(attack.GetTurnSlow());
-        playerMovement.SetAbilitySlow(attack.GetAbilitySlow());
+        playerMovement.ApplyAbility(attack);
     }
 
     private void ActivateAttack(SO_NetworkUlt ult)
@@ -68,8 +67,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         anim.CrossFade(ult.attackName, 0.2f);
 
         // Slow player
-        playerMovement.SetTurnSlow(ult.GetTurnSlow());
-        playerMovement.SetAbilitySlow(ult.GetAbilitySlow());
+        playerMovement.ApplyAbility(ult);
     }
 
     // Needs to be linked via NetworkPlayer_AnimationLink Script
@@ -85,7 +83,11 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public void FireFAttack()
     {
-        if (Object.HasStateAuthority) Runner.Spawn(fAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        if (Object.HasStateAuthority)
+        {
+            Transform attackTransform = transform;
+            Runner.Spawn(fAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        }
     }
 
     public SO_NetworkAttack GetQAttack()

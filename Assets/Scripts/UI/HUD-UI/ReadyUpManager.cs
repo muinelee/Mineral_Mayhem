@@ -208,7 +208,11 @@ public class ReadyUpManager : MonoBehaviour
         if (redTeamList.Contains(player)) redTeamList.Remove(player);
         if (undecidedTeamList.Contains(player)) undecidedTeamList.Remove(player);
 
-        FindAnyObjectByType<NetworkRunner>().Disconnect(player.GetComponent<NetworkObject>().InputAuthority);
+        NetworkRunner runner = FindAnyObjectByType<NetworkRunner>();
+        PlayerRef playerAuthority = player.GetComponent<NetworkObject>().InputAuthority;
+
+        NetworkPlayer.RemovePlayer(runner, playerAuthority);
+        runner.Disconnect(playerAuthority);
 
         Destroy(playerTeamDisplayPair[player].gameObject);
         playerTeamDisplayPair.Remove(player);

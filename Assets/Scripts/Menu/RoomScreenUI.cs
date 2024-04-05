@@ -79,7 +79,6 @@ public class RoomScreenUI : MonoBehaviour, IForceDisabledElement
 
         if (IsAllReady())
         {
-            Debug.LogWarning("We're doin it!");
             int scene = ResourceManager.Instance.arenas[GameManager.Instance.ArenaID].buildIndex;
             LevelManager.LoadScene(scene);
         }
