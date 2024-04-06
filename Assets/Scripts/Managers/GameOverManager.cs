@@ -62,8 +62,8 @@ public class GameOverManager : NetworkBehaviour
 
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
-            if (player.GetComponent<NetworkObject>().HasStateAuthority) continue;
-            runner.Disconnect(player.GetComponent<NetworkObject>().InputAuthority);
+            if (player.Object.HasStateAuthority) continue;
+            runner.Disconnect(player.Object.InputAuthority);
         }
 
         NetworkPlayer.Players.Clear();

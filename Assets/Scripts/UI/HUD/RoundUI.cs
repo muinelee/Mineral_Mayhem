@@ -17,6 +17,8 @@ public class RoundUI : MonoBehaviour
     [SerializeField] CG_Fade gemRed2;
     [SerializeField] CG_Fade gemRed3;
 
+    [SerializeField] GameObject roundUIBar;
+
     //------------------------------//
 
     private void Awake()
@@ -99,5 +101,10 @@ public class RoundUI : MonoBehaviour
         {
 
         }
+    }
+
+    public void StartRound()
+    {
+        roundUIBar.gameObject.SetActive(true);
     }
 }

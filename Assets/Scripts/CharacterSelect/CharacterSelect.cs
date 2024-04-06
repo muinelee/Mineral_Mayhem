@@ -21,6 +21,10 @@ public class CharacterSelect : NetworkBehaviour
     [SerializeField] private TMP_Text backstory;
     private Button currentSelectedCharacterButton;
 
+    [Header("Level start")]
+    [SerializeField] private float characterSelectDuration = 10;
+    private TickTimer characterSelectTimer = TickTimer.None;
+
     // Can decouple into the Arena Manager script
     [Header("Spawn Points")]
     public Transform[] spawnPoints;
@@ -41,6 +45,15 @@ public class CharacterSelect : NetworkBehaviour
         {
             reselectButton.onClick.AddListener(RenableCharacterSelect);
         }
+    }
+
+    private void FixedUpdate()
+    {        
+        if (!characterSelectTimer.Expired(Runner)) return;
+
+        characterSelectTimer = TickTimer.None;
+        RoundUI.instance.StartRound();
+        this.gameObject.SetActive(false);
     }
 
     private void SelectCharacter (int characterIndex, Button selectedButton)
@@ -127,6 +140,9 @@ public class CharacterSelect : NetworkBehaviour
         spawnPoint += ReadyUpManager.instance.GetIndex(NetworkPlayer.Local);
         if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
         else NetworkCameraEffectsManager.instance.GoToBlueCamera();
+
+        // Character Select Timer
+        characterSelectTimer = TickTimer.CreateFromSeconds(Runner, characterSelectDuration);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
