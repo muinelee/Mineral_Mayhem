@@ -123,6 +123,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &24888426 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3529939863584988263, guid: cdfdeeb5ab5292f4e9d2e2b1e47aea7f, type: 3}
+  m_PrefabInstance: {fileID: 1391234058}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &136331773
 GameObject:
   m_ObjectHideFlags: 0
@@ -3417,6 +3422,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: ----UI----
       objectReference: {fileID: 0}
+    - target: {fileID: 3529939863584988263, guid: cdfdeeb5ab5292f4e9d2e2b1e47aea7f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3552759792373019052, guid: cdfdeeb5ab5292f4e9d2e2b1e47aea7f, type: 3}
+      propertyPath: roundUIBar
+      value: 
+      objectReference: {fileID: 24888426}
     - target: {fileID: 4612587094527344179, guid: cdfdeeb5ab5292f4e9d2e2b1e47aea7f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5663,6 +5676,7 @@ MonoBehaviour:
   reselectButton: {fileID: 788390970}
   currentAbilityDescription: {fileID: 1916947795}
   backstory: {fileID: 1133359398}
+  characterSelectDuration: 10
   spawnPoints:
   - {fileID: 262827291}
   - {fileID: 1458701468}

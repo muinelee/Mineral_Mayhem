@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using Unity.VisualScripting;
 
 public class NetworkPlayer_Health : CharacterComponent
 {
@@ -13,7 +14,7 @@ public class NetworkPlayer_Health : CharacterComponent
 
     private bool isInitialized = false;
     private Animator anim;
-    private Rigidbody rb;
+    private NetworkRigidbody rb;
 
     [SerializeField] private float startingHP = 100;
 
@@ -27,7 +28,7 @@ public class NetworkPlayer_Health : CharacterComponent
     {
         if (HP == startingHP) isDead = false;
         anim = GetComponentInChildren<Animator>();
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponent<NetworkRigidbody>();
 
         RoundManager.Instance.ResetRound += Respawn;
         RoundManager.Instance.MatchEndEvent += DisableControls;
@@ -68,6 +69,15 @@ public class NetworkPlayer_Health : CharacterComponent
         else NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
     }
 
+    public void OnKnockback(float force, Vector3 source)
+    {
+        if (isDead) return;
+
+        source.y = transform.position.y;
+        Vector3 direction = transform.position - source;
+        rb.Rigidbody.AddForce(direction * force);
+    }
+
     private void HandleDeath()
     {
         DisableControls();
@@ -81,7 +91,7 @@ public class NetworkPlayer_Health : CharacterComponent
     public void HandleRespawn()
     {
         EnableControls();
-        anim.CrossFade("Run", 0.2f);
+        anim.Play("Run");
     }
 
     static void OnHPChanged(Changed<NetworkPlayer_Health> changed)
@@ -123,7 +133,7 @@ public class NetworkPlayer_Health : CharacterComponent
         // Disable sphere collider
         GetComponent<SphereCollider>().enabled = false;
         // Disable gravity
-        rb.useGravity = false;
+        rb.Rigidbody.useGravity = false;
     }
 
     public void EnableControls()
@@ -136,7 +146,7 @@ public class NetworkPlayer_Health : CharacterComponent
         // Disable sphere collider
         GetComponent<SphereCollider>().enabled = true;
         // Disable gravity
-        rb.useGravity = true;
+        rb.Rigidbody.useGravity = true;
     }
 
     public void OnDestroy()
