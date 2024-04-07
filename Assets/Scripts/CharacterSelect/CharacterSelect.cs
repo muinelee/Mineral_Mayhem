@@ -52,7 +52,9 @@ public class CharacterSelect : NetworkBehaviour
         if (!characterSelectTimer.Expired(Runner)) return;
 
         characterSelectTimer = TickTimer.None;
+        FinalizeChoice();
         RoundUI.instance.StartRound();
+        RoundManager.Instance.MatchStart();
         this.gameObject.SetActive(false);
     }
 
@@ -199,6 +201,7 @@ public class CharacterSelect : NetworkBehaviour
     public void FinalizeChoice()
     {
         characterLookup[NetworkPlayer.Local].Controller.characterHasBeenSelected = true;
+        characterLookup[NetworkPlayer.Local].PlayerUI.SpawnPlayerUI();
         NetworkCameraEffectsManager.instance.GoToTopCamera();
         ResetButtonVisual(currentSelectedCharacterButton);
         characterSelectScreen.SetActive(false);

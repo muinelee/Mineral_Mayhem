@@ -58,16 +58,15 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
     public void OnCreateNewGameClicked()
     {
-
         PlayerPrefs.SetString("PlayerName", playerName.text);
-
         HideAllPanels();
-
         createSessionPanel.SetActive(true);
+        sessionName.text = PlayerPrefs.GetString("SessionName");
     }
 
     public void OnStartNewSessionClicked()
     {
+        PlayerPrefs.SetString("SessionName", sessionName.text);
         networkRunnerHandler.CreateGame(sessionName.text, "RichardCPhoton");
         /*
         // Training Map
@@ -80,7 +79,7 @@ public class PlayerJoinScreenUI : MonoBehaviour
         // Display Status Panel
         HideAllPanels();
         statusPanel.SetActive(true);
-         */
+        */
     }
 
     public void OnBackClicked()
