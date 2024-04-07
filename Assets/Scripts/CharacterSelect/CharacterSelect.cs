@@ -52,6 +52,7 @@ public class CharacterSelect : NetworkBehaviour
         if (!characterSelectTimer.Expired(Runner)) return;
 
         characterSelectTimer = TickTimer.None;
+        FinalizeChoice();
         RoundUI.instance.StartRound();
         RoundManager.Instance.MatchStart();
         this.gameObject.SetActive(false);
