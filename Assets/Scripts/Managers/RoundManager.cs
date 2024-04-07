@@ -26,6 +26,7 @@ public class RoundManager : NetworkBehaviour
     public static RoundManager Instance { get; private set; }
     //public static event Action<NetworkPlayer> OnPlayerDeath;
 
+    public event Action MatchStartEvent;
     public event Action ResetRound;
     public event Action MatchEndEvent;
 
@@ -112,6 +113,11 @@ public class RoundManager : NetworkBehaviour
         if (redRoundsWon > blueRoundsWon) RPC_DisplayGameOver(true);
         else if (blueRoundsWon > redRoundsWon) RPC_DisplayGameOver(false);
         else Debug.Log("Tie!");
+    }
+
+    public void MatchStart()
+    {
+        MatchStartEvent?.Invoke();
     }
 
     public override void FixedUpdateNetwork()

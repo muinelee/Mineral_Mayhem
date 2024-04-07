@@ -14,17 +14,15 @@ public class NetworkPlayer_OnSpawnUI : NetworkBehaviour
 
     public override void Spawned()
     {
-        base.Spawned();
+        if (!Object.HasInputAuthority) return;
 
+        RoundManager.Instance.MatchStartEvent += SpawnPlayerUI;
+    }
+
+    public void SpawnPlayerUI()
+    {
         if (Object.HasInputAuthority)
         {
-            // Link Cinemachine
-            /*CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
-            virtualCam.Follow = this.transform;
-            virtualCam.LookAt = this.transform;
-
-            GetComponent<NetworkPlayer_InputController>().SetCam(Camera.main);*/
-
             playerUI = Instantiate(playerUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
 
             // Local player health linked to player UI
@@ -48,5 +46,10 @@ public class NetworkPlayer_OnSpawnUI : NetworkBehaviour
 
             playerUI.PrimeUI();
         }
+    }
+
+    private void OnDestroy()
+    {
+        RoundManager.Instance.MatchStartEvent -= SpawnPlayerUI;
     }
 }
