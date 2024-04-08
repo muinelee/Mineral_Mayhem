@@ -13,10 +13,6 @@ public class GameOverManager : NetworkBehaviour
     [SerializeField] private GameObject redWinImage;
     [SerializeField] private GameObject blueWinImage;
 
-    [Header("Buttons")]
-    [SerializeField] private Button rematchButton;
-    [SerializeField] private Button returnToLobbyButton;
-
     [Header("GameOver Timer")]
     [SerializeField] private float gameOverScreenDuration;
     private TickTimer gameOverTimer = TickTimer.None;
@@ -45,9 +41,6 @@ public class GameOverManager : NetworkBehaviour
     {
         if (isRedWins) DisplayRedWins();
         else DisplayBlueWins();
-
-        rematchButton.gameObject.SetActive(true);
-        returnToLobbyButton.gameObject.SetActive(true);
 
         gameOverTimer = TickTimer.CreateFromSeconds(Runner, gameOverScreenDuration);
     }

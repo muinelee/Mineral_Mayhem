@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -731,6 +731,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 5934481008385603267, guid: 3e86fa2389a60f9489b7e46fd1008ff8, type: 3}
+  character: {fileID: 0}
+  networkRunner: {fileID: 0}
+  sessionLobbyManager: {fileID: 0}
 --- !u!4 &240857892
 Transform:
   m_ObjectHideFlags: 0
@@ -1230,6 +1233,34 @@ PrefabInstance:
     - target: {fileID: 593386485324816745, guid: 3e86fa2389a60f9489b7e46fd1008ff8, type: 3}
       propertyPath: m_Name
       value: PhotonPlayerPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 2098500895633039834, guid: 3e86fa2389a60f9489b7e46fd1008ff8, type: 3}
+      propertyPath: StateHashes.Array.size
+      value: 39
+      objectReference: {fileID: 0}
+    - target: {fileID: 2098500895633039834, guid: 3e86fa2389a60f9489b7e46fd1008ff8, type: 3}
+      propertyPath: StateHashes.Array.data[33]
+      value: -1685635445
+      objectReference: {fileID: 0}
+    - target: {fileID: 2098500895633039834, guid: 3e86fa2389a60f9489b7e46fd1008ff8, type: 3}
+      propertyPath: StateHashes.Array.data[34]
+      value: -1242035194
+      objectReference: {fileID: 0}
+    - target: {fileID: 2098500895633039834, guid: 3e86fa2389a60f9489b7e46fd1008ff8, type: 3}
+      propertyPath: StateHashes.Array.data[35]
+      value: 42889009
+      objectReference: {fileID: 0}
+    - target: {fileID: 2098500895633039834, guid: 3e86fa2389a60f9489b7e46fd1008ff8, type: 3}
+      propertyPath: StateHashes.Array.data[36]
+      value: 754015676
+      objectReference: {fileID: 0}
+    - target: {fileID: 2098500895633039834, guid: 3e86fa2389a60f9489b7e46fd1008ff8, type: 3}
+      propertyPath: StateHashes.Array.data[37]
+      value: 1971937191
+      objectReference: {fileID: 0}
+    - target: {fileID: 2098500895633039834, guid: 3e86fa2389a60f9489b7e46fd1008ff8, type: 3}
+      propertyPath: StateHashes.Array.data[38]
+      value: 1542876458
       objectReference: {fileID: 0}
     - target: {fileID: 7443949920135970668, guid: 3e86fa2389a60f9489b7e46fd1008ff8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2765,6 +2796,10 @@ MonoBehaviour:
   hitStopDuration: 0.2
   screenShakeDuration: 0.5
   screenShakeIntensity: 2
+  redCameraPriority: {fileID: 0}
+  blueCameraPriority: {fileID: 0}
+  topCameraPriority: {fileID: 0}
+  victoryCameraPriority: {fileID: 0}
 --- !u!4 &965854454
 Transform:
   m_ObjectHideFlags: 0
@@ -4754,7 +4789,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 2019159826}
+  m_Mesh: {fileID: 1397376954}
 --- !u!33 &1677473232
 MeshFilter:
   m_ObjectHideFlags: 10
