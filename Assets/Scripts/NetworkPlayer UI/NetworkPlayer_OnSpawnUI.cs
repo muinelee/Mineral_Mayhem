@@ -11,29 +11,18 @@ public class NetworkPlayer_OnSpawnUI : NetworkBehaviour
     [Header("Player UI Elements")]
     [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
     public NetworkPlayer_InGameUI playerUI;
-    [SerializeField] public NetworkPlayer_WorldSpaceHUD floatingHealthBar;
-
-    [Header("Camera Offset")]
-    [SerializeField] private float cameraAngle;
 
     public override void Spawned()
     {
-        base.Spawned();
+        if (!Object.HasInputAuthority) return;
 
+        RoundManager.Instance.MatchStartEvent += SpawnPlayerUI;
+    }
+
+    public void SpawnPlayerUI()
+    {
         if (Object.HasInputAuthority)
         {
-            // Disable floating health bar if local player
-            floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(false);
-
-            // Link Cinemachine
-            CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
-            virtualCam.Follow = this.transform;
-            virtualCam.LookAt = this.transform;
-
-            GetComponent<NetworkPlayer_InputController>().SetCam(Camera.main);
-
-            Camera.main.transform.rotation = Quaternion.Euler(cameraAngle, 0, 0);
-
             playerUI = Instantiate(playerUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
 
             // Local player health linked to player UI
@@ -57,11 +46,10 @@ public class NetworkPlayer_OnSpawnUI : NetworkBehaviour
 
             playerUI.PrimeUI();
         }
+    }
 
-        else
-        {
-            // Eneable floating health bar if non-local player
-            floatingHealthBar.nonLocalPlayerHealthBar.gameObject.SetActive(true);
-        }
+    private void OnDestroy()
+    {
+        RoundManager.Instance.MatchStartEvent -= SpawnPlayerUI;
     }
 }

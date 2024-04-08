@@ -57,24 +57,13 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
             // Get the player's token
             int playerToken = GetPlayerGUID(runner, player);
 
-            // Check dictionary if player already exists in the scene - important for Host Migration and disconnection
-            if (mapTokenIDWithNetworkPlayer.TryGetValue(playerToken, out NetworkPlayer networkPlayer))
-            {
-                Debug.Log($"Player of token {playerToken} is already in scene. Connecting controls");
-                networkPlayer.GetComponent<NetworkObject>().AssignInputAuthority(player);
 
-                networkPlayer.Spawned();
-            }
+            NetworkPlayer newPlayer = runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
 
-            else
-            {
-                NetworkPlayer newPlayer = runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
+            if (character) runner.Spawn(character, transform.position, Quaternion.identity, player);
 
-                if (character) runner.Spawn(character, transform.position, Quaternion.identity, player);
-
-                newPlayer.tokenID = playerToken;
-                mapTokenIDWithNetworkPlayer[playerToken] = newPlayer;
-            }
+            newPlayer.tokenID = playerToken;
+            mapTokenIDWithNetworkPlayer[playerToken] = newPlayer;
         }
     }
 
@@ -84,9 +73,10 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        if (playerInputController == null && NetworkPlayer.Local != null) playerInputController = NetworkPlayer.Local.GetComponent<NetworkPlayer_InputController>();
-
-        if (playerInputController != null) input.Set(playerInputController.GetNetworkInput());
+        if (playerInputController == null) return; 
+        
+        // playerInputController is set from NetworkPlayer_InputController when character is spawned
+        input.Set(playerInputController.GetNetworkInput());
     }
 
     public void OnConnectedToServer(NetworkRunner runner)
@@ -108,19 +98,27 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         
     }
 
-    public void OnDisconnectedFromServer(NetworkRunner runner)
+    void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner)
     {
+        Debug.Log("I got disconnected from server");
+
+        NetworkPlayer.Players.Clear();
+        FindAnyObjectByType<NetworkRunner>().Shutdown();
         SceneManager.LoadScene("RichardCPlayerLobby");
     }
 
     public async void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
     {
-        Debug.Log("Migrating Host");
+        //Debug.Log("Migrating Host");
 
-        await runner.Shutdown(shutdownReason: ShutdownReason.HostMigration);
+        //await runner.Shutdown(shutdownReason: ShutdownReason.HostMigration);
 
-        // Find Network Runner Handler and start the host migration
-        FindObjectOfType<NetworkRunnerHandler>().StartHostMigration(hostMigrationToken);
+        //Find Network Runner Handler and start the host migration
+        //FindObjectOfType<NetworkRunnerHandler>().StartHostMigration(hostMigrationToken);
+
+        NetworkPlayer.Players.Clear();
+        await FindAnyObjectByType<NetworkRunner>().Shutdown();
+        SceneManager.LoadScene("RichardCPlayerLobby");
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
@@ -173,7 +171,6 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
@@ -197,5 +194,10 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         }
 
         Debug.Log("Spawner OnHostMigrationCleanup completed");
+    }
+
+    public void SetInputController(NetworkPlayer_InputController controller)
+    {
+        playerInputController = controller;
     }
 }

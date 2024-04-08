@@ -5,7 +5,9 @@ using TMPro;
 using UnityEngine.UI;
 
 public class NetworkPlayer_InGameUI : MonoBehaviour
-{  
+{
+    public static NetworkPlayer_InGameUI instance { get; set; }
+
     // Abilities
     private SO_NetworkAttack qAttack;
     private SO_NetworkAttack eAttack;
@@ -46,6 +48,10 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
     [SerializeField] private Image fImageBlock;
 
     // cooldown comes from Scriptable Objects passed from local player
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void FixedUpdate()
     {
@@ -78,7 +84,7 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
 
     private void DisplayHealth()
     {
-        if (healthBar.value <= 0) return;
+        if (healthBar.value <= 0) healthBar.value = 0;
 
         healthBar.value = playerHealth.HP / playerHealth.GetStartingHP();
     }
@@ -145,5 +151,10 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
     public void SetPlayerAttack(NetworkPlayer_Attack playerAttackScript)
     {
         playerAttack = playerAttackScript;
+    }
+
+    public void ResetValues()
+    {
+        
     }
 }

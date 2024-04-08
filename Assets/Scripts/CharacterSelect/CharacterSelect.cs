@@ -7,34 +7,29 @@ using UnityEngine.UI;
 
 public class CharacterSelect : NetworkBehaviour
 {
-    // Instance
-    public static CharacterSelect instance;
-
-    // Test
-    public NetworkObject playerPF;
-    public NetworkObject curPlayerObject;
-
     [Header("Character Select")]
     public List<SO_Character> characters;
-
     public Dictionary<NetworkPlayer, CharacterEntity> characterLookup = new Dictionary<NetworkPlayer, CharacterEntity>();
 
     [Header("UI Elements")]
     [SerializeField] private GameObject characterSelectScreen;
     [SerializeField] private Button[] characterButtons;
     [SerializeField] private Button[] abilityPortraits;
+    [SerializeField] private Button selectButton;
+    [SerializeField] private Button reselectButton;
     [SerializeField] private TMP_Text currentAbilityDescription;
     [SerializeField] private TMP_Text backstory;
     private Button currentSelectedCharacterButton;
-    private Button currentSelectedAbilityButton;
+
+    [Header("Level start")]
+    [SerializeField] private float characterSelectDuration = 10;
+    private TickTimer characterSelectTimer = TickTimer.None;
 
     // Can decouple into the Arena Manager script
     [Header("Spawn Points")]
     public Transform[] spawnPoints;
+    private int spawnPoint;
 
-    private CharacterEntity currentCharacterInstance;
-
-    // Start is called before the first frame update
     private void Start()
     {
         for (int i = 0; i < characterButtons.Length; i++)
@@ -42,7 +37,25 @@ public class CharacterSelect : NetworkBehaviour
             int index = i;
             characterButtons[index].onClick.AddListener(() => SelectCharacter(index, characterButtons[index]));
         }
-        instance = this;
+        if (selectButton)
+        {
+            selectButton.onClick.AddListener(FinalizeChoice);
+        }
+        if (reselectButton)
+        {
+            reselectButton.onClick.AddListener(RenableCharacterSelect);
+        }
+    }
+
+    private void FixedUpdate()
+    {        
+        if (!characterSelectTimer.Expired(Runner)) return;
+
+        characterSelectTimer = TickTimer.None;
+        FinalizeChoice();
+        RoundUI.instance.StartRound();
+        RoundManager.Instance.MatchStart();
+        this.gameObject.SetActive(false);
     }
 
     private void SelectCharacter (int characterIndex, Button selectedButton)
@@ -54,27 +67,13 @@ public class CharacterSelect : NetworkBehaviour
         NetworkPlayer player = NetworkPlayer.Players[index];
         if (characterLookup.ContainsKey(player) == true)
         {
-            Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
-        }
-
-        RPC_SpawnCharacter(index);
-
-        /*
-        if (Runner.IsServer)
-        {
-            if (currentCharacterInstance != null)
+            if (characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI != null)
             {
-                Runner.Despawn(currentCharacterInstance.GetComponent<NetworkObject>());
+                Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
             }
-
-            // Rplace instantiate with Spawn    Instantiate(character.prefab, spawnPoints[0].position, spawnPoints[0].rotation);        
-            currentCharacterInstance = Runner.Spawn(character.prefab, spawnPoints[0].position, spawnPoints[0].rotation, Object.InputAuthority);
         }
-         */
 
-        SO_Character character = characters[NetworkPlayer.Local.CharacterID];
-        // Update character backstory text
-        backstory.text = character.backstory;
+        RPC_SpawnCharacter(index, spawnPoint);
 
         // Update UI for selected character button
         if (currentSelectedCharacterButton != null)
@@ -85,27 +84,6 @@ public class CharacterSelect : NetworkBehaviour
 
         // Update the current selection and its visual state
         currentSelectedCharacterButton = selectedButton;
-
-        SetButtonAsSelected(currentSelectedCharacterButton);
-
-        // Setup ability portraits and descriptions
-        SetupAbilityUI(character);
-        UpdateAbilityDescription(character.characterBasicAbilityDescription);
-    }
-
-    private void OnEnable()
-    {
-        foreach (NetworkPlayer player in NetworkPlayer.Players)
-        {
-            characterLookup.Add(player, null);
-        }
-    }
-
-    public void SpawnCharacter(CharacterEntity character, PlayerRef player)
-    {
-        if (!Runner.IsServer) return;
-
-        Runner.Spawn(character, spawnPoints[0].position, spawnPoints[0].rotation, player);
     }
 
     private void SetupAbilityUI(SO_Character character)
@@ -150,19 +128,30 @@ public class CharacterSelect : NetworkBehaviour
         currentAbilityDescription.text = description;
     }
 
-    // TODO: Lock In Character
-    public void LockInCharacter()
-    {
-        // Implement logic to lock in character, disable character selection UI
-    }
-
     public void ActivateCharacterSelect()
     {
         characterSelectScreen.SetActive(true);
+        RoundManager.Instance.ResetRound += SetPlayerToSpawn;
+        foreach (NetworkPlayer player in NetworkPlayer.Players)
+        {
+            int spawnLocation = (player.team == NetworkPlayer.Team.Red) ? 0 : 2;
+            spawnLocation += ReadyUpManager.instance.GetIndex(player);
+            Vector3 spawnVector = spawnPoints[spawnLocation].position;
+            RoundManager.Instance.respawnPoints.Add(player, spawnVector);
+        }
+
+        // Set camera location
+        spawnPoint = (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) ? 0 : 2;
+        spawnPoint += ReadyUpManager.instance.GetIndex(NetworkPlayer.Local);
+        if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
+        else NetworkCameraEffectsManager.instance.GoToBlueCamera();
+
+        // Character Select Timer
+        characterSelectTimer = TickTimer.CreateFromSeconds(Runner, characterSelectDuration);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    private void RPC_SpawnCharacter(int playerIndex)
+    private void RPC_SpawnCharacter(int playerIndex, int spawnLocation)
     {
         if (!Runner.IsServer) return;
 
@@ -172,18 +161,20 @@ public class CharacterSelect : NetworkBehaviour
 
         if (characterLookup[player] == null)
         {
-            characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
+            characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnLocation].position, Quaternion.identity, player.Object.InputAuthority);
         }
 
         else
         {
-            //Temporary test fr desawning/destroying health bars
-            //Runner.Despawn(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().floatingHealthBar.Object);
             Runner.Despawn(characterLookup[player].Object);
-            characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, Vector3.zero, Quaternion.identity, player.Object.InputAuthority);
+            characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnLocation].position, Quaternion.identity, player.Object.InputAuthority);
         }
+
+        characterLookup[player].GetComponent<NetworkPlayer_Health>().team = player.team;
+
         RPC_UpdateCharacterLookupForClients(player, characterLookup[player]);
     }
+
     /// <summary>
     /// Syncs CharacterLookup  across all clients from the original RPC_SpawnCharacter call
     /// </summary>
@@ -192,6 +183,60 @@ public class CharacterSelect : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_UpdateCharacterLookupForClients(NetworkPlayer player, CharacterEntity character)
     {
-        characterLookup[player] = character;
+        if (character != null)
+        {
+            characterLookup[player] = character;
+            SO_Character characterSO = characters[NetworkPlayer.Local.CharacterID];
+
+            // Update character backstory text
+            backstory.text = characterSO.backstory;
+
+            // Setup ability portraits and descriptions
+            SetupAbilityUI(characterSO);
+            UpdateAbilityDescription(characterSO.characterBasicAbilityDescription);
+        }
+        else characterLookup.Remove(player);
+    }
+
+    /// <summary>
+    /// Designed for the Character Select button, to finalize your character selection
+    /// </summary>
+    public void FinalizeChoice()
+    {
+        characterLookup[NetworkPlayer.Local].Controller.characterHasBeenSelected = true;
+        characterLookup[NetworkPlayer.Local].PlayerUI.SpawnPlayerUI();
+        NetworkCameraEffectsManager.instance.GoToTopCamera();
+        ResetButtonVisual(currentSelectedCharacterButton);
+        characterSelectScreen.SetActive(false);
+        reselectButton.gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// This feature will be for when we want to test different characters before we begin the first round, to re-enable character select
+    /// </summary>
+    public void RenableCharacterSelect()
+    {
+        characterSelectScreen.SetActive(true);
+        reselectButton.gameObject.SetActive(false);
+        Destroy(characterLookup[NetworkPlayer.Local].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
+        RPC_CharacterReselect(NetworkPlayer.Local);
+        if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
+        else NetworkCameraEffectsManager.instance.GoToBlueCamera();
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_CharacterReselect(NetworkPlayer player)
+    {
+        Runner.Despawn(characterLookup[player].Object);
+        RPC_UpdateCharacterLookupForClients(player, null);
+    }
+
+    private void SetPlayerToSpawn()
+    {
+        foreach (NetworkPlayer player in NetworkPlayer.Players)
+        {
+            Vector3 spawnPos = RoundManager.Instance.respawnPoints[player];
+            characterLookup[player].gameObject.transform.position = spawnPos;
+        }
     }
 }

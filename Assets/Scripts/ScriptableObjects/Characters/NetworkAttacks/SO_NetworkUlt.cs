@@ -8,7 +8,8 @@ public class SO_NetworkUlt : SO_NetworkAttack
 {
     /*
     
-    Inherits all important info from NetworkPlayer Attack and excludes cooldown
-    
+    Inherits all important info from SO_NetworkAttack.
+    Created separate Scriptable Object for safety
+
     */
 }
