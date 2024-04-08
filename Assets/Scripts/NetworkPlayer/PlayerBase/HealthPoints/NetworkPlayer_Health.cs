@@ -126,15 +126,15 @@ public class NetworkPlayer_Health : CharacterComponent
 
     public void DisableControls()
     {
-        GetComponent<NetworkPlayer_InputController>().enabled = false;
+        if (GetComponent<NetworkPlayer_InputController>()) GetComponent<NetworkPlayer_InputController>().enabled = false;
         // Disable movement
-        GetComponent<NetworkPlayer_Movement>().enabled = false;
+        if (GetComponent<NetworkPlayer_Movement>()) GetComponent<NetworkPlayer_Movement>().enabled = false;
         // Disable attack
-        GetComponent<NetworkPlayer_Attack>().enabled = false;
+        if (GetComponent<NetworkPlayer_Attack>()) GetComponent<NetworkPlayer_Attack>().enabled = false;
         // Disable sphere collider
-        GetComponent<SphereCollider>().enabled = false;
+        if (GetComponent<SphereCollider>()) GetComponent<SphereCollider>().enabled = false;
         // Disable gravity
-        rb.Rigidbody.useGravity = false;
+        if (rb.Rigidbody) rb.Rigidbody.useGravity = false;
     }
 
     public void EnableControls()
@@ -153,5 +153,6 @@ public class NetworkPlayer_Health : CharacterComponent
     public void OnDestroy()
     {
         RoundManager.Instance.ResetRound -= Respawn;
+        RoundManager.Instance.MatchEndEvent -= DisableControls;
     }
 }
