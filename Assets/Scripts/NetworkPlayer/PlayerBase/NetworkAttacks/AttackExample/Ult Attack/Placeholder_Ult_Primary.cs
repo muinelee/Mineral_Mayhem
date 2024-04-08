@@ -27,7 +27,7 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
     [Header("List of objects hit")]
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private List<Hitbox> objectsHit = new List<Hitbox>();          // Check if object is in the objectsHit list. If not, do damage and add to list
-    private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
+    [SerializeField] private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
     public override void Spawned()
     {
