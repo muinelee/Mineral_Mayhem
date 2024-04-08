@@ -46,8 +46,9 @@ public class NetworkPlayer_Movement : CharacterComponent
             if (canMove && !isDashing)
             {
                 // Set direction player is looking at
-                targetDirection = (networkInputData.cursorLocation - transform.position).normalized;
-
+                targetDirection = (networkInputData.cursorLocation - transform.position);
+                targetDirection.y = 0;
+                targetDirection.Normalize();
                 // Rotate
                 Aim();
 
@@ -69,10 +70,12 @@ public class NetworkPlayer_Movement : CharacterComponent
     private void Aim()
     {
         // Rotate player over time to the target angle
-        float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
+        /*float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
         float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime + turnSlow);
-        Quaternion rotation = Quaternion.Euler(0, angle, 0);
-        transform.rotation = rotation;
+        Quaternion rotation = Quaternion.Euler(0, angle, 0);*/
+
+        Quaternion rotation2 = Quaternion.LookRotation(targetDirection, Vector3.up);
+        transform.rotation = rotation2;
     }
 
     private void MobilityAbility(Vector3 moveDirection)
