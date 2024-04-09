@@ -29,6 +29,8 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     [SerializeField] private CinemachineVirtualCamera blueCameraPriority;
     [SerializeField] private CinemachineVirtualCamera topCameraPriority;
     [SerializeField] private CinemachineVirtualCamera victoryCameraPriority;
+    [SerializeField] private CinemachineVirtualCamera redCinematicCameraPriority;
+    [SerializeField] private CinemachineVirtualCamera blueCinematicCameraPriority;
 
     private bool isRedTeam;
 
@@ -104,16 +106,51 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         victoryCameraPriority.Priority = 100;
     }
 
+    public void GoToRedCinematicCamera()
+    {
+        redCameraPriority.Priority = 0;
+        blueCameraPriority.Priority = 0;
+        topCameraPriority.Priority = 0;
+        victoryCameraPriority.Priority = 0;
+        blueCinematicCameraPriority.Priority = 0;  
+
+        redCinematicCameraPriority.Priority = 100;
+    }
+
+    public void GoToBlueCinematicCamera()
+    {
+        redCameraPriority.Priority = 0;
+        blueCameraPriority.Priority = 0;
+        topCameraPriority.Priority = 0;
+        victoryCameraPriority.Priority = 0;
+        redCinematicCameraPriority.Priority = 0;
+
+        blueCinematicCameraPriority.Priority = 100; 
+    }
+
+    public void StartCinematic(NetworkPlayer player)
+    {
+        RPC_GoToCinematicCamera(player);
+    } 
+
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_CameraPriority(bool isRedTeam)
     {
-        if (isRedTeam)
+        if (isRedTeam) GoToRedCamera();
+        else GoToBlueCamera();
+    }
+
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_GoToCinematicCamera(NetworkPlayer player)
+    {
+        if (player.team == NetworkPlayer.Team.Red)
         {
-            GoToRedCamera();
+            GoToRedCinematicCamera();
         }
-        else
+        else if (player.team == NetworkPlayer.Team.Blue)
         {
-            GoToBlueCamera();
+            GoToBlueCinematicCamera();
         }
     }
     #endregion
