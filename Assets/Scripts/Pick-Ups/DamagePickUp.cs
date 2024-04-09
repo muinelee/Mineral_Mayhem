@@ -5,9 +5,10 @@ using UnityEngine;
 public class DamagePickup : MonoBehaviour
 {
     [SerializeField] private int damageAmount = 20;
+    [SerializeField] private LayerMask targetLayer;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
         {
             NetworkPlayer_Health playerHealth = other.GetComponent<NetworkPlayer_Health>();
             if (playerHealth != null)
