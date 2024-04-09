@@ -64,7 +64,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     [Header("Username UI")]
     public TextMeshProUGUI playerNameTMP;
     [Networked(OnChanged = nameof(OnStateChanged))] public NetworkBool IsReady {  get; set; }
-    [Networked(OnChanged = nameof(OnPlayerNameChanged))] public NetworkString<_16> playerName { get; private set; }
+    [Networked] public NetworkString<_16> playerName { get; private set; }
 
     public override void Spawned()
     {
@@ -79,7 +79,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             RPC_SetPlayerStats(ClientInfo.Username, ClientInfo.CharacterID);
 
             playerName = PlayerPrefs.GetString("PlayerName");
-            RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
+            RPC_SetPlayerNames(playerName.ToString());
 
             ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
             readyUpUI.PrimeReadyUpUI(this);
@@ -93,16 +93,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public void PlayerLeft(PlayerRef player)
     {
         if (player == Object.InputAuthority) Runner.Despawn(Object);
-    }
-
-    private static void OnPlayerNameChanged(Changed<NetworkPlayer> player)
-    {
-        player.Behaviour.OnPlayerNameChanged();
-    }
-
-    private void OnPlayerNameChanged()
-    {
-        //playerNameTMP.text = playerName.ToString();
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
@@ -172,7 +162,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.StateAuthority)]
     public void RPC_ChangeReadyState(NetworkBool state)
     {
-        Debug.Log($"Setting {Object.Name} ready state to {state}");
         IsReady = state;
     }
 

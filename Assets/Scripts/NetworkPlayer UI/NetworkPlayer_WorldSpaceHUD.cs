@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Fusion;
 using Cinemachine;
+using TMPro;
 
 public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
 {
@@ -11,7 +10,10 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
     private float yOffset;
 
     public Slider nonLocalPlayerHealthBar;
+    public TextMeshProUGUI playerName;
     [SerializeField] private NetworkPlayer_Health playerHealth;
+
+
 
     public override void Spawned()
     {
@@ -35,8 +37,13 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
         transform.SetParent(null);*/
 
         // Set Floating HealthBar properties
-        if (Object.HasInputAuthority) nonLocalPlayerHealthBar.gameObject.SetActive(false);
+        if (Object.HasInputAuthority)
+        {
+            nonLocalPlayerHealthBar.gameObject.SetActive(false);
+            RPC_SetPlayerName(NetworkPlayer.Local.playerName.ToString());
+        }
         else nonLocalPlayerHealthBar.gameObject.SetActive(true);
+
     }
 
     private void DisplayHUD()
@@ -47,5 +54,11 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
         nonLocalPlayerHealthBar.value = playerHealth.HP / playerHealth.GetStartingHP();
 
         transform.LookAt(cam.transform.rotation * Vector3.forward + transform.position, cam.transform.rotation * Vector3.up);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_SetPlayerName(string name)
+    {
+        this.playerName.text = name;
     }
 }

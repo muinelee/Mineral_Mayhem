@@ -25,24 +25,6 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     private string[] roomAddress = new string[] { "RaeLeda/RaeLedaTrainingRoom", "RichardCPhoton" };
 
-    private int GetPlayerGUID(NetworkRunner runner, PlayerRef player)
-    {
-        // if it is the local player, directly get GUID using the local instance of the NetworkInfoManager
-        if (runner.LocalPlayer == player) return ConnectionTokenUtils.HashToken(NetworkInfoManager.instance.GetConnectionToken());
-        
-        // else if it the non local player, get GUIDI using the built in GetPlayerConnectionToken from Fusion
-        else
-        {
-            byte[] token = runner.GetPlayerConnectionToken(player);
-
-            if (token != null) return ConnectionTokenUtils.HashToken(token);
-
-            // if token is null, a faulty player was passed
-            Debug.LogError($"Invalid token was passed to GetPlayerToken() function");
-            return 0;
-        }
-    }
-
     public void AddPlayerToMap(int token, NetworkPlayer player)
     {
         mapTokenIDWithNetworkPlayer.Add(token, player);
@@ -54,16 +36,9 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         if (runner.IsServer)
         {
-            // Get the player's token
-            int playerToken = GetPlayerGUID(runner, player);
-
-
             NetworkPlayer newPlayer = runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
 
             if (character) runner.Spawn(character, transform.position, Quaternion.identity, player);
-
-            newPlayer.tokenID = playerToken;
-            mapTokenIDWithNetworkPlayer[playerToken] = newPlayer;
         }
     }
 
