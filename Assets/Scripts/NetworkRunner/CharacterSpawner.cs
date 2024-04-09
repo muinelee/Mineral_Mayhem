@@ -84,13 +84,6 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public async void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
     {
-        //Debug.Log("Migrating Host");
-
-        //await runner.Shutdown(shutdownReason: ShutdownReason.HostMigration);
-
-        //Find Network Runner Handler and start the host migration
-        //FindObjectOfType<NetworkRunnerHandler>().StartHostMigration(hostMigrationToken);
-
         NetworkPlayer.Players.Clear();
         await FindAnyObjectByType<NetworkRunner>().Shutdown();
         SceneManager.LoadScene("RichardCPlayerLobby");
