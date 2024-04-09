@@ -62,7 +62,7 @@ public class NetworkPlayer_Health : CharacterComponent
 
         if (HP <= 0)
         {
-            Debug.Log($"{Time.time} {transform.name} is dead");
+        //    Debug.Log($"{Time.time} {transform.name} is dead");
 
             isDead = true;
         }
@@ -92,7 +92,7 @@ public class NetworkPlayer_Health : CharacterComponent
     public void HandleRespawn()
     {
         EnableControls();
-        anim.CrossFade("Run", 0.2f);
+        anim.Play("Run");
     }
 
     static void OnHPChanged(Changed<NetworkPlayer_Health> changed)
@@ -102,7 +102,7 @@ public class NetworkPlayer_Health : CharacterComponent
 
     static void OnStateChanged(Changed<NetworkPlayer_Health> changed)
     {
-        Debug.Log($"{Time.time} OnStateChanged isDead {changed.Behaviour.isDead}");
+        //Debug.Log($"{Time.time} OnStateChanged isDead {changed.Behaviour.isDead}");
 
         if (changed.Behaviour.isDead) changed.Behaviour.HandleDeath();
         else changed.Behaviour.HandleRespawn();

@@ -29,24 +29,14 @@ public class NetworkRunnerHandler : MonoBehaviour
         networkRunner = Instantiate(networkRunnerPrefab);
         networkRunner.name = "NetworkRunner";
 
-        Debug.Log($"Created a network runner at {SceneManager.GetActiveScene().name}");
+        //Debug.Log($"Created a network runner at {SceneManager.GetActiveScene().name}");
 
         if (SceneManager.GetActiveScene().name == "RichardCPhoton")     // Change "RichardCPhoton" to game scene name in future
         {
-            var clientTask = InitializeNetworkRunner(networkRunner, GameMode.AutoHostOrClient, "TestSession", NetworkInfoManager.instance.GetConnectionToken() ,NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
+            var clientTask = InitializeNetworkRunner(networkRunner, GameMode.AutoHostOrClient, "TestSession", NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
         }
 
-        Debug.Log($"Server NetworkRunner started.");
-    }
-
-    public void StartHostMigration(HostMigrationToken hostMigrationToken)
-    {
-        networkRunner = Instantiate(networkRunnerPrefab);
-        networkRunner.name = "NetworkRunner - Migrated";
-
-        var clientTask = InitializeHostMigration(networkRunner, hostMigrationToken, NetworkInfoManager.instance.GetConnectionToken());
-
-        Debug.Log($"Host Migration started");
+        //Debug.Log($"Server NetworkRunner started.");
     }
 
     INetworkSceneManager GetSceneManager(NetworkRunner runner)
@@ -58,7 +48,7 @@ public class NetworkRunnerHandler : MonoBehaviour
         return sceneManager;
     }
 
-    protected virtual Task InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, string sessionName, byte[] connectionToken, NetAddress address, SceneRef scene, Action<NetworkRunner> initialized)
+    protected virtual Task InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, string sessionName, NetAddress address, SceneRef scene, Action<NetworkRunner> initialized)
     {
         var sceneManager = GetSceneManager(runner);
 
@@ -73,8 +63,7 @@ public class NetworkRunnerHandler : MonoBehaviour
             Scene = scene,
             Initialized = initialized,
             SceneManager = sceneManager,
-            PlayerCount = roomSize,
-            ConnectionToken = connectionToken
+            PlayerCount = roomSize
         });
     }
 
@@ -165,14 +154,14 @@ public class NetworkRunnerHandler : MonoBehaviour
     public void CreateGame(string sessionName, string sceneName)
     {
         // Create game as a host
-        var clientTask = InitializeNetworkRunner(networkRunner, GameMode.Host, sessionName, NetworkInfoManager.instance.GetConnectionToken(), NetAddress.Any(), SceneUtility.GetBuildIndexByScenePath($"_Scenes/{sceneName}"), null);
+        var clientTask = InitializeNetworkRunner(networkRunner, GameMode.Host, sessionName, NetAddress.Any(), SceneUtility.GetBuildIndexByScenePath($"_Scenes/{sceneName}"), null);
     }
 
     public void JoinGame(SessionInfo sessionInfo)
     {
         // Join existing game as client
         // NOTE: When joining game, the scene argument will be passing the current active scene because it will be overriten by the host
-        var clientTask = InitializeNetworkRunner(networkRunner, GameMode.Client, sessionInfo.Name, NetworkInfoManager.instance.GetConnectionToken(), NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
+        var clientTask = InitializeNetworkRunner(networkRunner, GameMode.Client, sessionInfo.Name, NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
     }
 
     public int GetRoomSize()

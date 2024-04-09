@@ -207,6 +207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   canAttack: 1
+  basicAttacks: []
   qAttack: {fileID: 11400000, guid: 169387f7ae7a67f438c58a02428eea9d, type: 2}
   eAttack: {fileID: 11400000, guid: 30985dba2b0883b46aef86c380316a54, type: 2}
   fAttack: {fileID: 11400000, guid: 325223d65b6736a4d8c861cef9794c68, type: 2}
@@ -270,7 +271,7 @@ MonoBehaviour:
     _value: 0
     _inverse: 0
     _hash: -814817977
-  StateHashes: 0000000020e23b685928a8ce26b8da42a4f796c72afa8626a8b5caa3c19962852ffbaaf07bc86b1c95aaa369edf86c6b039aa41ee3bb102dc00b138b3e0381be1db38218d6565164cb5196237ef1a54a4d42807d7d223a39bf50fb9b4022c943ae400136790d3cdf4abe19e8d81ab74cfbaab4ea79610a19dc25eda6a680324f03c4d5f0
+  StateHashes: 0000000020e23b685928a8ce26b8da42a4f796c72afa8626a8b5caa3c19962852ffbaaf07bc86b1c95aaa369edf86c6b039aa41ee3bb102dc00b138b3e0381be1db38218d6565164cb5196237ef1a54a4d42807d7d223a39bf50fb9b4022c943ae400136790d3cdf4abe19e8d81ab74cfbaab4ea79610a19dc25eda6a680324f03c4d5f08b3e879b060cf8b5316f8e02bc5df12ca75f89752a6df65b
   TriggerHashes: 00000000
 --- !u!114 &6451881978930218668
 MonoBehaviour:
@@ -440,6 +441,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8575679808473682377, guid: 96ec909675a0f7745afa9e98a05cdb6f, type: 3}
+      propertyPath: playerName
+      value: 
+      objectReference: {fileID: 5849272690638275235}
+    - target: {fileID: 8575679808473682377, guid: 96ec909675a0f7745afa9e98a05cdb6f, type: 3}
       propertyPath: playerHealth
       value: 
       objectReference: {fileID: 6903174612733432645}
@@ -456,6 +461,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96ec909675a0f7745afa9e98a05cdb6f, type: 3}
+--- !u!114 &5849272690638275235 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5052296079356433476, guid: 96ec909675a0f7745afa9e98a05cdb6f, type: 3}
+  m_PrefabInstance: {fileID: 1671281869410326247}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6932017674382772014 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8575679808473682377, guid: 96ec909675a0f7745afa9e98a05cdb6f, type: 3}
