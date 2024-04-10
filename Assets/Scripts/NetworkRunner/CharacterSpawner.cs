@@ -30,7 +30,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         if (runner.IsServer)
         {
-            NetworkPlayer newPlayer = runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
+            runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
         }
     }
 
