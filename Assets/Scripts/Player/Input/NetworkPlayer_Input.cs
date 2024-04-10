@@ -21,6 +21,8 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
 
         Runner.AddCallbacks(this);
 
+        if (!Object.HasInputAuthority) return;
+
         CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
         virtualCam.Follow = this.transform;
         virtualCam.LookAt = this.transform;
