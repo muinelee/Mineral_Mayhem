@@ -58,7 +58,6 @@ public class CharacterEntity : CharacterComponent
     public Collider Collider { get; private set; }
     public NetworkPlayer_AnimationLink Animator { get; private set; }
     public NetworkPlayer_Input Input { get; private set; }
-    public NetworkPlayer_InputController InputController { get; private set; }
     public NetworkPlayer_Movement Movement { get; private set; }
     public NetworkPlayer_Attack Attack { get; private set; }
     public StatusHandler StatusHandler { get; private set; }
@@ -74,10 +73,6 @@ public class CharacterEntity : CharacterComponent
     public void SetInput(NetworkPlayer_Input characterComp)
     {
         Input = characterComp;
-    }
-    public void SetInputController(NetworkPlayer_InputController characterComp)
-    {
-        InputController = characterComp;
     }
     public void SetMovement(NetworkPlayer_Movement characterComp)
     {

@@ -10,8 +10,6 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     [Header("Placeholder player prefab")]
     public NetworkPlayer playerPrefab;
-    public CharacterEntity character;
-    public NetworkRunner networkRunner;
 
     [Header("Session Lobby Manager")]
     [SerializeField] private SessionLobbyManager sessionLobbyManager;
@@ -19,18 +17,11 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     // Dictionary for holding player UserIDs
     private Dictionary<int, NetworkPlayer> mapTokenIDWithNetworkPlayer = new Dictionary<int, NetworkPlayer>();
 
-    [Header("Components for UI")]
-    private NetworkPlayer_InputController playerInputController;
-
     private string[] roomAddress = new string[] { "RaeLeda/RaeLedaTrainingRoom", "RichardCPhoton" };
 
     public void AddPlayerToMap(int token, NetworkPlayer player)
     {
         mapTokenIDWithNetworkPlayer.Add(token, player);
-    }
-    public void SetInputController(NetworkPlayer_InputController controller)
-    {
-        playerInputController = controller;
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)                          // Spawns player in scene
@@ -40,18 +31,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (runner.IsServer)
         {
             NetworkPlayer newPlayer = runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
-
-            if (character) runner.Spawn(character, transform.position, Quaternion.identity, player);
         }
-    }
-
-    public void OnInput(NetworkRunner runner, NetworkInput input)
-    {
-        if (playerInputController == null) return; 
-        
-        // playerInputController is set from NetworkPlayer_InputController when character is spawned
-        // Will be defunct with new Input system
-        input.Set(playerInputController.GetNetworkInput());
     }
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
@@ -117,6 +97,9 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     }    
 
     #region More Runner Callbacks
+    public void OnInput(NetworkRunner runner, NetworkInput input)
+    {
+    }
     public void OnConnectedToServer(NetworkRunner runner)
     {
     }

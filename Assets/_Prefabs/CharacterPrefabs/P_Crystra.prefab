@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 569291861852959994}
   - component: {fileID: 3114791478887022334}
   - component: {fileID: 5589622251466101637}
-  - component: {fileID: 8986336812292418098}
   - component: {fileID: 2430217939546453825}
   - component: {fileID: 7827230098480810277}
   - component: {fileID: -1653265293756383233}
@@ -71,7 +70,6 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 5589622251466101637}
-  - {fileID: 8986336812292418098}
   - {fileID: 2430217939546453825}
   - {fileID: 7827230098480810277}
   - {fileID: -1653265293756383233}
@@ -161,22 +159,6 @@ MonoBehaviour:
     RotTeleportRadians: 1.5
   UseLegacySharedModeInterpolation: 0
   TargetInterpolationDelay: 0.03
---- !u!114 &8986336812292418098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593386485324816745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4079ce53e463f064a9a8f626212d758c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  characterHasBeenSelected: 0
-  cam: {fileID: 0}
-  _NetworkUser: {fileID: 0}
 --- !u!114 &2430217939546453825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,6 +344,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _NetworkUser: {fileID: 0}
+  characterHasBeenSelected: 0
 --- !u!1001 &1671281869410326247
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -41,7 +41,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public static event Action<NetworkPlayer> OnPlayerLeave;
     public static NetworkPlayer Local { get; private set; }
 
-    [Networked] public NetworkPlayer_InputController Avatar { get; set; }
+    [Networked] public NetworkPlayer_Input Avatar { get; set; }
     [Networked] public EnumGameState GameState { get; set; }
     [Networked] public int CharacterID { get; set; }
 

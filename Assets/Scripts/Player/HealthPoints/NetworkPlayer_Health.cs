@@ -132,28 +132,28 @@ public class NetworkPlayer_Health : CharacterComponent
 
     public void DisableControls()
     {
-        if (GetComponent<NetworkPlayer_InputController>()) GetComponent<NetworkPlayer_InputController>().enabled = false;
+        Character.Input.enabled = false;
         // Disable movement
-        if (GetComponent<NetworkPlayer_Movement>()) GetComponent<NetworkPlayer_Movement>().enabled = false;
+        Character.Movement.enabled = false;
         // Disable attack
-        if (GetComponent<NetworkPlayer_Attack>()) GetComponent<NetworkPlayer_Attack>().enabled = false;
+        Character.Attack.enabled = false;
         // Disable sphere collider
-        if (GetComponent<SphereCollider>()) GetComponent<SphereCollider>().enabled = false;
+        Character.Collider.enabled = false;
         // Disable gravity
-        if (rb.Rigidbody) rb.Rigidbody.useGravity = false;
+        Character.Rigidbody.Rigidbody.useGravity = false;
     }
 
     public void EnableControls()
     {
-        GetComponent<NetworkPlayer_InputController>().enabled = true;
+        Character.Input.enabled = true;
         // Disable movement
-        GetComponent<NetworkPlayer_Movement>().enabled = true;
+        Character.Movement.enabled = true;
         // Disable attack
-        GetComponent<NetworkPlayer_Attack>().enabled = true;
+        Character.Attack.enabled = true;
         // Disable sphere collider
-        GetComponent<SphereCollider>().enabled = true;
+        Character.Collider.enabled = true;
         // Disable gravity
-        rb.Rigidbody.useGravity = true;
+        Character.Rigidbody.Rigidbody.useGravity = true;
     }
 
     public void OnDestroy()

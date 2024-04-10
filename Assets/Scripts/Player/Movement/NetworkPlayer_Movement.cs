@@ -49,81 +49,39 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputStuff input)) Inputs = input;
+        if (GetInput(out NetworkInputStuff input) && Character.Input.characterHasBeenSelected) Inputs = input;
         if (canMove && !isDashing)
         {
             // Set direction player is looking at
-            //targetDirection = (networkInputData.cursorLocation - transform.position);
             targetDirection = (new Vector3(Inputs.cursorLocation.x, 0, Inputs.cursorLocation.y) - transform.position);
-            targetDirection.y = 0;
             targetDirection.Normalize();
+
             // Rotate
             Aim();
 
             float horizontalDir = (Inputs.IsDown(NetworkInputStuff.ButtonD) ? 1 : 0) - (Inputs.IsDown(NetworkInputStuff.ButtonA) ? 1 : 0);
             float verticalDir = (Inputs.IsDown(NetworkInputStuff.ButtonW) ? 1 : 0) - (Inputs.IsDown(NetworkInputStuff.ButtonS) ? 1 : 0);
             Vector3 moveDir = new Vector3(horizontalDir, 0, verticalDir).normalized;
-            Debug.Log($"Move Direction: {moveDir}");
 
             // Move
-            //networkRigidBody.Rigidbody.AddForce(networkInputData.moveDirection * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
             networkRigidBody.Rigidbody.AddForce(moveDir * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
 
             // Dash (Can be a boost or buff)
-            //if (networkInputData.isDashing) MobilityAbility(networkInputData.moveDirection);
             if (Inputs.IsDown(NetworkInputStuff.ButtonDash)) MobilityAbility(moveDir);
 
             // Play movement animation
-            //PlayMovementAnimation(networkInputData.moveDirection);
             PlayMovementAnimation(moveDir);
         }
 
         // Manage Timers and ability effects
         ManageTimers();
-        /*if (GetInput(out NetworkInputData networkInputData))
-        {
-            if (canMove && !isDashing)
-            {
-                // Set direction player is looking at
-                //targetDirection = (networkInputData.cursorLocation - transform.position);
-                targetDirection = (new Vector3(Inputs.cursorLocation.x, 0, Inputs.cursorLocation.y) - transform.position);
-                targetDirection.y = 0;
-                targetDirection.Normalize();
-                // Rotate
-                Aim();
-
-                float horizontalDir = (Inputs.IsDown(NetworkInputStuff.ButtonD) ? 1 : 0) - (Inputs.IsDown(NetworkInputStuff.ButtonA) ? 1 : 0);
-                float verticalDir = (Inputs.IsDown(NetworkInputStuff.ButtonW) ? 1 : 0) - (Inputs.IsDown(NetworkInputStuff.ButtonS) ? 1 : 0);
-                Vector3 moveDir = new Vector3(horizontalDir, 0, verticalDir).normalized;
-                Debug.Log($"Move Direction: {moveDir}");
-
-                // Move
-                //networkRigidBody.Rigidbody.AddForce(networkInputData.moveDirection * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
-                networkRigidBody.Rigidbody.AddForce(moveDir * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
-
-                // Dash (Can be a boost or buff)
-                //if (networkInputData.isDashing) MobilityAbility(networkInputData.moveDirection);
-                if (Inputs.IsDown(NetworkInputStuff.ButtonDash)) MobilityAbility(moveDir);
-
-                // Play movement animation
-                //PlayMovementAnimation(networkInputData.moveDirection);
-                PlayMovementAnimation(moveDir);
-            }
-
-            // Manage Timers and ability effects
-            ManageTimers();
-        }*/
     }
 
     private void Aim()
     {
         // Rotate player over time to the target angle
-        /*float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
-        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime + turnSlow);
-        Quaternion rotation = Quaternion.Euler(0, angle, 0);*/
-
-        Quaternion rotation2 = Quaternion.LookRotation(targetDirection, Vector3.up);
-        transform.rotation = rotation2;
+        Quaternion rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
+        transform.rotation = rotation;
     }
 
     private void MobilityAbility(Vector3 moveDirection)
