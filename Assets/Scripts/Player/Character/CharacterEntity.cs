@@ -13,6 +13,7 @@ public class CharacterEntity : CharacterComponent
     public event Action<float> OnHealEvent;
     public event Action<StatusEffect> OnStatusBeginEvent;
     public event Action<StatusEffect> OnStatusEndedEvent;
+    public event Action OnCleanseEvent;
     public event Action OnPickupEvent;
     public event Action OnCharacterDeathEvent;
     public event Action OnRoundEndEvent;
@@ -34,7 +35,10 @@ public class CharacterEntity : CharacterComponent
     {
         OnStatusEndedEvent?.Invoke(status);
     }
-
+    public override void OnCleanse()
+    {
+        OnCleanseEvent?.Invoke();
+    }
     public override void OnCharacterDeath()
     {
         OnCharacterDeathEvent?.Invoke();
