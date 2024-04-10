@@ -54,12 +54,27 @@ public class UnshackleBuff : NetworkAttack_Base
         for (int i = 0; i < hits.Count; i++)
         {
             Debug.Log($"Did we hit a hitbox? {hits[i].Hitbox}");
+
+            CharacterEntity character = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
+            
+            if (character)
+            {
+                character.OnCleanse();
+
+                if (statusEffectSO.Count > 0 && character)
+                {
+                    foreach (StatusEffect status in statusEffectSO)
+                    {
+                        character.OnStatusBegin(status);
+                    }
+                }
+            }
+
             NetworkPlayer_Health healthHandler = hits[i].GameObject.GetComponentInParent<NetworkPlayer_Health>();
 
             if (healthHandler)
             {
                 healthHandler.dmgReduction = 0.7f;
-                ClearDebuffs();
                 Debug.Log("Applyingbuff");
 
                 yield return new WaitForSeconds(5);
@@ -67,11 +82,5 @@ public class UnshackleBuff : NetworkAttack_Base
                 Debug.Log("BuffEnded");
             }
         }
-
-    }
-
-    private void ClearDebuffs()
-    {
-        //Clears the player of debuffs once that is added to the game
     }
 }

@@ -29,4 +29,13 @@ public class StunStatus : StatusEffect
         handler.stun++;
         Debug.Log(handler.stun);
     }
+
+    public override void OnStatusCleansed(StatusHandler handler)
+    {
+        handler.stun = 0;
+
+        handler.Character.Movement.canMove = true;
+        handler.Character.Attack.canAttack = true;
+        handler.Character.Animator.ResetAnimation();
+    }
 }

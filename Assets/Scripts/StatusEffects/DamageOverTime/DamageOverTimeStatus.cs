@@ -26,4 +26,9 @@ public class DamageOverTimeStatus : StatusEffect
             handler.GetComponentInParent<NetworkPlayer_Health>().OnTakeDamage((int)damage);
         }
     }
+
+    public override void OnStatusCleansed(StatusHandler handler)
+    {
+        
+    }
 }

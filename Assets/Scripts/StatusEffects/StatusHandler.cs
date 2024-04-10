@@ -8,6 +8,7 @@ public class StatusHandler : CharacterComponent
     List<StatusData> statuses = new List<StatusData>();
 
     public Stat health;
+    public Stat armor;
     public Stat speed;
     public int stun = 0;
 
@@ -83,6 +84,30 @@ public class StatusHandler : CharacterComponent
     {
         //data.status.OnStatusEnded(this);
         statuses.Remove(data);
+    }
+
+    public override void OnCleanse()
+    {
+        CleanseDebuff();
+    }
+
+    public void CleanseDebuff()
+    {
+        foreach (StatusData status in statuses)
+        {
+            if (status.status.isCleanseable)
+            {
+                RemoveStatus(status);
+
+                status.status.OnStatusCleansed(this);
+            }
+        }
+    }
+    
+    public float GetArmorValue()
+    {
+        // As an example: Add 25 to armor value to reduce damage taken by 25%
+        return Mathf.Clamp((armor.GetValue()/100), 0, 200);
     }
 
     private void SpeedStatChangedCallback()

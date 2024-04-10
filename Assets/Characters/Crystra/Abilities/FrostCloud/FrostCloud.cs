@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Test_FrostCloud : MonoBehaviour
+public class FrostCloud : NetworkAttack_Base
 {
     [Header("Movement Properties")]
     [SerializeField] private float speed;
@@ -13,12 +13,14 @@ public class Test_FrostCloud : MonoBehaviour
     private float lifeTimer = 0;
     private float distanceTravelled = 0;
 
-    private void Start()
+    public override void Spawned()
     {
+        if (!Object.HasStateAuthority) return;
+
         transform.position += transform.up * offset.y + transform.forward * offset.z;
     }
 
-    void FixedUpdate()
+    public override void FixedUpdateNetwork()
     {
         float moveDistance = speed * Time.deltaTime;
 
