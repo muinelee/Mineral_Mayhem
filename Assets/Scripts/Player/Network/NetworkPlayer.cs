@@ -8,22 +8,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Essential Components for player character base
-//[RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
-//[RequireComponent(typeof(NetworkObject))]
-/*[RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
-[RequireComponent(typeof(NetworkPlayer_InputController), typeof(NetworkPlayer_Movement))]
-[RequireComponent(typeof(NetworkPlayer_Attack), typeof(NetworkPlayer_Energy), typeof(NetworkPlayer_Health))]
-[RequireComponent(typeof(NetworkMecanimAnimator), typeof(HitboxRoot))]*/
-
-/* 
-    Notes when creating new character:
-    
-    Add player model as a child object
-    Add a Floating Health Bar prefab as a child object
-    Add hitbox component to model
-*/
-
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
     public enum EnumGameState

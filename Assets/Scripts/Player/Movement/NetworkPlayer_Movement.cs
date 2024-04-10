@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class NetworkPlayer_Movement : CharacterComponent
 {
-    [Networked] private NetworkInputStuff Inputs { get; set; }
+    [Networked] private NetworkInputData Inputs { get; set; }
 
     [Header("Movement properties")]
     [SerializeField] private float turnTime;
@@ -49,7 +49,7 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputStuff input) && Character.Input.characterHasBeenSelected) Inputs = input;
+        if (GetInput(out NetworkInputData input) && Character.Input.characterHasBeenSelected) Inputs = input;
         if (canMove && !isDashing)
         {
             // Set direction player is looking at
@@ -59,15 +59,15 @@ public class NetworkPlayer_Movement : CharacterComponent
             // Rotate
             Aim();
 
-            float horizontalDir = (Inputs.IsDown(NetworkInputStuff.ButtonD) ? 1 : 0) - (Inputs.IsDown(NetworkInputStuff.ButtonA) ? 1 : 0);
-            float verticalDir = (Inputs.IsDown(NetworkInputStuff.ButtonW) ? 1 : 0) - (Inputs.IsDown(NetworkInputStuff.ButtonS) ? 1 : 0);
+            float horizontalDir = (Inputs.IsDown(NetworkInputData.ButtonD) ? 1 : 0) - (Inputs.IsDown(NetworkInputData.ButtonA) ? 1 : 0);
+            float verticalDir = (Inputs.IsDown(NetworkInputData.ButtonW) ? 1 : 0) - (Inputs.IsDown(NetworkInputData.ButtonS) ? 1 : 0);
             Vector3 moveDir = new Vector3(horizontalDir, 0, verticalDir).normalized;
 
             // Move
             networkRigidBody.Rigidbody.AddForce(moveDir * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
 
             // Dash (Can be a boost or buff)
-            if (Inputs.IsDown(NetworkInputStuff.ButtonDash)) MobilityAbility(moveDir);
+            if (Inputs.IsDown(NetworkInputData.ButtonDash)) MobilityAbility(moveDir);
 
             // Play movement animation
             PlayMovementAnimation(moveDir);

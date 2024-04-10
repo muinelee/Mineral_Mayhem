@@ -5,21 +5,6 @@ using Fusion;
 
 public struct NetworkInputData : INetworkInput
 {
-    public Vector3 moveDirection;
-    public Vector3 cursorLocation;
-    public float lookDirection;
-    public NetworkBool isDashing;
-    public NetworkBool isQAttack;
-    public NetworkBool isEAttack;
-    public NetworkBool isFAttack;
-    public NetworkBool isBasicAttack;
-
-    public NetworkBool canAttack;
-    public NetworkBool canMove;
-}
-
-public struct NetworkInputStuff : INetworkInput
-{
     public const uint ButtonDash = 1 << 0;
     public const uint ButtonQ = 1 << 1;
     public const uint ButtonE = 1 << 2;
