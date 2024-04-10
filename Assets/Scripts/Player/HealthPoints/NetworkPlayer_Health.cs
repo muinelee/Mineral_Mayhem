@@ -126,24 +126,34 @@ public class NetworkPlayer_Health : CharacterComponent
 
     public void DisableControls()
     {
-        if (GetComponent<NetworkPlayer_InputController>()) GetComponent<NetworkPlayer_InputController>().enabled = false;
+        CharacterEntity character = GetComponent<CharacterEntity>();
+
+        if (!character) return;
+
+        // Disable Input
+        character.Controller.enabled = false;
         // Disable movement
-        if (GetComponent<NetworkPlayer_Movement>()) GetComponent<NetworkPlayer_Movement>().enabled = false;
+        character.Movement.enabled = false;
         // Disable attack
-        if (GetComponent<NetworkPlayer_Attack>()) GetComponent<NetworkPlayer_Attack>().enabled = false;
+        character.Attack.enabled = false;
         // Disable sphere collider
-        if (GetComponent<SphereCollider>()) GetComponent<SphereCollider>().enabled = false;
+        GetComponent<SphereCollider>().enabled = false;
         // Disable gravity
-        if (rb.Rigidbody) rb.Rigidbody.useGravity = false;
+        rb.Rigidbody.useGravity = false;
     }
 
     public void EnableControls()
     {
-        GetComponent<NetworkPlayer_InputController>().enabled = true;
+        CharacterEntity character = GetComponent<CharacterEntity>();
+
+        if (!character) return;
+
+        character.Controller.enabled = true;
         // Disable movement
-        GetComponent<NetworkPlayer_Movement>().enabled = true;
+        character.Movement.enabled = true;
         // Disable attack
-        GetComponent<NetworkPlayer_Attack>().enabled = true;
+        character.Attack.enabled = true;
+        character.Attack.ResetAttackCapabilities();
         // Disable sphere collider
         GetComponent<SphereCollider>().enabled = true;
         // Disable gravity
