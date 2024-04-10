@@ -22,6 +22,11 @@ public class NetworkPlayer_Health : CharacterComponent
     [SerializeField] public float dmgReduction = 1.0f;
 
     public NetworkPlayer.Team team;
+    public override void Init(CharacterEntity character)
+    {
+        base.Init(character);
+        character.SetHealth(this);
+    }
 
     // Start is called before the first frame update
     public override void Spawned()

@@ -22,12 +22,15 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [Header("Components for UI")]
     private NetworkPlayer_InputController playerInputController;
 
-
     private string[] roomAddress = new string[] { "RaeLeda/RaeLedaTrainingRoom", "RichardCPhoton" };
 
     public void AddPlayerToMap(int token, NetworkPlayer player)
     {
         mapTokenIDWithNetworkPlayer.Add(token, player);
+    }
+    public void SetInputController(NetworkPlayer_InputController controller)
+    {
+        playerInputController = controller;
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)                          // Spawns player in scene
@@ -42,38 +45,16 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    public void SpawnCharacter()
-    {
-    }
-
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
         if (playerInputController == null) return; 
         
         // playerInputController is set from NetworkPlayer_InputController when character is spawned
+        // Will be defunct with new Input system
         input.Set(playerInputController.GetNetworkInput());
     }
 
-    public void OnConnectedToServer(NetworkRunner runner)
-    {
-    }
-
-    public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
-    {
-        
-    }
-
-    public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
-    {
-        
-    }
-
-    public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
-    {
-        
-    }
-
-    void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner)
+    public void OnDisconnectedFromServer(NetworkRunner runner)
     {
         Debug.Log("I got disconnected from server");
 
@@ -89,29 +70,9 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         SceneManager.LoadScene("RichardCPlayerLobby");
     }
 
-    public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
-    {
-        
-    }
-
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         Debug.Log("Player Left");
-    }
-
-    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
-    {
-        
-    }
-
-    public void OnSceneLoadDone(NetworkRunner runner)
-    {
-
-    }
-
-    public void OnSceneLoadStart(NetworkRunner runner)
-    {
-        
     }
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
@@ -137,15 +98,6 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
-    {
-    }
-
-    public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
-    {
-
-    }
-
     public void OnHostMigrationCleanup()
     {
         Debug.Log("Spawner OnHostMigrationCleanup started");
@@ -162,10 +114,38 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         }
 
         Debug.Log("Spawner OnHostMigrationCleanup completed");
-    }
+    }    
 
-    public void SetInputController(NetworkPlayer_InputController controller)
+    #region More Runner Callbacks
+    public void OnConnectedToServer(NetworkRunner runner)
     {
-        playerInputController = controller;
     }
+    public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
+    {
+    }
+    public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
+    {  
+    }
+    public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
+    {
+    }
+    public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
+    {
+    }
+    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
+    {  
+    }
+    public void OnSceneLoadDone(NetworkRunner runner)
+    {
+    }
+    public void OnSceneLoadStart(NetworkRunner runner)
+    {  
+    }
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+    {
+    }
+    public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
+    {
+    }
+    #endregion
 }

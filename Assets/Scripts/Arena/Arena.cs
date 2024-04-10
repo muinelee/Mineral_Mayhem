@@ -53,9 +53,9 @@ public class Arena : NetworkBehaviour
             point.rotation,
             player.Object.InputAuthority);
 
-        entity.Controller.NetworkUser = player;
+        entity.InputController.NetworkUser = player;
         player.GameState = NetworkPlayer.EnumGameState.CharacterSelection;
-        player.Avatar = entity.Controller;
+        player.Avatar = entity.InputController;
 
         Debug.Log($"Spawning character for {player.playerName} as {entity.name}");
         entity.transform.name = $"Character ({player.playerName})";

@@ -22,6 +22,11 @@ public class NetworkPlayer_InputController : CharacterComponent
     [SerializeField] private Camera cam;
 
     [Networked] public NetworkPlayer NetworkUser { get; set; }
+    public override void Init(CharacterEntity character)
+    {
+        base.Init(character);
+        character.SetInputController(this);
+    }
 
     public override void Spawned()
     {

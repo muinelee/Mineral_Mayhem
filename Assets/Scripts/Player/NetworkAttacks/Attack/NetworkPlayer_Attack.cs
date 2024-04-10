@@ -28,6 +28,11 @@ public class NetworkPlayer_Attack : CharacterComponent
     private Animator anim;
     private NetworkPlayer_Energy playerEnergy;
     private NetworkPlayer_Movement playerMovement;
+    public override void Init(CharacterEntity character)
+    {
+        base.Init(character);
+        character.SetAttack(this);
+    }
 
     public override void Spawned()
     {

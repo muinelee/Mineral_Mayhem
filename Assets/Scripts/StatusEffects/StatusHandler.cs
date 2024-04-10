@@ -11,6 +11,12 @@ public class StatusHandler : CharacterComponent
     public Stat speed;
     public int stun = 0;
 
+    public override void Init(CharacterEntity character)
+    {
+        base.Init(character);
+        character.SetStatusHandler(this);
+    }
+
     private void Start()
     {
         speed.OnStatChanged += SpeedStatChangedCallback;

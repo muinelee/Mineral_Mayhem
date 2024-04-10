@@ -30,6 +30,12 @@ public class NetworkPlayer_Movement : CharacterComponent
     [SerializeField] private Animator anim;
     [SerializeField] private NetworkRigidbody networkRigidBody;
 
+    public override void Init(CharacterEntity character)
+    {
+        base.Init(character);
+        character.SetMovement(this);
+    }
+
     public override void Spawned()
     {
         if (!anim) anim = GetComponentInChildren<Animator>();
