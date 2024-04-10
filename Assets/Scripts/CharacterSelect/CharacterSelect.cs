@@ -162,12 +162,14 @@ public class CharacterSelect : NetworkBehaviour
         if (characterLookup[player] == null)
         {
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnLocation].position, Quaternion.identity, player.Object.InputAuthority);
+            player.Avatar = characterLookup[player].Controller;
         }
 
         else
         {
             Runner.Despawn(characterLookup[player].Object);
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnLocation].position, Quaternion.identity, player.Object.InputAuthority);
+            player.Avatar = characterLookup[player].Controller;
         }
 
         characterLookup[player].GetComponent<NetworkPlayer_Health>().team = player.team;
