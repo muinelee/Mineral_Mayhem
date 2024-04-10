@@ -50,7 +50,37 @@ public class NetworkPlayer_Movement : CharacterComponent
     public override void FixedUpdateNetwork()
     {
         if (GetInput(out NetworkInputStuff input)) Inputs = input;
-        if (GetInput(out NetworkInputData networkInputData))
+        if (canMove && !isDashing)
+        {
+            // Set direction player is looking at
+            //targetDirection = (networkInputData.cursorLocation - transform.position);
+            targetDirection = (new Vector3(Inputs.cursorLocation.x, 0, Inputs.cursorLocation.y) - transform.position);
+            targetDirection.y = 0;
+            targetDirection.Normalize();
+            // Rotate
+            Aim();
+
+            float horizontalDir = (Inputs.IsDown(NetworkInputStuff.ButtonD) ? 1 : 0) - (Inputs.IsDown(NetworkInputStuff.ButtonA) ? 1 : 0);
+            float verticalDir = (Inputs.IsDown(NetworkInputStuff.ButtonW) ? 1 : 0) - (Inputs.IsDown(NetworkInputStuff.ButtonS) ? 1 : 0);
+            Vector3 moveDir = new Vector3(horizontalDir, 0, verticalDir).normalized;
+            Debug.Log($"Move Direction: {moveDir}");
+
+            // Move
+            //networkRigidBody.Rigidbody.AddForce(networkInputData.moveDirection * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
+            networkRigidBody.Rigidbody.AddForce(moveDir * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
+
+            // Dash (Can be a boost or buff)
+            //if (networkInputData.isDashing) MobilityAbility(networkInputData.moveDirection);
+            if (Inputs.IsDown(NetworkInputStuff.ButtonDash)) MobilityAbility(moveDir);
+
+            // Play movement animation
+            //PlayMovementAnimation(networkInputData.moveDirection);
+            PlayMovementAnimation(moveDir);
+        }
+
+        // Manage Timers and ability effects
+        ManageTimers();
+        /*if (GetInput(out NetworkInputData networkInputData))
         {
             if (canMove && !isDashing)
             {
@@ -65,6 +95,7 @@ public class NetworkPlayer_Movement : CharacterComponent
                 float horizontalDir = (Inputs.IsDown(NetworkInputStuff.ButtonD) ? 1 : 0) - (Inputs.IsDown(NetworkInputStuff.ButtonA) ? 1 : 0);
                 float verticalDir = (Inputs.IsDown(NetworkInputStuff.ButtonW) ? 1 : 0) - (Inputs.IsDown(NetworkInputStuff.ButtonS) ? 1 : 0);
                 Vector3 moveDir = new Vector3(horizontalDir, 0, verticalDir).normalized;
+                Debug.Log($"Move Direction: {moveDir}");
 
                 // Move
                 //networkRigidBody.Rigidbody.AddForce(networkInputData.moveDirection * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
@@ -72,7 +103,7 @@ public class NetworkPlayer_Movement : CharacterComponent
 
                 // Dash (Can be a boost or buff)
                 //if (networkInputData.isDashing) MobilityAbility(networkInputData.moveDirection);
-                if (networkInputData.isDashing) MobilityAbility(moveDir);
+                if (Inputs.IsDown(NetworkInputStuff.ButtonDash)) MobilityAbility(moveDir);
 
                 // Play movement animation
                 //PlayMovementAnimation(networkInputData.moveDirection);
@@ -81,7 +112,7 @@ public class NetworkPlayer_Movement : CharacterComponent
 
             // Manage Timers and ability effects
             ManageTimers();
-        }
+        }*/
     }
 
     private void Aim()
