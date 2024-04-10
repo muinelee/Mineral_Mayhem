@@ -36,15 +36,15 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
     {
         var userInput = new NetworkInputStuff();
 
-        if (Input.GetKeyDown(KeyCode.Space)) userInput.Buttons |= NetworkInputStuff.ButtonDash;
-        if (Input.GetKeyDown(KeyCode.Q)) userInput.Buttons |= NetworkInputStuff.ButtonQ;
-        if (Input.GetKeyDown(KeyCode.E)) userInput.Buttons |= NetworkInputStuff.ButtonE;
-        if (Input.GetKeyDown(KeyCode.F)) userInput.Buttons |= NetworkInputStuff.ButtonF;
-        if (Input.GetKeyDown(KeyCode.Mouse0)) userInput.Buttons |= NetworkInputStuff.ButtonBasic;
-        if (Input.GetKeyDown(KeyCode.W)) userInput.Buttons |= NetworkInputStuff.ButtonW;
-        if (Input.GetKeyDown(KeyCode.A)) userInput.Buttons |= NetworkInputStuff.ButtonA;
-        if (Input.GetKeyDown(KeyCode.S)) userInput.Buttons |= NetworkInputStuff.ButtonS;
-        if (Input.GetKeyDown(KeyCode.D)) userInput.Buttons |= NetworkInputStuff.ButtonD;
+        if (Input.GetKey(KeyCode.Space)) userInput.Buttons |= NetworkInputStuff.ButtonDash;
+        if (Input.GetKey(KeyCode.Q)) userInput.Buttons |= NetworkInputStuff.ButtonQ;
+        if (Input.GetKey(KeyCode.E)) userInput.Buttons |= NetworkInputStuff.ButtonE;
+        if (Input.GetKey(KeyCode.F)) userInput.Buttons |= NetworkInputStuff.ButtonF;
+        if (Input.GetKey(KeyCode.Mouse0)) userInput.Buttons |= NetworkInputStuff.ButtonBasic;
+        if (Input.GetKey(KeyCode.W)) userInput.Buttons |= NetworkInputStuff.ButtonW;
+        if (Input.GetKey(KeyCode.A)) userInput.Buttons |= NetworkInputStuff.ButtonA;
+        if (Input.GetKey(KeyCode.S)) userInput.Buttons |= NetworkInputStuff.ButtonS;
+        if (Input.GetKey(KeyCode.D)) userInput.Buttons |= NetworkInputStuff.ButtonD;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit raycastHit))
             userInput.cursorLocation = new Vector2(raycastHit.point.x, raycastHit.point.z);
 
