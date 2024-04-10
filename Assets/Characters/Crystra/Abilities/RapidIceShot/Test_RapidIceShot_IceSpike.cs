@@ -4,13 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Test_RapidIceShot_IceSpike : NetworkBehaviour
+public class Test_RapidIceShot_IceSpike : NetworkAttack_Base
 {
     [Header("Movement Properties")]
     [SerializeField] private float speed;
     [SerializeField] private float lifetime;
     private float lifeTimer = 0;
     [SerializeField] private float offset;
+
+    // Components for getting objects in attack range
+    [SerializeField] private float radius;
+    List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
+    [SerializeField] private LayerMask collisionLayer;
 
     private void Start()
     {
@@ -31,5 +36,22 @@ public class Test_RapidIceShot_IceSpike : NetworkBehaviour
         // manage lifetime
         lifeTimer += Time.deltaTime;
         if (lifeTimer > lifetime) Destroy(gameObject);
+
+        DealDamage();
     }
-}
+    
+
+    protected override void DealDamage() {
+        Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
+
+
+        for (int i = 0; i < hits.Count; i++) {
+            Debug.Log($"Did we hit a hitbox? {hits[i].Hitbox}");
+            NetworkPlayer_Health healthHandler = hits[i].GameObject.GetComponentInParent<NetworkPlayer_Health>();
+
+            if (healthHandler) healthHandler.OnTakeDamage(damage);
+            Runner.Despawn(GetComponent<NetworkObject>());
+        }
+
+    }
+} 
