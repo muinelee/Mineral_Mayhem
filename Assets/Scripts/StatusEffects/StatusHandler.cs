@@ -18,16 +18,6 @@ public class StatusHandler : CharacterComponent
         character.SetStatusHandler(this);
     }
 
-    private void Start()
-    {
-        speed.OnStatChanged += SpeedStatChangedCallback;
-    }
-
-    private void OnDisable()
-    {
-        speed.OnStatChanged -= SpeedStatChangedCallback;
-    }
-
     private void Update()
     {
         List<StatusData> statusesToRemove = new List<StatusData>();
@@ -108,14 +98,5 @@ public class StatusHandler : CharacterComponent
     {
         // As an example: Add 25 to armor value to reduce damage taken by 25%
         return Mathf.Clamp((armor.GetValue()/100), 0, 200);
-    }
-
-    private void SpeedStatChangedCallback()
-    {
-        NetworkPlayer_Movement networkPlayer_Movement = GetComponent<NetworkPlayer_Movement>();
-        if (networkPlayer_Movement != null)
-        {
-            //networkPlayer_Movement.SetSpeed(speed.GetValue());
-        }
     }
 }

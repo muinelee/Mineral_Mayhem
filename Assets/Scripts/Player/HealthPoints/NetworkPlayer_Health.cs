@@ -59,8 +59,8 @@ public class NetworkPlayer_Health : CharacterComponent
         }
 
         //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
-        int currDamageAmount = (int) (damageAmount * dmgReduction);
-        //int currDamageAmount = (int) (damageAmount * GetArmorValue());
+        //int currDamageAmount = (int) (damageAmount * dmgReduction);
+        int currDamageAmount = (int) (damageAmount * Character.StatusHandler.GetArmorValue());
 
         HP -= (float) currDamageAmount;
 

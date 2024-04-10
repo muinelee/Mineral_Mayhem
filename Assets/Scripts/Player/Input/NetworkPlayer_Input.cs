@@ -2,12 +2,8 @@
 using Fusion;
 using Fusion.Sockets;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Entities;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
 {

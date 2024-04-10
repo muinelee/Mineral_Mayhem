@@ -114,7 +114,6 @@ public class CharacterEntity : CharacterComponent
         Rigidbody = GetComponent<NetworkRigidbody>();
         Collider = GetComponent<Collider>();
 
-        // *** If all components do this instead, allows for very reader friendly method of initialization
         var components = GetComponentsInChildren<CharacterComponent>();
         foreach (var component in components)
         {
