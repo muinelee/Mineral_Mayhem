@@ -14,7 +14,6 @@ public class NetworkPlayer_Health : CharacterComponent
 
     private bool isInitialized = false;
     private Animator anim;
-    private NetworkRigidbody rb;
 
     [SerializeField] private float startingHP = 100;
 
@@ -33,7 +32,6 @@ public class NetworkPlayer_Health : CharacterComponent
     {
         if (HP == startingHP) isDead = false;
         anim = GetComponentInChildren<Animator>();
-        rb = GetComponent<NetworkRigidbody>();
 
         RoundManager.Instance.ResetRound += Respawn;
         RoundManager.Instance.MatchEndEvent += DisableControls;
@@ -82,7 +80,7 @@ public class NetworkPlayer_Health : CharacterComponent
         source.y = transform.position.y;
         Vector3 direction = transform.position - source;
 
-        rb.Rigidbody.AddForce(direction * force);
+        Character.Rigidbody.Rigidbody.AddForce(direction * force);
     }
 
     private void HandleDeath()

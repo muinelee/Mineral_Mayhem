@@ -30,21 +30,17 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     // Components to be retrieved when Spawned
     [SerializeField] private Animator anim;
-    [SerializeField] private NetworkRigidbody networkRigidBody;
 
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
         character.SetMovement(this);
+        speed = Character.StatusHandler.speed;
     }
 
     public override void Spawned()
     {
         if (!anim) anim = GetComponentInChildren<Animator>();
-        if (!networkRigidBody) networkRigidBody = GetComponent<NetworkRigidbody>();
-        // Temporary solution for between refactoring
-        if (Character) speed = Character.StatusHandler.speed;
-        else speed = GetComponent<StatusHandler>().speed;
     }
 
     public override void FixedUpdateNetwork()
@@ -64,7 +60,7 @@ public class NetworkPlayer_Movement : CharacterComponent
             Vector3 moveDir = new Vector3(horizontalDir, 0, verticalDir).normalized;
 
             // Move
-            networkRigidBody.Rigidbody.AddForce(moveDir * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
+            Character.Rigidbody.Rigidbody.AddForce(moveDir * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
 
             // Dash (Can be a boost or buff)
             if (Inputs.IsDown(NetworkInputData.ButtonDash)) MobilityAbility(moveDir);
@@ -90,7 +86,7 @@ public class NetworkPlayer_Movement : CharacterComponent
 
         if (!dash.GetCanSteer())
         {
-            networkRigidBody.Rigidbody.velocity = moveDirection * dash.GetDashValue();
+            Character.Rigidbody.Rigidbody.velocity = moveDirection * dash.GetDashValue();
             isDashing = true;
         }
 
@@ -116,7 +112,7 @@ public class NetworkPlayer_Movement : CharacterComponent
         if (dashDurationTimer.Expired(Runner))
         {
             dashSpeed = 0;
-            if (!dash.GetCanSteer()) networkRigidBody.Rigidbody.velocity *= 0.2f;
+            if (!dash.GetCanSteer()) Character.Rigidbody.Rigidbody.velocity *= 0.2f;
             isDashing = false;
             dashDurationTimer = TickTimer.None;
         }
