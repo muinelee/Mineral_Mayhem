@@ -205,7 +205,7 @@ public class CharacterSelect : NetworkBehaviour
     {
         characterLookup[NetworkPlayer.Local].Controller.characterHasBeenSelected = true;
         characterLookup[NetworkPlayer.Local].PlayerUI.SpawnPlayerUI();
-        NetworkCameraEffectsManager.instance.GoToTopCamera();
+        //NetworkCameraEffectsManager.instance.GoToTopCamera();
         ResetButtonVisual(currentSelectedCharacterButton);
         characterSelectScreen.SetActive(false);
         reselectButton.gameObject.SetActive(true);

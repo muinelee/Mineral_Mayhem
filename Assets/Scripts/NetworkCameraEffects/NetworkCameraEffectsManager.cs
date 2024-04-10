@@ -57,6 +57,12 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
             // Go to Player Camera (Top-Down View)
             GoToVictoryCamera();
         }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            // Go to Player Camera (Top-Down View)
+            GoToRedCinematicCamera(); 
+        }
     }
 
     void Start()
@@ -130,20 +136,6 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
 
     public void StartCinematic(NetworkPlayer player)
     {
-        RPC_GoToCinematicCamera(player);
-    } 
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_CameraPriority(bool isRedTeam)
-    {
-        if (isRedTeam) GoToRedCamera();
-        else GoToBlueCamera();
-    }
-
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_GoToCinematicCamera(NetworkPlayer player)
-    {
         if (player.team == NetworkPlayer.Team.Red)
         {
             GoToRedCinematicCamera();
@@ -152,6 +144,13 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         {
             GoToBlueCinematicCamera();
         }
+    } 
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_CameraPriority(bool isRedTeam)
+    {
+        if (isRedTeam) GoToRedCamera();
+        else GoToBlueCamera();
     }
     #endregion
 
