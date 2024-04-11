@@ -43,7 +43,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputData input) && canAttack && Character.Input.characterHasBeenSelected)
+        if (GetInput(out NetworkInputData input) && canAttack)
         {
             if (input.IsDown(NetworkInputData.ButtonF) && playerEnergy.IsUltCharged()) ActivateUlt();
             else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning) ActivateAttack(qAttack, ref qAttackCoolDownTimer);

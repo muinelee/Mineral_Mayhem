@@ -8,7 +8,7 @@ using UnityEngine;
 public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
 {
     [Networked] public NetworkPlayer NetworkUser { get; set; }
-    public NetworkBool characterHasBeenSelected = false;
+    public bool characterHasBeenSelected = false;
 
     public override void Init(CharacterEntity character)
     {
@@ -37,8 +37,12 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
     }
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        if (Object.HasInputAuthority) Debug.Log("Setting Input");
         var userInput = new NetworkInputData();
+        if (!characterHasBeenSelected)
+        {
+            input.Set(userInput);
+            return;
+        }
 
         if (Input.GetKey(KeyCode.Space)) userInput.Buttons |= NetworkInputData.ButtonDash;
         if (Input.GetKey(KeyCode.Mouse0)) userInput.Buttons |= NetworkInputData.ButtonBasic;
