@@ -97,6 +97,11 @@ public class StatusHandler : CharacterComponent
     public float GetArmorValue()
     {
         // As an example: Add 25 to armor value to reduce damage taken by 25%
-        return Mathf.Clamp((armor.GetValue()/100), 0, 200);
+        return Mathf.Clamp(armor.GetValue(), 0, 200);
+    }
+
+    public float GetDamageReduction()
+    {
+        return Mathf.Clamp(((200 - GetArmorValue()) / 100), 0, 2);
     }
 }
