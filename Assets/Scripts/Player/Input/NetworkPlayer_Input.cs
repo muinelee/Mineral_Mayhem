@@ -35,14 +35,11 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
 
         Runner.RemoveCallbacks(this);
     }
-    public void OnInput(NetworkRunner runner, NetworkInput input)
+
+    public NetworkInputData GetInput()
     {
         var userInput = new NetworkInputData();
-        if (!characterHasBeenSelected)
-        {
-            input.Set(userInput);
-            return;
-        }
+        if (!characterHasBeenSelected) return userInput;
 
         if (Input.GetKey(KeyCode.Space)) userInput.Buttons |= NetworkInputData.ButtonDash;
         if (Input.GetKey(KeyCode.Mouse0)) userInput.Buttons |= NetworkInputData.ButtonBasic;
@@ -56,6 +53,12 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit raycastHit))
             userInput.cursorLocation = new Vector2(raycastHit.point.x, raycastHit.point.z);
 
+        return userInput;
+    }
+
+    public void OnInput(NetworkRunner runner, NetworkInput input)
+    {
+        NetworkInputData userInput = GetInput();
         input.Set(userInput);
     }
 
