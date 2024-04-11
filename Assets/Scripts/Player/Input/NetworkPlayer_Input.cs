@@ -8,7 +8,7 @@ using UnityEngine;
 public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
 {
     [Networked] public NetworkPlayer NetworkUser { get; set; }
-    [Networked] public bool CharacterSelected { get; set; }
+    [Networked] public NetworkBool CharacterSelected { get; set; }
 
     public override void Init(CharacterEntity character)
     {
