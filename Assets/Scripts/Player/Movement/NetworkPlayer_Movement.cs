@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class NetworkPlayer_Movement : CharacterComponent
 {
-    //[Networked] private NetworkInputData Inputs { get; set; }
-
     [Header("Movement properties")]
     [SerializeField] private float turnTime;
     public bool canMove = true;
@@ -43,7 +41,6 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     public override void FixedUpdateNetwork()
     {
-        //if (!Object.HasInputAuthority) return;
         if (GetInput(out NetworkInputData input))
         {
             if (canMove && !isDashing)
