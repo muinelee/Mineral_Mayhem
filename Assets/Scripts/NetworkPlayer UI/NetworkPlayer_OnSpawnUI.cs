@@ -5,12 +5,18 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class NetworkPlayer_OnSpawnUI : NetworkBehaviour
+public class NetworkPlayer_OnSpawnUI : CharacterComponent
 {
 
     [Header("Player UI Elements")]
     [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
     public NetworkPlayer_InGameUI playerUI;
+
+    public override void Init(CharacterEntity character)
+    {
+        base.Init(character);
+        character.SetPlayerUI(this);
+    }
 
     public override void Spawned()
     {

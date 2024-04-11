@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 
-public class NetworkPlayer_Energy : NetworkBehaviour
+public class NetworkPlayer_Energy : CharacterComponent
 {
     /*
     Energy will be the resource for the FAttack in the NetworkPlayer_Attack script
@@ -13,6 +13,11 @@ public class NetworkPlayer_Energy : NetworkBehaviour
 
     [SerializeField] private float fullCharge;
     private float energy;
+    public override void Init(CharacterEntity character)
+    {
+        base.Init(character);
+        character.SetEnergy(this);
+    }
 
     public override void FixedUpdateNetwork()
     {

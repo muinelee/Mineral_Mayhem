@@ -12,14 +12,10 @@ public class StatusHandler : CharacterComponent
     public Stat speed;
     public int stun = 0;
 
-    private void Start()
+    public override void Init(CharacterEntity character)
     {
-        speed.OnStatChanged += SpeedStatChangedCallback;
-    }
-
-    private void OnDisable()
-    {
-        speed.OnStatChanged -= SpeedStatChangedCallback;
+        base.Init(character);
+        character.SetStatusHandler(this);
     }
 
     private void Update()
@@ -106,15 +102,11 @@ public class StatusHandler : CharacterComponent
     public float GetArmorValue()
     {
         // As an example: Add 25 to armor value to reduce damage taken by 25%
-        return Mathf.Clamp((armor.GetValue()/100), 0, 200);
+        return Mathf.Clamp(armor.GetValue(), 0, 200);
     }
 
-    private void SpeedStatChangedCallback()
+    public float GetDamageReduction()
     {
-        NetworkPlayer_Movement networkPlayer_Movement = GetComponent<NetworkPlayer_Movement>();
-        if (networkPlayer_Movement != null)
-        {
-            //networkPlayer_Movement.SetSpeed(speed.GetValue());
-        }
+        return Mathf.Clamp(((200 - GetArmorValue()) / 100), 0, 2);
     }
 }
