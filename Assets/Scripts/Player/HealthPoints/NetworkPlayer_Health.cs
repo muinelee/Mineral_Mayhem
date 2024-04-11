@@ -126,6 +126,7 @@ public class NetworkPlayer_Health : CharacterComponent
 
     public void DisableControls()
     {
+        // Disable Input
         Character.Input.enabled = false;
         // Disable movement
         Character.Movement.enabled = false;
@@ -139,14 +140,16 @@ public class NetworkPlayer_Health : CharacterComponent
 
     public void EnableControls()
     {
+        // Enable Input
         Character.Input.enabled = true;
-        // Disable movement
+        // Enable movement
         Character.Movement.enabled = true;
-        // Disable attack
+        // Enable attack
         Character.Attack.enabled = true;
-        // Disable sphere collider
+        Character.Attack.ResetAttackCapabilities();
+        // Enable sphere collider
         Character.Collider.enabled = true;
-        // Disable gravity
+        // Enable gravity
         Character.Rigidbody.Rigidbody.useGravity = true;
     }
 

@@ -80,7 +80,9 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
 
                 CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
 
-                if (characterEntity) characterEntity.OnHit(damage);
+                if (characterEntity.Health.isDead || CheckIfSameTeam(characterEntity)) return;
+
+                characterEntity.OnHit(damage);
 
                 if (statusEffectSO.Count > 0 && characterEntity)
                 {

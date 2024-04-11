@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1811508530976954334}
   - component: {fileID: 1878492904260351275}
-  - component: {fileID: 8685243831107096983}
   - component: {fileID: -2166753976555216322}
+  - component: {fileID: -7569207264193709750}
+  - component: {fileID: -5531875723242617307}
   m_Layer: 0
   m_Name: Basic_attack_Projectile
   m_TagString: Untagged
@@ -57,10 +58,10 @@ MonoBehaviour:
     RawGuidValue: 0485f5ccd7610ea4eab5a2f8c985cad1
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 8685243831107096983}
   - {fileID: -2166753976555216322}
+  - {fileID: -5531875723242617307}
   SimulationBehaviours: []
---- !u!114 &8685243831107096983
+--- !u!114 &-2166753976555216322
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -69,7 +70,58 @@ MonoBehaviour:
   m_GameObject: {fileID: 2877724939557886532}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: 11500000, guid: e1a5b70275b8c6249b4019249932ac0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  damage: 10
+  knockback: 250
+  SFX: {fileID: 0}
+  statusEffectSO: []
+  speed: 40
+  offset: 0
+  lifeDuration: 3
+  radius: 0.3
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+--- !u!54 &-7569207264193709750
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2877724939557886532}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &-5531875723242617307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2877724939557886532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1710889294, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
@@ -88,28 +140,6 @@ MonoBehaviour:
     RotTeleportRadians: 1.5
   UseLegacySharedModeInterpolation: 0
   TargetInterpolationDelay: 0.03
---- !u!114 &-2166753976555216322
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2877724939557886532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1a5b70275b8c6249b4019249932ac0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  speed: 0.5
-  offset: 0
-  lifeDuration: 3
-  damage: 10
-  knockBack: 200
-  radius: 0.3
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
 --- !u!1001 &6741019234880040298
 PrefabInstance:
   m_ObjectHideFlags: 0
