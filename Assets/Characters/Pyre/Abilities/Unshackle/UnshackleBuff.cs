@@ -29,7 +29,7 @@ public class UnshackleBuff : NetworkAttack_Base
         transform.position += transform.forward * offset;
 
         //Do I need the void? IEnumerator instead maybe, check how to get hit player
-        StartCoroutine(ApplyBuff());
+        ApplyBuff();
 
         Debug.Log("Unshackle activated");
     }
@@ -45,7 +45,7 @@ public class UnshackleBuff : NetworkAttack_Base
         }
     }
 
-    IEnumerator ApplyBuff()
+    private void ApplyBuff()
     {
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, collisionLayer);
 
@@ -69,18 +69,6 @@ public class UnshackleBuff : NetworkAttack_Base
                     }
                 }
             }
-
-            yield return new WaitForSeconds(5);
-            /*NetworkPlayer_Health healthHandler = hits[i].GameObject.GetComponentInParent<NetworkPlayer_Health>();
-
-            if (healthHandler)
-            {
-                healthHandler.dmgReduction = 0.7f;
-                Debug.Log("Applyingbuff");
-
-                healthHandler.dmgReduction = 1.0f;
-                Debug.Log("BuffEnded");
-            }*/
         }
     }
 }

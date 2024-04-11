@@ -83,14 +83,19 @@ public class StatusHandler : CharacterComponent
 
     public void CleanseDebuff()
     {
+        List<StatusData> statusesToRemove = new List<StatusData>();
+
         foreach (StatusData status in statuses)
         {
             if (status.status.isCleanseable)
             {
-                RemoveStatus(status);
-
-                status.status.OnStatusCleansed(this);
+                statusesToRemove.Add(status);
             }
+        }
+        foreach (StatusData status in statusesToRemove)
+        {
+            status.status.OnStatusCleansed(this);
+            statuses.Remove(status);
         }
     }
     

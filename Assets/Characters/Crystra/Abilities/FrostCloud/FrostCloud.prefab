@@ -10,9 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3793083176373262126}
   - component: {fileID: 4671277010859855993}
-  - component: {fileID: -4186985271934524126}
-  - component: {fileID: 581805725318101433}
   - component: {fileID: 4287955592093380396}
+  - component: {fileID: 55144514498512506}
   m_Layer: 0
   m_Name: FrostCloud
   m_TagString: Untagged
@@ -58,37 +57,10 @@ MonoBehaviour:
     RawGuidValue: 251e78130bcac144ea4fb5448ac22353
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 581805725318101433}
   - {fileID: 4287955592093380396}
+  - {fileID: 55144514498512506}
   SimulationBehaviours: []
---- !u!54 &-4186985271934524126
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2490229635425242872}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 1
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &581805725318101433
+--- !u!114 &4287955592093380396
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,7 +69,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 2490229635425242872}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1710889294, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: 11500000, guid: 823c5060acdf6094bb981687f0c85622, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  damage: 1
+  SFX: {fileID: 0}
+  statusEffectSO:
+  - {fileID: 11400000, guid: 97d69ea5c08407e49afef73b4c011bcd, type: 2}
+  speed: 1
+  lifetime: 10
+  offset: {x: 0, y: 0, z: 0}
+  maxTravelDistance: 5
+--- !u!114 &55144514498512506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2490229635425242872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
@@ -116,27 +109,6 @@ MonoBehaviour:
     RotTeleportRadians: 1.5
   UseLegacySharedModeInterpolation: 0
   TargetInterpolationDelay: 0.03
---- !u!114 &4287955592093380396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2490229635425242872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 823c5060acdf6094bb981687f0c85622, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  damage: 5
-  SFX: {fileID: 0}
-  statusEffectSO:
-  - {fileID: 11400000, guid: 97d69ea5c08407e49afef73b4c011bcd, type: 2}
-  speed: 2
-  lifetime: 5
-  offset: {x: 0, y: -2, z: 1}
-  maxTravelDistance: 7
 --- !u!1 &4142559262748066218
 GameObject:
   m_ObjectHideFlags: 0
