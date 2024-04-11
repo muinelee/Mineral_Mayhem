@@ -9,7 +9,7 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
 {
     [Networked] public NetworkPlayer NetworkUser { get; set; }
     public NetworkInputData Inputs;
-    public bool CharacterSelected;
+    public bool CharacterSelected = false;
 
     public override void Init(CharacterEntity character)
     {
@@ -33,7 +33,6 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
     private void Update()
     {
         if (!CharacterSelected) return;
-        if (!Object.HasInputAuthority) return;
         Inputs = GetInput();
     }
 
