@@ -1,6 +1,5 @@
 using Fusion;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -59,10 +58,11 @@ public class CharacterEntity : CharacterComponent
     public StatusHandler StatusHandler { get; private set; }
     public NetworkPlayer_Health Health { get; private set; }
     public NetworkPlayer_OnSpawnUI PlayerUI { get; private set; }
-
+    public NetworkPlayer.Team Team { get; private set; }
     public bool hasDespawned = false;
+    public SpriteRenderer TeamIndicator;
 
-    private void Awake()
+    public override void Spawned()
     {
         Rigidbody = GetComponent<NetworkRigidbody>();
         Collider = GetComponent<Collider>();
@@ -73,6 +73,8 @@ public class CharacterEntity : CharacterComponent
         Attack = GetComponent<NetworkPlayer_Attack>();
         Health = GetComponent<NetworkPlayer_Health>();
         PlayerUI = GetComponent<NetworkPlayer_OnSpawnUI>();
+        TeamIndicator = GetComponentInChildren<SpriteRenderer>();
+        if (Object.HasInputAuthority) RPC_SetTeam(NetworkPlayer.Local.team);
 
         // *** If all components do this instead, allows for very reader friendly method of initialization
         var components = GetComponentsInChildren<CharacterComponent>();
@@ -100,5 +102,14 @@ public class CharacterEntity : CharacterComponent
         {
             OnCharacterDespawned?.Invoke(this);
         }
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_SetTeam(NetworkPlayer.Team team)
+    {
+        this.Team = team;
+
+        if (team == NetworkPlayer.Team.Red) this.TeamIndicator.color = Color.red;
+        else this.TeamIndicator.color = Color.blue;
     }
 }
