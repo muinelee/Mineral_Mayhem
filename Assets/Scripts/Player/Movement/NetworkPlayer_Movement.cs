@@ -35,12 +35,13 @@ public class NetworkPlayer_Movement : CharacterComponent
     {
         base.Init(character);
         character.SetMovement(this);
-        speed = Character.StatusHandler.speed;
     }
 
     public override void Spawned()
     {
         if (!anim) anim = GetComponentInChildren<Animator>();
+        speed = Character.StatusHandler.speed;
+        
     }
 
     public override void FixedUpdateNetwork()
