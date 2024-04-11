@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 3793083176373262126}
   - component: {fileID: 4671277010859855993}
-  - component: {fileID: 5653254366109482503}
   - component: {fileID: -4186985271934524126}
   - component: {fileID: 581805725318101433}
+  - component: {fileID: 4287955592093380396}
   m_Layer: 0
-  m_Name: Crystra_FrostCloud
+  m_Name: FrostCloud
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59,23 +59,8 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 581805725318101433}
+  - {fileID: 4287955592093380396}
   SimulationBehaviours: []
---- !u!114 &5653254366109482503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2490229635425242872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed994d45315421a45a9cd8fddc905829, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 2
-  lifetime: 5
-  offset: {x: 0, y: -1, z: 2}
-  maxTravelDistance: 4
 --- !u!54 &-4186985271934524126
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -131,6 +116,27 @@ MonoBehaviour:
     RotTeleportRadians: 1.5
   UseLegacySharedModeInterpolation: 0
   TargetInterpolationDelay: 0.03
+--- !u!114 &4287955592093380396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2490229635425242872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 823c5060acdf6094bb981687f0c85622, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  damage: 5
+  SFX: {fileID: 0}
+  statusEffectSO:
+  - {fileID: 11400000, guid: 97d69ea5c08407e49afef73b4c011bcd, type: 2}
+  speed: 2
+  lifetime: 5
+  offset: {x: 0, y: -2, z: 1}
+  maxTravelDistance: 7
 --- !u!1 &4142559262748066218
 GameObject:
   m_ObjectHideFlags: 0

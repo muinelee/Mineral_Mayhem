@@ -8,17 +8,14 @@ public class StatusHandler : CharacterComponent
     List<StatusData> statuses = new List<StatusData>();
 
     public Stat health;
+    public Stat armor;
     public Stat speed;
     public int stun = 0;
 
-    private void Start()
+    public override void Init(CharacterEntity character)
     {
-        speed.OnStatChanged += SpeedStatChangedCallback;
-    }
-
-    private void OnDisable()
-    {
-        speed.OnStatChanged -= SpeedStatChangedCallback;
+        base.Init(character);
+        character.SetStatusHandler(this);
     }
 
     private void Update()
@@ -79,12 +76,32 @@ public class StatusHandler : CharacterComponent
         statuses.Remove(data);
     }
 
-    private void SpeedStatChangedCallback()
+    public override void OnCleanse()
     {
-        NetworkPlayer_Movement networkPlayer_Movement = GetComponent<NetworkPlayer_Movement>();
-        if (networkPlayer_Movement != null)
+        CleanseDebuff();
+    }
+
+    public void CleanseDebuff()
+    {
+        foreach (StatusData status in statuses)
         {
-            //networkPlayer_Movement.SetSpeed(speed.GetValue());
+            if (status.status.isCleanseable)
+            {
+                RemoveStatus(status);
+
+                status.status.OnStatusCleansed(this);
+            }
         }
+    }
+    
+    public float GetArmorValue()
+    {
+        // As an example: Add 25 to armor value to reduce damage taken by 25%
+        return Mathf.Clamp(armor.GetValue(), 0, 200);
+    }
+
+    public float GetDamageReduction()
+    {
+        return Mathf.Clamp(((200 - GetArmorValue()) / 100), 0, 2);
     }
 }

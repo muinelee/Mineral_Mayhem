@@ -8,6 +8,12 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
     private NetworkPlayer_Attack playerAttack;
     public Animator anim;
 
+    public override void Init(CharacterEntity character)
+    {
+        base.Init(character);
+        character.SetAnimationLink(this);
+    }
+
     // Start is called before the first frame update
     public override void Spawned()
     {

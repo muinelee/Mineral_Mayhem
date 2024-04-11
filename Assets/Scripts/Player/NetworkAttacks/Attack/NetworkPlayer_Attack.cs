@@ -28,6 +28,11 @@ public class NetworkPlayer_Attack : CharacterComponent
     private Animator anim;
     private NetworkPlayer_Energy playerEnergy;
     private NetworkPlayer_Movement playerMovement;
+    public override void Init(CharacterEntity character)
+    {
+        base.Init(character);
+        character.SetAttack(this);
+    }
 
     public override void Spawned()
     {
@@ -38,12 +43,12 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputData networkInputData) && canAttack)
+        if (GetInput(out NetworkInputData input) && canAttack)
         {
-            if (networkInputData.isFAttack && playerEnergy.IsUltCharged()) ActivateUlt();
-            else if (networkInputData.isQAttack && !qAttackCoolDownTimer.IsRunning) ActivateAttack(qAttack, ref qAttackCoolDownTimer);
-            else if (networkInputData.isEAttack && !eAttackCoolDownTimer.IsRunning) ActivateAttack(eAttack, ref eAttackCoolDownTimer);
-            else if (networkInputData.isBasicAttack && basicAttackCount < basicAttacks.Length && canBasicAttack) ActivateBasicAttack();
+            if (input.IsDown(NetworkInputData.ButtonF) && playerEnergy.IsUltCharged()) ActivateUlt();
+            else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning) ActivateAttack(qAttack, ref qAttackCoolDownTimer);
+            else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning) ActivateAttack(eAttack, ref eAttackCoolDownTimer);
+            else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack) ActivateBasicAttack();
         }
 
         ManageTimers(ref qAttackCoolDownTimer);

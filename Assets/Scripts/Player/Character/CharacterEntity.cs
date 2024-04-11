@@ -12,6 +12,7 @@ public class CharacterEntity : CharacterComponent
     public event Action<float> OnHealEvent;
     public event Action<StatusEffect> OnStatusBeginEvent;
     public event Action<StatusEffect> OnStatusEndedEvent;
+    public event Action OnCleanseEvent;
     public event Action OnPickupEvent;
     public event Action OnCharacterDeathEvent;
     public event Action OnRoundEndEvent;
@@ -33,7 +34,10 @@ public class CharacterEntity : CharacterComponent
     {
         OnStatusEndedEvent?.Invoke(status);
     }
-
+    public override void OnCleanse()
+    {
+        OnCleanseEvent?.Invoke();
+    }
     public override void OnCharacterDeath()
     {
         OnCharacterDeathEvent?.Invoke();
@@ -52,31 +56,63 @@ public class CharacterEntity : CharacterComponent
     public NetworkRigidbody Rigidbody { get; private set; }
     public Collider Collider { get; private set; }
     public NetworkPlayer_AnimationLink Animator { get; private set; }
-    public NetworkPlayer_InputController Controller { get; private set; }
+    public NetworkPlayer_Input Input { get; private set; }
     public NetworkPlayer_Movement Movement { get; private set; }
     public NetworkPlayer_Attack Attack { get; private set; }
     public StatusHandler StatusHandler { get; private set; }
     public NetworkPlayer_Health Health { get; private set; }
+    public NetworkPlayer_Energy Energy { get; private set; }
     public NetworkPlayer_OnSpawnUI PlayerUI { get; private set; }
+
+    # region Private Setter Functions
+    public void SetAnimationLink(NetworkPlayer_AnimationLink characterComp)
+    {
+        Animator = characterComp;
+    }
+    public void SetInput(NetworkPlayer_Input characterComp)
+    {
+        Input = characterComp;
+    }
+    public void SetMovement(NetworkPlayer_Movement characterComp)
+    {
+        Movement = characterComp;
+    }
+    public void SetAttack(NetworkPlayer_Attack characterComp)
+    {
+        Attack = characterComp;
+    }
+    public void SetStatusHandler(StatusHandler characterComp)
+    {
+        StatusHandler = characterComp;
+    }
+    public void SetHealth(NetworkPlayer_Health characterComp)
+    {
+        Health = characterComp;
+    }
+    public void SetEnergy(NetworkPlayer_Energy characterComp)
+    {
+        Energy = characterComp;
+    }
+    public void SetPlayerUI(NetworkPlayer_OnSpawnUI characterComp)
+    {
+        PlayerUI = characterComp;
+    }
+    #endregion
+
     public NetworkPlayer.Team Team { get; private set; }
     public bool hasDespawned = false;
     public SpriteRenderer TeamIndicator;
+
+    public static readonly List<CharacterEntity> Characters = new List<CharacterEntity>();
 
     public override void Spawned()
     {
         Rigidbody = GetComponent<NetworkRigidbody>();
         Collider = GetComponent<Collider>();
-        Animator = GetComponentInChildren<NetworkPlayer_AnimationLink>();
-        Controller = GetComponent<NetworkPlayer_InputController>();
-        StatusHandler = GetComponent<StatusHandler>();
-        Movement = GetComponent<NetworkPlayer_Movement>();
-        Attack = GetComponent<NetworkPlayer_Attack>();
-        Health = GetComponent<NetworkPlayer_Health>();
-        PlayerUI = GetComponent<NetworkPlayer_OnSpawnUI>();
+
         TeamIndicator = GetComponentInChildren<SpriteRenderer>();
         if (Object.HasInputAuthority) RPC_SetTeam(NetworkPlayer.Local.team);
-
-        // *** If all components do this instead, allows for very reader friendly method of initialization
+        
         var components = GetComponentsInChildren<CharacterComponent>();
         foreach (var component in components)
         {
@@ -84,8 +120,6 @@ public class CharacterEntity : CharacterComponent
             component.Init(this);
         }
     }
-
-    public static readonly List<CharacterEntity> Characters = new List<CharacterEntity>();
 
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
