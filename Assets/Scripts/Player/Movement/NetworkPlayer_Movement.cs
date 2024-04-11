@@ -10,7 +10,6 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     [Header("Movement properties")]
     [SerializeField] private float turnTime;
-    private Stat speed;
     public bool canMove = true;
     private Vector3 targetDirection;
     private float dashSpeed = 0;
@@ -39,14 +38,11 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     public override void Spawned()
     {
-        if (!anim) anim = GetComponentInChildren<Animator>();
-        speed = Character.StatusHandler.speed;
-        
+        if (!anim) anim = GetComponentInChildren<Animator>();        
     }
 
     public override void FixedUpdateNetwork()
     {
-        if (Object.HasInputAuthority) Debug.Log("Has Authority");
         //if (!Object.HasInputAuthority) return;
         if (GetInput(out NetworkInputData input) && Character.Input.characterHasBeenSelected)
         {
@@ -200,6 +196,6 @@ public class NetworkPlayer_Movement : CharacterComponent
     /// </summary>
     private float GetCombinedSpeed()
     {
-        return speed.GetValue() + currentBoostValue;
+        return Character.StatusHandler.speed.GetValue() + currentBoostValue;
     }
 }

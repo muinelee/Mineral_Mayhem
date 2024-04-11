@@ -19,5 +19,4 @@ public struct NetworkInputData : INetworkInput
     public Vector2 cursorLocation;
 
     public bool IsDown(uint button) => (Buttons & button) == button;
-    public bool IsUp(uint button) => IsDown(button) == false;
 }
