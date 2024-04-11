@@ -60,9 +60,11 @@ public class CharacterEntity : CharacterComponent
     public NetworkPlayer_Health Health { get; private set; }
     public NetworkPlayer_OnSpawnUI PlayerUI { get; private set; }
 
+    public NetworkPlayer.Team Team { get; private set; }
+
     public bool hasDespawned = false;
 
-    private void Awake()
+    public override void Spawned()
     {
         Rigidbody = GetComponent<NetworkRigidbody>();
         Collider = GetComponent<Collider>();
@@ -73,6 +75,7 @@ public class CharacterEntity : CharacterComponent
         Attack = GetComponent<NetworkPlayer_Attack>();
         Health = GetComponent<NetworkPlayer_Health>();
         PlayerUI = GetComponent<NetworkPlayer_OnSpawnUI>();
+        if (Object.HasInputAuthority) RPC_SetTeam(NetworkPlayer.Local.team);
 
         // *** If all components do this instead, allows for very reader friendly method of initialization
         var components = GetComponentsInChildren<CharacterComponent>();
@@ -100,5 +103,11 @@ public class CharacterEntity : CharacterComponent
         {
             OnCharacterDespawned?.Invoke(this);
         }
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_SetTeam(NetworkPlayer.Team team)
+    {
+        this.Team = team;
     }
 }
