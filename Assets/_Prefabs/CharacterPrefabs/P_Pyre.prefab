@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 569291861852959994}
   - component: {fileID: 3114791478887022334}
   - component: {fileID: 5589622251466101637}
-  - component: {fileID: 8986336812292418098}
+  - component: {fileID: 3682036912258378962}
   - component: {fileID: 2430217939546453825}
   - component: {fileID: 7827230098480810277}
   - component: {fileID: -1653265293756383233}
@@ -71,7 +71,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 5589622251466101637}
-  - {fileID: 8986336812292418098}
+  - {fileID: 3682036912258378962}
   - {fileID: 2430217939546453825}
   - {fileID: 7827230098480810277}
   - {fileID: -1653265293756383233}
@@ -160,7 +160,7 @@ MonoBehaviour:
     RotTeleportRadians: 1.5
   UseLegacySharedModeInterpolation: 0
   TargetInterpolationDelay: 0.03
---- !u!114 &8986336812292418098
+--- !u!114 &3682036912258378962
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -169,13 +169,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 593386485324816745}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4079ce53e463f064a9a8f626212d758c, type: 3}
+  m_Script: {fileID: 11500000, guid: dcb135da19d09e348a54f6ca8c91de4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  characterHasBeenSelected: 0
-  cam: {fileID: 0}
   _NetworkUser: {fileID: 0}
+  CharacterSelected: 0
 --- !u!114 &2430217939546453825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,7 +192,6 @@ MonoBehaviour:
   canMove: 1
   dash: {fileID: 11400000, guid: cea01a3e636397f40943d85444c70827, type: 2}
   anim: {fileID: 240942584216921724}
-  networkRigidBody: {fileID: 5589622251466101637}
 --- !u!114 &7827230098480810277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,7 +240,6 @@ MonoBehaviour:
   _HP: 100
   _isDead: 0
   startingHP: 100
-  dmgReduction: 1
   team: 0
 --- !u!114 &2098500895633039834
 MonoBehaviour:
@@ -321,6 +318,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   health:
+    baseValue: 10
+    Modifiers: []
+  armor:
     baseValue: 10
     Modifiers: []
   speed:
