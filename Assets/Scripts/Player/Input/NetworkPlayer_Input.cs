@@ -9,6 +9,7 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
 {
     [Networked] public NetworkPlayer NetworkUser { get; set; }
     public bool CharacterSelected = false;
+    public LayerMask layerMask;
 
     public override void Init(CharacterEntity character)
     {
@@ -50,7 +51,7 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
         if (Input.GetKey(KeyCode.A)) userInput.Buttons |= NetworkInputData.ButtonA;
         if (Input.GetKey(KeyCode.S)) userInput.Buttons |= NetworkInputData.ButtonS;
         if (Input.GetKey(KeyCode.D)) userInput.Buttons |= NetworkInputData.ButtonD;
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit raycastHit))
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit raycastHit, Mathf.Infinity, layerMask))
             userInput.cursorLocation = new Vector2(raycastHit.point.x, raycastHit.point.z);
 
         return userInput;
