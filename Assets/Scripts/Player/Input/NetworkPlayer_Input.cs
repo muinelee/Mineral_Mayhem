@@ -8,7 +8,6 @@ using UnityEngine;
 public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
 {
     [Networked] public NetworkPlayer NetworkUser { get; set; }
-    public NetworkInputData Inputs;
     public bool CharacterSelected = false;
 
     public override void Init(CharacterEntity character)
@@ -28,12 +27,6 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
         CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
         virtualCam.Follow = this.transform;
         virtualCam.LookAt = this.transform;
-    }
-
-    private void Update()
-    {
-        if (!CharacterSelected) return;
-        Inputs = GetInput();
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -66,7 +59,7 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
         if (!Object.HasInputAuthority) return;
-        NetworkInputData userInput = Inputs;
+        NetworkInputData userInput = GetInput();
         input.Set(userInput);
     }
 
