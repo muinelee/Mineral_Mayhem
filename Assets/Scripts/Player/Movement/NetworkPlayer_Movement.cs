@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class NetworkPlayer_Movement : CharacterComponent
 {
-    private NetworkInputData Inputs { get; set; }
+    [Networked] private NetworkInputData Inputs { get; set; }
 
     [Header("Movement properties")]
     [SerializeField] private float turnTime;
