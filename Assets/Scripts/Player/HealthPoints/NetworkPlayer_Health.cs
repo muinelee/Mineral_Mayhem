@@ -17,9 +17,6 @@ public class NetworkPlayer_Health : CharacterComponent
 
     [SerializeField] private float startingHP = 100;
 
-    //Base dmg reduction multiplier 1 = normal damage
-    [SerializeField] public float dmgReduction = 1.0f;
-
     public NetworkPlayer.Team team;
     public override void Init(CharacterEntity character)
     {
@@ -57,7 +54,6 @@ public class NetworkPlayer_Health : CharacterComponent
         }
 
         //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
-        //int currDamageAmount = (int) (damageAmount * dmgReduction);
         int currDamageAmount = (int) (damageAmount * Character.StatusHandler.GetArmorValue());
 
         HP -= (float) currDamageAmount;

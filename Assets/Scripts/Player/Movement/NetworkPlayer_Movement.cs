@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class NetworkPlayer_Movement : CharacterComponent
 {
-    [Networked] private NetworkInputData Inputs { get; set; }
+    private NetworkInputData Inputs { get; set; }
 
     [Header("Movement properties")]
     [SerializeField] private float turnTime;
@@ -46,32 +46,37 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputData input) && Character.Input.characterHasBeenSelected) Inputs = input;
-        if (canMove && !isDashing)
+        if (Object.HasInputAuthority) Debug.Log("Has Authority");
+        //if (!Object.HasInputAuthority) return;
+        if (GetInput(out NetworkInputData input) && Character.Input.characterHasBeenSelected)
         {
-            // Set direction player is looking at
-            targetDirection = (new Vector3(Inputs.cursorLocation.x, 0, Inputs.cursorLocation.y) - transform.position);
-            targetDirection.Normalize();
+            Inputs = input;
+            if (canMove && !isDashing)
+            {
+                // Set direction player is looking at
+                targetDirection = (new Vector3(Inputs.cursorLocation.x, 0, Inputs.cursorLocation.y) - transform.position);
+                targetDirection.Normalize();
 
-            // Rotate
-            Aim();
+                // Rotate
+                Aim();
 
-            float horizontalDir = (Inputs.IsDown(NetworkInputData.ButtonD) ? 1 : 0) - (Inputs.IsDown(NetworkInputData.ButtonA) ? 1 : 0);
-            float verticalDir = (Inputs.IsDown(NetworkInputData.ButtonW) ? 1 : 0) - (Inputs.IsDown(NetworkInputData.ButtonS) ? 1 : 0);
-            Vector3 moveDir = new Vector3(horizontalDir, 0, verticalDir).normalized;
+                float horizontalDir = (Inputs.IsDown(NetworkInputData.ButtonD) ? 1 : 0) - (Inputs.IsDown(NetworkInputData.ButtonA) ? 1 : 0);
+                float verticalDir = (Inputs.IsDown(NetworkInputData.ButtonW) ? 1 : 0) - (Inputs.IsDown(NetworkInputData.ButtonS) ? 1 : 0);
+                Vector3 moveDir = new Vector3(horizontalDir, 0, verticalDir).normalized;
 
-            // Move
-            Character.Rigidbody.Rigidbody.AddForce(moveDir * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
+                // Move
+                Character.Rigidbody.Rigidbody.AddForce(moveDir * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
 
-            // Dash (Can be a boost or buff)
-            if (Inputs.IsDown(NetworkInputData.ButtonDash)) MobilityAbility(moveDir);
+                // Dash (Can be a boost or buff)
+                if (Inputs.IsDown(NetworkInputData.ButtonDash)) MobilityAbility(moveDir);
 
-            // Play movement animation
-            PlayMovementAnimation(moveDir);
+                // Play movement animation
+                PlayMovementAnimation(moveDir);
+            }
+
+            // Manage Timers and ability effects
+            ManageTimers();
         }
-
-        // Manage Timers and ability effects
-        ManageTimers();
     }
 
     private void Aim()

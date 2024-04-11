@@ -70,17 +70,17 @@ public class UnshackleBuff : NetworkAttack_Base
                 }
             }
 
-            NetworkPlayer_Health healthHandler = hits[i].GameObject.GetComponentInParent<NetworkPlayer_Health>();
+            yield return new WaitForSeconds(5);
+            /*NetworkPlayer_Health healthHandler = hits[i].GameObject.GetComponentInParent<NetworkPlayer_Health>();
 
             if (healthHandler)
             {
                 healthHandler.dmgReduction = 0.7f;
                 Debug.Log("Applyingbuff");
 
-                yield return new WaitForSeconds(5);
                 healthHandler.dmgReduction = 1.0f;
                 Debug.Log("BuffEnded");
-            }
+            }*/
         }
     }
 }

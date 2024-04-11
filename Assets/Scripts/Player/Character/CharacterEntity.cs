@@ -104,7 +104,7 @@ public class CharacterEntity : CharacterComponent
 
     public static readonly List<CharacterEntity> Characters = new List<CharacterEntity>();
 
-    private void Awake()
+    public override void Spawned()
     {
         Rigidbody = GetComponent<NetworkRigidbody>();
         Collider = GetComponent<Collider>();
