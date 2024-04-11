@@ -113,4 +113,9 @@ public class PlayerJoinScreenUI : MonoBehaviour
     {
         map = roomAddress[1];
     }
+
+    public void OnQuitClicked()
+    {
+        Application.Quit();
+    }
 }
