@@ -79,7 +79,8 @@ public class NetworkPlayer_Movement : CharacterComponent
     {
         // Rotate player over time to the target angle
         Quaternion rotation = Quaternion.LookRotation(targetDirection, Vector3.up);
-        transform.rotation = rotation;
+        Vector3 angle = new Vector3(0, rotation.eulerAngles.y, 0);
+        transform.rotation = Quaternion.Euler(angle);
     }
 
     private void MobilityAbility(Vector3 moveDirection)
