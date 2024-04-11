@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.ProBuilder;
+using UnityEngine.UI;
 
 public class CoreBehaviour : MonoBehaviour
 {
@@ -11,6 +12,11 @@ public class CoreBehaviour : MonoBehaviour
     public GameObject[] collectiblePrefabs;
     public Transform[] spawnPoints;
     private System.Random random = new System.Random();
+
+    //Health
+    [SerializeField] private Image healthBar;
+
+
 
     private void Start()
     {
@@ -23,6 +29,8 @@ public class CoreBehaviour : MonoBehaviour
         {
             TakeDamage(25);
         }
+
+
     }
 
 
@@ -35,6 +43,8 @@ public class CoreBehaviour : MonoBehaviour
     private void CheckHealth()
     {
         float healthPercentage = (float)currentHealth / maxHealth;
+
+        healthBar.fillAmount = healthPercentage;
 
         if (healthPercentage <= 0f)
         {
