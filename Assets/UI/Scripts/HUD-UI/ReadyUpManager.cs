@@ -68,19 +68,12 @@ public class ReadyUpManager : MonoBehaviour
     {
         if (player.HasStateAuthority) startGame.gameObject.SetActive(true);
 
-        NetworkPlayer[] players = FindObjectsOfType<NetworkPlayer>();
-        foreach (NetworkPlayer netPlayer in players)
+        foreach (NetworkPlayer netPlayer in NetworkPlayer.Players)
         {
             // Display team colors if players not ready
             if (netPlayer.team == NetworkPlayer.Team.Blue) JoinBlueTeam(netPlayer);
             else if (netPlayer.team == NetworkPlayer.Team.Red) JoinRedTeam(netPlayer);
             else if (netPlayer.team == NetworkPlayer.Team.Undecided && netPlayer != NetworkPlayer.Local) JoinUndecided(netPlayer);
-
-            if (netPlayer.isReady)
-            {
-                playerTeamDisplayPair[netPlayer].GetComponent<Image>().color = Color.green;
-                ReadyUp(netPlayer);
-            }
         }
     }
 
@@ -127,12 +120,14 @@ public class ReadyUpManager : MonoBehaviour
     {
         NetworkPlayer.Local.RPC_JoinBlueTeam();
         unReadyUp.gameObject.SetActive(false);
+        CheckIsOthersReady();
     }
 
     public void OnJoinRedTeam()
     {
         NetworkPlayer.Local.RPC_JoinRedTeam();
         unReadyUp.gameObject.SetActive(false);
+        CheckIsOthersReady();
     }
 
     public void JoinBlueTeam(NetworkPlayer player)
@@ -243,5 +238,17 @@ public class ReadyUpManager : MonoBehaviour
             return redTeamList.IndexOf(player);
         }
         return 0;
+    }
+
+    private void CheckIsOthersReady()
+    {
+        foreach (NetworkPlayer player in NetworkPlayer.Players)
+        {
+            if (player.isReady)
+            {
+                playerTeamDisplayPair[player].GetComponent<Image>().color = Color.green;
+                ReadyUp(player);
+            }
+        }
     }
 }

@@ -8,22 +8,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Essential Components for player character base
-//[RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
-//[RequireComponent(typeof(NetworkObject))]
-/*[RequireComponent(typeof(SphereCollider), typeof(Rigidbody), typeof(NetworkRigidbody))]
-[RequireComponent(typeof(NetworkPlayer_InputController), typeof(NetworkPlayer_Movement))]
-[RequireComponent(typeof(NetworkPlayer_Attack), typeof(NetworkPlayer_Energy), typeof(NetworkPlayer_Health))]
-[RequireComponent(typeof(NetworkMecanimAnimator), typeof(HitboxRoot))]*/
-
-/* 
-    Notes when creating new character:
-    
-    Add player model as a child object
-    Add a Floating Health Bar prefab as a child object
-    Add hitbox component to model
-*/
-
 public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 {
     public enum EnumGameState
@@ -41,7 +25,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public static event Action<NetworkPlayer> OnPlayerLeave;
     public static NetworkPlayer Local { get; private set; }
 
-    [Networked] public NetworkPlayer_InputController Avatar { get; set; }
+    [Networked] public NetworkPlayer_Input Avatar { get; set; }
     [Networked] public EnumGameState GameState { get; set; }
     [Networked] public int CharacterID { get; set; }
 
@@ -64,7 +48,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     [Header("Username UI")]
     public TextMeshProUGUI playerNameTMP;
     [Networked(OnChanged = nameof(OnStateChanged))] public NetworkBool IsReady {  get; set; }
-    [Networked(OnChanged = nameof(OnPlayerNameChanged))] public NetworkString<_16> playerName { get; private set; }
+    [Networked] public NetworkString<_16> playerName { get; private set; }
 
     public override void Spawned()
     {
@@ -79,7 +63,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             RPC_SetPlayerStats(ClientInfo.Username, ClientInfo.CharacterID);
 
             playerName = PlayerPrefs.GetString("PlayerName");
-            RPC_SetPlayerNames(PlayerPrefs.GetString("PlayerName"));
+            RPC_SetPlayerNames(playerName.ToString());
 
             ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
             readyUpUI.PrimeReadyUpUI(this);
@@ -93,16 +77,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     public void PlayerLeft(PlayerRef player)
     {
         if (player == Object.InputAuthority) Runner.Despawn(Object);
-    }
-
-    private static void OnPlayerNameChanged(Changed<NetworkPlayer> player)
-    {
-        player.Behaviour.OnPlayerNameChanged();
-    }
-
-    private void OnPlayerNameChanged()
-    {
-        //playerNameTMP.text = playerName.ToString();
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
@@ -172,7 +146,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
     [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.StateAuthority)]
     public void RPC_ChangeReadyState(NetworkBool state)
     {
-        Debug.Log($"Setting {Object.Name} ready state to {state}");
         IsReady = state;
     }
 

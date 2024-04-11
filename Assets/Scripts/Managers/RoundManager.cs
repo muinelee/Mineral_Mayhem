@@ -87,14 +87,12 @@ public class RoundManager : NetworkBehaviour
         // Blueplayer and red playerdies already checks if all members on team dies 
         if (redPlayersAlive > bluePlayersAlive)
         {
-            Debug.Log("Red Wins the round!");
             redRoundsWon++;
             RPC_UpdateRoundUIForClients(true);
         }
 
         else if (bluePlayersAlive > redPlayersAlive)
         {
-            Debug.Log("Blue Wins the round!");
             blueRoundsWon++; 
             RPC_UpdateRoundUIForClients(false);
         }

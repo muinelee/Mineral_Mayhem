@@ -2,26 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Status Effect", menuName = "Scriptable Object/Status Effect/Slow Status")]
-public class SlowStatus : StatusEffect
+[CreateAssetMenu(fileName = "New Status Effect", menuName = "Scriptable Object/Status Effect/Damage Mitigation")]
+public class DamageMitigation : StatusEffect
 {
-    [SerializeField, Range(0f, Mathf.Infinity)] private float slowAmount = 2f;
+    [SerializeField] private float damageMitigation = 25;
+
     public override void OnStatusApplied(StatusHandler handler)
     {
-        handler.speed.AddModifier(-slowAmount);
+        handler.armor.AddModifier(damageMitigation);
     }
 
     public override void OnStatusEnded(StatusHandler handler)
     {
-        handler.speed.RemoveModifier(-slowAmount);
+        handler.armor.RemoveModifier(damageMitigation);
     }
 
     public override void OnStatusUpdate(StatusHandler handler)
     {
-
     }
+
     public override void OnStatusCleansed(StatusHandler handler)
     {
-        handler.speed.RemoveModifier(-slowAmount);
+        //handler.armor.RemoveModifier(damageMitigation);
     }
 }
