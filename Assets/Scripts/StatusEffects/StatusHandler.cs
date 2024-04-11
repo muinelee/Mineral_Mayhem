@@ -83,20 +83,30 @@ public class StatusHandler : CharacterComponent
 
     public void CleanseDebuff()
     {
+        List<StatusData> statusesToRemove = new List<StatusData>();
+
         foreach (StatusData status in statuses)
         {
             if (status.status.isCleanseable)
             {
-                RemoveStatus(status);
-
-                status.status.OnStatusCleansed(this);
+                statusesToRemove.Add(status);
             }
+        }
+        foreach (StatusData status in statusesToRemove)
+        {
+            status.status.OnStatusCleansed(this);
+            statuses.Remove(status);
         }
     }
     
     public float GetArmorValue()
     {
         // As an example: Add 25 to armor value to reduce damage taken by 25%
-        return Mathf.Clamp((armor.GetValue()/100), 0, 200);
+        return Mathf.Clamp(armor.GetValue(), 0, 200);
+    }
+
+    public float GetDamageReduction()
+    {
+        return Mathf.Clamp(((200 - GetArmorValue()) / 100), 0, 2);
     }
 }

@@ -1,6 +1,5 @@
 using Fusion;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -100,7 +99,9 @@ public class CharacterEntity : CharacterComponent
     }
     #endregion
 
+    public NetworkPlayer.Team Team { get; private set; }
     public bool hasDespawned = false;
+    public SpriteRenderer TeamIndicator;
 
     public static readonly List<CharacterEntity> Characters = new List<CharacterEntity>();
 
@@ -109,6 +110,9 @@ public class CharacterEntity : CharacterComponent
         Rigidbody = GetComponent<NetworkRigidbody>();
         Collider = GetComponent<Collider>();
 
+        TeamIndicator = GetComponentInChildren<SpriteRenderer>();
+        if (Object.HasInputAuthority) RPC_SetTeam(NetworkPlayer.Local.team);
+        
         var components = GetComponentsInChildren<CharacterComponent>();
         foreach (var component in components)
         {
@@ -132,5 +136,14 @@ public class CharacterEntity : CharacterComponent
         {
             OnCharacterDespawned?.Invoke(this);
         }
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_SetTeam(NetworkPlayer.Team team)
+    {
+        this.Team = team;
+
+        if (team == NetworkPlayer.Team.Red) this.TeamIndicator.color = Color.red;
+        else this.TeamIndicator.color = Color.blue;
     }
 }

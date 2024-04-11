@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Crystra_Basic_Attack_Projectile : NetworkBehaviour
+public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
 {
     [Header("Movement Properties")]
     [SerializeField] private float speed;
@@ -13,15 +13,17 @@ public class Crystra_Basic_Attack_Projectile : NetworkBehaviour
     [SerializeField] private float lifeDuration;
     private TickTimer lifeTimer = TickTimer.None;
 
-    [Header("Attack Properties")]
-    [SerializeField] private float damage;
-    [SerializeField] private float knockBack;
+    [Header("Other Attack Properties")]
     [SerializeField] private float radius;
-    [SerializeField] private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
     [SerializeField] private LayerMask playerLayer;
+    private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
     public override void Spawned()
     {
+        base.Spawned();
+
+        GetComponent<Rigidbody>().velocity = transform.forward * speed;
+
         float offsetX = Random.Range(-offset, offset);
         float offsetY = Random.Range(0, offset);
 
@@ -35,10 +37,7 @@ public class Crystra_Basic_Attack_Projectile : NetworkBehaviour
     // Update is called once per frame
     public override void FixedUpdateNetwork()
     {
-        // move
-        transform.Translate(Vector3.forward * speed);
-
-        CheckHits();
+        DealDamage();
 
         if (lifeTimer.Expired(Runner))
         {
@@ -51,7 +50,7 @@ public class Crystra_Basic_Attack_Projectile : NetworkBehaviour
         lifeTimer = TickTimer.None;
         Runner.Despawn(Object);
     }
-    public void CheckHits()
+    protected override void DealDamage()
     {
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
         foreach (LagCompensatedHit hit in hits)
@@ -60,10 +59,10 @@ public class Crystra_Basic_Attack_Projectile : NetworkBehaviour
 
             if (characterEntity)
             {
-                if (characterEntity.Health.isDead) continue;
+                if (characterEntity.Health.isDead || CheckIfSameTeam(characterEntity)) continue;
 
                 characterEntity.Health.OnHit(damage);
-                characterEntity.Health.OnKnockBack(knockBack, transform.position);
+                characterEntity.Health.OnKnockBack(knockback, transform.position);
                 AttackEnd();
             }
         }
