@@ -44,7 +44,7 @@ public class NetworkPlayer_Movement : CharacterComponent
     public override void FixedUpdateNetwork()
     {
         //if (!Object.HasInputAuthority) return;
-        if (GetInput(out NetworkInputData input) && Character.Input.characterHasBeenSelected)
+        if (GetInput(out NetworkInputData input))
         {
             Inputs = input;
             if (canMove && !isDashing)
