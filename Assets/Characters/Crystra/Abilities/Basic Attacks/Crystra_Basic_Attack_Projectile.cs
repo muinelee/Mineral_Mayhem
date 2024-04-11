@@ -22,6 +22,8 @@ public class Crystra_Basic_Attack_Projectile : NetworkBehaviour
 
     public override void Spawned()
     {
+        GetComponent<Rigidbody>().velocity = transform.forward * speed;
+
         float offsetX = Random.Range(-offset, offset);
         float offsetY = Random.Range(0, offset);
 
@@ -35,9 +37,6 @@ public class Crystra_Basic_Attack_Projectile : NetworkBehaviour
     // Update is called once per frame
     public override void FixedUpdateNetwork()
     {
-        // move
-        transform.Translate(Vector3.forward * speed);
-
         CheckHits();
 
         if (lifeTimer.Expired(Runner))
