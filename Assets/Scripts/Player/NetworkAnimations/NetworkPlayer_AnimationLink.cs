@@ -5,14 +5,12 @@ using UnityEngine;
 
 public class NetworkPlayer_AnimationLink : CharacterComponent
 {
-    private NetworkPlayer_Movement playerMovement;
     private NetworkPlayer_Attack playerAttack;
     public Animator anim;
 
     // Start is called before the first frame update
     public override void Spawned()
     {
-        playerMovement = GetComponentInParent<NetworkPlayer_Movement>();
         playerAttack = GetComponentInParent<NetworkPlayer_Attack>();
         anim = GetComponent<Animator>();
     }

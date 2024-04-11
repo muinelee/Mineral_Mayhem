@@ -124,9 +124,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public void FireBasicAttack()
     {
-        if (!Object.HasStateAuthority) return;
-
-        Runner.Spawn(basicAttacks[basicAttackCount].GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        if (Object.HasStateAuthority) Runner.Spawn(basicAttacks[basicAttackCount].GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
         basicAttackCount++;
     }
 
