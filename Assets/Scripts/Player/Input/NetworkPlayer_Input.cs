@@ -65,6 +65,7 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
+        if (!Object.HasInputAuthority) return;
         NetworkInputData userInput = Inputs;
         input.Set(userInput);
     }
