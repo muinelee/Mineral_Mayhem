@@ -66,7 +66,8 @@ public class Arena : NetworkBehaviour
     }
     private void StartArenaCinematic()
     {
-        if (NetworkPlayer.Local) NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
+        Debug.Log("Starting Arena Cinematic"); 
+        NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
     }
 
     public bool ControlCamera(Camera cam)
@@ -94,5 +95,14 @@ public class Arena : NetworkBehaviour
             }
         }
         return true;
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Z))
+        {
+            // Go to Player Camera (Top-Down View)
+            StartArenaCinematic(); 
+        }
     }
 }

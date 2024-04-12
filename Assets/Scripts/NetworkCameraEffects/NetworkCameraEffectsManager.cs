@@ -57,12 +57,6 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
             // Go to Player Camera (Top-Down View)
             GoToVictoryCamera();
         }
-
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            // Go to Player Camera (Top-Down View)
-            GoToRedCinematicCamera(); 
-        }
     }
 
     void Start()
@@ -136,6 +130,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
 
     public void StartCinematic(NetworkPlayer player)
     {
+        Debug.Log("Checking for player's team"); 
         if (player.team == NetworkPlayer.Team.Red)
         {
             GoToRedCinematicCamera();
