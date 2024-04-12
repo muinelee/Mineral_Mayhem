@@ -162,12 +162,14 @@ public class CharacterSelect : NetworkBehaviour
         if (characterLookup[player] == null)
         {
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnLocation].position, Quaternion.identity, player.Object.InputAuthority);
+            player.Avatar = characterLookup[player].Input;
         }
 
         else
         {
             Runner.Despawn(characterLookup[player].Object);
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnLocation].position, Quaternion.identity, player.Object.InputAuthority);
+            player.Avatar = characterLookup[player].Input;
         }
 
         characterLookup[player].GetComponent<NetworkPlayer_Health>().team = player.team;
@@ -203,7 +205,7 @@ public class CharacterSelect : NetworkBehaviour
     /// </summary>
     public void FinalizeChoice()
     {
-        characterLookup[NetworkPlayer.Local].Controller.characterHasBeenSelected = true;
+        characterLookup[NetworkPlayer.Local].Input.CharacterSelected = true;
         characterLookup[NetworkPlayer.Local].PlayerUI.SpawnPlayerUI();
         //NetworkCameraEffectsManager.instance.GoToTopCamera();
         ResetButtonVisual(currentSelectedCharacterButton);

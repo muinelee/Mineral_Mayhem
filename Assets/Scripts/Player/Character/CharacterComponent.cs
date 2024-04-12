@@ -17,6 +17,7 @@ public class CharacterComponent : NetworkBehaviour
         Character.OnHealEvent += OnHeal;
         Character.OnStatusBeginEvent += OnStatusBegin;
         Character.OnStatusEndedEvent += OnStatusEnded;
+        Character.OnCleanseEvent += OnCleanse;
         Character.OnPickupEvent += OnPickup;
         Character.OnCharacterDeathEvent += OnCharacterDeath;
         Character.OnRoundEndEvent += OnRoundEnd;
@@ -41,6 +42,11 @@ public class CharacterComponent : NetworkBehaviour
     /// Called when a player affliction ends (Parameters need to be changed when statuses will be implemented, most likely)
     /// </summary>
     public virtual void OnStatusEnded(StatusEffect status) { }
+
+    /// <summary>
+    /// Called when a player cleanses debuffs
+    /// </summary>
+    public virtual void OnCleanse() { }
 
     /// <summary>
     /// Called when a player dies

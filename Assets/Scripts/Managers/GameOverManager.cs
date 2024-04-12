@@ -63,6 +63,6 @@ public class GameOverManager : NetworkBehaviour
 
         runner.Shutdown();
 
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("RichardCPlayerLobby");
     }
 }
