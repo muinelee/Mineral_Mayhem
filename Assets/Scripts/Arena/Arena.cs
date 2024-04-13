@@ -22,7 +22,7 @@ public class Arena : NetworkBehaviour
         Current = this;
 
         //  Give GameManager a reference to the Arena we're on;
-        GameManager.SetArena(this);
+        //GameManager.SetArena(this);
     }
 
     public override void Spawned()
@@ -33,7 +33,7 @@ public class Arena : NetworkBehaviour
         /*if (NetworkPlayer.Local.IsLeader)
         {
 
-        }*/
+        }*/ 
     }
 
     private void OnDestroy()
