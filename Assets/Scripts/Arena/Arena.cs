@@ -28,7 +28,7 @@ public class Arena : NetworkBehaviour
     public override void Spawned()
     {
         base.Spawned();
-        RoundManager.Instance.MatchStartEvent += StartArenaCinematic; 
+        //RoundManager.Instance.MatchStartEvent += StartArenaCinematic; 
         // Custom Host functionality present here if need be:
         /*if (NetworkPlayer.Local.IsLeader)
         {
@@ -39,7 +39,7 @@ public class Arena : NetworkBehaviour
     private void OnDestroy()
     {
         GameManager.SetArena(null);
-        RoundManager.Instance.MatchStartEvent -= StartArenaCinematic;
+        //RoundManager.Instance.MatchStartEvent -= StartArenaCinematic;
     }
 
     public void SpawnCharacter(NetworkRunner runner, NetworkPlayer player)
@@ -67,7 +67,7 @@ public class Arena : NetworkBehaviour
     private void StartArenaCinematic()
     {
         Debug.Log("Starting Arena Cinematic"); 
-        NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
+        if (NetworkPlayer.Local) NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
     }
 
     public bool ControlCamera(Camera cam)

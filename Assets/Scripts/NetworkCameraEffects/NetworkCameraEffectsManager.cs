@@ -34,6 +34,9 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
 
     private bool isRedTeam;
 
+    [SerializeField] private float cinematicTimerDuration = 10;
+    private TickTimer cinematicTimer = TickTimer.None;
+
     // Update Method is for testing. Remove/Move/Replace when done and logic for player's team has been implemented
     private void Update()
     {
@@ -72,6 +75,14 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         // Broadcast to all clients to hit stop and camera shake if damage is over a threshold
         RPC_CameraShake();
     }
+
+    private void FixedUpdate()
+    {
+        if (!cinematicTimer.Expired(Runner)) return;
+
+        cinematicTimer = TickTimer.None;
+        GoToTopCamera(); 
+    } 
 
     #region <----- Camera Priority ----->
     public void GoToRedCamera()
@@ -139,6 +150,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         {
             GoToBlueCinematicCamera();
         }
+        cinematicTimer = TickTimer.CreateFromSeconds(Runner, cinematicTimerDuration);  
     } 
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
