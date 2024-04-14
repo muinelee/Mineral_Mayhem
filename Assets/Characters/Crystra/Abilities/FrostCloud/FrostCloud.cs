@@ -42,5 +42,36 @@ public class FrostCloud : NetworkAttack_Base
 
         transform.Translate(Vector3.forward * moveDistance);
         distanceTravelled += moveDistance;
+
+        DealDamage();
+
+        if (lifeTimer.Expired(Runner))
+        {
+            AttackEnd();
+        }
+    }
+
+    public void AttackEnd()
+    {
+        lifeTimer = TickTimer.None;
+        Runner.Despawn(Object);
+    }
+
+    protected override void DealDamage()
+    {
+        Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
+        foreach (LagCompensatedHit hit in hits)
+        {
+            CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
+
+            if (characterEntity)
+            {
+                if (characterEntity.Health.isDead || CheckIfSameTeam(characterEntity)) continue;
+
+                characterEntity.Health.OnHit(damage);
+                //characterEntity.Health.OnKnockBack(knockback, transform.position);
+                AttackEnd();
+            }
+        }
     }
 }

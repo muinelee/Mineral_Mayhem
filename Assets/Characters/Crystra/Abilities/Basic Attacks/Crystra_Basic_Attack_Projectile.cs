@@ -50,6 +50,7 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
         lifeTimer = TickTimer.None;
         Runner.Despawn(Object);
     }
+
     protected override void DealDamage()
     {
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
