@@ -65,6 +65,14 @@ public class FrostCloud : NetworkAttack_Base
                 if (characterEntity.Health.isDead || CheckIfSameTeam(characterEntity)) continue;
 
                 characterEntity.Health.OnHit(damage);
+
+                if (statusEffectSO.Count > 0 && characterEntity)
+                {
+                    foreach (StatusEffect status in statusEffectSO)
+                    {
+                        characterEntity.OnStatusBegin(status);
+                    }
+                }
             }
         }
     }
