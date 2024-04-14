@@ -69,8 +69,6 @@ public class FrostCloud : NetworkAttack_Base
                 if (characterEntity.Health.isDead || CheckIfSameTeam(characterEntity)) continue;
 
                 characterEntity.Health.OnHit(damage);
-                //characterEntity.Health.OnKnockBack(knockback, transform.position);
-                AttackEnd();
             }
         }
     }
