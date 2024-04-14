@@ -27,6 +27,8 @@ public class FrostCloud : NetworkAttack_Base
         base.Spawned();
 
         GetComponent<Rigidbody>().velocity = transform.forward * speed;
+
+        lifeTimer = TickTimer.CreateFromSeconds(Runner, lifetime);
     }
 
     public override void FixedUpdateNetwork()
@@ -40,7 +42,5 @@ public class FrostCloud : NetworkAttack_Base
 
         transform.Translate(Vector3.forward * moveDistance);
         distanceTravelled += moveDistance;
-
-        lifeTimer = TickTimer.CreateFromSeconds(Runner, lifetime);
     }
 }
