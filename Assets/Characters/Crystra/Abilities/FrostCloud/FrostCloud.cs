@@ -33,7 +33,7 @@ public class FrostCloud : NetworkAttack_Base
 
     public override void FixedUpdateNetwork()
     {
-        float moveDistance = speed * Time.deltaTime;
+        float moveDistance = speed * Runner.DeltaTime;
 
         if (distanceTravelled + moveDistance > maxTravelDistance)
         {
