@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 
 public class FrostCloud : NetworkAttack_Base
@@ -7,17 +8,25 @@ public class FrostCloud : NetworkAttack_Base
     [Header("Movement Properties")]
     [SerializeField] private float speed;
     [SerializeField] private float lifetime;
-    [SerializeField] private Vector3 offset;
     [SerializeField] private float maxTravelDistance;
-
-    private float lifeTimer = 0;
     private float distanceTravelled = 0;
+    [SerializeField] private Vector3 offset;
+
+    [Header("Lifetime Components")]
+    //[SerializeField] private float lifeDuration;
+    private TickTimer lifeTimer = TickTimer.None;
+
+    [Header("Other Attack Properties")]
+    [SerializeField] private float radius;
+    [SerializeField] private LayerMask playerLayer;
+    private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
+
 
     public override void Spawned()
     {
-        if (!Object.HasStateAuthority) return;
+        base.Spawned();
 
-        transform.position += transform.up * offset.y + transform.forward * offset.z;
+        GetComponent<Rigidbody>().velocity = transform.forward * speed;
     }
 
     public override void FixedUpdateNetwork()
@@ -32,7 +41,6 @@ public class FrostCloud : NetworkAttack_Base
         transform.Translate(Vector3.forward * moveDistance);
         distanceTravelled += moveDistance;
 
-        lifeTimer += Time.deltaTime;
-        if (lifeTimer > lifetime) Destroy(gameObject);
+        lifeTimer = TickTimer.CreateFromSeconds(Runner, lifetime);
     }
 }
