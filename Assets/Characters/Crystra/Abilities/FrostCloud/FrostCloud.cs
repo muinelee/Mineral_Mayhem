@@ -44,7 +44,6 @@ public class FrostCloud : NetworkAttack_Base
 
         if (distanceTravelled + moveDistance > maxTravelDistance) return;        
 
-        transform.Translate(Vector3.forward * moveDistance);
         distanceTravelled += moveDistance;
     }
 
