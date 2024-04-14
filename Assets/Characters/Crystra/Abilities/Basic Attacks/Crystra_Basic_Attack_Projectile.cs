@@ -56,14 +56,14 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
         foreach (LagCompensatedHit hit in hits)
         {
-            CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
+            IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
 
-            if (characterEntity)
+            if (healthComponent != null)
             {
-                if (characterEntity.Health.isDead || CheckIfSameTeam(characterEntity)) continue;
+                if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
 
-                characterEntity.Health.OnHit(damage);
-                characterEntity.Health.OnKnockBack(knockback, transform.position);
+                healthComponent.OnTakeDamage(damage);
+                healthComponent.OnKnockBack(knockback, transform.position);
                 AttackEnd();
             }
         }

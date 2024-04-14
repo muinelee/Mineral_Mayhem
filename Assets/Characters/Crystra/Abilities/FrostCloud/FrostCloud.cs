@@ -58,20 +58,23 @@ public class FrostCloud : NetworkAttack_Base
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
         foreach (LagCompensatedHit hit in hits)
         {
+
+            IHealthComponent healthComponent = hit.GameObject.GetComponent<IHealthComponent>();
+
+            if (healthComponent != null)
+            {
+                if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
+
+                healthComponent.OnTakeDamage(damage);
+            }
+
             CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
 
-            if (characterEntity)
+            if (statusEffectSO.Count > 0 && characterEntity)
             {
-                if (characterEntity.Health.isDead || CheckIfSameTeam(characterEntity)) continue;
-
-                characterEntity.Health.OnHit(damage);
-
-                if (statusEffectSO.Count > 0 && characterEntity)
+                foreach (StatusEffect status in statusEffectSO)
                 {
-                    foreach (StatusEffect status in statusEffectSO)
-                    {
-                        characterEntity.OnStatusBegin(status);
-                    }
+                    characterEntity.OnStatusBegin(status);
                 }
             }
         }

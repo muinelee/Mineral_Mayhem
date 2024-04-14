@@ -33,9 +33,9 @@ public abstract class NetworkAttack_Base : NetworkBehaviour
 
     protected virtual void DealDamage() { }
 
-    protected bool CheckIfSameTeam(CharacterEntity playerHit)
+    protected bool CheckIfSameTeam(NetworkPlayer.Team team)
     {
-        if (playerHit.Team == thisTeam) return true;
+        if (team == thisTeam) return true;
 
         return false;
     }
