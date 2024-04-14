@@ -108,8 +108,8 @@ public class NetworkPlayer_Attack : CharacterComponent
     // Needs to be linked via NetworkPlayer_AnimationLink Script
     public void FireQAttack()
     {
-        if (Object.HasStateAuthority) return;
-            
+        if (!Object.HasStateAuthority) return;
+
         Runner.Spawn(qAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
     }
 
