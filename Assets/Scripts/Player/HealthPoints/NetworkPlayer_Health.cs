@@ -4,20 +4,20 @@ using UnityEngine;
 using Fusion;
 using Unity.VisualScripting;
 
-public class NetworkPlayer_Health : CharacterComponent
+public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 {
     [Networked(OnChanged = nameof(OnHPChanged))]
     public float HP { get; set; }
 
     [Networked(OnChanged = nameof(OnStateChanged))]
     public bool isDead { get; set; }
+    public NetworkPlayer.Team team { get; set; }
 
     private bool isInitialized = false;
     private Animator anim;
 
     [SerializeField] private float startingHP = 100;
 
-    public NetworkPlayer.Team team;
     public override void Init(CharacterEntity character)
     {
         base.Init(character);

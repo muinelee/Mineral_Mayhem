@@ -34,6 +34,6 @@ public class Stat
             finalValue += modifier;
         }
 
-        return finalValue;
+        return Mathf.Clamp(finalValue, 0, (baseValue * 2));
     }
 }
