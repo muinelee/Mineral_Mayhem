@@ -10,6 +10,7 @@ public class CharacterEntity : CharacterComponent
 
     public event Action<float> OnHitEvent;
     public event Action<float> OnHealEvent;
+    public event Action<float> OnBlockEvent;
     public event Action<StatusEffect> OnStatusBeginEvent;
     public event Action<StatusEffect> OnStatusEndedEvent;
     public event Action OnCleanseEvent;
@@ -25,6 +26,10 @@ public class CharacterEntity : CharacterComponent
     public override void OnHeal(float x)
     {
         OnHealEvent?.Invoke(x);
+    }
+    public override void OnBlock(float x)
+    {
+        OnBlockEvent?.Invoke(x);
     }
     public override void OnStatusBegin(StatusEffect status)
     {

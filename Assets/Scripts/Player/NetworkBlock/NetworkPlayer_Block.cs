@@ -1,23 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 
 public class NetworkPlayer_Block : CharacterComponent
 {
+    // Blocking will reduce incoming damage by a percentage
+    [SerializeField] private float blockDamageReduction = 0.5f;
+
+    // Shield Meter properties
+    [SerializeField] private float shieldMeter = 100;
+
     // Control variables
     public bool canBlock = true;
+    public bool isBlocking = false;
 
+    // [Header("Block Properties")]
+    // [SerializeField] private SO_Block block;
 
-
-    // Start is called before the first frame update
-    void Start()
+    public override void Spawned()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void FixedUpdateNetwork()
     {
-        
+        if (GetInput(out NetworkInputData input) && canBlock)
+        {
+            //if (input.IsDown(NetworkInputData.ButtonBlock) && playerEnergy.IsUltCharged()) ActivateBlock();
+        }
+    }
+
+
+    public void FireBlock()
+    {
+        if (!Object.HasStateAuthority) return;
+
+        Runner.Spawn(block.GetBlockPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
     }
 }
