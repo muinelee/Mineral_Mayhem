@@ -5,10 +5,7 @@ using UnityEngine;
 
 public class Arena : NetworkBehaviour
 {
-    public static Arena Current { get; private set; }
-    private int currentCamTrack = 0; 
-    private float camIntervalTime = 5.0f; 
-    public CameraTrack[] camPositions;  
+    public static Arena Current { get; private set; } 
     public Transform[] spawnPoints;
     public GameObject healthPickup;
     public GameObject altPickup;    // at time of writing I forget name of other collectible in-game lol - there may also be more than one, can create list
@@ -70,39 +67,13 @@ public class Arena : NetworkBehaviour
         if (NetworkPlayer.Local) NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
     }
 
-    public bool ControlCamera(Camera cam)
-    {
-        cam.transform.position = Vector3.Lerp(
-            camPositions[currentCamTrack].startPoint.position,
-            camPositions[currentCamTrack].endPoint.position,
-             camIntervalTime / camPositions[currentCamTrack].duration);
-
-        cam.transform.rotation = Quaternion.Slerp(
-            camPositions[currentCamTrack].startPoint.rotation,
-            camPositions[currentCamTrack].endPoint.rotation,
-            camIntervalTime / camPositions[currentCamTrack].duration);
-
-        camIntervalTime += Time.deltaTime;
-        if (camIntervalTime >= camPositions[currentCamTrack].duration) 
-        {
-            camIntervalTime = 0;
-            currentCamTrack++;
-            if (currentCamTrack == camPositions.Length)
-            {
-                currentCamTrack = 0;
-                camIntervalTime = 0;
-                return false;
-            }
-        }
-        return true;
-    }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Z))
+        if(Input.GetKeyDown(KeyCode.Z)) 
         {
             // Go to Player Camera (Top-Down View)
-            StartArenaCinematic(); 
+            StartArenaCinematic();  
         }
     }
 }
