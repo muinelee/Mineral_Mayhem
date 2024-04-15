@@ -5,9 +5,15 @@ using UnityEngine.ProBuilder;
 using UnityEngine.UI;
 
 public class CoreBehaviour : MonoBehaviour
-{
+{   
+    //Health
     public int maxHealth = 100;
     private int currentHealth;
+
+    //Pickup flags
+    private bool spawn75flag = false;
+    private bool spawn50flag = false;
+    private bool spawn25flag = false;
 
     public GameObject[] collectiblePrefabs;
     public Transform[] spawnPoints;
@@ -27,7 +33,7 @@ public class CoreBehaviour : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.O))
         {
-            TakeDamage(25);
+            TakeDamage(10);
         }
 
 
@@ -50,17 +56,20 @@ public class CoreBehaviour : MonoBehaviour
         {
             Die();
         }
-        else if (healthPercentage <= 0.75f && healthPercentage > 0.50f)
+        else if (healthPercentage <= 0.75f && healthPercentage > 0.50f && !spawn75flag)
         {
             SpawnCollectible();
+            spawn75flag = true;
         }
-        else if (healthPercentage <= 0.50f && healthPercentage > 0.25f)
+        else if (healthPercentage <= 0.50f && healthPercentage > 0.25f && !spawn50flag)
         {
             SpawnCollectible();
+            spawn50flag = true;
         }
-        else if (healthPercentage <= 0.25f)
+        else if (healthPercentage <= 0.25f && !spawn25flag)
         {
             SpawnCollectible();
+            spawn25flag = true;
         }
     }
 
