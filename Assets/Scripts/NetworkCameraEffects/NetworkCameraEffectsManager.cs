@@ -32,6 +32,12 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     [SerializeField] private CinemachineVirtualCamera redCinematicCameraPriority;
     [SerializeField] private CinemachineVirtualCamera blueCinematicCameraPriority;
 
+    [Header("Camera Tracking")]
+    [SerializeField]  private int currentCamTrack = 0;
+    [SerializeField]  private float camIntervalTime = 5.0f;
+    private bool isCameraMoving = false; 
+    //public CameraTrack[] camPositions; 
+
     private bool isRedTeam;
 
     [SerializeField] private float cinematicTimerDuration = 10;
@@ -126,6 +132,8 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         blueCinematicCameraPriority.Priority = 0;  
 
         redCinematicCameraPriority.Priority = 100;
+
+        ControlCamera(redCinematicCameraPriority); 
     }
 
     public void GoToBlueCinematicCamera()
@@ -136,7 +144,9 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         victoryCameraPriority.Priority = 0;
         redCinematicCameraPriority.Priority = 0;
 
-        blueCinematicCameraPriority.Priority = 100; 
+        blueCinematicCameraPriority.Priority = 100;
+
+        ControlCamera(blueCinematicCameraPriority); 
     }
 
     public void StartCinematic(NetworkPlayer player)
@@ -180,6 +190,55 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         }
     }
     #endregion
+
+    #region Camera Cinematic Tracking 
+
+    public void ControlCamera(CinemachineVirtualCamera cam)
+    {
+        if (isCameraMoving) return;
+       
+        CameraTrack cameraTrack = cam.GetComponent<CameraTrack>();
+        if (cameraTrack == null)
+        {
+            Debug.LogError("CameraTrack component not found on CinemachineVirtualCamera.");
+            return;
+        }
+
+        StartCoroutine(MoveCamera(cam, cameraTrack));
+    }
+
+    private IEnumerator MoveCamera(CinemachineVirtualCamera cam, CameraTrack cameraTrack)
+    {
+        isCameraMoving = true;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < cameraTrack.duration)
+        {
+            float t = elapsedTime / cameraTrack.duration;
+
+            cam.transform.position = Vector3.Lerp(
+                cameraTrack.startPoint.position,
+                cameraTrack.endPoint.position,
+                t);
+
+            cam.transform.rotation = Quaternion.Slerp(
+                cameraTrack.startPoint.rotation,
+                cameraTrack.endPoint.rotation,
+                t);
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        cam.transform.position = cameraTrack.endPoint.position;
+        cam.transform.rotation = cameraTrack.endPoint.rotation;
+
+        isCameraMoving = false;
+    }
+
+    #endregion
+
 
     #region <----- Screen Shake ----->
     public void ScreenShake()
