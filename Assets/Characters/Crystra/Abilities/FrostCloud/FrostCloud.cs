@@ -36,6 +36,7 @@ public class FrostCloud : NetworkAttack_Base
         if (lifeTimer.Expired(Runner))
         {
             AttackEnd();
+            return;
         }
 
         DealDamage();
@@ -55,19 +56,21 @@ public class FrostCloud : NetworkAttack_Base
 
     protected override void DealDamage()
     {
+        if (!Runner) return;
+
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
         foreach (LagCompensatedHit hit in hits)
         {
-
-            IHealthComponent healthComponent = hit.GameObject.GetComponent<IHealthComponent>();
+            IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
 
             if (healthComponent != null)
             {
+                Debug.Log("Frost Cloud Deal Damage is being called");
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
 
                 healthComponent.OnTakeDamage(damage);
             }
-
+            
             CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
 
             if (statusEffectSO.Count > 0 && characterEntity)
