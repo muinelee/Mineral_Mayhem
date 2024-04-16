@@ -10,13 +10,16 @@ public class NetworkPlayer_BlockMeter : CharacterComponent
         If the block meter has been depleated, the player will be stunned, and will not be able to block until it is full
     */
 
-    private float maxBlockMeter;
+    // Shield Meter properties
+    [SerializeField] private float maxBlockMeter = 100;
     private float currentBlockMeter;
 
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
         //TODO: character.SetBlock(this);
+        
+        currentBlockMeter = maxBlockMeter;
     }
 
     public override void FixedUpdateNetwork()

@@ -8,9 +8,6 @@ public class NetworkPlayer_Block : CharacterComponent
     // Blocking will reduce incoming damage by a percentage. Need to access NetworkPlayer_Health to apply the damage reduction.
     [SerializeField] private float blockDamageReduction = 0.5f;
 
-    // Shield Meter properties
-    [SerializeField] private float shieldMeter = 100;
-
     // Control variables
     public bool canBlock = true;
     public bool isBlocking = false;
