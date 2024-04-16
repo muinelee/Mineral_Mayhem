@@ -14,7 +14,7 @@ public class RocketJump : NetworkAttack_Base
     [SerializeField] private float landingOffset;
     [SerializeField] private LayerMask collisionLayer;
 
-    private List<LagCompensatedHit> hits;
+    private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
     private NetworkRigidbody rb;
     [SerializeField] private float gravityScale;
@@ -25,6 +25,8 @@ public class RocketJump : NetworkAttack_Base
         
         if (!Runner.IsServer) return;
 
+        if (Runner) Debug.Log("We have a runner");
+
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, collisionLayer);
 
         for (int i = 0; i < hits.Count; i++)
@@ -33,7 +35,7 @@ public class RocketJump : NetworkAttack_Base
 
             if (character)
             {
-                if (character.Object.InputAuthority == Object.InputAuthority)
+                if (character.Object.InputAuthority != Object.InputAuthority)
                 {
                     Debug.Log("This is not the player you're looking for");
                     continue;
@@ -41,7 +43,7 @@ public class RocketJump : NetworkAttack_Base
 
                 playerSource = character.transform;
                 rb = character.Rigidbody;
-                rb.Rigidbody.AddForce(transform.forward * forceForward + transform.up * forceUpward);
+                rb.Rigidbody.AddForce(transform.forward * forceForward);
             }
         }
     }
