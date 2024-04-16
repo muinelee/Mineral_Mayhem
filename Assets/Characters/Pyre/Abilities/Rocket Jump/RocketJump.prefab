@@ -46,18 +46,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  damage: 0
-  knockback: 0
+  damage: 10
+  knockback: 500
   SFX: {fileID: 0}
   statusEffectSO: []
-  radius: 0.1
-  forceForward: 1000
-  forceUpward: 0
-  landingOffset: 0.2
+  searchRadius: 0.1
   collisionLayer:
     serializedVersion: 2
     m_Bits: 128
-  gravityScale: 0
+  attackRadius: 2
+  forceForward: 1500
+  jumpVFX: {fileID: 3138491093618922590, guid: 85467ff3dbc3180439d484feb435d09a, type: 3}
+  slamVFX: {fileID: 2499573213990221270, guid: 45261fc0332d22547a7e92c19a0555ee, type: 3}
+  vfxDuration: 3
 --- !u!114 &3766184700802888238
 MonoBehaviour:
   m_ObjectHideFlags: 0

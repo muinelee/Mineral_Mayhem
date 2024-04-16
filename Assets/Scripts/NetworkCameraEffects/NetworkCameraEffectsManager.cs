@@ -151,7 +151,6 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
 
     public void StartCinematic(NetworkPlayer player)
     {
-        Debug.Log("Checking for player's team"); 
         if (player.team == NetworkPlayer.Team.Red)
         {
             GoToRedCinematicCamera();
