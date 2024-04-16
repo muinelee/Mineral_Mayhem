@@ -2,6 +2,7 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Splines;
 
 public class Arena : NetworkBehaviour
 {
@@ -13,11 +14,12 @@ public class Arena : NetworkBehaviour
 
     public SO_ArenaDefinition definition;    //Will have information relative to the specific arena we are on (music/name/index/icon/image, etc)
 
+    public SplineContainer spline;
 
     private void Awake()
     {
         Current = this;
-
+        if (spline == null) spline = GetComponentInChildren<SplineContainer>();
         //  Give GameManager a reference to the Arena we're on;
         //GameManager.SetArena(this);
     }
@@ -75,5 +77,24 @@ public class Arena : NetworkBehaviour
             // Go to Player Camera (Top-Down View)
             StartArenaCinematic();  
         }
+    }
+
+    /// <summary>
+    /// Returns the center point of the core's spawn path.
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 GetCenterCoreLocation()
+    {
+        return spline.EvaluatePosition(0.5f);
+    }
+
+    /// <summary>
+    /// Returns a random spot along the core's spawn path.
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 GetNewCoreSpawnLocation()
+    {
+        float randomLocation = Random.Range(0f, 1f);
+        return spline.EvaluatePosition(randomLocation);
     }
 }
