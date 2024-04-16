@@ -11,6 +11,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     [Networked(OnChanged = nameof(OnStateChanged))]
     public bool isDead { get; set; }
+
     public NetworkPlayer.Team team { get; set; }
 
     private bool isInitialized = false;

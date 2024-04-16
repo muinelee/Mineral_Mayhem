@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class NetworkPlayer_Block : CharacterComponent
 {
-    // Blocking will reduce incoming damage by a percentage
+    // Blocking will reduce incoming damage by a percentage. Need to access NetworkPlayer_Health to apply the damage reduction.
     [SerializeField] private float blockDamageReduction = 0.5f;
 
     // Shield Meter properties
@@ -36,6 +36,6 @@ public class NetworkPlayer_Block : CharacterComponent
     {
         if (!Object.HasStateAuthority) return;
 
-        Runner.Spawn(block.GetBlockPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        //Runner.Spawn(block.GetBlockPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
     }
 }
