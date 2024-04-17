@@ -9,7 +9,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     public static NetworkCameraEffectsManager instance;
 
     [Header("Camera Component")]
-    [SerializeField] private CinemachineVirtualCamera cam;
+    [SerializeField] private CinemachineBrain cam;
 
     [Header("Hit Effect Trigger")]
     [SerializeField] private int hitEffectThreshold;
@@ -29,8 +29,19 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     [SerializeField] private CinemachineVirtualCamera blueCameraPriority;
     [SerializeField] private CinemachineVirtualCamera topCameraPriority;
     [SerializeField] private CinemachineVirtualCamera victoryCameraPriority;
+    [SerializeField] private CinemachineVirtualCamera redCinematicCameraPriority;
+    [SerializeField] private CinemachineVirtualCamera blueCinematicCameraPriority;
+
+    [Header("Camera Tracking")]
+    [SerializeField]  private int currentCamTrack = 0;
+    [SerializeField]  private float camIntervalTime = 5.0f;
+    private bool isCameraMoving = false; 
+    //public CameraTrack[] camPositions; 
 
     private bool isRedTeam;
+
+    [SerializeField] private float cinematicTimerDuration = 10;
+    private TickTimer cinematicTimer = TickTimer.None;
 
     // Update Method is for testing. Remove/Move/Replace when done and logic for player's team has been implemented
     private void Update()
@@ -60,7 +71,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     void Start()
     {
         instance = this;
-        cam = Camera.main.GetComponentInChildren<CinemachineVirtualCamera>();
+        cam = Camera.main.GetComponentInChildren<CinemachineBrain>();
     }
 
     public void CameraHitEffect(int damage)
@@ -70,6 +81,14 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         // Broadcast to all clients to hit stop and camera shake if damage is over a threshold
         RPC_CameraShake();
     }
+
+    private void FixedUpdate()
+    {
+        if (!cinematicTimer.Expired(Runner)) return;
+
+        cinematicTimer = TickTimer.None;
+        GoToTopCamera(); 
+    } 
 
     #region <----- Camera Priority ----->
     public void GoToRedCamera()
@@ -104,17 +123,50 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         victoryCameraPriority.Priority = 100;
     }
 
+    public void GoToRedCinematicCamera()
+    {
+        redCameraPriority.Priority = 0;
+        blueCameraPriority.Priority = 0;
+        topCameraPriority.Priority = 0;
+        victoryCameraPriority.Priority = 0;
+        blueCinematicCameraPriority.Priority = 0;  
+
+        redCinematicCameraPriority.Priority = 100;
+
+        ControlCamera(redCinematicCameraPriority); 
+    }
+
+    public void GoToBlueCinematicCamera()
+    {
+        redCameraPriority.Priority = 0;
+        blueCameraPriority.Priority = 0;
+        topCameraPriority.Priority = 0;
+        victoryCameraPriority.Priority = 0;
+        redCinematicCameraPriority.Priority = 0;
+
+        blueCinematicCameraPriority.Priority = 100;
+
+        ControlCamera(blueCinematicCameraPriority); 
+    }
+
+    public void StartCinematic(NetworkPlayer player)
+    {
+        if (player.team == NetworkPlayer.Team.Red)
+        {
+            GoToRedCinematicCamera();
+        }
+        else if (player.team == NetworkPlayer.Team.Blue)
+        {
+            GoToBlueCinematicCamera();
+        }
+        cinematicTimer = TickTimer.CreateFromSeconds(Runner, cinematicTimerDuration);  
+    } 
+
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_CameraPriority(bool isRedTeam)
     {
-        if (isRedTeam)
-        {
-            GoToRedCamera();
-        }
-        else
-        {
-            GoToBlueCamera();
-        }
+        if (isRedTeam) GoToRedCamera();
+        else GoToBlueCamera();
     }
     #endregion
 
@@ -138,6 +190,55 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     }
     #endregion
 
+    #region Camera Cinematic Tracking 
+
+    public void ControlCamera(CinemachineVirtualCamera cam)
+    {
+        if (isCameraMoving) return;
+       
+        CameraTrack cameraTrack = cam.GetComponent<CameraTrack>();
+        if (cameraTrack == null)
+        {
+            Debug.LogError("CameraTrack component not found on CinemachineVirtualCamera.");
+            return;
+        }
+
+        StartCoroutine(MoveCamera(cam, cameraTrack));
+    }
+
+    private IEnumerator MoveCamera(CinemachineVirtualCamera cam, CameraTrack cameraTrack)
+    {
+        isCameraMoving = true;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < cameraTrack.duration)
+        {
+            float t = elapsedTime / cameraTrack.duration;
+
+            cam.transform.position = Vector3.Lerp(
+                cameraTrack.startPoint.position,
+                cameraTrack.endPoint.position,
+                t);
+
+            cam.transform.rotation = Quaternion.Slerp(
+                cameraTrack.startPoint.rotation,
+                cameraTrack.endPoint.rotation,
+                t);
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        cam.transform.position = cameraTrack.endPoint.position;
+        cam.transform.rotation = cameraTrack.endPoint.rotation;
+
+        isCameraMoving = false;
+    }
+
+    #endregion
+
+
     #region <----- Screen Shake ----->
     public void ScreenShake()
     {
@@ -147,7 +248,8 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     IEnumerator ApplyScreenShake()
     {
         // Access Virtual Camera properties
-        CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        CinemachineVirtualCamera virtualCam = cam.ActiveVirtualCamera as CinemachineVirtualCamera;
+        CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = virtualCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = screenShakeIntensity;
 
         yield return new WaitForSecondsRealtime(screenShakeDuration);
