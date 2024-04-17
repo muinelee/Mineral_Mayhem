@@ -83,6 +83,18 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         else NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
     }
 
+    public override void OnBlock(bool isBlocking)
+    {
+        if (isBlocking)
+        {
+            Character.Shield.SetActive(true);
+        }
+        else
+        {
+            Character.Shield.SetActive(false);
+        }
+    }
+
     public void OnKnockBack(float force, Vector3 source)
     {
         if (isDead) return;

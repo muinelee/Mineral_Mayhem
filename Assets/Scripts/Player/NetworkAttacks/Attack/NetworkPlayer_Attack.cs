@@ -103,7 +103,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public void ActivateBlock(bool blockButtonDown)
     {
-        if (blockButtonDown && !isBlocking && canBlock)
+        if (blockButtonDown && !isBlocking)
         {
             isBlocking = true;
             Character.OnBlock(true);
