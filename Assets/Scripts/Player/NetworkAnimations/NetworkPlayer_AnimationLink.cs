@@ -51,6 +51,11 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
         playerAttack.ChainBasicAttack();
     }
 
+    public void FireBlock()
+    {
+        playerAttack.FireBlock();
+    }
+
     public void ResetAnimation()
     {
         playerAttack.ResetAttackCapabilities();

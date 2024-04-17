@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using System.Security.Cryptography.X509Certificates;
 
 public class NetworkPlayer_Attack : CharacterComponent
 {
@@ -23,6 +24,9 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     [Header("(Ult) F Attack Properties")]
     [SerializeField] private SO_NetworkUlt fAttack;
+
+    [Header("Block Properties")]
+    [SerializeField] private SO_NetworkAttack block;
 
     //Components
     private Animator anim;
@@ -49,6 +53,7 @@ public class NetworkPlayer_Attack : CharacterComponent
             else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning) ActivateAttack(qAttack, ref qAttackCoolDownTimer);
             else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning) ActivateAttack(eAttack, ref eAttackCoolDownTimer);
             else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack) ActivateBasicAttack();
+            else if (input.IsDown(NetworkInputData.ButtonBlock)) ActivateBlock(block);
         }
 
         ManageTimers(ref qAttackCoolDownTimer);
@@ -105,6 +110,17 @@ public class NetworkPlayer_Attack : CharacterComponent
         playerMovement.ApplyAbility(basicAttacks[basicAttackCount]);
     }
 
+    public void ActivateBlock(SO_NetworkAttack attack)
+    {
+        canAttack = false;
+
+        // Start Block animation
+        anim.CrossFade(attack.attackName, 0.1f);
+
+        // Slow player
+        playerMovement.ApplyAbility(attack);
+    }
+
     // Needs to be linked via NetworkPlayer_AnimationLink Script
     public void FireQAttack()
     {
@@ -133,6 +149,13 @@ public class NetworkPlayer_Attack : CharacterComponent
         basicAttackCount++;
     }
 
+    public void FireBlock()
+    {
+        if (!Object.HasStateAuthority) return;
+
+        Runner.Spawn(block.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+    }
+
     public SO_NetworkAttack GetQAttack()
     {
         return qAttack;
@@ -151,6 +174,11 @@ public class NetworkPlayer_Attack : CharacterComponent
     public SO_NetworkBasicAttack GetBasicAttack(int index)
     {
         return basicAttacks[index];
+    }
+
+    public SO_NetworkAttack GetBlock()
+    {
+        return block;
     }
 
     public float GetQAttackCoolDownTimer()
