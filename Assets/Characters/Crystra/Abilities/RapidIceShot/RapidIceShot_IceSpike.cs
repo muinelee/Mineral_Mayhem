@@ -15,7 +15,7 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
     // Components for getting objects in attack range
     [SerializeField] private float radius;
     List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
-    [SerializeField] private LayerMask collisionLayer;
+    [SerializeField] private LayerMask collisionLayer; 
 
     // Damage properties
     [Header("Damage Properties")]
