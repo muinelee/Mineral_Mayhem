@@ -8,6 +8,8 @@ public class NetworkPlayer_Attack : CharacterComponent
 {
     // Control variables
     public bool canAttack = true;
+    public bool isBlocking = false;
+    public bool canBlock = true;
 
     [Header("Basic Attacks Properties")]
     [SerializeField] private SO_NetworkBasicAttack[] basicAttacks;
@@ -28,32 +30,21 @@ public class NetworkPlayer_Attack : CharacterComponent
     [Header("Block Properties")]
     [SerializeField] private SO_NetworkAttack block;
 
-    //Components
-    private Animator anim;
-    private NetworkPlayer_Energy playerEnergy;
-    private NetworkPlayer_Movement playerMovement;
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
         character.SetAttack(this);
     }
 
-    public override void Spawned()
-    {
-        anim = GetComponentInChildren<Animator>();
-        playerEnergy = GetComponent<NetworkPlayer_Energy>();
-        playerMovement = GetComponent<NetworkPlayer_Movement>();
-    }
-
     public override void FixedUpdateNetwork()
     {
         if (GetInput(out NetworkInputData input) && canAttack)
         {
-            if (input.IsDown(NetworkInputData.ButtonF) && playerEnergy.IsUltCharged()) ActivateUlt();
+            if (input.IsDown(NetworkInputData.ButtonF) && Character.Energy.IsUltCharged()) ActivateUlt();
             else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning) ActivateAttack(qAttack, ref qAttackCoolDownTimer);
             else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning) ActivateAttack(eAttack, ref eAttackCoolDownTimer);
             else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack) ActivateBasicAttack();
-            else if (input.IsDown(NetworkInputData.ButtonBlock)) ActivateBlock(block);
+            ActivateBlock(input.IsDown(NetworkInputData.ButtonBlock));
         }
 
         ManageTimers(ref qAttackCoolDownTimer);
@@ -69,21 +60,21 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         // Start Attack animation
         canAttack = false;
-        anim.CrossFade(attack.attackName, 0.2f);
+        Character.Animator.anim.CrossFade(attack.attackName, 0.2f);
         attackTimer = TickTimer.CreateFromSeconds(Runner, attack.GetCoolDown());
 
         // Slow player
-        playerMovement.ApplyAbility(attack);
+        Character.Movement.ApplyAbility(attack);
     }
 
     private void ActivateUlt()
     {
         // Start Ult animation
         canAttack = false;
-        anim.CrossFade(fAttack.attackName, 0.2f);
+        Character.Animator.anim.CrossFade(fAttack.attackName, 0.2f);
 
         // Slow player
-        playerMovement.ApplyAbility(fAttack);
+        Character.Movement.ApplyAbility(fAttack);
     }
 
     private void ActivateBasicAttack()
@@ -92,8 +83,8 @@ public class NetworkPlayer_Attack : CharacterComponent
 
         if (basicAttackCount == 0)
         {
-            anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.1f);
-            playerMovement.ApplyAbility(basicAttacks[basicAttackCount]);
+            Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.1f);
+            Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
         }
     }
 
@@ -106,19 +97,22 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (canBasicAttack) return;
 
-        anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.1f);
-        playerMovement.ApplyAbility(basicAttacks[basicAttackCount]);
+        Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.1f);
+        Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
     }
 
-    public void ActivateBlock(SO_NetworkAttack attack)
+    public void ActivateBlock(bool blockButtonDown)
     {
-        canAttack = false;
-
-        // Start Block animation
-        anim.CrossFade(attack.attackName, 0.1f);
-
-        // Slow player
-        playerMovement.ApplyAbility(attack);
+        if (blockButtonDown && !isBlocking && canBlock)
+        {
+            isBlocking = true;
+            Character.OnBlock(true);
+        }
+        else if (!blockButtonDown && isBlocking)
+        {
+            isBlocking = false;
+            Character.OnBlock(false);
+        }
     }
 
     // Needs to be linked via NetworkPlayer_AnimationLink Script
@@ -198,6 +192,6 @@ public class NetworkPlayer_Attack : CharacterComponent
         canAttack = true;
         canBasicAttack = true;
         basicAttackCount = 0;
-        playerMovement.ResetSlows();
+        Character.Movement.ResetSlows();
     }
 }

@@ -9,6 +9,10 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     [Networked(OnChanged = nameof(OnHPChanged))]
     public float HP { get; set; }
 
+    // Callback is Temporary until OnHPChanged is implemented
+    [Networked(OnChanged = nameof(OnHPChanged))] 
+    public float BP { get; set; }
+
     [Networked(OnChanged = nameof(OnStateChanged))]
     public bool isDead { get; set; }
 
@@ -17,7 +21,12 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     private bool isInitialized = false;
     private Animator anim;
 
+    // Health Properties
     [SerializeField] private float startingHP = 100;
+
+    // Block Properties
+    [SerializeField] private float startingBP = 100;
+    [SerializeField] private float blockDamageReduction = 0.5f;
 
     public override void Init(CharacterEntity character)
     {
@@ -29,7 +38,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public override void Spawned()
     {
         if (HP == startingHP) isDead = false;
-        anim = GetComponentInChildren<Animator>();
+        anim = Character.Animator.anim;
 
         RoundManager.Instance.ResetRound += Respawn;
         RoundManager.Instance.MatchEndEvent += DisableControls;
@@ -57,6 +66,10 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
         int currDamageAmount = (int) (damageAmount * Character.StatusHandler.GetDamageReduction());
 
+        if (Character.Attack.isBlocking)
+        {
+            currDamageAmount = (int) (currDamageAmount * blockDamageReduction);
+        }
         HP -= (float) currDamageAmount;
 
         //Debug.Log($"{Time.time} {transform.name} took damage and has {HP} HP left");
