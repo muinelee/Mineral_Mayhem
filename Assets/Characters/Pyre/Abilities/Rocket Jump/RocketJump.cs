@@ -100,13 +100,12 @@ public class RocketJump : NetworkAttack_Base
 
         foreach (LagCompensatedHit hit in hits)
         {
-            IHealthComponent health = hit.GameObject.GetComponentInParent<IHealthComponent>();
+            IHealthComponent playerHit = hit.GameObject.GetComponentInParent<IHealthComponent>();
 
-            if (health != null)
-            {
-                health.OnTakeDamage(damage);
-                health.OnKnockBack(knockback, rigTransform.position);
-            }
+            if (playerHit == null || CheckIfSameTeam(playerHit.team)) continue;
+
+            playerHit.OnTakeDamage(damage);
+            playerHit.OnKnockBack(knockback, rigTransform.position);
         }
     }
 }
