@@ -195,7 +195,6 @@ MonoBehaviour:
   turnTime: 0.005
   canMove: 1
   dash: {fileID: 11400000, guid: cea01a3e636397f40943d85444c70827, type: 2}
-  anim: {fileID: 240942584216921724}
 --- !u!114 &7827230098480810277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,8 +209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   canAttack: 1
-  isBlocking: 0
-  canBlock: 1
+  isDefending: 0
   basicAttacks:
   - {fileID: 11400000, guid: d2ff822e41c2019458e9b93bcb75760d, type: 2}
   - {fileID: 11400000, guid: 24b9ea15226a82d4ca7694bd26303898, type: 2}
@@ -253,6 +251,10 @@ MonoBehaviour:
   startingHP: 100
   startingBP: 100
   blockDamageReduction: 0.5
+  blockDepletedStun: {fileID: 11400000, guid: 6b20de36fe388be4691aabc1a0a1e14c, type: 2}
+  blockDrainRate: 10
+  blockRechargeRate: 10
+  canBlock: 1
 --- !u!114 &2098500895633039834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1667,10 +1669,6 @@ PrefabInstance:
     - target: {fileID: 8055280256432487588, guid: 4d838904ce0736640b7135ecdf79e5a3, type: 3}
       propertyPath: m_Name
       value: Shield
-      objectReference: {fileID: 0}
-    - target: {fileID: 8055280256432487588, guid: 4d838904ce0736640b7135ecdf79e5a3, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

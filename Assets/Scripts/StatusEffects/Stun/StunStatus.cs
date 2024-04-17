@@ -8,9 +8,10 @@ public class StunStatus : StatusEffect
     [SerializeField] public string animationName = "GravityStun";
     public override void OnStatusApplied(StatusHandler handler)
     {
-        handler.Character.Animator.anim.CrossFade(animationName, 0.2f);
+        if (animationName != "") handler.Character.Animator.anim.CrossFade(animationName, 0.2f);
         handler.Character.Movement.canMove = false;
         handler.Character.Attack.canAttack = false;
+        handler.Character.OnBlock(false);
     }
 
     public override void OnStatusEnded(StatusHandler handler)
@@ -27,7 +28,6 @@ public class StunStatus : StatusEffect
     public override void OnStatusUpdate(StatusHandler handler)
     {
         handler.stun++;
-        Debug.Log(handler.stun);
     }
 
     public override void OnStatusCleansed(StatusHandler handler)

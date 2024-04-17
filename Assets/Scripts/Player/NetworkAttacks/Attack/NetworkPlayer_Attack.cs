@@ -8,8 +8,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 {
     // Control variables
     public bool canAttack = true;
-    public bool isBlocking = false;
-    public bool canBlock = true;
+    public bool isDefending = false;
 
     [Header("Basic Attacks Properties")]
     [SerializeField] private SO_NetworkBasicAttack[] basicAttacks;
@@ -103,16 +102,19 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public void ActivateBlock(bool blockButtonDown)
     {
-        if (blockButtonDown && !isBlocking)
+        if (blockButtonDown && !isDefending && Character.Health.canBlock)
         {
-            isBlocking = true;
             Character.OnBlock(true);
         }
-        else if (!blockButtonDown && isBlocking)
+        else if (!blockButtonDown && isDefending)
         {
-            isBlocking = false;
             Character.OnBlock(false);
         }
+    }
+
+    public override void OnBlock(bool isBlocking)
+    {
+        isDefending = isBlocking;
     }
 
     // Needs to be linked via NetworkPlayer_AnimationLink Script

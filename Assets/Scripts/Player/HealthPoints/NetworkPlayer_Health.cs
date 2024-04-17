@@ -27,6 +27,10 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     // Block Properties
     [SerializeField] private float startingBP = 100;
     [SerializeField] private float blockDamageReduction = 0.5f;
+    [SerializeField] private StatusEffect blockDepletedStun;    // Call if block is 0
+    [SerializeField] private float blockDrainRate = 10.0f;      // Can change for balancing
+    [SerializeField] private float blockRechargeRate = 10.0f;   // Can change for balancing
+    public bool canBlock = true;
 
     public override void Init(CharacterEntity character)
     {
@@ -65,7 +69,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
         int currDamageAmount = (int) (damageAmount * Character.StatusHandler.GetDamageReduction());
 
-        if (Character.Attack.isBlocking)
+        if (Character.Attack.isDefending)
         {
             currDamageAmount = (int) (currDamageAmount * blockDamageReduction);
         }
