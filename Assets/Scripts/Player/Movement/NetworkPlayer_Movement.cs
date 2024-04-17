@@ -25,18 +25,10 @@ public class NetworkPlayer_Movement : CharacterComponent
     private TickTimer dashDurationTimer = TickTimer.None;
     private bool isDashing = false;
 
-    // Components to be retrieved when Spawned
-    [SerializeField] private Animator anim;
-
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
         character.SetMovement(this);
-    }
-
-    public override void Spawned()
-    {
-        if (!anim) anim = GetComponentInChildren<Animator>();        
     }
 
     public override void FixedUpdateNetwork()
@@ -105,8 +97,8 @@ public class NetworkPlayer_Movement : CharacterComponent
         Vector3 perpendicularMovement = new Vector3(targetDirection.z, 0, -targetDirection.x);              // Perpendicular vector in 2D space
         float horizontalMovement = Vector3.Dot(moveDirection, perpendicularMovement);                       // Dot product to get horizontal direction
 
-        anim.SetFloat("Zaxis", Vector3.Dot(moveDirection, targetDirection), 0.2f, Runner.DeltaTime);     // Use Dot product to determine forward move direction relevant to look direction
-        anim.SetFloat("Xaxis", horizontalMovement, 0.2f, Runner.DeltaTime);
+        Character.Animator.anim.SetFloat("Zaxis", Vector3.Dot(moveDirection, targetDirection), 0.2f, Runner.DeltaTime);     // Use Dot product to determine forward move direction relevant to look direction
+        Character.Animator.anim.SetFloat("Xaxis", horizontalMovement, 0.2f, Runner.DeltaTime);
     }
 
     private void ManageTimers()

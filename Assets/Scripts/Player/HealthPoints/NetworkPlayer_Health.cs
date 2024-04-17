@@ -38,7 +38,6 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public override void Spawned()
     {
         if (HP == startingHP) isDead = false;
-        anim = Character.Animator.anim;
 
         RoundManager.Instance.ResetRound += Respawn;
         RoundManager.Instance.MatchEndEvent += DisableControls;
