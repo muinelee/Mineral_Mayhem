@@ -1,18 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ChangeName : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] TMP_InputField inputField;
+    [SerializeField] TextMeshProUGUI textPlayerName;
+
+    //--------------------------------//
+
+    private void Start()
     {
-        
+        textPlayerName.text = ClientInfo.Username;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void UpdatePlayerName()
     {
-        
+        ClientInfo.Username = inputField.text;
+        Debug.Log("Player Name: " + ClientInfo.Username);
     }
 }

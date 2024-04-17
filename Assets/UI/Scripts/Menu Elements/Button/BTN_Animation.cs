@@ -18,6 +18,7 @@ public class BTN_Animation : MonoBehaviour
 
     private float curScale;
     private float lastScale;
+    [SerializeField] bool lockColor;
 
     //-----------------------------------//
 
@@ -34,39 +35,45 @@ public class BTN_Animation : MonoBehaviour
 
     public void ColorChange()
     {
-        gameObject.GetComponent<Image>().color = colorPressed;
+        if (!lockColor)
+        {
+            gameObject.GetComponent<Image>().color = colorPressed;
 
-        if (imagesToChangeColor.Length > 0)
-        {
-            for (int i = 0; i < imagesToChangeColor.Length; i++)
+            if (imagesToChangeColor.Length > 0)
             {
-                imagesToChangeColor[i].color = colorPressed;
+                for (int i = 0; i < imagesToChangeColor.Length; i++)
+                {
+                    imagesToChangeColor[i].color = colorPressed;
+                }
             }
-        }
-        if (textToChangeColor.Length > 0)
-        {
-            for (int i = 0; i < textToChangeColor.Length; i++)
+            if (textToChangeColor.Length > 0)
             {
-                textToChangeColor[i].color = colorPressed;
+                for (int i = 0; i < textToChangeColor.Length; i++)
+                {
+                    textToChangeColor[i].color = colorPressed;
+                }
             }
         }
     }
     public void ColorRevert()
     {
-        gameObject.GetComponent<Image>().color = colorNormal;
+        if (!lockColor)
+        {
+            gameObject.GetComponent<Image>().color = colorNormal;
 
-        if (imagesToChangeColor.Length > 0)
-        {
-            for (int i = 0; i < imagesToChangeColor.Length; i++)
+            if (imagesToChangeColor.Length > 0)
             {
-                imagesToChangeColor[i].color = colorNormal;
+                for (int i = 0; i < imagesToChangeColor.Length; i++)
+                {
+                    imagesToChangeColor[i].color = colorNormal;
+                }
             }
-        }
-        if (textToChangeColor.Length > 0)
-        {
-            for (int i = 0; i < textToChangeColor.Length; i++)
+            if (textToChangeColor.Length > 0)
             {
-                textToChangeColor[i].color = colorNormal;
+                for (int i = 0; i < textToChangeColor.Length; i++)
+                {
+                    textToChangeColor[i].color = colorNormal;
+                }
             }
         }
     }
@@ -111,5 +118,10 @@ public class BTN_Animation : MonoBehaviour
         }
         curScale = startValue;
         transform.localScale = new Vector3(curScale, curScale, curScale);
+    }
+
+    public void ColorLock(bool on)
+    {
+        lockColor = on;
     }
 }
