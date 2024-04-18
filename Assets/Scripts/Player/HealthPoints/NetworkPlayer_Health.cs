@@ -38,6 +38,11 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         character.SetHealth(this);
     }
 
+    public override void FixedUpdateNetwork()
+    {
+        HandleBlockMeter();
+    }
+
     // Start is called before the first frame update
     public override void Spawned()
     {
@@ -50,6 +55,39 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public override void OnHit(float x)
     {
         OnTakeDamage((int)x);
+    }
+
+    public void HandleBlockMeter()
+    {
+        if (Character.Attack.isDefending && canBlock)
+        {
+            BP -= blockDrainRate * Runner.DeltaTime;
+            if (BP <= 0)
+            {
+                BP = 0;
+                StartCoroutine(HandleBlockDepletion());
+            }
+        }
+        else if (!Character.Attack.isDefending && BP < startingBP)
+        {
+            BP += blockRechargeRate * Runner.DeltaTime;
+            BP = Mathf.Clamp(BP, 0, startingBP);
+        }
+    }
+
+    IEnumerator HandleBlockDepletion()
+    {
+        canBlock = false;
+        Character.OnStatusBegin(blockDepletedStun);
+        yield return new WaitForSeconds(blockDepletedStun.duration);
+
+        while (BP < startingBP)
+        {
+            BP += blockRechargeRate * Runner.DeltaTime;
+            yield return null;
+        }
+
+        canBlock = true;
     }
 
     // Function only called on the server
@@ -73,14 +111,10 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         {
             currDamageAmount = (int) (currDamageAmount * blockDamageReduction);
         }
-        HP -= (float) currDamageAmount;
-
-        //Debug.Log($"{Time.time} {transform.name} took damage and has {HP} HP left");
+        HP -= (int) currDamageAmount;
 
         if (HP <= 0)
         {
-        //    Debug.Log($"{Time.time} {transform.name} is dead");
-
             isDead = true;
         }
         else NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);

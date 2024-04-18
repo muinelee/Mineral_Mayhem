@@ -26,9 +26,6 @@ public class NetworkPlayer_Attack : CharacterComponent
     [Header("(Ult) F Attack Properties")]
     [SerializeField] private SO_NetworkUlt fAttack;
 
-    [Header("Block Properties")]
-    [SerializeField] private SO_NetworkAttack block;
-
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
@@ -145,13 +142,6 @@ public class NetworkPlayer_Attack : CharacterComponent
         basicAttackCount++;
     }
 
-    public void FireBlock()
-    {
-        if (!Object.HasStateAuthority) return;
-
-        Runner.Spawn(block.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
-    }
-
     public SO_NetworkAttack GetQAttack()
     {
         return qAttack;
@@ -170,11 +160,6 @@ public class NetworkPlayer_Attack : CharacterComponent
     public SO_NetworkBasicAttack GetBasicAttack(int index)
     {
         return basicAttacks[index];
-    }
-
-    public SO_NetworkAttack GetBlock()
-    {
-        return block;
     }
 
     public float GetQAttackCoolDownTimer()
