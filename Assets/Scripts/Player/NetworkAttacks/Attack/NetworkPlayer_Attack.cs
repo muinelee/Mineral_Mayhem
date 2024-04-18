@@ -102,6 +102,8 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public void ActivateBlock(bool blockButtonDown)
     {
+        if (!Object.HasStateAuthority) return;
+
         if (blockButtonDown && !isDefending && Character.Health.canBlock)
         {
             Character.Shield = Runner.Spawn(blockShield, transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
