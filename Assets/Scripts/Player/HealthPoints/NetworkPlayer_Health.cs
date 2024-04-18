@@ -102,7 +102,9 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
         if (Character.Attack.isDefending)
         {
-            currDamageAmount = (int) (currDamageAmount * blockDamageReduction);
+            int blockDamageAmount = (int) (currDamageAmount * (blockDamageReduction));
+            BP = Mathf.Max(BP - blockDamageAmount, 0);
+            currDamageAmount = (int) (currDamageAmount * (1 - blockDamageReduction));
         }
         HP -= (int) currDamageAmount;
 
