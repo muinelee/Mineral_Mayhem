@@ -23,10 +23,9 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
     {
         base.Spawned();
 
-        GetComponent<Rigidbody>().velocity = transform.forward * speed;
-
+        transform.position += Vector3.up * spawnHeight;
         float offsetX = Random.Range(-offset, offset);
-        float offsetY = spawnHeight + Random.Range(0, offset);
+        float offsetY = Random.Range(0, offset);
 
         Vector3 offsetVector = new Vector3(offsetX, offsetY, 0);
 

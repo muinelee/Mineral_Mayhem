@@ -22,6 +22,7 @@ public class LavaDive : NetworkAttack_Base
     [SerializeField] private float forceForward;
     [SerializeField] private float lingerTime;
     [SerializeField] private float attackRadius = 2;
+    [SerializeField] private NetworkObject attackEndVFX;
     private bool finishDive = false;
     private TickTimer lingerTimer;
 
@@ -95,8 +96,8 @@ public class LavaDive : NetworkAttack_Base
         // Temp
 
 
-
         DealDamage();
+        if (Runner.IsServer) Runner.Spawn(attackEndVFX, character.transform.position, Quaternion.identity);
         lingerTimer = TickTimer.CreateFromSeconds(Runner, lingerTime);
 
         //character.Animator.ResetAnimation();
@@ -167,11 +168,10 @@ public class LavaDive : NetworkAttack_Base
 
             if (healthComponent != null)
             {
-                Debug.Log("Should be doing damage");
                 healthComponent.OnTakeDamage(damage);
 
                 Vector3 playerhitPosition = hits[i].GameObject.transform.position;
-                Vector3 directionTowardsTrail = playerhitPosition + (transform.position + playerhitPosition).normalized - Vector3.up;
+                Vector3 directionTowardsTrail = playerhitPosition + (playerhitPosition - transform.position) - Vector3.up;
 
                 healthComponent.OnKnockBack(knockback, directionTowardsTrail);
             }

@@ -29,10 +29,11 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
     //spawn indexing
     private static int spawnIndex = 0;
 
-    private void Start()
+    public override void Spawned()
     {
+        transform.position += Vector3.up * spawnHeight;
         float offsetX = Random.Range(-offset, offset);
-        float offsetY = spawnHeight + Random.Range(0, offset);
+        float offsetY = Random.Range(0, offset);
 
         Vector3 offsetVector = new Vector3(offsetX, offsetY, 0);
 
@@ -43,14 +44,14 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    public override void FixedUpdateNetwork()
     {
         // move
         transform.Translate(Vector3.forward * speed);
 
         // manage lifetime
         lifeTimer += Time.deltaTime;
-        if (lifeTimer > lifetime) Destroy(gameObject);
+        if (lifeTimer > lifetime) Runner.Despawn(Object);
 
         DealDamage();
     }
@@ -80,18 +81,20 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
             damageMultiplier = 1f;
         }
         //a lil debug log to check if the spawn index is working
-        Debug.Log($"Spawn Index: {spawnIndex}");
+        //Debug.Log($"Spawn Index: {spawnIndex}");
     }
     
 
     protected override void DealDamage() {
+
+        if (!Runner.IsServer) return;
+        
         float totalDamage = 0;
         //hit signature to check 
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
 
         //loop to check for hits
         for (int i = 0; i < hits.Count; i++) {
-            Debug.Log($"Did we hit a hitbox? {hits[i].Hitbox}");
             NetworkPlayer_Health healthHandler = hits[i].GameObject.GetComponentInParent<NetworkPlayer_Health>();
 
             if (healthHandler) {
@@ -111,11 +114,11 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
                 TrackAttacks();
 
                 //debug attack index
-                Debug.Log($"Attack Index: {attackIndex}");
+                //Debug.Log($"Attack Index: {attackIndex}");
                 //debug damage multiplier
-                Debug.Log($"Damage Multiplier: {damageMultiplier}");
+                //Debug.Log($"Damage Multiplier: {damageMultiplier}");
                 //debug log to check if damage is being dealt
-                Debug.Log($"Dealt {totalDamage} damage to {healthHandler.gameObject.name}");
+                //Debug.Log($"Dealt {totalDamage} damage to {healthHandler.gameObject.name}");
 
                 Runner.Despawn(GetComponent<NetworkObject>());
             }
