@@ -13,6 +13,7 @@ public class BTN_OpenClose : MonoBehaviour
 
     [SerializeField] string nextSceneName;
     [SerializeField] bool restart;
+    [SerializeField] bool quit;
 
     public bool disabled = false;
 
@@ -30,6 +31,15 @@ public class BTN_OpenClose : MonoBehaviour
         onPress?.Invoke();
 
         yield return new WaitForSecondsRealtime(delayTime);
+
+        if (quit)
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
 
         if (restart)
         {
