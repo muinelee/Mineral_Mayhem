@@ -58,35 +58,27 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     public void HandleBlockMeter()
     {
-        if (Character.Attack.isDefending && canBlock)
+        if (!Character.Attack.isDefending && BP < startingBP)
+        {
+            BP += blockRechargeRate * Runner.DeltaTime;
+            BP = Mathf.Clamp(BP, 0, startingBP);
+            if (BP >= startingBP) canBlock = true;
+        }
+        else if (Character.Attack.isDefending && canBlock)
         {
             BP -= blockDrainRate * Runner.DeltaTime;
             if (BP <= 0)
             {
                 BP = 0;
-                StartCoroutine(HandleBlockDepletion());
+                HandleBlockDepletion();
             }
-        }
-        else if (!Character.Attack.isDefending && BP < startingBP)
-        {
-            BP += blockRechargeRate * Runner.DeltaTime;
-            BP = Mathf.Clamp(BP, 0, startingBP);
         }
     }
 
-    IEnumerator HandleBlockDepletion()
+    private void HandleBlockDepletion()
     {
         canBlock = false;
         Character.OnStatusBegin(blockDepletedStun);
-        yield return new WaitForSeconds(blockDepletedStun.duration);
-
-        while (BP < startingBP)
-        {
-            BP += blockRechargeRate * Runner.DeltaTime;
-            yield return null;
-        }
-
-        canBlock = true;
     }
 
     // Function only called on the server
