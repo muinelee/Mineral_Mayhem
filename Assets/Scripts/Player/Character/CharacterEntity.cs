@@ -108,7 +108,7 @@ public class CharacterEntity : CharacterComponent
     public bool hasDespawned = false;
     public SpriteRenderer TeamIndicator;
 
-    public GameObject Shield;
+    public NetworkObject Shield;
 
     public static readonly List<CharacterEntity> Characters = new List<CharacterEntity>();
 
@@ -119,12 +119,6 @@ public class CharacterEntity : CharacterComponent
 
         if (!TeamIndicator) TeamIndicator = GetComponentInChildren<SpriteRenderer>();
         if (Object.HasInputAuthority) RPC_SetTeam(NetworkPlayer.Local.team);
-
-        if (!Shield)
-        {
-            Debug.Log("Character has no shield");
-            Shield = GetComponentInChildren<MeshRenderer>().gameObject;
-        }
         
         var components = GetComponentsInChildren<CharacterComponent>();
         foreach (var component in components)

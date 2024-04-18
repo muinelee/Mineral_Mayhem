@@ -104,13 +104,14 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (blockButtonDown && !isDefending && Character.Health.canBlock)
         {
-            Runner.Spawn(blockShield, transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+            Character.Shield = Runner.Spawn(blockShield, transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
             Character.OnBlock(true);
             Character.Animator.anim.CrossFade("Block", 0.1f);
         }
         else if (!blockButtonDown && isDefending)
         {
-            Runner.Despawn(blockShield);
+            Runner.Despawn(Character.Shield);
+            Character.Shield = null;
             Character.OnBlock(false);
             Character.Animator.ResetAnimation();
         }
