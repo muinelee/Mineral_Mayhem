@@ -130,26 +130,26 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (!Object.HasStateAuthority) return;
 
-        Runner.Spawn(qAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        Runner.Spawn(qAttack.GetAttackPrefab(), transform.position, transform.rotation, Object.InputAuthority);
     }
 
     public void FireEAttack()
     {
         if (!Object.HasStateAuthority) return;
         
-        Runner.Spawn(eAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        Runner.Spawn(eAttack.GetAttackPrefab(), transform.position, transform.rotation, Object.InputAuthority);
     }
 
     public void FireFAttack()
     {
         if (!Object.HasStateAuthority) return;
             
-        Runner.Spawn(fAttack.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        Runner.Spawn(fAttack.GetAttackPrefab(), transform.position, transform.rotation, Object.InputAuthority);
     }
 
     public void FireBasicAttack()
     {
-        if (Object.HasStateAuthority) Runner.Spawn(basicAttacks[basicAttackCount].GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+        if (Object.HasStateAuthority) Runner.Spawn(basicAttacks[basicAttackCount].GetAttackPrefab(), transform.position, transform.rotation, Object.InputAuthority);
         basicAttackCount++;
     }
 

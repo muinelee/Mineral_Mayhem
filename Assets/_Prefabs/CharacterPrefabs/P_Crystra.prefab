@@ -268,7 +268,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   Animator: {fileID: 240942584216921724}
-  TotalWords: 5
+  TotalWords: 6
   SyncSettings: 95
   FloatAccuracy:
     _value: 0
@@ -366,7 +366,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1841117810212969303}
   - component: {fileID: 9210060762347888247}
-  m_Layer: 7
+  - component: {fileID: 6828125065033205939}
+  m_Layer: 8
   m_Name: Team Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -440,6 +441,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!135 &6828125065033205939
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3891199122871958208}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.0000002
+  m_Center: {x: 0, y: 0, z: -1}
 --- !u!1001 &1671281869410326247
 PrefabInstance:
   m_ObjectHideFlags: 0
