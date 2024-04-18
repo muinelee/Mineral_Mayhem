@@ -20,12 +20,14 @@ public class ChangeName : MonoBehaviour
     public void UpdatePlayerName()
     {
         ClientInfo.Username = inputFieldPlayerName.text;
+        PlayerPrefs.SetString("PlayerName", ClientInfo.Username);
         Debug.Log("Player Name: " + ClientInfo.Username);
     }
 
     public void UpdateSessionName()
     {
         ClientInfo.LobbyName = inputFieldSessionName.text;
+        PlayerPrefs.SetString("SessionName", ClientInfo.LobbyName);
         Debug.Log("Session Name: " + ClientInfo.LobbyName);
     }
 }
