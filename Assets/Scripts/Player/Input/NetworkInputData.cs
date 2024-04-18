@@ -14,6 +14,7 @@ public struct NetworkInputData : INetworkInput
     public const uint ButtonA = 1 << 6;
     public const uint ButtonS = 1 << 7;
     public const uint ButtonD = 1 << 8;
+    public const uint ButtonBlock = 1 << 9;
 
     public uint Buttons;
     public Vector2 cursorLocation;

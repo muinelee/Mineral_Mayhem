@@ -15,6 +15,7 @@ public class CharacterComponent : NetworkBehaviour
         Character = character;
         Character.OnHitEvent += OnHit;
         Character.OnHealEvent += OnHeal;
+        Character.OnBlockEvent += OnBlock;
         Character.OnStatusBeginEvent += OnStatusBegin;
         Character.OnStatusEndedEvent += OnStatusEnded;
         Character.OnCleanseEvent += OnCleanse;
@@ -31,7 +32,12 @@ public class CharacterComponent : NetworkBehaviour
     /// <summary>
     /// Called when a player gets healed
     /// </summary>
-    public virtual void OnHeal(float x) { }
+    public virtual void OnHeal(float x) { }    
+    
+    /// <summary>
+    /// Called when a player starts to block if true or stops blocking if false
+    /// </summary>
+    public virtual void OnBlock(bool isBlocking) { }
 
     /// <summary>
     /// Called when a player gets afflicted (Parameters need to be changed when statuses will be implemented, most likely)

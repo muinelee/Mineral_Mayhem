@@ -13,8 +13,6 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
     public TextMeshProUGUI playerName;
     [SerializeField] private NetworkPlayer_Health playerHealth;
 
-
-
     public override void Spawned()
     {
         PrimeUI();
