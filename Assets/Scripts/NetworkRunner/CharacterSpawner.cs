@@ -40,7 +40,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         NetworkPlayer.Players.Clear();
         FindAnyObjectByType<NetworkRunner>().Shutdown();
-        SceneManager.LoadScene("RichardCPlayerLobby");
+        SceneManager.LoadScene(0);
     }
 
     public async void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
