@@ -12,6 +12,7 @@ public class CG_Fade : MonoBehaviour
     [SerializeField] private float endValue = 1f;
 
     private float curValue;
+    [SerializeField] float delayOpen;
 
     //--------------------------------------//
 
@@ -26,6 +27,9 @@ public class CG_Fade : MonoBehaviour
     }
     private IEnumerator iFadeIn()
     {
+        group.alpha = startValue;
+        yield return new WaitForSecondsRealtime(delayOpen);
+
         float timeElapsed = 0;
         while (timeElapsed < lerpDuration)
         {
