@@ -19,7 +19,6 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public NetworkPlayer.Team team { get; set; }
 
     private bool isInitialized = false;
-    private Animator anim;
 
     // Health Properties
     [SerializeField] private float startingHP = 100;
@@ -146,7 +145,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         DisableControls();
 
-        anim.CrossFade("Death", 0.2f);
+        Character.Animator.anim.CrossFade("Death", 0.2f);
 
         if (!NetworkPlayer.Local.HasStateAuthority) return;
         if (team == NetworkPlayer.Team.Red) RoundManager.Instance.RedPlayersDies();
@@ -155,7 +154,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public void HandleRespawn()
     {
         EnableControls();
-        anim.Play("Run");
+        Character.Animator.anim.Play("Run");
     }
 
     static void OnHPChanged(Changed<NetworkPlayer_Health> changed)
