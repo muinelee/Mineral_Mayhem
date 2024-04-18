@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.Collections.Unicode;
+using UnityEngine.TextCore.Text;
 
 [CreateAssetMenu(fileName = "New Status Effect", menuName = "Scriptable Object/Status Effect/Stun Status")]
 public class StunStatus : StatusEffect

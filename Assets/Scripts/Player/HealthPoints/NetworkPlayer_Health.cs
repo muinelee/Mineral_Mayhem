@@ -79,6 +79,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         canBlock = false;
         Character.OnStatusBegin(blockDepletedStun);
+        Runner.Despawn(Character.Shield);
+        Character.Shield = null;
     }
 
     // Function only called on the server
