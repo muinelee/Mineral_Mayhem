@@ -40,14 +40,14 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         NetworkPlayer.Players.Clear();
         FindAnyObjectByType<NetworkRunner>().Shutdown();
-        SceneManager.LoadScene("RichardCPlayerLobby");
+        SceneManager.LoadScene(0);
     }
 
     public async void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
     {
         NetworkPlayer.Players.Clear();
         await FindAnyObjectByType<NetworkRunner>().Shutdown();
-        SceneManager.LoadScene("RichardCPlayerLobby");
+        SceneManager.LoadScene(0);
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)

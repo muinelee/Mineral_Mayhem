@@ -30,8 +30,6 @@ public class UnshackleBuff : NetworkAttack_Base
 
         //Do I need the void? IEnumerator instead maybe, check how to get hit player
         ApplyBuff();
-
-        Debug.Log("Unshackle activated");
     }
 
     public override void FixedUpdateNetwork()
@@ -49,12 +47,8 @@ public class UnshackleBuff : NetworkAttack_Base
     {
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, collisionLayer);
 
-        Debug.Log("Ability Called");
-
         for (int i = 0; i < hits.Count; i++)
         {
-            Debug.Log($"Did we hit a hitbox? {hits[i].Hitbox}");
-
             CharacterEntity character = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
             
             if (character)

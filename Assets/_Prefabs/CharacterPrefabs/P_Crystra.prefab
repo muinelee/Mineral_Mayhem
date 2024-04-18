@@ -268,7 +268,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   Animator: {fileID: 240942584216921724}
-  TotalWords: 5
+  TotalWords: 6
   SyncSettings: 95
   FloatAccuracy:
     _value: 0
@@ -282,7 +282,7 @@ MonoBehaviour:
     _value: 0
     _inverse: 0
     _hash: -814817977
-  StateHashes: 0000000020e23b685928a8ce26b8da42a4f796c72afa8626a8b5caa3c19962852ffbaaf07bc86b1c95aaa369edf86c6b039aa41ee3bb102dc00b138b3e0381be1db38218d6565164cb5196237ef1a54a4d42807d7d223a39bf50fb9b4022c943ae400136790d3cdf4abe19e8d81ab74cfbaab4ea79610a19dc25eda6a680324f03c4d5f08b3e879b060cf8b5316f8e02bc5df12ca75f89752a6df65b
+  StateHashes: 0000000020e23b685928a8ce26b8da42a4f796c72afa8626a8b5caa3c19962852ffbaaf07bc86b1c95aaa369edf86c6b039aa41ee3bb102dc00b138b3e0381be1db38218d6565164cb5196237ef1a54a4d42807d7d223a39bf50fb9b4022c943ae400136790d3cdf4abe19e8d81ab74cfbaab4ea79610a19dc25eda6a680324f03c4d5f08b3e879b060cf8b5316f8e02bc5df12ca75f89752a6df65bddfeef2d78ba0892096c6770b99dd82ed7681dbc7171eadc
   TriggerHashes: 00000000
 --- !u!114 &6451881978930218668
 MonoBehaviour:
@@ -366,7 +366,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1841117810212969303}
   - component: {fileID: 9210060762347888247}
-  m_Layer: 7
+  - component: {fileID: 6828125065033205939}
+  m_Layer: 8
   m_Name: Team Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -440,6 +441,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!135 &6828125065033205939
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3891199122871958208}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.0000002
+  m_Center: {x: 0, y: 0, z: -1}
 --- !u!1001 &1671281869410326247
 PrefabInstance:
   m_ObjectHideFlags: 0
