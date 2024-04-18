@@ -26,10 +26,14 @@ public class LavaDive : NetworkAttack_Base
 
     private CharacterEntity character;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
-    
+
+    TrailRenderer trailRenderer;
+
     public override void Spawned()
     {
         AttackStart();
+        trailRenderer = GetComponentInParent<TrailRenderer>();
+        GetComponentInParent<TrailRenderer>().emitting = true;
     }
 
     public override void FixedUpdateNetwork()
@@ -94,6 +98,8 @@ public class LavaDive : NetworkAttack_Base
 
         //character.Animator.ResetAnimation();
         finishDive = true;
+
+        GetComponentInParent<TrailRenderer>().emitting = false;
     }
     private void ManageTrailDamage()
     {
