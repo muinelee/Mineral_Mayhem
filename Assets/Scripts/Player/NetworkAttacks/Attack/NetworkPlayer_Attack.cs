@@ -27,7 +27,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     [SerializeField] private SO_NetworkUlt fAttack;
 
     [Header("Block Properties")]
-    [SerializeField] private SO_NetworkUlt blockShield;
+    [SerializeField] private NetworkObject blockShield;
 
     public override void Init(CharacterEntity character)
     {
@@ -104,13 +104,13 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (blockButtonDown && !isDefending && Character.Health.canBlock)
         {
-            Runner.Spawn(blockShield.GetAttackPrefab(), transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+            Runner.Spawn(blockShield, transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
             Character.OnBlock(true);
-            Character.Animator.anim.CrossFade(blockShield.attackName, 0.1f);
+            Character.Animator.anim.CrossFade("Block", 0.1f);
         }
         else if (!blockButtonDown && isDefending)
         {
-            Runner.Despawn(blockShield.GetAttackPrefab());
+            Runner.Despawn(blockShield);
             Character.OnBlock(false);
             Character.Animator.ResetAnimation();
         }
