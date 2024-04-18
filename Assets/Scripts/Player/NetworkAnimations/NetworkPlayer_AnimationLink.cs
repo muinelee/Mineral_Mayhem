@@ -61,10 +61,14 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
 
         if (isBlocking)
         {
+            Debug.Log($"{Character.Object.name} is Blocking");
+
             anim.CrossFade("Block", 0.2f);
         }
         else 
         {
+            Debug.Log($"{Character.Object.name} is not Blocking");
+
             ResetAnimation();
         }
     }
