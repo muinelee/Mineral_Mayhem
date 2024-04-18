@@ -30,7 +30,7 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
 
         Vector3 offsetVector = new Vector3(offsetX, offsetY, 0);
 
-        transform.Translate(offsetVector);
+        GetComponent<NetworkRigidbody>().Rigidbody.velocity = transform.forward * speed;
 
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifeDuration);
     }

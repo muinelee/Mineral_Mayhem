@@ -11,6 +11,7 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
     [SerializeField] private float lifetime;
     private float lifeTimer = 0;
     [SerializeField] private float offset;
+    [SerializeField] private float spawnHeight;
 
     // Components for getting objects in attack range
     [SerializeField] private float radius;
@@ -31,11 +32,11 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
     private void Start()
     {
         float offsetX = Random.Range(-offset, offset);
-        float offsetY = Random.Range(0, offset);
+        float offsetY = spawnHeight + Random.Range(0, offset);
 
         Vector3 offsetVector = new Vector3(offsetX, offsetY, 0);
 
-        transform.Translate(offsetVector);
+        GetComponent<NetworkRigidbody>().Rigidbody.velocity = transform.forward * speed;
 
         //track the spawns
         TrackSpawns();
