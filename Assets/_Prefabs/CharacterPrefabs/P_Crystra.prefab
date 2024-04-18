@@ -218,6 +218,7 @@ MonoBehaviour:
   qAttack: {fileID: 11400000, guid: 66c899a9801b41e41a744068b55c0af0, type: 2}
   eAttack: {fileID: 11400000, guid: 30985dba2b0883b46aef86c380316a54, type: 2}
   fAttack: {fileID: 11400000, guid: 1edd8eea6b7dcef4ebcf08088f864308, type: 2}
+  blockShield: {fileID: 0}
 --- !u!114 &-1653265293756383233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1681,6 +1682,10 @@ PrefabInstance:
     - target: {fileID: 8055280256432487588, guid: 4d838904ce0736640b7135ecdf79e5a3, type: 3}
       propertyPath: m_Name
       value: Shield
+      objectReference: {fileID: 0}
+    - target: {fileID: 8055280256432487588, guid: 4d838904ce0736640b7135ecdf79e5a3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

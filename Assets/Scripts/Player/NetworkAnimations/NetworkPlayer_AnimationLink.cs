@@ -54,22 +54,4 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
         Character.Attack.ResetAttackCapabilities();
         anim.CrossFade("Run", 0.2f);
     }
-
-    public override void OnBlock(bool isBlocking)
-    {
-        base.OnBlock(isBlocking);
-
-        if (isBlocking)
-        {
-            Debug.Log($"{Character.Object.name} is Blocking");
-
-            anim.CrossFade("Block", 0.2f);
-        }
-        else 
-        {
-            Debug.Log($"{Character.Object.name} is not Blocking");
-
-            ResetAnimation();
-        }
-    }
 }

@@ -9,9 +9,10 @@ public class StunStatus : StatusEffect
     public override void OnStatusApplied(StatusHandler handler)
     {
         if (animationName != "") handler.Character.Animator.anim.CrossFade(animationName, 0.2f);
+        else handler.Character.Animator.ResetAnimation();
         handler.Character.Movement.canMove = false;
         handler.Character.Attack.canAttack = false;
-        handler.Character.OnBlock(false);
+        handler.Character.OnBlock(false);        
     }
 
     public override void OnStatusEnded(StatusHandler handler)
