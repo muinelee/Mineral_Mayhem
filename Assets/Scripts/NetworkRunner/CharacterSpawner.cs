@@ -47,7 +47,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         NetworkPlayer.Players.Clear();
         await FindAnyObjectByType<NetworkRunner>().Shutdown();
-        SceneManager.LoadScene("RichardCPlayerLobby");
+        SceneManager.LoadScene(0);
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
