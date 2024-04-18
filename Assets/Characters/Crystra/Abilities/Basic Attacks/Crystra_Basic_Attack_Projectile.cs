@@ -8,6 +8,7 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
     [Header("Movement Properties")]
     [SerializeField] private float speed;
     [SerializeField] private float offset;
+    [SerializeField] private float spawnHeight;
 
     [Header("Lifetime Components")]
     [SerializeField] private float lifeDuration;
@@ -25,7 +26,7 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
         GetComponent<Rigidbody>().velocity = transform.forward * speed;
 
         float offsetX = Random.Range(-offset, offset);
-        float offsetY = Random.Range(0, offset);
+        float offsetY = spawnHeight + Random.Range(0, offset);
 
         Vector3 offsetVector = new Vector3(offsetX, offsetY, 0);
 
