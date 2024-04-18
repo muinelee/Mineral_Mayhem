@@ -61,7 +61,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             OnPlayerChanged?.Invoke(this);
             RPC_SetPlayerStats(ClientInfo.Username, ClientInfo.CharacterID);
-
             playerName = PlayerPrefs.GetString("PlayerName");
             RPC_SetPlayerNames(playerName.ToString());
 
