@@ -105,6 +105,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         if (blockButtonDown && !isDefending && Character.Health.canBlock)
         {
             Character.Shield = Runner.Spawn(blockShield, transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+            Character.Shield.transform.SetParent(Character.transform);
             Character.OnBlock(true);
             Character.Animator.anim.CrossFade("Block", 0.1f);
         }
