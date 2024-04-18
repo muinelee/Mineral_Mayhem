@@ -4,7 +4,7 @@ public static class ClientInfo
 {
     public static string Username
     {
-        get => PlayerPrefs.GetString("Client_Username", "PlayerName");
+        get => PlayerPrefs.GetString("Client_Username", "Player Name");
         set => PlayerPrefs.SetString("Client_Username", value);
     }
 
@@ -16,7 +16,7 @@ public static class ClientInfo
 
     public static string LobbyName
     {
-        get => PlayerPrefs.GetString("Client_LastLobbyName", "");
+        get => PlayerPrefs.GetString("Client_LastLobbyName", "Session Name");
         set => PlayerPrefs.SetString("Client_LastLobbyName", value);
     }
 }

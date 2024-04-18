@@ -8,10 +8,6 @@ using UnityEngine.Events;
 
 public class PlayerJoinScreenUI : MonoBehaviour
 {
-
-    [Header("New Game Info")]
-    public TMP_InputField sessionName;
-
     private NetworkRunnerHandler networkRunnerHandler;
     private string[] roomAddress = new string[] { "RaeLeda/RaeLedaTrainingRoom", "RichardCPhoton" };
     private string map;
@@ -29,15 +25,9 @@ public class PlayerJoinScreenUI : MonoBehaviour
         FindObjectOfType<SessionLobbyManager>(true).OnLookingForSession();
     }
 
-    public void OnCreateNewGameClicked()
-    {
-        sessionName.text = PlayerPrefs.GetString("SessionName");
-    }
-
     public void OnStartNewSessionClicked()
     {
-        PlayerPrefs.SetString("SessionName", sessionName.text);
-        networkRunnerHandler.CreateGame(sessionName.text, "RichardCPhoton");
+        networkRunnerHandler.CreateGame(ClientInfo.LobbyName, "RichardCPhoton");
     }
 
     public void OnBackClicked()
