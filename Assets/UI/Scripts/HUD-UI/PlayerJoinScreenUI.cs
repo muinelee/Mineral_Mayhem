@@ -68,18 +68,6 @@ public class PlayerJoinScreenUI : MonoBehaviour
     {
         PlayerPrefs.SetString("SessionName", sessionName.text);
         networkRunnerHandler.CreateGame(sessionName.text, "RichardCPhoton");
-        /*
-        // Training Map
-        if (map == roomAddress[0]) networkRunnerHandler.CreateGame(sessionName.text, map);
-
-        // Arena Map
-        else if (map == roomAddress[1] && networkRunnerHandler.GetRoomSize() > 1) networkRunnerHandler.CreateGame(sessionName.text, map);
-
-        else return;
-        // Display Status Panel
-        HideAllPanels();
-        statusPanel.SetActive(true);
-        */
     }
 
     public void OnBackClicked()
