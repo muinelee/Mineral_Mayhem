@@ -47,17 +47,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  damage: 1
-  knockback: 0
+  damage: 20
+  knockback: 1000
   SFX: {fileID: 0}
-  statusEffectSO: []
+  statusEffectSO:
+  - {fileID: 11400000, guid: 8f4c96a15ba57a04380148f2dae97480, type: 2}
   searchRadius: 0.1
   collisionLayer:
     serializedVersion: 2
     m_Bits: 128
-  forceForward: 100
-  diveDistance: 800
+  diveDistance: 5
   boxWidth: 3
+  tickRate: 0.5
+  tickDamage: 3
+  forceForward: 45
+  lingerTime: 3
+  attackRadius: 2
 --- !u!114 &8048664628170203332
 MonoBehaviour:
   m_ObjectHideFlags: 0
