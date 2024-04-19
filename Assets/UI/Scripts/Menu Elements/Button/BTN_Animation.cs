@@ -11,10 +11,9 @@ public class BTN_Animation : MonoBehaviour
     private float startValue = 1;
     private float endValue = 1.25f;
     [SerializeField] float sizeMultiplier = -0.25f;
-    private Color colorNormal;
-    [SerializeField] Color colorPressed;
     [SerializeField] Image[] imagesToChangeColor;
-    [SerializeField] TextMeshProUGUI[] textToChangeColor;
+    [SerializeField] Color[] colorNormal;
+    [SerializeField] Color[] colorPressed;
 
     private float curScale;
     private float lastScale;
@@ -29,28 +28,17 @@ public class BTN_Animation : MonoBehaviour
         lastScale = curScale;
 
         endValue = startValue + (startValue * sizeMultiplier);
-
-        colorNormal = gameObject.GetComponent<Image>().color;
     }
 
     public void ColorChange()
     {
         if (!lockColor)
         {
-            gameObject.GetComponent<Image>().color = colorPressed;
-
             if (imagesToChangeColor.Length > 0)
             {
                 for (int i = 0; i < imagesToChangeColor.Length; i++)
                 {
-                    imagesToChangeColor[i].color = colorPressed;
-                }
-            }
-            if (textToChangeColor.Length > 0)
-            {
-                for (int i = 0; i < textToChangeColor.Length; i++)
-                {
-                    textToChangeColor[i].color = colorPressed;
+                    imagesToChangeColor[i].color = colorPressed[i];
                 }
             }
         }
@@ -59,20 +47,11 @@ public class BTN_Animation : MonoBehaviour
     {
         if (!lockColor)
         {
-            gameObject.GetComponent<Image>().color = colorNormal;
-
             if (imagesToChangeColor.Length > 0)
             {
                 for (int i = 0; i < imagesToChangeColor.Length; i++)
                 {
-                    imagesToChangeColor[i].color = colorNormal;
-                }
-            }
-            if (textToChangeColor.Length > 0)
-            {
-                for (int i = 0; i < textToChangeColor.Length; i++)
-                {
-                    textToChangeColor[i].color = colorNormal;
+                    imagesToChangeColor[i].color = colorNormal[i];
                 }
             }
         }
