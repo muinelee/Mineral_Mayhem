@@ -9,19 +9,31 @@ public class Coldmehameha : NetworkAttack_Base
     //componets for getting attack objects
     [Header("Attack Properties")]
     //used for OverlapSphere, will be removed when swapped to OverlapBox
-    [SerializeField] private float radius; ///////////////////////////
+    [SerializeField] private float attradius; ///////////////////////////
     //lifetime of the attack
     [SerializeField] private float lifetime;
     //ticktimer to work with lifetime
     private TickTimer lifeTimer = TickTimer.None;
 
+    CharacterEntity characterEntity;
+
     List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
     [SerializeField] private LayerMask collisionLayer;
+
     public override void Spawned() {
         //call base class spawn function
         base.Spawned();
         //lifetimer ticktimer created from lifetime variable
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifetime);
+
+        //call sphere to check player
+        Runner.LagCompensation.OverlapSphere(transform.position, 0.1f, player: Object.InputAuthority, hits, collisionLayer);
+        //loop for hits
+        for (int i = 0; i < hits.Count; i++) {
+            //get character entity as parent of hit object
+            CharacterEntity character = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
+            this.transform.SetParent(character.transform);
+        }
     }
     void FixedUpdate()
     {
@@ -45,7 +57,7 @@ public class Coldmehameha : NetworkAttack_Base
 
     protected override void DealDamage()
     {
-        Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
+        Runner.LagCompensation.OverlapSphere(transform.position, attradius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
         //loop to check for hits
         foreach (LagCompensatedHit hit in hits) {
             //get health component interface
