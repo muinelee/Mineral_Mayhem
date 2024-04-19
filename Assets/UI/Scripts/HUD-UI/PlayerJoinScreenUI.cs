@@ -48,11 +48,6 @@ public class PlayerJoinScreenUI : MonoBehaviour
         map = roomAddress[0];
     }
 
-    public void OnArenaClicked()
-    {
-        map = roomAddress[1];
-    }
-
     public void OnQuitClicked()
     {
         BackToMainMenu?.Invoke();
