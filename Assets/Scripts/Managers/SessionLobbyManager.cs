@@ -44,7 +44,7 @@ public class SessionLobbyManager : MonoBehaviour
 
         networkRunnerHandler.JoinGame(sessionInfo);
 
-        FindAnyObjectByType<PlayerJoinScreenUI>().OnJoiningServer();
+        //FindAnyObjectByType<PlayerJoinScreenUI>().OnJoiningServer();
     }
 
     public void OnNoSessionsFound()

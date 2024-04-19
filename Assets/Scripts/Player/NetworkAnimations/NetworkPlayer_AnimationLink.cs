@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class NetworkPlayer_AnimationLink : CharacterComponent
 {
-    private NetworkPlayer_Attack playerAttack;
     public Animator anim;
 
     public override void Init(CharacterEntity character)
@@ -17,43 +16,42 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
     // Start is called before the first frame update
     public override void Spawned()
     {
-        playerAttack = GetComponentInParent<NetworkPlayer_Attack>();
-        anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();        
     }
 
     public void FireQAttack()
     {
-        playerAttack.FireQAttack();
+        Character.Attack.FireQAttack();
     }
 
     public void FireEAttack()
     {
-        playerAttack.FireEAttack();
+        Character.Attack.FireEAttack();
     }
 
     public void FireFAttack()
     {
-        playerAttack.FireFAttack();
+        Character.Attack.FireFAttack();
     }
 
     public void FireBasicAttack()
     {
-        playerAttack.FireBasicAttack();
+        Character.Attack.FireBasicAttack();
     }
 
     public void AllowChainBasicAttack()
     {
-        playerAttack.AllowChainBasicAttack();
+        Character.Attack.AllowChainBasicAttack();
     }
 
     public void ChainBasicAttack()
     {
-        playerAttack.ChainBasicAttack();
+        Character.Attack.ChainBasicAttack();
     }
 
     public void ResetAnimation()
     {
-        playerAttack.ResetAttackCapabilities();
+        Character.Attack.ResetAttackCapabilities();
         anim.CrossFade("Run", 0.2f);
     }
 }

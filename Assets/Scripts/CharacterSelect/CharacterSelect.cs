@@ -54,6 +54,7 @@ public class CharacterSelect : NetworkBehaviour
         characterSelectTimer = TickTimer.None;
         FinalizeChoice();
         RoundUI.instance.StartRound();
+        NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
         RoundManager.Instance.MatchStart();
         this.gameObject.SetActive(false);
     }
@@ -207,7 +208,9 @@ public class CharacterSelect : NetworkBehaviour
     {
         characterLookup[NetworkPlayer.Local].Input.CharacterSelected = true;
         characterLookup[NetworkPlayer.Local].PlayerUI.SpawnPlayerUI();
-        NetworkCameraEffectsManager.instance.GoToTopCamera();
+        //
+        // ----  Disabling Cinematic Call For Now - Re-enable When Ready ----
+        //
         ResetButtonVisual(currentSelectedCharacterButton);
         characterSelectScreen.SetActive(false);
         reselectButton.gameObject.SetActive(true);

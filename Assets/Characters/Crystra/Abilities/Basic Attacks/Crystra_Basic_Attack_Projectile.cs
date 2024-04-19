@@ -8,6 +8,7 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
     [Header("Movement Properties")]
     [SerializeField] private float speed;
     [SerializeField] private float offset;
+    [SerializeField] private float spawnHeight;
 
     [Header("Lifetime Components")]
     [SerializeField] private float lifeDuration;
@@ -22,14 +23,13 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
     {
         base.Spawned();
 
-        GetComponent<Rigidbody>().velocity = transform.forward * speed;
-
+        transform.position += Vector3.up * spawnHeight;
         float offsetX = Random.Range(-offset, offset);
         float offsetY = Random.Range(0, offset);
 
         Vector3 offsetVector = new Vector3(offsetX, offsetY, 0);
 
-        transform.Translate(offsetVector);
+        GetComponent<NetworkRigidbody>().Rigidbody.velocity = transform.forward * speed;
 
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifeDuration);
     }
@@ -50,19 +50,20 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
         lifeTimer = TickTimer.None;
         Runner.Despawn(Object);
     }
+
     protected override void DealDamage()
     {
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
         foreach (LagCompensatedHit hit in hits)
         {
-            CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
+            IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
 
-            if (characterEntity)
+            if (healthComponent != null)
             {
-                if (characterEntity.Health.isDead || CheckIfSameTeam(characterEntity)) continue;
+                if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
 
-                characterEntity.Health.OnHit(damage);
-                characterEntity.Health.OnKnockBack(knockback, transform.position);
+                healthComponent.OnTakeDamage(damage);
+                healthComponent.OnKnockBack(knockback, transform.position);
                 AttackEnd();
             }
         }
