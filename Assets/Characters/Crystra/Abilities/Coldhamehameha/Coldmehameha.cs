@@ -14,8 +14,11 @@ public class Coldmehameha : NetworkAttack_Base
     [SerializeField] private float lifetime;
     //ticktimer to work with lifetime
     private TickTimer lifeTimer = TickTimer.None;
+    //spawn offset
 
-    CharacterEntity characterEntity;
+
+    CharacterEntity character;
+    public Vector3 extends = new Vector3(0.5f, 0.5f, 6f);
 
     List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
     [SerializeField] private LayerMask collisionLayer;
@@ -31,7 +34,7 @@ public class Coldmehameha : NetworkAttack_Base
         //loop for hits
         for (int i = 0; i < hits.Count; i++) {
             //get character entity as parent of hit object
-            CharacterEntity character = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
+            character = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
             this.transform.SetParent(character.transform);
         }
     }
@@ -55,9 +58,15 @@ public class Coldmehameha : NetworkAttack_Base
         Runner.Despawn(Object);
     }
 
+    //private void OnDrawGizmos() {
+    //    //draw gizmos for the attack
+    //    Gizmos.DrawCube((this.transform.position + (transform.forward * 3)), extends);
+    //}
+
     protected override void DealDamage()
     {
-        Runner.LagCompensation.OverlapSphere(transform.position, attradius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
+        Quaternion rotation = Quaternion.LookRotation(character.transform.forward);
+        Runner.LagCompensation.OverlapBox((character.transform.position + (character.transform.forward * 3)), extends, rotation, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
         //loop to check for hits
         foreach (LagCompensatedHit hit in hits) {
             //get health component interface
@@ -70,6 +79,8 @@ public class Coldmehameha : NetworkAttack_Base
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
                 //call the on take damage function from the health component
                 healthComponent.OnTakeDamage(damage);
+                //apply knockback when hit
+                healthComponent.OnKnockBack(knockback, this.transform.position);
             }
 
             CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
