@@ -54,6 +54,7 @@ public class CharacterSelect : NetworkBehaviour
         characterSelectTimer = TickTimer.None;
         FinalizeChoice();
         RoundUI.instance.StartRound();
+        NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
         RoundManager.Instance.MatchStart();
         this.gameObject.SetActive(false);
     }
@@ -210,7 +211,6 @@ public class CharacterSelect : NetworkBehaviour
         //
         // ----  Disabling Cinematic Call For Now - Re-enable When Ready ----
         //
-        NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local); 
         ResetButtonVisual(currentSelectedCharacterButton);
         characterSelectScreen.SetActive(false);
         reselectButton.gameObject.SetActive(true);

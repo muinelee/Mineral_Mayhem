@@ -15,6 +15,8 @@ public class LavaDive : NetworkAttack_Base
     [SerializeField] private float tickRate = 0.5f;
     [SerializeField] private int tickDamage = 3;
     [SerializeField] private Transform trail;
+    [SerializeField] private float dashDuration;
+    private TickTimer dashTimer = TickTimer.None;
     private TickTimer trailDamageTimer = TickTimer.None;
     private List<CharacterEntity> playerEntities = new List<CharacterEntity>();
 
@@ -52,7 +54,7 @@ public class LavaDive : NetworkAttack_Base
         }
 
         if (finishDive) return;
-        if (Vector3.Magnitude(character.transform.position - transform.position) > diveDistance) DiveEnd();
+        if (Vector3.Magnitude(character.transform.position - transform.position) > diveDistance || dashTimer.Expired(Runner)) DiveEnd();
         trail.position = character.transform.position;
     }
 
@@ -79,6 +81,7 @@ public class LavaDive : NetworkAttack_Base
             }
         }
 
+        dashTimer = TickTimer.CreateFromSeconds(Runner, dashDuration);
         trailDamageTimer = TickTimer.CreateFromSeconds(Runner, tickRate);
     }
 

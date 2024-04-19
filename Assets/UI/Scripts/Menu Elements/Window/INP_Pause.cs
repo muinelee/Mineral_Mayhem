@@ -37,8 +37,8 @@ public class INP_Pause : MonoBehaviour
             Time.timeScale = 1;
             paused = false;
 
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            //Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.visible = false;
         }
         else if (!paused)
         {
@@ -48,8 +48,8 @@ public class INP_Pause : MonoBehaviour
             menu.gameObject.SetActive(true);
             menu.FadeIn();
 
-            Cursor.lockState = CursorLockMode.Confined;
-            Cursor.visible = true;
+            //Cursor.lockState = CursorLockMode.Confined;
+            //Cursor.visible = true;
         }
     }
 }

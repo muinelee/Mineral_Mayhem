@@ -102,20 +102,25 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public void ActivateBlock(bool blockButtonDown)
     {
-        if (!Object.HasStateAuthority) return;
 
         if (blockButtonDown && !isDefending && Character.Health.canBlock)
         {
-            Character.Shield = Runner.Spawn(blockShield, transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
-            Character.Shield.transform.SetParent(Character.transform);
-            Character.OnBlock(true);
+            if (Object.HasStateAuthority)
+            {
+                Character.Shield = Runner.Spawn(blockShield, transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+                Character.Shield.transform.SetParent(Character.transform);
+                Character.OnBlock(true);
+            }
             Character.Animator.anim.CrossFade("Block", 0.1f);
         }
         else if (!blockButtonDown && isDefending)
         {
-            Runner.Despawn(Character.Shield);
-            Character.Shield = null;
-            Character.OnBlock(false);
+            if (Object.HasStateAuthority)
+            {
+                Runner.Despawn(Character.Shield);
+                Character.Shield = null;
+                Character.OnBlock(false);
+            }
             Character.Animator.ResetAnimation();
         }
     }
