@@ -44,6 +44,7 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
 
         if (Input.GetKey(KeyCode.Space)) userInput.Buttons |= NetworkInputData.ButtonDash;
         if (Input.GetKey(KeyCode.Mouse0)) userInput.Buttons |= NetworkInputData.ButtonBasic;
+        if (Input.GetKey(KeyCode.Mouse1)) userInput.Buttons |= NetworkInputData.ButtonBlock;
         if (Input.GetKey(KeyCode.Q)) userInput.Buttons |= NetworkInputData.ButtonQ;
         if (Input.GetKey(KeyCode.E)) userInput.Buttons |= NetworkInputData.ButtonE;
         if (Input.GetKey(KeyCode.F)) userInput.Buttons |= NetworkInputData.ButtonF;

@@ -9,14 +9,27 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     [Networked(OnChanged = nameof(OnHPChanged))]
     public float HP { get; set; }
 
+    // Callback is Temporary until OnHPChanged is implemented
+    [Networked(OnChanged = nameof(OnHPChanged))] 
+    public float BP { get; set; }
+
     [Networked(OnChanged = nameof(OnStateChanged))]
     public bool isDead { get; set; }
+
     public NetworkPlayer.Team team { get; set; }
 
     private bool isInitialized = false;
-    private Animator anim;
 
+    // Health Properties
     [SerializeField] private float startingHP = 100;
+
+    // Block Properties
+    [SerializeField] private float startingBP = 100;
+    [SerializeField] private float blockDamageReduction = 0.5f;
+    [SerializeField] private StatusEffect blockDepletedStun;    // Call if block is 0
+    [SerializeField] private float blockDrainRate = 10.0f;      // Can change for balancing
+    [SerializeField] private float blockRechargeRate = 10.0f;   // Can change for balancing
+    public bool canBlock = true;
 
     public override void Init(CharacterEntity character)
     {
@@ -24,11 +37,15 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         character.SetHealth(this);
     }
 
+    public override void FixedUpdateNetwork()
+    {
+        HandleBlockMeter();
+    }
+
     // Start is called before the first frame update
     public override void Spawned()
     {
         if (HP == startingHP) isDead = false;
-        anim = GetComponentInChildren<Animator>();
 
         RoundManager.Instance.ResetRound += Respawn;
         RoundManager.Instance.MatchEndEvent += DisableControls;
@@ -37,6 +54,33 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public override void OnHit(float x)
     {
         OnTakeDamage((int)x);
+    }
+
+    public void HandleBlockMeter()
+    {
+        if (!Character.Attack.isDefending && BP < startingBP)
+        {
+            BP += blockRechargeRate * Runner.DeltaTime;
+            BP = Mathf.Clamp(BP, 0, startingBP);
+            if (BP >= startingBP) canBlock = true;
+        }
+        else if (Character.Attack.isDefending && canBlock)
+        {
+            BP -= blockDrainRate * Runner.DeltaTime;
+            if (BP <= 0)
+            {
+                BP = 0;
+                HandleBlockDepletion();
+            }
+        }
+    }
+
+    private void HandleBlockDepletion()
+    {
+        canBlock = false;
+        Character.OnStatusBegin(blockDepletedStun);
+        Runner.Despawn(Character.Shield);
+        Character.Shield = null;
     }
 
     // Function only called on the server
@@ -56,18 +100,21 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
         int currDamageAmount = (int) (damageAmount * Character.StatusHandler.GetDamageReduction());
 
-        HP -= (float) currDamageAmount;
-
-        //Debug.Log($"{Time.time} {transform.name} took damage and has {HP} HP left");
+        if (Character.Attack.isDefending)
+        {
+            int blockDamageAmount = (int) (currDamageAmount * (blockDamageReduction));
+            BP = Mathf.Max(BP - blockDamageAmount, 0);
+            currDamageAmount = (int) (currDamageAmount * (1 - blockDamageReduction));
+        }
+        HP -= (int) currDamageAmount;
 
         if (HP <= 0)
         {
-        //    Debug.Log($"{Time.time} {transform.name} is dead");
-
             isDead = true;
         }
         else NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
     }
+
 
     public void OnKnockBack(float force, Vector3 source)
     {
@@ -83,7 +130,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         DisableControls();
 
-        anim.CrossFade("Death", 0.2f);
+        Character.Animator.anim.CrossFade("Death", 0.2f);
 
         if (!NetworkPlayer.Local.HasStateAuthority) return;
         if (team == NetworkPlayer.Team.Red) RoundManager.Instance.RedPlayersDies();
@@ -92,7 +139,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public void HandleRespawn()
     {
         EnableControls();
-        anim.Play("Run");
+        Character.Animator.anim.Play("Run");
     }
 
     static void OnHPChanged(Changed<NetworkPlayer_Health> changed)

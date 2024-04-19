@@ -10,6 +10,7 @@ public class CharacterEntity : CharacterComponent
 
     public event Action<float> OnHitEvent;
     public event Action<float> OnHealEvent;
+    public event Action<bool> OnBlockEvent;
     public event Action<StatusEffect> OnStatusBeginEvent;
     public event Action<StatusEffect> OnStatusEndedEvent;
     public event Action OnCleanseEvent;
@@ -25,6 +26,10 @@ public class CharacterEntity : CharacterComponent
     public override void OnHeal(float x)
     {
         OnHealEvent?.Invoke(x);
+    }
+    public override void OnBlock(bool isBlocking)
+    {
+        OnBlockEvent?.Invoke(isBlocking);
     }
     public override void OnStatusBegin(StatusEffect status)
     {
@@ -103,6 +108,8 @@ public class CharacterEntity : CharacterComponent
     public bool hasDespawned = false;
     public SpriteRenderer TeamIndicator;
 
+    public NetworkObject Shield;
+
     public static readonly List<CharacterEntity> Characters = new List<CharacterEntity>();
 
     public override void Spawned()
@@ -110,7 +117,7 @@ public class CharacterEntity : CharacterComponent
         Rigidbody = GetComponent<NetworkRigidbody>();
         Collider = GetComponent<Collider>();
 
-        TeamIndicator = GetComponentInChildren<SpriteRenderer>();
+        if (!TeamIndicator) TeamIndicator = GetComponentInChildren<SpriteRenderer>();
         if (Object.HasInputAuthority) RPC_SetTeam(NetworkPlayer.Local.team);
         
         var components = GetComponentsInChildren<CharacterComponent>();

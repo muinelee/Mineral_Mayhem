@@ -115,6 +115,7 @@ public class RoundManager : NetworkBehaviour
 
     public void MatchStart()
     {
+        NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
         MatchStartEvent?.Invoke();
     }
 
