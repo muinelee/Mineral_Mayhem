@@ -16,7 +16,7 @@ public class CoreBehaviour : MonoBehaviour
     private bool spawn25flag = false;
 
     public GameObject[] collectiblePrefabs;
-    public Transform[] spawnPoints;
+    public Transform spawnPoint;
     private System.Random random = new System.Random();
 
     //Health
@@ -80,11 +80,10 @@ public class CoreBehaviour : MonoBehaviour
 
     private void SpawnCollectible()
     {
-        if (collectiblePrefabs != null && collectiblePrefabs.Length > 0 && spawnPoints != null && spawnPoints.Length > 0)
+        if (collectiblePrefabs != null && collectiblePrefabs.Length > 0 && spawnPoint != null)
         {
             GameObject randomCollectible = collectiblePrefabs[random.Next(0, collectiblePrefabs.Length)];
-            Transform randomSpawnPoint = spawnPoints[random.Next(0, spawnPoints.Length)];
-            Instantiate(randomCollectible, randomSpawnPoint.position, Quaternion.identity);
+            Instantiate(randomCollectible, spawnPoint.position, Quaternion.identity);
         }
     }
 
