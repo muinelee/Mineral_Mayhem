@@ -6791,6 +6791,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1593739270}
   - component: {fileID: 1593739269}
+  - component: {fileID: 1593739271}
   m_Layer: 0
   m_Name: Arena
   m_TagString: Untagged
@@ -6814,7 +6815,7 @@ MonoBehaviour:
   spawnPoints: []
   healthPickup: {fileID: 0}
   altPickup: {fileID: 0}
-  core: {fileID: 0}
+  core: {fileID: 4435497306642889174, guid: 13fc9a49295942943b4d04436816fb4d, type: 3}
   definition: {fileID: 0}
   spline: {fileID: 0}
 --- !u!4 &1593739270
@@ -6833,6 +6834,30 @@ Transform:
   - {fileID: 451529275}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1593739271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593739268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2561
+  NetworkGuid:
+    RawGuidValue: ee92ee1860d84d52b5ffe0f51688489b
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 1593739269}
+  SimulationBehaviours: []
 --- !u!1 &1597203930
 GameObject:
   m_ObjectHideFlags: 3
@@ -8636,8 +8661,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1596800849579836642}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2164396, y: -0, z: -0, w: 0.97629607}
-  m_LocalPosition: {x: 34.35, y: 1.5, z: 0}
+  m_LocalRotation: {x: 0.42261827, y: -0, z: -0, w: 0.9063079}
+  m_LocalPosition: {x: 7.5, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

@@ -16,6 +16,43 @@ public class Arena : NetworkBehaviour
 
     public SplineContainer spline;
 
+    private GameObject currentCore;
+    private Coroutine coreSpawnCoroutine;
+
+    private void Start()
+    {
+        StartCoreSpawnTimer(5f);
+    }
+
+    private void StartCoreSpawnTimer(float delay)
+    {
+        if (coreSpawnCoroutine != null)
+            StopCoroutine(coreSpawnCoroutine);
+
+        coreSpawnCoroutine = StartCoroutine(SpawnCoreAfterDelay(delay));
+    }
+
+    private IEnumerator SpawnCoreAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        Vector3 spawnPosition = GetNewCoreSpawnLocation();
+        currentCore = Instantiate(core, spawnPosition, Quaternion.identity);
+
+        StartCoroutine(WaitForCoreDestroyed());
+    }
+
+    private IEnumerator WaitForCoreDestroyed()
+    {
+        while (currentCore != null)
+        {
+            yield return null;
+        }
+
+        StartCoreSpawnTimer(5f);
+    }
+
+
     private void Awake()
     {
         Current = this;
@@ -77,6 +114,11 @@ public class Arena : NetworkBehaviour
             // Go to Player Camera (Top-Down View)
             StartArenaCinematic();  
         }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            DestroyCore(); // Destroy the core manually (for testing purposes)
+        }
     }
 
     /// <summary>
@@ -94,7 +136,24 @@ public class Arena : NetworkBehaviour
     /// <returns></returns>
     public Vector3 GetNewCoreSpawnLocation()
     {
-        float randomLocation = Random.Range(0f, 1f);
-        return spline.EvaluatePosition(randomLocation);
+        if (spline != null)
+        {
+            float randomLocation = Random.Range(0f, 1f);
+            return spline.EvaluatePosition(randomLocation);
+        }
+        else
+        {
+            Debug.LogWarning("Spline is not assigned for core spawning.");
+            return Vector3.zero;
+        }
+    }
+
+    public void DestroyCore()
+    {
+        if (currentCore != null)
+        {
+            Destroy(currentCore);
+            currentCore = null;
+        }
     }
 }
