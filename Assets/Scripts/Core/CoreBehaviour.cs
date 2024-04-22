@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.ProBuilder;
 using UnityEngine.UI;
+using Fusion;
 
-public class CoreBehaviour : MonoBehaviour
+public class CoreBehaviour : NetworkBehaviour, IHealthComponent
 {   
     //Health
     public int maxHealth = 100;
-    private int currentHealth;
 
     //Pickup flags
     private bool spawn75flag = false;
@@ -22,9 +22,13 @@ public class CoreBehaviour : MonoBehaviour
     //Health
     [SerializeField] private Image healthBar;
 
+    public float HP { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public bool isDead { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public NetworkPlayer.Team team { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+
     private void Start()
     {
-        currentHealth = maxHealth;
+        HP = maxHealth;
     }
 
     private void Update()
@@ -38,13 +42,13 @@ public class CoreBehaviour : MonoBehaviour
 
     public void TakeDamage(int damageAmount)
     {
-        currentHealth -= damageAmount;
+        HP -= damageAmount;
         CheckHealth();
     }
 
     private void CheckHealth()
     {
-        float healthPercentage = (float)currentHealth / maxHealth;
+        float healthPercentage = (float)HP / maxHealth;
 
         healthBar.fillAmount = healthPercentage;
 

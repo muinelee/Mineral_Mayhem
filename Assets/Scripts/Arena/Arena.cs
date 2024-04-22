@@ -10,13 +10,13 @@ public class Arena : NetworkBehaviour
     public Transform[] spawnPoints;
     public GameObject healthPickup;
     public GameObject altPickup;    // at time of writing I forget name of other collectible in-game lol - there may also be more than one, can create list
-    public GameObject core;
+    public NetworkObject core;
 
     public SO_ArenaDefinition definition;    //Will have information relative to the specific arena we are on (music/name/index/icon/image, etc)
 
     public SplineContainer spline;
 
-    private GameObject currentCore;
+    private NetworkObject currentCore;
     private Coroutine coreSpawnCoroutine;
 
     private void Start()
@@ -37,13 +37,17 @@ public class Arena : NetworkBehaviour
         yield return new WaitForSeconds(delay);
 
         Vector3 spawnPosition = GetNewCoreSpawnLocation();
-        currentCore = Instantiate(core, spawnPosition, Quaternion.identity);
+        currentCore = Runner.Spawn(core, spawnPosition, Quaternion.identity);
 
         StartCoroutine(WaitForCoreDestroyed());
     }
 
     private IEnumerator WaitForCoreDestroyed()
     {
+        if(!Runner.IsServer)
+        {
+            yield return null;
+        }
         while (currentCore != null)
         {
             yield return null;
