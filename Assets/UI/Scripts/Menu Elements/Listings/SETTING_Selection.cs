@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class SETTING_Selection : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI text;
+    [SerializeField] TextMeshProUGUI[] text;
     [SerializeField] string settingType;
 
-    [SerializeField] string[] value = { "Off", "On" };
+    [SerializeField] string[] value = { "On", "Off" };
 
     [Header("Options")]
     [SerializeField] bool loop = true;
@@ -56,11 +56,14 @@ public class SETTING_Selection : MonoBehaviour
         {
             if (i == selected)
             {
-                text.text = value[i];
+                for (int j = 0; i < text.Length; i++)
+                {
+                    text[j].text = value[i];
+                }
             }
         }
 
-        ChangeSetting.instance.ChangeSelection(selected, settingType);
+        if (settingType != "") ChangeSetting.instance.ChangeSelection(selected, settingType);
         Debug.Log("Option: " + selected);
     }
 }
