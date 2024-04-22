@@ -22,8 +22,6 @@ public class CoreBehaviour : MonoBehaviour
     //Health
     [SerializeField] private Image healthBar;
 
-
-
     private void Start()
     {
         currentHealth = maxHealth;
@@ -35,8 +33,6 @@ public class CoreBehaviour : MonoBehaviour
         {
             TakeDamage(10);
         }
-
-
     }
 
 
@@ -86,5 +82,4 @@ public class CoreBehaviour : MonoBehaviour
             Instantiate(randomCollectible, spawnPoint.position, Quaternion.identity);
         }
     }
-
 }
