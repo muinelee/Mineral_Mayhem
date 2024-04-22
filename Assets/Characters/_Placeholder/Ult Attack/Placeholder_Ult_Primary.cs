@@ -78,21 +78,16 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
 
                 objectsHit.Add(hit.Hitbox);
 
-                CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
+                IHealthComponent healthComponent = hit.GameObject.GetComponent<IHealthComponent>();
 
-                if (characterEntity) characterEntity.OnHit(damage);
-                // Temporary solution for between refactoring
-                else
+                if (healthComponent != null)
                 {
-                    NetworkPlayer_Health networkPlayer_Health = hit.GameObject.GetComponentInParent<NetworkPlayer_Health>();
-                    networkPlayer_Health.OnTakeDamage(damage);
+                    if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
 
-                    StatusHandler statusHandler = hit.GameObject.GetComponentInParent<StatusHandler>();
-                    foreach (StatusEffect status in statusEffectSO)
-                    {
-                        statusHandler.AddStatus(status);
-                    }
+                    healthComponent.OnTakeDamage(damage);
                 }
+
+                CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
 
                 if (statusEffectSO.Count > 0 && characterEntity)
                 {

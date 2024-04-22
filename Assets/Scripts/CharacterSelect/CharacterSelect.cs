@@ -54,6 +54,7 @@ public class CharacterSelect : NetworkBehaviour
         characterSelectTimer = TickTimer.None;
         FinalizeChoice();
         RoundUI.instance.StartRound();
+        NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
         RoundManager.Instance.MatchStart();
         this.gameObject.SetActive(false);
     }
@@ -162,12 +163,14 @@ public class CharacterSelect : NetworkBehaviour
         if (characterLookup[player] == null)
         {
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnLocation].position, Quaternion.identity, player.Object.InputAuthority);
+            player.Avatar = characterLookup[player].Input;
         }
 
         else
         {
             Runner.Despawn(characterLookup[player].Object);
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnLocation].position, Quaternion.identity, player.Object.InputAuthority);
+            player.Avatar = characterLookup[player].Input;
         }
 
         characterLookup[player].GetComponent<NetworkPlayer_Health>().team = player.team;
@@ -203,9 +206,13 @@ public class CharacterSelect : NetworkBehaviour
     /// </summary>
     public void FinalizeChoice()
     {
-        characterLookup[NetworkPlayer.Local].Controller.characterHasBeenSelected = true;
+        characterLookup[NetworkPlayer.Local].Input.CharacterSelected = true;
         characterLookup[NetworkPlayer.Local].PlayerUI.SpawnPlayerUI();
-        NetworkCameraEffectsManager.instance.GoToTopCamera();
+        //
+        // ----  Disabling Cinematic Call For Now - Re-enable When Ready ----
+        //re-enabled for now as it caused issues MS
+        //
+        NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
         ResetButtonVisual(currentSelectedCharacterButton);
         characterSelectScreen.SetActive(false);
         reselectButton.gameObject.SetActive(true);

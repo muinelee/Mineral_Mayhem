@@ -11,11 +11,16 @@ public class SessionListItem : MonoBehaviour
 {
     public TextMeshProUGUI sessionNameText;
     public TextMeshProUGUI playerCountText;
-    public Button joinButton;
+    public BTN_OpenClose joinButton;
 
     private SessionInfo sessionInfo;
 
     public event Action<SessionInfo> OnJoinSession;
+
+    private void Awake()
+    {
+        joinButton.onPress.AddListener(OnClick);
+    }
 
     public void SetInformation(SessionInfo sessionInfo)
     {

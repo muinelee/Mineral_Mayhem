@@ -1,5 +1,6 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,37 +11,58 @@ public class BTN_Animation : MonoBehaviour
     private float startValue = 1;
     private float endValue = 1.25f;
     [SerializeField] float sizeMultiplier = -0.25f;
-    [SerializeField] Color colorNormal;
-    [SerializeField] Color colorPressed;
+    [SerializeField] Image[] imagesToChangeColor;
+    [SerializeField] Color[] colorNormal;
+    [SerializeField] Color[] colorPressed;
 
     private float curScale;
     private float lastScale;
+    [SerializeField] bool lockColor;
 
     //-----------------------------------//
 
     private void Start()
     {
-        curScale = transform.localScale.x;
+        startValue = transform.localScale.x;
+        curScale = startValue;
         lastScale = curScale;
 
         endValue = startValue + (startValue * sizeMultiplier);
     }
 
-    public void MouseEnter()
+    public void ColorChange()
     {
-        gameObject.GetComponent<Image>().color = colorPressed;
+        if (!lockColor)
+        {
+            if (imagesToChangeColor.Length > 0)
+            {
+                for (int i = 0; i < imagesToChangeColor.Length; i++)
+                {
+                    imagesToChangeColor[i].color = colorPressed[i];
+                }
+            }
+        }
     }
-    public void MouseExit()
+    public void ColorRevert()
     {
-        gameObject.GetComponent<Image>().color = colorNormal;
+        if (!lockColor)
+        {
+            if (imagesToChangeColor.Length > 0)
+            {
+                for (int i = 0; i < imagesToChangeColor.Length; i++)
+                {
+                    imagesToChangeColor[i].color = colorNormal[i];
+                }
+            }
+        }
     }
 
-    public void MouseDown()
+    public void ScaleChange()
     {
         StopAllCoroutines();
-        StartCoroutine(iMouseDown());
+        StartCoroutine(iScaleChange());
     }
-    private IEnumerator iMouseDown()
+    private IEnumerator iScaleChange()
     {
         float timeElapsed = 0;
         while (timeElapsed < lerpDuration)
@@ -56,12 +78,12 @@ public class BTN_Animation : MonoBehaviour
         transform.localScale = new Vector3(curScale, curScale, curScale);
     }
 
-    public void MouseUp()
+    public void ScaleRevert()
     {
         StopAllCoroutines();
-        StartCoroutine(iMouseUp());
+        StartCoroutine(iScaleRevert());
     }
-    private IEnumerator iMouseUp()
+    private IEnumerator iScaleRevert()
     {
         float timeElapsed = 0;
         while (timeElapsed < lerpDuration)
@@ -75,5 +97,10 @@ public class BTN_Animation : MonoBehaviour
         }
         curScale = startValue;
         transform.localScale = new Vector3(curScale, curScale, curScale);
+    }
+
+    public void ColorLock(bool on)
+    {
+        lockColor = on;
     }
 }

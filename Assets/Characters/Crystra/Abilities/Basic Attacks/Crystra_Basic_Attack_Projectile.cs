@@ -3,31 +3,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Crystra_Basic_Attack_Projectile : NetworkBehaviour
+public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
 {
     [Header("Movement Properties")]
     [SerializeField] private float speed;
     [SerializeField] private float offset;
+    [SerializeField] private float spawnHeight;
 
     [Header("Lifetime Components")]
     [SerializeField] private float lifeDuration;
     private TickTimer lifeTimer = TickTimer.None;
 
-    [Header("Attack Properties")]
-    [SerializeField] private float damage;
-    [SerializeField] private float knockBack;
+    [Header("Other Attack Properties")]
     [SerializeField] private float radius;
-    [SerializeField] private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
     [SerializeField] private LayerMask playerLayer;
+    private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
     public override void Spawned()
     {
+        base.Spawned();
+
+        transform.position += Vector3.up * spawnHeight;
         float offsetX = Random.Range(-offset, offset);
         float offsetY = Random.Range(0, offset);
 
         Vector3 offsetVector = new Vector3(offsetX, offsetY, 0);
 
-        transform.Translate(offsetVector);
+        GetComponent<NetworkRigidbody>().Rigidbody.velocity = transform.forward * speed;
 
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifeDuration);
     }
@@ -35,10 +37,7 @@ public class Crystra_Basic_Attack_Projectile : NetworkBehaviour
     // Update is called once per frame
     public override void FixedUpdateNetwork()
     {
-        // move
-        transform.Translate(Vector3.forward * speed);
-
-        CheckHits();
+        DealDamage();
 
         if (lifeTimer.Expired(Runner))
         {
@@ -51,19 +50,20 @@ public class Crystra_Basic_Attack_Projectile : NetworkBehaviour
         lifeTimer = TickTimer.None;
         Runner.Despawn(Object);
     }
-    public void CheckHits()
+
+    protected override void DealDamage()
     {
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
         foreach (LagCompensatedHit hit in hits)
         {
-            CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
+            IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
 
-            if (characterEntity)
+            if (healthComponent != null)
             {
-                if (characterEntity.Health.isDead) continue;
+                if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
 
-                characterEntity.Health.OnHit(damage);
-                characterEntity.Health.OnKnockBack(knockBack, transform.position);
+                healthComponent.OnTakeDamage(damage);
+                healthComponent.OnKnockBack(knockback, transform.position);
                 AttackEnd();
             }
         }

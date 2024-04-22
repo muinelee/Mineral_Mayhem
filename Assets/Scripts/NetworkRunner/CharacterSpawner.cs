@@ -10,18 +10,12 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     [Header("Placeholder player prefab")]
     public NetworkPlayer playerPrefab;
-    public CharacterEntity character;
-    public NetworkRunner networkRunner;
 
     [Header("Session Lobby Manager")]
     [SerializeField] private SessionLobbyManager sessionLobbyManager;
 
     // Dictionary for holding player UserIDs
     private Dictionary<int, NetworkPlayer> mapTokenIDWithNetworkPlayer = new Dictionary<int, NetworkPlayer>();
-
-    [Header("Components for UI")]
-    private NetworkPlayer_InputController playerInputController;
-
 
     private string[] roomAddress = new string[] { "RaeLeda/RaeLedaTrainingRoom", "RichardCPhoton" };
 
@@ -36,89 +30,29 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         if (runner.IsServer)
         {
-            NetworkPlayer newPlayer = runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
-
-            if (character) runner.Spawn(character, transform.position, Quaternion.identity, player);
+            runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
         }
     }
 
-    public void SpawnCharacter()
-    {
-    }
-
-    public void OnInput(NetworkRunner runner, NetworkInput input)
-    {
-        if (playerInputController == null) return; 
-        
-        // playerInputController is set from NetworkPlayer_InputController when character is spawned
-        input.Set(playerInputController.GetNetworkInput());
-    }
-
-    public void OnConnectedToServer(NetworkRunner runner)
-    {
-    }
-
-    public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
-    {
-        
-    }
-
-    public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
-    {
-        
-    }
-
-    public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
-    {
-        
-    }
-
-    void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner)
+    public void OnDisconnectedFromServer(NetworkRunner runner)
     {
         Debug.Log("I got disconnected from server");
 
         NetworkPlayer.Players.Clear();
         FindAnyObjectByType<NetworkRunner>().Shutdown();
-        SceneManager.LoadScene("RichardCPlayerLobby");
+        SceneManager.LoadScene(0);
     }
 
     public async void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
     {
-        //Debug.Log("Migrating Host");
-
-        //await runner.Shutdown(shutdownReason: ShutdownReason.HostMigration);
-
-        //Find Network Runner Handler and start the host migration
-        //FindObjectOfType<NetworkRunnerHandler>().StartHostMigration(hostMigrationToken);
-
         NetworkPlayer.Players.Clear();
         await FindAnyObjectByType<NetworkRunner>().Shutdown();
-        SceneManager.LoadScene("RichardCPlayerLobby");
-    }
-
-    public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
-    {
-        
+        SceneManager.LoadScene(0);
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         Debug.Log("Player Left");
-    }
-
-    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
-    {
-        
-    }
-
-    public void OnSceneLoadDone(NetworkRunner runner)
-    {
-
-    }
-
-    public void OnSceneLoadStart(NetworkRunner runner)
-    {
-        
     }
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
@@ -144,15 +78,6 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
-    {
-    }
-
-    public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
-    {
-
-    }
-
     public void OnHostMigrationCleanup()
     {
         Debug.Log("Spawner OnHostMigrationCleanup started");
@@ -169,10 +94,41 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         }
 
         Debug.Log("Spawner OnHostMigrationCleanup completed");
-    }
+    }    
 
-    public void SetInputController(NetworkPlayer_InputController controller)
+    #region More Runner Callbacks
+    public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        playerInputController = controller;
     }
+    public void OnConnectedToServer(NetworkRunner runner)
+    {
+    }
+    public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
+    {
+    }
+    public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
+    {  
+    }
+    public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
+    {
+    }
+    public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
+    {
+    }
+    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data)
+    {  
+    }
+    public void OnSceneLoadDone(NetworkRunner runner)
+    {
+    }
+    public void OnSceneLoadStart(NetworkRunner runner)
+    {  
+    }
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+    {
+    }
+    public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
+    {
+    }
+    #endregion
 }

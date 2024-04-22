@@ -19,21 +19,21 @@ public class BTN_Audio : MonoBehaviour
     public void OnEnter()
     {
         if (sfxMouseEnter != null)
-            source.PlayOneShot(sfxMouseEnter, 1);
+            source.PlayOneShot(sfxMouseEnter, 0.15f);
     }
     public void OnExit()
     {
         if (sfxMouseExit != null)
-            source.PlayOneShot(sfxMouseExit, 1);
+            source.PlayOneShot(sfxMouseExit, 0.35f);
     }
     public void OnDown()
     {
         if (sfxMouseDown != null)
-            source.PlayOneShot(sfxMouseDown, 1);
+            source.PlayOneShot(sfxMouseDown, 0.35f);
     }
     public void OnUp()
     {
         if (sfxMouseUp != null)
-            source.PlayOneShot(sfxMouseUp, 1);
+            source.PlayOneShot(sfxMouseUp, 0.35f);
     }
 }

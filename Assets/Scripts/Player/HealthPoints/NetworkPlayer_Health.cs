@@ -4,31 +4,48 @@ using UnityEngine;
 using Fusion;
 using Unity.VisualScripting;
 
-public class NetworkPlayer_Health : CharacterComponent
+public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 {
     [Networked(OnChanged = nameof(OnHPChanged))]
     public float HP { get; set; }
 
+    // Callback is Temporary until OnHPChanged is implemented
+    [Networked(OnChanged = nameof(OnHPChanged))] 
+    public float BP { get; set; }
+
     [Networked(OnChanged = nameof(OnStateChanged))]
     public bool isDead { get; set; }
 
-    private bool isInitialized = false;
-    private Animator anim;
-    private NetworkRigidbody rb;
+    public NetworkPlayer.Team team { get; set; }
 
+    private bool isInitialized = false;
+
+    // Health Properties
     [SerializeField] private float startingHP = 100;
 
-    //Base dmg reduction multiplier 1 = normal damage
-    [SerializeField] public float dmgReduction = 1.0f;
+    // Block Properties
+    [SerializeField] private float startingBP = 100;
+    [SerializeField] private float blockDamageReduction = 0.5f;
+    [SerializeField] private StatusEffect blockDepletedStun;    // Call if block is 0
+    [SerializeField] private float blockDrainRate = 10.0f;      // Can change for balancing
+    [SerializeField] private float blockRechargeRate = 10.0f;   // Can change for balancing
+    public bool canBlock = true;
 
-    public NetworkPlayer.Team team;
+    public override void Init(CharacterEntity character)
+    {
+        base.Init(character);
+        character.SetHealth(this);
+    }
+
+    public override void FixedUpdateNetwork()
+    {
+        HandleBlockMeter();
+    }
 
     // Start is called before the first frame update
     public override void Spawned()
     {
         if (HP == startingHP) isDead = false;
-        anim = GetComponentInChildren<Animator>();
-        rb = GetComponent<NetworkRigidbody>();
 
         RoundManager.Instance.ResetRound += Respawn;
         RoundManager.Instance.MatchEndEvent += DisableControls;
@@ -37,6 +54,33 @@ public class NetworkPlayer_Health : CharacterComponent
     public override void OnHit(float x)
     {
         OnTakeDamage((int)x);
+    }
+
+    public void HandleBlockMeter()
+    {
+        if (!Character.Attack.isDefending && BP < startingBP)
+        {
+            BP += blockRechargeRate * Runner.DeltaTime;
+            BP = Mathf.Clamp(BP, 0, startingBP);
+            if (BP >= startingBP) canBlock = true;
+        }
+        else if (Character.Attack.isDefending && canBlock)
+        {
+            BP -= blockDrainRate * Runner.DeltaTime;
+            if (BP <= 0)
+            {
+                BP = 0;
+                HandleBlockDepletion();
+            }
+        }
+    }
+
+    private void HandleBlockDepletion()
+    {
+        canBlock = false;
+        Character.OnStatusBegin(blockDepletedStun);
+        Runner.Despawn(Character.Shield);
+        Character.Shield = null;
     }
 
     // Function only called on the server
@@ -54,20 +98,23 @@ public class NetworkPlayer_Health : CharacterComponent
         }
 
         //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
-        int currDamageAmount = (int) (damageAmount * dmgReduction);
+        int currDamageAmount = (int) (damageAmount * Character.StatusHandler.GetDamageReduction());
 
-        HP -= (float) currDamageAmount;
-
-        //Debug.Log($"{Time.time} {transform.name} took damage and has {HP} HP left");
+        if (Character.Attack.isDefending)
+        {
+            int blockDamageAmount = (int) (currDamageAmount * (blockDamageReduction));
+            BP = Mathf.Max(BP - blockDamageAmount, 0);
+            currDamageAmount = (int) (currDamageAmount * (1 - blockDamageReduction));
+        }
+        HP -= (int) currDamageAmount;
 
         if (HP <= 0)
         {
-        //    Debug.Log($"{Time.time} {transform.name} is dead");
-
             isDead = true;
         }
         else NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
     }
+
 
     public void OnKnockBack(float force, Vector3 source)
     {
@@ -76,14 +123,14 @@ public class NetworkPlayer_Health : CharacterComponent
         source.y = transform.position.y;
         Vector3 direction = transform.position - source;
 
-        rb.Rigidbody.AddForce(direction * force);
+        Character.Rigidbody.Rigidbody.AddForce(direction * force);
     }
 
     private void HandleDeath()
     {
         DisableControls();
 
-        anim.CrossFade("Death", 0.2f);
+        Character.Animator.anim.CrossFade("Death", 0.2f);
 
         if (!NetworkPlayer.Local.HasStateAuthority) return;
         if (team == NetworkPlayer.Team.Red) RoundManager.Instance.RedPlayersDies();
@@ -92,7 +139,7 @@ public class NetworkPlayer_Health : CharacterComponent
     public void HandleRespawn()
     {
         EnableControls();
-        anim.Play("Run");
+        Character.Animator.anim.Play("Run");
     }
 
     static void OnHPChanged(Changed<NetworkPlayer_Health> changed)
@@ -126,28 +173,31 @@ public class NetworkPlayer_Health : CharacterComponent
 
     public void DisableControls()
     {
-        if (GetComponent<NetworkPlayer_InputController>()) GetComponent<NetworkPlayer_InputController>().enabled = false;
+        // Disable Input
+        Character.Input.enabled = false;
         // Disable movement
-        if (GetComponent<NetworkPlayer_Movement>()) GetComponent<NetworkPlayer_Movement>().enabled = false;
+        Character.Movement.enabled = false;
         // Disable attack
-        if (GetComponent<NetworkPlayer_Attack>()) GetComponent<NetworkPlayer_Attack>().enabled = false;
+        Character.Attack.enabled = false;
         // Disable sphere collider
-        if (GetComponent<SphereCollider>()) GetComponent<SphereCollider>().enabled = false;
+        Character.Collider.enabled = false;
         // Disable gravity
-        if (rb.Rigidbody) rb.Rigidbody.useGravity = false;
+        Character.Rigidbody.Rigidbody.useGravity = false;
     }
 
     public void EnableControls()
     {
-        GetComponent<NetworkPlayer_InputController>().enabled = true;
-        // Disable movement
-        GetComponent<NetworkPlayer_Movement>().enabled = true;
-        // Disable attack
-        GetComponent<NetworkPlayer_Attack>().enabled = true;
-        // Disable sphere collider
-        GetComponent<SphereCollider>().enabled = true;
-        // Disable gravity
-        rb.Rigidbody.useGravity = true;
+        // Enable Input
+        Character.Input.enabled = true;
+        // Enable movement
+        Character.Movement.enabled = true;
+        // Enable attack
+        Character.Attack.enabled = true;
+        Character.Attack.ResetAttackCapabilities();
+        // Enable sphere collider
+        Character.Collider.enabled = true;
+        // Enable gravity
+        Character.Rigidbody.Rigidbody.useGravity = true;
     }
 
     public void OnDestroy()

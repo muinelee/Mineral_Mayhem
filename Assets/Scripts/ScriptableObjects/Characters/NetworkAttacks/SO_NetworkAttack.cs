@@ -18,7 +18,7 @@ public class SO_NetworkAttack : ScriptableObject
 
     [Header("Ability Slow Percentage on activation")]
     [SerializeField, Range(0,1)] protected float abilitySlow;
-    [SerializeField, Range(0,1)] protected float turnSlow;
+    [SerializeField, Range(0,10)] protected float turnSlow;
 
     [Header("Cooldown Properties")]
     [SerializeField] private float coolDown;

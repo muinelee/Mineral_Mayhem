@@ -8,7 +8,6 @@ public class NetworkPlayer_Movement : CharacterComponent
 {
     [Header("Movement properties")]
     [SerializeField] private float turnTime;
-    private Stat speed;
     public bool canMove = true;
     private Vector3 targetDirection;
     private float dashSpeed = 0;
@@ -26,56 +25,54 @@ public class NetworkPlayer_Movement : CharacterComponent
     private TickTimer dashDurationTimer = TickTimer.None;
     private bool isDashing = false;
 
-    // Components to be retrieved when Spawned
-    [SerializeField] private Animator anim;
-    [SerializeField] private NetworkRigidbody networkRigidBody;
-
-    public override void Spawned()
+    public override void Init(CharacterEntity character)
     {
-        if (!anim) anim = GetComponentInChildren<Animator>();
-        if (!networkRigidBody) networkRigidBody = GetComponent<NetworkRigidbody>();
-        // Temporary solution for between refactoring
-        if (Character) speed = Character.StatusHandler.speed;
-        else speed = GetComponent<StatusHandler>().speed;
+        base.Init(character);
+        character.SetMovement(this);
     }
 
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputData networkInputData))
+        if (Object.HasInputAuthority || Object.HasStateAuthority)
         {
-            if (canMove && !isDashing)
+            if (GetInput(out NetworkInputData input))
             {
-                // Set direction player is looking at
-                targetDirection = (networkInputData.cursorLocation - transform.position);
-                targetDirection.y = 0;
-                targetDirection.Normalize();
-                // Rotate
-                Aim();
+                if (canMove && !isDashing)
+                {
+                    // Set direction player is looking at
+                    targetDirection = (new Vector3(input.cursorLocation.x, 0, input.cursorLocation.y) - transform.position);
+                    targetDirection.Normalize();
 
-                // Move
-                networkRigidBody.Rigidbody.AddForce(networkInputData.moveDirection * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
+                    // Rotate
+                    Aim();
 
-                // Dash (Can be a boost or buff)
-                if (networkInputData.isDashing) MobilityAbility(networkInputData.moveDirection);
+                    float horizontalDir = (input.IsDown(NetworkInputData.ButtonD) ? 1 : 0) - (input.IsDown(NetworkInputData.ButtonA) ? 1 : 0);
+                    float verticalDir = (input.IsDown(NetworkInputData.ButtonW) ? 1 : 0) - (input.IsDown(NetworkInputData.ButtonS) ? 1 : 0);
+                    Vector3 moveDir = new Vector3(horizontalDir, 0, verticalDir).normalized;
 
-                // Play movement animation
-                PlayMovementAnimation(networkInputData.moveDirection);
+                    // Move
+                    Character.Rigidbody.Rigidbody.AddForce(moveDir * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
+
+                    // Dash (Can be a boost or buff)
+                    if (input.IsDown(NetworkInputData.ButtonDash)) MobilityAbility(moveDir);
+
+                    // Play movement animation
+                    PlayMovementAnimation(moveDir);
+                }
+
+                // Manage Timers and ability effects
+                ManageTimers();
             }
-
-            // Manage Timers and ability effects
-            ManageTimers();
         }
+
     }
 
     private void Aim()
     {
         // Rotate player over time to the target angle
-        /*float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
+        float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
         float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime + turnSlow);
-        Quaternion rotation = Quaternion.Euler(0, angle, 0);*/
-
-        Quaternion rotation2 = Quaternion.LookRotation(targetDirection, Vector3.up);
-        transform.rotation = rotation2;
+        transform.rotation = Quaternion.Euler(0, angle, 0);
     }
 
     private void MobilityAbility(Vector3 moveDirection)
@@ -84,7 +81,7 @@ public class NetworkPlayer_Movement : CharacterComponent
 
         if (!dash.GetCanSteer())
         {
-            networkRigidBody.Rigidbody.velocity = moveDirection * dash.GetDashValue();
+            Character.Rigidbody.Rigidbody.velocity = moveDirection * dash.GetDashValue();
             isDashing = true;
         }
 
@@ -100,8 +97,8 @@ public class NetworkPlayer_Movement : CharacterComponent
         Vector3 perpendicularMovement = new Vector3(targetDirection.z, 0, -targetDirection.x);              // Perpendicular vector in 2D space
         float horizontalMovement = Vector3.Dot(moveDirection, perpendicularMovement);                       // Dot product to get horizontal direction
 
-        anim.SetFloat("Zaxis", Vector3.Dot(moveDirection, targetDirection), 0.2f, Runner.DeltaTime);     // Use Dot product to determine forward move direction relevant to look direction
-        anim.SetFloat("Xaxis", horizontalMovement, 0.2f, Runner.DeltaTime);
+        Character.Animator.anim.SetFloat("Zaxis", Vector3.Dot(moveDirection, targetDirection), 0.2f, Runner.DeltaTime);     // Use Dot product to determine forward move direction relevant to look direction
+        Character.Animator.anim.SetFloat("Xaxis", horizontalMovement, 0.2f, Runner.DeltaTime);
     }
 
     private void ManageTimers()
@@ -110,7 +107,7 @@ public class NetworkPlayer_Movement : CharacterComponent
         if (dashDurationTimer.Expired(Runner))
         {
             dashSpeed = 0;
-            if (!dash.GetCanSteer()) networkRigidBody.Rigidbody.velocity *= 0.2f;
+            if (!dash.GetCanSteer()) Character.Rigidbody.Rigidbody.velocity *= 0.2f;
             isDashing = false;
             dashDurationTimer = TickTimer.None;
         }
@@ -192,6 +189,6 @@ public class NetworkPlayer_Movement : CharacterComponent
     /// </summary>
     private float GetCombinedSpeed()
     {
-        return speed.GetValue() + currentBoostValue;
+        return Character.StatusHandler.speed.GetValue() + currentBoostValue;
     }
 }

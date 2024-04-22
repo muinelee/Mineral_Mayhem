@@ -20,4 +20,8 @@ public class SlowStatus : StatusEffect
     {
 
     }
+    public override void OnStatusCleansed(StatusHandler handler)
+    {
+        handler.speed.RemoveModifier(-slowAmount);
+    }
 }
