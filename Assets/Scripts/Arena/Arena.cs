@@ -19,11 +19,6 @@ public class Arena : NetworkBehaviour
     private NetworkObject currentCore;
     private Coroutine coreSpawnCoroutine;
 
-    private void Start()
-    {
-        StartCoreSpawnTimer(5f);
-    }
-
     private void StartCoreSpawnTimer(float delay)
     {
         if (coreSpawnCoroutine != null)
@@ -73,7 +68,8 @@ public class Arena : NetworkBehaviour
         /*if (NetworkPlayer.Local.IsLeader)
         {
 
-        }*/ 
+        }*/
+        StartCoreSpawnTimer(5f);
     }
 
     private void OnDestroy()

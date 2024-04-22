@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.ProBuilder;
 using UnityEngine.UI;
 using Fusion;
+using Unity.IO.LowLevel.Unsafe;
 
 public class CoreBehaviour : NetworkBehaviour, IHealthComponent
 {   
@@ -26,19 +27,13 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     public bool isDead { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
     public NetworkPlayer.Team team { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
-    private void Start()
+    public override void Spawned()
     {
+        if (!Runner.IsServer)
+            return;
+
         HP = maxHealth;
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            TakeDamage(10);
-        }
-    }
-
 
     public void TakeDamage(int damageAmount)
     {
