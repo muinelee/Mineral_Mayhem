@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
-using System.Diagnostics;
+using Unity.VisualScripting;
+using static Fusion.NetworkCharacterController;
 
-public class ShrinkingStorm : NetworkBehaviour {
+public class ShrinkingStorm : NetworkAttack_Base { 
 
     [Header("Shrinking Storm Variables")]
     //timer for start delay
@@ -13,30 +14,73 @@ public class ShrinkingStorm : NetworkBehaviour {
     private float remainingTime;
 
     [Header("Other Variables")]
-    [SerializeField] private float lifeTime;
     //start delay variable
     [SerializeField] private float startDelay;
+    [SerializeField] private bool isShrinking = false;
+    [SerializeField] private float shrinkAmount;
 
+    //references
+    [Header("References")]
+    [SerializeField] private CapsuleCollider stormCollider;
+    [SerializeField] private float damageDelay;
+
+    [Header("Damage Variables")]
+    [SerializeField] private float radius;
+    [SerializeField] private LayerMask playerLayer;
+    private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
     // Start is called before the first frame update
     void Start() {
-        //start the timer with the start delay
-        shrinkTimer = TickTimer.CreateFromSeconds(Runner, startDelay);
+        stormCollider = GetComponent<CapsuleCollider>();
+        if (!stormCollider) {
+            Debug.LogError("No collider found");
+        }
+        //subscribe to the event
+        CharacterSelect.OnCharacterSelect += EventHandler;
+        Debug.Log("Subscribed to event");
     }
 
     // Update is called once per frame
     void FixedUpdate() {
-        //if start delay timer has expired, start the shrinking storm
-        if (shrinkTimer.Expired(Runner)) {
-            shrinkTimer = TickTimer.None;
-            //set the timer to the life time of the storm
-            shrinkTimer = TickTimer.CreateFromSeconds(Runner, lifeTime);
-            UnityEngine.Debug.Log("shrinkTimer.RemainingTime(Runner);" + shrinkTimer.RemainingTime(Runner));
+        if (isShrinking) {
+            //lerp the scale of the object to shrink it
+            StormScaleChange();
+            //for each player in the scene
+            foreach (NetworkPlayer player in NetworkPlayer.Players) {
+                //if the player is not in the collider
+                if (!stormCollider.bounds.Contains(player.transform.position)) {
+                    //hurt em
+                    Debug.Log("Player is in the storm");
+                    DealDamage();
+                }
+            }
         }
+    }
+
+    protected override void DealDamage() {
+        Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
+        foreach (LagCompensatedHit hit in hits) {
+            IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
+
+            if (healthComponent != null) {
+                healthComponent.OnTakeDamage(damage);
+                Debug.Log("player dealt " + damage);
+            }
+        }
+    }
+
+    private void EventHandler() {
+        Invoke("ShrinkStorm", startDelay);
+        Debug.Log("Timer Started");
     }
 
     //shrinking the storm over time
     private void ShrinkStorm() {
-
+        isShrinking = true;
+        Debug.Log(isShrinking);
+    }
+    
+    private void StormScaleChange() {
+        transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero , shrinkAmount * Time.deltaTime);
     }
 }
