@@ -45,8 +45,8 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
     public void OnTrainingClicked()
     {
-        SetRoomSize(1); 
-        CreateGame(roomAddress[0]); 
+        SetRoomSize(1);
+        networkRunnerHandler.CreateGame("TrainingRoom", roomAddress[0]);
     }
 
     public void OnQuitClicked()
