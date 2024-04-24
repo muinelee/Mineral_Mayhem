@@ -44,7 +44,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
         Debug.Log("Subscribed to event");
 
         RoundManager.resetStorm += ResetStorm;
-        RoundManager.startStorm += EventHandler;
+        RoundManager.startStorm += ShrinkStorm;
     }
 
     // Update is called once per frame
@@ -89,10 +89,10 @@ public class ShrinkingStorm : NetworkAttack_Base {
         }
     }
 
-    private void EventHandler() {
-        Invoke("ShrinkStorm", startDelay);
-        Debug.Log("Timer Started");
-    }
+    //private void EventHandler() {
+    //    Invoke("ShrinkStorm", startDelay);
+    //    Debug.Log("Timer Started");
+    //}
 
     //shrinking the storm over time
     private void ShrinkStorm() {

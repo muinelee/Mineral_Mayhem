@@ -81,6 +81,8 @@ public class RoundManager : NetworkBehaviour
     {
         if (currentRound == maxRounds) return; 
         currentRound++;
+        resetStorm?.Invoke();
+        startStorm?.Invoke();
         // Round start based on if its round 1, then its 30s, if not, 10s 
         float startDuration = (currentRound == 1) ? gameStartDuration : roundStartDuration;
         roundStartTimer = TickTimer.CreateFromSeconds(Runner, startDuration);
@@ -89,7 +91,7 @@ public class RoundManager : NetworkBehaviour
         // Resetting health and lives 
         // 10 second wait time for game to start for doors to open OR input to be enabled 
         redPlayersAlive = teammSize; 
-        bluePlayersAlive = teammSize; 
+        bluePlayersAlive = teammSize;
     }
 
     public void RoundEnd() 
