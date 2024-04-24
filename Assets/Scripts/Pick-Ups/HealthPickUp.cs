@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 
-public class HealthPickup : MonoBehaviour
+public class HealthPickup : NetworkBehaviour
 {
     [SerializeField] private int healthAmount = 20;
     [SerializeField] private LayerMask targetLayer; 
@@ -16,7 +15,7 @@ public class HealthPickup : MonoBehaviour
             if (playerHealth != null)
             {
                 playerHealth.Heal(healthAmount);
-                Destroy(gameObject);
+                Runner.Despawn(Object);
             }
         }
     }
