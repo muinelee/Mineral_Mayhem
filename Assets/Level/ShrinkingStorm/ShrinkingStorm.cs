@@ -40,9 +40,6 @@ public class ShrinkingStorm : NetworkAttack_Base {
         //subscribe to the event
         CharacterSelect.OnCharacterSelect += EventHandler;
         Debug.Log("Subscribed to event");
-
-        //list of character positions found
-        characters = FindObjectsOfType<CharacterEntity>();
     }
 
     // Update is called once per frame
@@ -52,6 +49,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
             StormScaleChange();
             //for each player in the scene
             foreach (CharacterEntity playerchar in characters) {
+                Debug.Log(playerchar.transform.position);
                 //if the player is not in the collider
                 if (!stormCollider.bounds.Contains(playerchar.transform.position)) {
                     //hurt em
@@ -62,14 +60,21 @@ public class ShrinkingStorm : NetworkAttack_Base {
         }
     }
 
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, radius);
+    }
+
     protected override void DealDamage() {
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
         foreach (LagCompensatedHit hit in hits) {
             IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
 
             if (healthComponent != null) {
-                healthComponent.OnTakeDamage(damage);
-                Debug.Log("player dealt " + damage);
+                if (!stormCollider.bounds.Contains(hit.GameObject.transform.position)) {
+                    healthComponent.OnTakeDamage(damage);
+                    Debug.Log("player dealt " + damage);
+                }
             }
         }
     }
@@ -82,6 +87,8 @@ public class ShrinkingStorm : NetworkAttack_Base {
     //shrinking the storm over time
     private void ShrinkStorm() {
         isShrinking = true;
+        //list of character positions found
+        characters = FindObjectsOfType<CharacterEntity>();
         Debug.Log(isShrinking);
     }
     
