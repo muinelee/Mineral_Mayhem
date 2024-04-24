@@ -10,7 +10,6 @@ public class LavaDive : NetworkAttack_Base
     [SerializeField] private LayerMask collisionLayer;
 
     [Header("Trail Damage Properties")]
-    [SerializeField] private float diveDistance;
     [SerializeField] private float boxWidth;
     [SerializeField] private float tickRate = 0.5f;
     [SerializeField] private int tickDamage = 3;
@@ -49,12 +48,10 @@ public class LavaDive : NetworkAttack_Base
             if (finishDive) return;
 
             character.Rigidbody.Rigidbody.AddForce(transform.forward * forceForward);
-
-            // Check if player reached max distance and let the attack linger
         }
 
         if (finishDive) return;
-        if (Vector3.Magnitude(character.transform.position - transform.position) > diveDistance || dashTimer.Expired(Runner)) DiveEnd();
+        if (dashTimer.Expired(Runner)) DiveEnd();
         trail.position = character.transform.position;
     }
 
@@ -92,12 +89,7 @@ public class LavaDive : NetworkAttack_Base
 
     private void DiveEnd()
     {
-        // Temp for showcase to Brad
-
         character.Animator.anim.CrossFade("LavaDiveEnd", 0.1f);
-
-        // Temp
-
 
         DealDamage();
         if (Runner.IsServer) Runner.Spawn(attackEndVFX, character.transform.position, Quaternion.identity);
