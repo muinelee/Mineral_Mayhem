@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 
-public class SpeedBoost : MonoBehaviour
+public class SpeedBoost : NetworkBehaviour
 {
     [SerializeField] private float speedBoostAmount = 2f;
     [SerializeField] private float duration = 5f;
@@ -10,6 +9,8 @@ public class SpeedBoost : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!Object.HasStateAuthority) return;
+
         if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
         {
             NetworkPlayer_Movement playerMovement = other.GetComponent<NetworkPlayer_Movement>();
@@ -17,7 +18,7 @@ public class SpeedBoost : MonoBehaviour
             {
                 playerMovement.ApplySpeedBoost(speedBoostAmount, duration);
 
-                Destroy(gameObject);
+                Runner.Despawn(Object);
             }
         }
     }

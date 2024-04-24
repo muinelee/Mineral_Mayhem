@@ -23,9 +23,9 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     //Health
     [SerializeField] private Image healthBar;
 
-    public float HP { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public bool isDead { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public NetworkPlayer.Team team { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public float HP { get; set; }
+    public bool isDead { get; set; }
+    public NetworkPlayer.Team team { get; set; }
 
     public override void Spawned()
     {
@@ -35,15 +35,15 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
         HP = maxHealth;
     }
 
-    public void TakeDamage(int damageAmount)
+    public void OnTakeDamage(int damageAmount)
     {
         HP -= damageAmount;
-        CheckHealth();
+        RPC_CheckHealth(HP);
     }
 
-    private void CheckHealth()
+    private void CheckHealth(float health)
     {
-        float healthPercentage = (float)HP / maxHealth;
+        float healthPercentage = health / maxHealth;
 
         healthBar.fillAmount = healthPercentage;
 
@@ -70,15 +70,34 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
 
     private void Die()
     {
-        Destroy(gameObject);
+        Runner.Despawn(Object);
     }
 
     private void SpawnCollectible()
     {
+        if (!Object.HasStateAuthority) return;
+
         if (collectiblePrefabs != null && collectiblePrefabs.Length > 0 && spawnPoint != null)
         {
             GameObject randomCollectible = collectiblePrefabs[random.Next(0, collectiblePrefabs.Length)];
-            Instantiate(randomCollectible, spawnPoint.position, Quaternion.identity);
+            Runner.Spawn(randomCollectible, spawnPoint.position, Quaternion.identity);
         }
     }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_CheckHealth(float health)
+    {
+        this.CheckHealth(health);
+    }
+
+    //INTERFACE FUNCTIONS
+
+    // Function for when object dies
+    public void HandleDeath() { }
+
+    // Function for if object respawns
+    public void HandleRespawn() { }
+
+    // Function for if the object can get knockedback
+    public void OnKnockBack(float force, Vector3 source) { }
 }

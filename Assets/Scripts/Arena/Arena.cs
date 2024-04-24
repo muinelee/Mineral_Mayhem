@@ -100,26 +100,6 @@ public class Arena : NetworkBehaviour
         Debug.Log($"Spawning character for {player.playerName} as {entity.name}");
         entity.transform.name = $"Character ({player.playerName})";
     }
-    private void StartArenaCinematic()
-    {
-        Debug.Log("Starting Arena Cinematic"); 
-        if (NetworkPlayer.Local) NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
-    }
-
-
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Z)) 
-        {
-            // Go to Player Camera (Top-Down View)
-            StartArenaCinematic();  
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            DestroyCore(); // Destroy the core manually (for testing purposes)
-        }
-    }
 
     /// <summary>
     /// Returns the center point of the core's spawn path.
@@ -152,7 +132,7 @@ public class Arena : NetworkBehaviour
     {
         if (currentCore != null)
         {
-            Destroy(currentCore);
+            Runner.Despawn(currentCore);
             currentCore = null;
         }
     }
