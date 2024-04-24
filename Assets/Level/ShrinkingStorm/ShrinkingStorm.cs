@@ -21,7 +21,6 @@ public class ShrinkingStorm : NetworkAttack_Base {
     //start delay variable
     [SerializeField] private float startDelay;
     [SerializeField] private bool isShrinking = false;
-    [SerializeField] private float shrinkAmount;
     [SerializeField] private CharacterEntity[] characters;
     private TickTimer damageTimer = TickTimer.None;
 
@@ -35,13 +34,8 @@ public class ShrinkingStorm : NetworkAttack_Base {
     [SerializeField] private LayerMask playerLayer;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
-    private Vector3 orgScale;
-    private float startingScale = 320f;
-
     // Start is called before the first frame update
     void Start() {
-        orgScale = new Vector3(startingScale, startingScale, startingScale);
-
         stormCollider = GetComponent<CapsuleCollider>();
         if (!stormCollider) {
             Debug.LogError("No collider found");
@@ -126,6 +120,6 @@ public class ShrinkingStorm : NetworkAttack_Base {
     }
 
     private void ResetStorm(){
-        transform.localScale = orgScale;
+        transform.localScale = startScale;
     }
 }
