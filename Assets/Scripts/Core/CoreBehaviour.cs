@@ -80,7 +80,8 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
         if (collectiblePrefabs != null && collectiblePrefabs.Length > 0 && spawnPoint != null)
         {
             GameObject randomCollectible = collectiblePrefabs[random.Next(0, collectiblePrefabs.Length)];
-            Runner.Spawn(randomCollectible, spawnPoint.position, Quaternion.identity);
+            NetworkObject spawnedItem = Runner.Spawn(randomCollectible, spawnPoint.position, spawnPoint.rotation);
+            spawnedItem.GetComponent<PickupThrow>().Throw();
         }
     }
 

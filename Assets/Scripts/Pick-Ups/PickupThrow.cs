@@ -1,38 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 
-public class PickupThrow : MonoBehaviour
+public class PickupThrow : NetworkBehaviour
 {
-    private Rigidbody rb;
+    private NetworkRigidbody rb;
     public float throwForce = 5f;
     public float yStop = 0.1f; //Point pickup stops
     private bool objectStop = false;
 
-    void Start()
+    public override void Spawned()
     {
-        rb = GetComponent<Rigidbody>();
-        Throw();
+        rb = GetComponent<NetworkRigidbody>();
     }
 
-    void Update()
+    public override void FixedUpdateNetwork()
     {
         if (transform.position.y <= yStop && objectStop == false)
         {
             Debug.Log("Spawn Model");
-            rb.useGravity = false;
-            rb.velocity = Vector3.zero;
+            rb.Rigidbody.useGravity = false;
+            rb.Rigidbody.velocity = Vector3.zero;
             Debug.Log("Gravity Deactivate");
             objectStop = true;
         }
     }
 
-    void Throw()
+    public void Throw()
     {   
         //Calculate Throw Direction
-        Vector3 throwDir = transform.forward + Vector3.up;
-
-        rb.AddForce(throwDir * throwForce, ForceMode.Impulse);
-        
+        rb.Rigidbody.AddForce((transform.forward + Vector3.up) * throwForce, ForceMode.Impulse);   
     }
 }

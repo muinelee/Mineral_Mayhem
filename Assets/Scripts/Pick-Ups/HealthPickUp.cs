@@ -8,6 +8,8 @@ public class HealthPickup : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!Object.HasStateAuthority) return;
+
         if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
         {
             NetworkPlayer_Health playerHealth = other.GetComponent<NetworkPlayer_Health>();

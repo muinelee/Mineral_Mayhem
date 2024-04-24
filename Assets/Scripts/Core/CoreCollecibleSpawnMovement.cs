@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CoreCollecibleSpawnMovement : MonoBehaviour
@@ -26,5 +24,7 @@ public class CoreCollecibleSpawnMovement : MonoBehaviour
 
         //Update position
         transform.position = new Vector3(x, y, z);
+        Vector3 lookDir = transform.position - centerPoint;
+        transform.rotation = Quaternion.LookRotation(lookDir);
     }
 }
