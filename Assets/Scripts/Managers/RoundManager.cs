@@ -3,10 +3,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static CharacterSelect;
 
 public class RoundManager : NetworkBehaviour
 {
     public Dictionary<NetworkPlayer, Vector3> respawnPoints = new Dictionary<NetworkPlayer, Vector3>();
+
+    //Resets the storm on round end
+    public delegate void ResetStorm();
+    //Starts the storm
+    public delegate void StartStorm();
 
     private TickTimer gameStartTimer = TickTimer.None;
     private TickTimer roundStartTimer = TickTimer.None;  
@@ -29,6 +35,11 @@ public class RoundManager : NetworkBehaviour
     public event Action MatchStartEvent;
     public event Action ResetRound;
     public event Action MatchEndEvent;
+
+    //Public event for storm reset
+    public static event ResetStorm resetStorm;
+    //Start the storm
+    public static event StartStorm startStorm;
 
     public override void Spawned() 
     {
@@ -81,7 +92,7 @@ public class RoundManager : NetworkBehaviour
         bluePlayersAlive = teammSize; 
     }
 
-    private void RoundEnd()
+    public void RoundEnd() 
     {
         // Checks which team has more players alive
         // Blueplayer and red playerdies already checks if all members on team dies 
@@ -117,6 +128,8 @@ public class RoundManager : NetworkBehaviour
     {
         NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
         MatchStartEvent?.Invoke();
+        resetStorm?.Invoke();
+        startStorm?.Invoke();
     }
 
     public override void FixedUpdateNetwork()

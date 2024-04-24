@@ -35,15 +35,22 @@ public class ShrinkingStorm : NetworkAttack_Base {
     [SerializeField] private LayerMask playerLayer;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
+    private Vector3 orgScale;
+    private float startingScale = 320f;
+
     // Start is called before the first frame update
     void Start() {
+        orgScale = new Vector3(startingScale, startingScale, startingScale);
+
         stormCollider = GetComponent<CapsuleCollider>();
         if (!stormCollider) {
             Debug.LogError("No collider found");
         }
         //subscribe to the event
-        CharacterSelect.OnCharacterSelect += EventHandler;
         Debug.Log("Subscribed to event");
+
+        RoundManager.resetStorm += ResetStorm;
+        RoundManager.startStorm += EventHandler;
     }
 
     // Update is called once per frame
@@ -116,5 +123,9 @@ public class ShrinkingStorm : NetworkAttack_Base {
         damageTimer = TickTimer.None;
         damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
         DealDamage();
+    }
+
+    private void ResetStorm(){
+        transform.localScale = orgScale;
     }
 }
