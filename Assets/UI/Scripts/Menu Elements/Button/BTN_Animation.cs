@@ -29,6 +29,10 @@ public class BTN_Animation : MonoBehaviour
 
         endValue = startValue + (startValue * sizeMultiplier);
     }
+    private void OnDisable()
+    {
+        ColorRevert();
+    }
 
     public void ColorChange()
     {
