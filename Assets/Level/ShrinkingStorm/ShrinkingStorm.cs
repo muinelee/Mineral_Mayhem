@@ -13,6 +13,9 @@ public class ShrinkingStorm : NetworkAttack_Base {
     private TickTimer shrinkTimer = TickTimer.None;
     //var to hold remaining time
     private float remainingTime;
+    [SerializeField] private Vector3 startScale;
+    [SerializeField] private Vector3 endScale;
+    [SerializeField] private float shrinkDuration;
 
     [Header("Other Variables")]
     //start delay variable
@@ -41,9 +44,6 @@ public class ShrinkingStorm : NetworkAttack_Base {
         //subscribe to the event
         CharacterSelect.OnCharacterSelect += EventHandler;
         Debug.Log("Subscribed to event");
-
-        //set damage timer to 1 second
-        damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
     }
 
     // Update is called once per frame
@@ -51,16 +51,20 @@ public class ShrinkingStorm : NetworkAttack_Base {
         if (isShrinking) {
             //lerp the scale of the object to shrink it
             StormScaleChange();
+            if (damageTimer.Expired(Runner)) {
             //for each player in the scene
             foreach (CharacterEntity playerchar in characters) {
                 Debug.Log(playerchar.transform.position);
-                //if the player is not in the collider
-                if (!stormCollider.bounds.Contains(playerchar.transform.position)) {
-                    //hurt em
-                    Debug.Log("Player is in the storm");
-                    ///DealDamage();
-                    DealDamage();
+                    //if the player is not in the collider
+                    if (!stormCollider.bounds.Contains(playerchar.transform.position)) {
+                        //hurt em
+                        Debug.Log("Player is in the storm");
+                        DealDamage();
+                        //ManageDamage();
+                    }
                 }
+                damageTimer = TickTimer.None;
+                damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
             }
         }
     }
@@ -92,13 +96,18 @@ public class ShrinkingStorm : NetworkAttack_Base {
     //shrinking the storm over time
     private void ShrinkStorm() {
         isShrinking = true;
+        remainingTime = 0f;
+        transform.localScale = startScale;
         //list of character positions found
         characters = FindObjectsOfType<CharacterEntity>();
+        //set damage timer to 1 second
+        damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
         Debug.Log(isShrinking);
     }
     
     private void StormScaleChange() {
-        transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero , shrinkAmount * Time.deltaTime);
+        remainingTime += Time.fixedDeltaTime;
+        transform.localScale = Vector3.Lerp(startScale, endScale, (remainingTime / shrinkDuration));
     }
 
     private void ManageDamage() {
