@@ -4,6 +4,7 @@ using UnityEngine;
 using Fusion;
 using Unity.VisualScripting;
 using static Fusion.NetworkCharacterController;
+using UnityEngine.TextCore.Text;
 
 public class ShrinkingStorm : NetworkAttack_Base { 
 
@@ -18,6 +19,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
     [SerializeField] private float startDelay;
     [SerializeField] private bool isShrinking = false;
     [SerializeField] private float shrinkAmount;
+    [SerializeField] private CharacterEntity[] characters;
 
     //references
     [Header("References")]
@@ -38,6 +40,9 @@ public class ShrinkingStorm : NetworkAttack_Base {
         //subscribe to the event
         CharacterSelect.OnCharacterSelect += EventHandler;
         Debug.Log("Subscribed to event");
+
+        //list of character positions found
+        characters = FindObjectsOfType<CharacterEntity>();
     }
 
     // Update is called once per frame
@@ -46,9 +51,9 @@ public class ShrinkingStorm : NetworkAttack_Base {
             //lerp the scale of the object to shrink it
             StormScaleChange();
             //for each player in the scene
-            foreach (NetworkPlayer player in NetworkPlayer.Players) {
+            foreach (CharacterEntity playerchar in characters) {
                 //if the player is not in the collider
-                if (!stormCollider.bounds.Contains(player.transform.position)) {
+                if (!stormCollider.bounds.Contains(playerchar.transform.position)) {
                     //hurt em
                     Debug.Log("Player is in the storm");
                     DealDamage();
