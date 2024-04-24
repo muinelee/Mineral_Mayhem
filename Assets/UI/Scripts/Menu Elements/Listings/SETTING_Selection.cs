@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SETTING_Selection : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI[] text;
+    [SerializeField] TextMeshProUGUI text;
     [SerializeField] string settingType;
 
     [SerializeField] string[] value = { "On", "Off" };
@@ -18,7 +18,7 @@ public class SETTING_Selection : MonoBehaviour
     {
         if (settingType == "fullScreen")
         {
-            selected = DataManager.fullScreen;
+            selected = DataManager.windowed;
             UpdateSetting();
         }
     }
@@ -32,6 +32,7 @@ public class SETTING_Selection : MonoBehaviour
         }
         else if (loop)
         {
+            Debug.Log("!");
             selected = 0;
             UpdateSetting();
         }
@@ -56,10 +57,7 @@ public class SETTING_Selection : MonoBehaviour
         {
             if (i == selected)
             {
-                for (int j = 0; i < text.Length; i++)
-                {
-                    text[j].text = value[i];
-                }
+                text.text = value[i];
             }
         }
 
