@@ -31,7 +31,6 @@ public class ShrinkingStorm : NetworkAttack_Base {
     [SerializeField] private float radius;
     [SerializeField] private LayerMask playerLayer;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
-    private TickTimer damageTimer = TickTimer.None;
 
     // Start is called before the first frame update
     void Start() {
