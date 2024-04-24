@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4187548605437878609}
   - component: {fileID: -6133623688385396727}
   - component: {fileID: -5932285461111788740}
+  - component: {fileID: 66301231548805349}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -31,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 29.597101, y: 29.597101, z: 29.597101}
+  m_LocalScale: {x: 325, y: 325, z: 325}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -101,7 +102,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -122,10 +123,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  startDelay: 15
+  damage: 1
+  knockback: 0
+  SFX: {fileID: 0}
+  statusEffectSO: []
+  startDelay: 2
   isShrinking: 0
-  shrinkAmount: 0.2
-  cs: {fileID: 0}
+  shrinkAmount: 0.05
+  stormCollider: {fileID: 0}
+  damageDelay: 5
+  radius: 320
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!114 &-5932285461111788740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,4 +159,33 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: -6133623688385396727}
+  - {fileID: 66301231548805349}
   SimulationBehaviours: []
+--- !u!114 &66301231548805349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 18054890882982185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  InterpolationSpace: 0
+  InterpolationTarget: {fileID: 0}
+  InterpolateErrorCorrection: 1
+  InterpolatedErrorCorrectionSettings:
+    MinRate: 3.3
+    MaxRate: 10
+    PosBlendStart: 0.25
+    PosBlendEnd: 1
+    PosMinCorrection: 0.025
+    PosTeleportDistance: 2
+    RotBlendStart: 0.1
+    RotBlendEnd: 0.5
+    RotTeleportRadians: 1.5
+  UseLegacySharedModeInterpolation: 0
+  TargetInterpolationDelay: 0.03
