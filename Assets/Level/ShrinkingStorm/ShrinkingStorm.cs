@@ -20,6 +20,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
     [SerializeField] private bool isShrinking = false;
     [SerializeField] private float shrinkAmount;
     [SerializeField] private CharacterEntity[] characters;
+    private TickTimer damageTimer = TickTimer.None;
 
     //references
     [Header("References")]
@@ -40,6 +41,9 @@ public class ShrinkingStorm : NetworkAttack_Base {
         //subscribe to the event
         CharacterSelect.OnCharacterSelect += EventHandler;
         Debug.Log("Subscribed to event");
+
+        //set damage timer to 1 second
+        damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
     }
 
     // Update is called once per frame
@@ -48,22 +52,14 @@ public class ShrinkingStorm : NetworkAttack_Base {
             //lerp the scale of the object to shrink it
             StormScaleChange();
             //for each player in the scene
-            foreach (CharacterEntity playerchar in characters) {
-                Debug.Log(playerchar.transform.position);
-                //if the player is not in the collider
-                if (!stormCollider.bounds.Contains(playerchar.transform.position)) {
-                    //hurt em
-                    Debug.Log("Player is in the storm");
-                    DealDamage();
-                }
-            }
+            ManageDamage();
         }
     }
 
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, radius);
-    }
+    //private void OnDrawGizmos() {
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireSphere(transform.position, radius);
+    //}
 
     protected override void DealDamage() {
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
@@ -94,5 +90,13 @@ public class ShrinkingStorm : NetworkAttack_Base {
     
     private void StormScaleChange() {
         transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero , shrinkAmount * Time.deltaTime);
+    }
+
+    private void ManageDamage() {
+        if (!damageTimer.Expired(Runner)) return;
+
+        damageTimer = TickTimer.None;
+        damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
+        DealDamage();
     }
 }
