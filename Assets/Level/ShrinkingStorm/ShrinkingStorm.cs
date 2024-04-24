@@ -59,7 +59,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
                     //hurt em
                     Debug.Log("Player is in the storm");
                     ///DealDamage();
-                    ManageDamage();
+                    DealDamage();
                 }
             }
         }
