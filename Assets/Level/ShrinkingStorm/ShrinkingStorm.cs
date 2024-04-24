@@ -30,6 +30,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
     [SerializeField] private float radius;
     [SerializeField] private LayerMask playerLayer;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
+    private TickTimer damageTimer = TickTimer.None;
 
     // Start is called before the first frame update
     void Start() {
@@ -54,7 +55,8 @@ public class ShrinkingStorm : NetworkAttack_Base {
                 if (!stormCollider.bounds.Contains(playerchar.transform.position)) {
                     //hurt em
                     Debug.Log("Player is in the storm");
-                    DealDamage();
+                    ///DealDamage();
+                    ManageDamage();
                 }
             }
         }
@@ -94,5 +96,13 @@ public class ShrinkingStorm : NetworkAttack_Base {
     
     private void StormScaleChange() {
         transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero , shrinkAmount * Time.deltaTime);
+    }
+
+    private void ManageDamage() {
+        if (!damageTimer.Expired(Runner)) return;
+
+        damageTimer = TickTimer.None;
+        damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
+        DealDamage();
     }
 }
