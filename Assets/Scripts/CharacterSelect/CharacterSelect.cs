@@ -62,7 +62,7 @@ public class CharacterSelect : NetworkBehaviour
     private void SelectCharacter (int characterIndex, Button selectedButton)
     {
         int index = NetworkPlayer.Players.IndexOf(NetworkPlayer.Local);
-        NetworkPlayer.Local.RPC_SetCharacterID(characterIndex);
+        NetworkPlayer.Local.RPC_SetCharacterID(characterIndex);  
 
         // Needing for removing monobehaviour HUD before RPC call
         NetworkPlayer player = NetworkPlayer.Players[index];
@@ -75,7 +75,7 @@ public class CharacterSelect : NetworkBehaviour
         }
 
         RPC_SpawnCharacter(index, spawnPoint);
-
+         
         // Update UI for selected character button
         if (currentSelectedCharacterButton != null)
         {
