@@ -27,6 +27,7 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
     public void OnStartNewSessionClicked()
     {
+        if (networkRunnerHandler.GetRoomSize() <= 1) return;
         CreateGame(roomAddress[1]); 
     }
 
