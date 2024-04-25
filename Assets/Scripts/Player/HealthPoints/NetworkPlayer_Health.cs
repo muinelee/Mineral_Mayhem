@@ -10,7 +10,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public float HP { get; set; }
 
     // Callback is Temporary until OnHPChanged is implemented
-    [Networked(OnChanged = nameof(OnHPChanged))] 
+    [Networked(OnChanged = nameof(OnHPChanged))]  
     public float BP { get; set; }
 
     [Networked(OnChanged = nameof(OnStateChanged))]
@@ -45,10 +45,18 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     // Start is called before the first frame update
     public override void Spawned()
     {
+        Debug.Log("Spawned was called on network player health"); 
         if (HP == startingHP) isDead = false;
-
-        RoundManager.Instance.ResetRound += Respawn;
-        RoundManager.Instance.MatchEndEvent += DisableControls;
+        RoundManager rm = RoundManager.Instance; 
+        if (rm != null)
+        {
+            rm.ResetRound += Respawn;
+            rm.MatchEndEvent += DisableControls; 
+        }
+        else
+        {
+            Respawn(); 
+        }
     }
 
     public override void OnHit(float x)
@@ -133,8 +141,11 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         Character.Animator.anim.CrossFade("Death", 0.2f);
 
         if (!NetworkPlayer.Local.HasStateAuthority) return;
-        if (team == NetworkPlayer.Team.Red) RoundManager.Instance.RedPlayersDies();
-        else RoundManager.Instance.BluePlayersDies(); 
+        if (RoundManager.Instance)
+        {
+            if (team == NetworkPlayer.Team.Red) RoundManager.Instance.RedPlayersDies();
+            else RoundManager.Instance.BluePlayersDies();
+        }
     }
     public void HandleRespawn()
     {
@@ -202,7 +213,10 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     public void OnDestroy()
     {
-        RoundManager.Instance.ResetRound -= Respawn;
-        RoundManager.Instance.MatchEndEvent -= DisableControls;
+        if (RoundManager.Instance)
+        {
+            RoundManager.Instance.ResetRound -= Respawn;
+            RoundManager.Instance.MatchEndEvent -= DisableControls;
+        }
     }
 }
