@@ -70,12 +70,13 @@ public class CharacterSelect : NetworkBehaviour
         {
             if (characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI != null)
             {
+                Debug.Log("Deleted player UI"); 
                 Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
             }
         }
 
         RPC_SpawnCharacter(index, spawnPoint);
-         
+        Debug.Log($"Character lookup contains player {characterLookup.ContainsKey(player)}");  
         // Update UI for selected character button
         if (currentSelectedCharacterButton != null)
         {
@@ -225,7 +226,8 @@ public class CharacterSelect : NetworkBehaviour
     {
         characterSelectScreen.SetActive(true);
         reselectButton.gameObject.SetActive(false);
-        Destroy(characterLookup[NetworkPlayer.Local].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
+        if (Runner.SessionInfo.MaxPlayers > 1) Destroy(characterLookup[NetworkPlayer.Local].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
+        else Destroy(FindObjectOfType<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);   
         RPC_CharacterReselect(NetworkPlayer.Local);
         if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
         else if (NetworkPlayer.Local.team == NetworkPlayer.Team.Blue) NetworkCameraEffectsManager.instance.GoToBlueCamera();
