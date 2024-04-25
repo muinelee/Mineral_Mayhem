@@ -55,7 +55,7 @@ public class CharacterSelect : NetworkBehaviour
         FinalizeChoice();
         RoundUI.instance.StartRound();
         NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
-        RoundManager.Instance.MatchStart();
+        if (RoundManager.Instance) RoundManager.Instance.MatchStart();
         this.gameObject.SetActive(false);
     }
 
@@ -228,7 +228,7 @@ public class CharacterSelect : NetworkBehaviour
         Destroy(characterLookup[NetworkPlayer.Local].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
         RPC_CharacterReselect(NetworkPlayer.Local);
         if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
-        else NetworkCameraEffectsManager.instance.GoToBlueCamera();
+        else if (NetworkPlayer.Local.team == NetworkPlayer.Team.Blue) NetworkCameraEffectsManager.instance.GoToBlueCamera();
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -240,10 +240,17 @@ public class CharacterSelect : NetworkBehaviour
 
     private void SetPlayerToSpawn()
     {
-        foreach (NetworkPlayer player in NetworkPlayer.Players)
+        if (RoundManager.Instance)
         {
-            Vector3 spawnPos = RoundManager.Instance.respawnPoints[player];
-            characterLookup[player].gameObject.transform.position = spawnPos;
+            foreach (NetworkPlayer player in NetworkPlayer.Players)
+            {
+                Vector3 spawnPos = RoundManager.Instance.respawnPoints[player];
+                characterLookup[player].gameObject.transform.position = spawnPos;
+            }
+        }
+        else
+        {
+            characterLookup[NetworkPlayer.Local].gameObject.transform.position = Vector3.zero; 
         }
     }
 }
