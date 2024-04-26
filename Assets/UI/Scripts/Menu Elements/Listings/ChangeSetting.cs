@@ -6,10 +6,8 @@ public class ChangeSetting : MonoBehaviour
     public static ChangeSetting instance;
 
     [Header("Setting Effect References")]
-    // Texture Quality is changed in game scene by TextureManager
     // Brightness Post-Processing is changed on start in game scene by PPManager
     [SerializeField] AudioMixer mixer;
-    // Left Handed is changed on start in game scene by GameManager
 
     //------------------------------------//
 
@@ -23,9 +21,9 @@ public class ChangeSetting : MonoBehaviour
 
     public void ChangeSelection(int selection, string type)
     {
-        if (type == "fullScreen")
+        if (type == "windowed")
         {
-            DataManager.fullScreen = selection;
+            DataManager.windowed = selection;
 
             // Setting Effect
         }
@@ -36,6 +34,18 @@ public class ChangeSetting : MonoBehaviour
         if (type == "brightness")
         {
             DataManager.brightness = value;
+
+            // Setting Effect
+        }
+        else if (type == "contrast")
+        {
+            DataManager.contrast = value;
+
+            // Setting Effect
+        }
+        else if (type == "saturation")
+        {
+            DataManager.saturation = value;
 
             // Setting Effect
         }

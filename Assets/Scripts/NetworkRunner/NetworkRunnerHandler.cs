@@ -89,6 +89,7 @@ public class NetworkRunnerHandler : MonoBehaviour
     {
         // Create game as a host
         var clientTask = InitializeNetworkRunner(networkRunner, GameMode.Host, sessionName, NetAddress.Any(), SceneUtility.GetBuildIndexByScenePath($"_Scenes/{sceneName}"), null);
+        Debug.Log("Joining Game Session " + sceneName); 
     }
 
     public void JoinGame(SessionInfo sessionInfo)

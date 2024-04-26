@@ -54,14 +54,15 @@ public class CharacterSelect : NetworkBehaviour
         characterSelectTimer = TickTimer.None;
         FinalizeChoice();
         RoundUI.instance.StartRound();
-        RoundManager.Instance.MatchStart();
+        NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
+        if (RoundManager.Instance) RoundManager.Instance.MatchStart();
         this.gameObject.SetActive(false);
     }
 
     private void SelectCharacter (int characterIndex, Button selectedButton)
     {
         int index = NetworkPlayer.Players.IndexOf(NetworkPlayer.Local);
-        NetworkPlayer.Local.RPC_SetCharacterID(characterIndex);
+        NetworkPlayer.Local.RPC_SetCharacterID(characterIndex);  
 
         // Needing for removing monobehaviour HUD before RPC call
         NetworkPlayer player = NetworkPlayer.Players[index];
@@ -69,12 +70,15 @@ public class CharacterSelect : NetworkBehaviour
         {
             if (characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI != null)
             {
+                Debug.Log("Deleted player UI"); 
                 Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
             }
         }
 
-        RPC_SpawnCharacter(index, spawnPoint);
+        CharacterEntity[]  character = FindObjectsOfType<CharacterEntity>();
 
+        RPC_SpawnCharacter(index, spawnPoint);
+        Debug.Log($"Character lookup contains player {characterLookup.ContainsKey(player)}");  
         // Update UI for selected character button
         if (currentSelectedCharacterButton != null)
         {
@@ -84,6 +88,7 @@ public class CharacterSelect : NetworkBehaviour
 
         // Update the current selection and its visual state
         currentSelectedCharacterButton = selectedButton;
+        PlayerPrefs.SetInt("lastSelectedCharacter", characterIndex);
     }
 
     private void SetupAbilityUI(SO_Character character)
@@ -130,24 +135,7 @@ public class CharacterSelect : NetworkBehaviour
 
     public void ActivateCharacterSelect()
     {
-        characterSelectScreen.SetActive(true);
-        RoundManager.Instance.ResetRound += SetPlayerToSpawn;
-        foreach (NetworkPlayer player in NetworkPlayer.Players)
-        {
-            int spawnLocation = (player.team == NetworkPlayer.Team.Red) ? 0 : 2;
-            spawnLocation += ReadyUpManager.instance.GetIndex(player);
-            Vector3 spawnVector = spawnPoints[spawnLocation].position;
-            RoundManager.Instance.respawnPoints.Add(player, spawnVector);
-        }
-
-        // Set camera location
-        spawnPoint = (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) ? 0 : 2;
-        spawnPoint += ReadyUpManager.instance.GetIndex(NetworkPlayer.Local);
-        if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
-        else NetworkCameraEffectsManager.instance.GoToBlueCamera();
-
-        // Character Select Timer
-        characterSelectTimer = TickTimer.CreateFromSeconds(Runner, characterSelectDuration);
+        StartCoroutine(SpawnPrevCharacter());
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -205,12 +193,11 @@ public class CharacterSelect : NetworkBehaviour
     /// </summary>
     public void FinalizeChoice()
     {
+        // Enable player control
         characterLookup[NetworkPlayer.Local].Input.CharacterSelected = true;
         characterLookup[NetworkPlayer.Local].PlayerUI.SpawnPlayerUI();
-        //
-        // ----  Disabling Cinematic Call For Now - Re-enable When Ready ----
-        //
-        //NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local); 
+
+        NetworkCameraEffectsManager.instance.GoToTopCamera();
         ResetButtonVisual(currentSelectedCharacterButton);
         characterSelectScreen.SetActive(false);
         reselectButton.gameObject.SetActive(true);
@@ -223,10 +210,11 @@ public class CharacterSelect : NetworkBehaviour
     {
         characterSelectScreen.SetActive(true);
         reselectButton.gameObject.SetActive(false);
-        Destroy(characterLookup[NetworkPlayer.Local].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
+        if (Runner.SessionInfo.MaxPlayers > 1) Destroy(characterLookup[NetworkPlayer.Local].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
+        else Destroy(FindObjectOfType<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);   
         RPC_CharacterReselect(NetworkPlayer.Local);
         if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
-        else NetworkCameraEffectsManager.instance.GoToBlueCamera();
+        else if (NetworkPlayer.Local.team == NetworkPlayer.Team.Blue) NetworkCameraEffectsManager.instance.GoToBlueCamera();
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -238,10 +226,44 @@ public class CharacterSelect : NetworkBehaviour
 
     private void SetPlayerToSpawn()
     {
+        if (RoundManager.Instance)
+        {
+            foreach (NetworkPlayer player in NetworkPlayer.Players)
+            {
+                Vector3 spawnPos = RoundManager.Instance.respawnPoints[player];
+                characterLookup[player].gameObject.transform.position = spawnPos;
+            }
+        }
+        else
+        {
+            characterLookup[NetworkPlayer.Local].gameObject.transform.position = Vector3.zero; 
+        }
+    }
+
+    IEnumerator SpawnPrevCharacter()
+    {
+        yield return 0;
+
+        characterSelectScreen.SetActive(true);
+        RoundManager.Instance.ResetRound += SetPlayerToSpawn;
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
-            Vector3 spawnPos = RoundManager.Instance.respawnPoints[player];
-            characterLookup[player].gameObject.transform.position = spawnPos;
+            int spawnLocation = (player.team == NetworkPlayer.Team.Red) ? 0 : 2;
+            spawnLocation += ReadyUpManager.instance.GetIndex(player);
+            Vector3 spawnVector = spawnPoints[spawnLocation].position;
+            RoundManager.Instance.respawnPoints.Add(player, spawnVector);
         }
+
+        // Set camera location
+        spawnPoint = (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) ? 0 : 2;
+        spawnPoint += ReadyUpManager.instance.GetIndex(NetworkPlayer.Local);
+        if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
+        else NetworkCameraEffectsManager.instance.GoToBlueCamera();
+
+        // Character Select Timer
+        characterSelectTimer = TickTimer.CreateFromSeconds(Runner, characterSelectDuration);
+
+        int lastSelectedCharacter = PlayerPrefs.GetInt("lastSelectedCharacter", 0);
+        SelectCharacter(lastSelectedCharacter, characterButtons[lastSelectedCharacter]);
     }
 }

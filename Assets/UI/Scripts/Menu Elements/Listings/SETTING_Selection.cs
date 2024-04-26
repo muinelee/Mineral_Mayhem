@@ -6,7 +6,7 @@ public class SETTING_Selection : MonoBehaviour
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] string settingType;
 
-    [SerializeField] string[] value = { "Off", "On" };
+    [SerializeField] string[] value = { "On", "Off" };
 
     [Header("Options")]
     [SerializeField] bool loop = true;
@@ -18,7 +18,7 @@ public class SETTING_Selection : MonoBehaviour
     {
         if (settingType == "fullScreen")
         {
-            selected = DataManager.fullScreen;
+            selected = DataManager.windowed;
             UpdateSetting();
         }
     }
@@ -32,6 +32,7 @@ public class SETTING_Selection : MonoBehaviour
         }
         else if (loop)
         {
+            Debug.Log("!");
             selected = 0;
             UpdateSetting();
         }
@@ -60,7 +61,7 @@ public class SETTING_Selection : MonoBehaviour
             }
         }
 
-        ChangeSetting.instance.ChangeSelection(selected, settingType);
+        if (settingType != "") ChangeSetting.instance.ChangeSelection(selected, settingType);
         Debug.Log("Option: " + selected);
     }
 }

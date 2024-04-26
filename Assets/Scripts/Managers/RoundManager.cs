@@ -115,13 +115,14 @@ public class RoundManager : NetworkBehaviour
 
     public void MatchStart()
     {
+        NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
         MatchStartEvent?.Invoke();
     }
 
     public override void FixedUpdateNetwork()
     {
         if (roundEndTimer.Expired(Runner))
-        {
+        { 
             roundEndTimer = TickTimer.None; 
             ResetRound?.Invoke();
         }

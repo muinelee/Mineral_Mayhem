@@ -17,7 +17,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     // Dictionary for holding player UserIDs
     private Dictionary<int, NetworkPlayer> mapTokenIDWithNetworkPlayer = new Dictionary<int, NetworkPlayer>();
 
-    private string[] roomAddress = new string[] { "RaeLeda/RaeLedaTrainingRoom", "RichardCPhoton" };
+    private string[] roomAddress = new string[] { "TrainingRoom", "RichardCPhoton" };
 
     public void AddPlayerToMap(int token, NetworkPlayer player)
     {
@@ -26,8 +26,12 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)                          // Spawns player in scene
     {
-        if (!roomAddress.Contains(SceneManager.GetActiveScene().name)) return;
-
+        if (!roomAddress.Contains(SceneManager.GetActiveScene().name))
+        {
+            Debug.Log("Cannot get active scene name"); 
+            return;
+        }
+        Debug.Log("Spawning Player"); 
         if (runner.IsServer)
         {
             runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
@@ -40,14 +44,14 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         NetworkPlayer.Players.Clear();
         FindAnyObjectByType<NetworkRunner>().Shutdown();
-        SceneManager.LoadScene("RichardCPlayerLobby");
+        SceneManager.LoadScene(0);
     }
 
     public async void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
     {
         NetworkPlayer.Players.Clear();
         await FindAnyObjectByType<NetworkRunner>().Shutdown();
-        SceneManager.LoadScene("RichardCPlayerLobby");
+        SceneManager.LoadScene(0);
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
