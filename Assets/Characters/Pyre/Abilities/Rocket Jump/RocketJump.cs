@@ -89,6 +89,11 @@ public class RocketJump : NetworkAttack_Base
         Runner.Despawn(Object);
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(rigTransform.position, attackRadius);
+    }
+
     protected override void DealDamage()
     {
         Runner.LagCompensation.OverlapSphere(rigTransform.position, attackRadius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);

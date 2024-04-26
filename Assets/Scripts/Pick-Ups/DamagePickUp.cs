@@ -1,21 +1,19 @@
-using Fusion;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class DamagePickup : NetworkBehaviour
+public class DamagePickup : MonoBehaviour
 {
     [SerializeField] private int damageAmount = 20;
-    [SerializeField] private LayerMask targetLayer;
     private void OnTriggerEnter(Collider other)
     {
-        if (!Object.HasStateAuthority) return;
-
-        if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
+        if (other.CompareTag("Player"))
         {
             NetworkPlayer_Health playerHealth = other.GetComponent<NetworkPlayer_Health>();
             if (playerHealth != null)
             {
                 playerHealth.OnTakeDamage(damageAmount);
-                Runner.Despawn(Object);
+                Destroy(gameObject);
             }
         }
     }
