@@ -16,9 +16,41 @@ public class SETTING_Selection : MonoBehaviour
 
     private void Start()
     {
-        if (settingType == "fullScreen")
+        if (settingType == "postProcessing")
         {
-            selected = DataManager.windowed;
+            selected = SettingsManager.postProcessing;
+        }
+        if (settingType == "windowed")
+        {
+            selected = SettingsManager.windowed;
+            UpdateSetting();
+        }
+    }
+
+    public void SetSettings()
+    {
+        if (settingType == "postProcessing")
+        {
+            selected = SettingsManager.postProcessing;
+            UpdateSetting();
+        }
+        if (settingType == "windowed")
+        {
+            selected = SettingsManager.windowed;
+            UpdateSetting();
+        }
+    }
+
+    public void ResetSettings()
+    {
+        if (settingType == "postProcessing")
+        {
+            selected = 0;
+            UpdateSetting();
+        }
+        if (settingType == "windowed")
+        {
+            selected = 1;
             UpdateSetting();
         }
     }

@@ -9,39 +9,34 @@ public class SaveManager : MonoBehaviour
     {
         LoadData();
     }
-    private void OnDisable()
-    {
-        SaveData();
-    }
 
     public void SaveData()
     {
-        PlayerPrefs.SetInt("Windowed", DataManager.windowed);
+        PlayerPrefs.SetInt("Windowed", SettingsManager.windowed);
+        PlayerPrefs.SetInt("PostProcessing", SettingsManager.postProcessing);
 
-        PlayerPrefs.SetFloat("VolumeMaster", DataManager.volumeMaster);
-        PlayerPrefs.SetFloat("VolumeMusic", DataManager.volumeMusic);
-        PlayerPrefs.SetFloat("VolumeSFX", DataManager.volumeSFX);
+        PlayerPrefs.SetFloat("VolumeMaster", SettingsManager.volumeMaster);
+        PlayerPrefs.SetFloat("VolumeMusic", SettingsManager.volumeMusic);
+        PlayerPrefs.SetFloat("VolumeSFX", SettingsManager.volumeSFX);
 
-        PlayerPrefs.SetFloat("Brightness", DataManager.brightness);
-        PlayerPrefs.SetFloat("Contrast", DataManager.contrast);
-        PlayerPrefs.SetFloat("Saturation", DataManager.saturation);
+        PlayerPrefs.SetFloat("Brightness", SettingsManager.brightness);
+        PlayerPrefs.SetFloat("Contrast", SettingsManager.contrast);
+        PlayerPrefs.SetFloat("Saturation", SettingsManager.saturation);
     }
 
     public void LoadData()
     {
-        DataManager.windowed = PlayerPrefs.GetInt("Windowed");
-        DataManager.volumeMaster = PlayerPrefs.GetFloat("VolumeMaster");
-        DataManager.volumeMusic = PlayerPrefs.GetFloat("VolumeMusic");
-        DataManager.volumeSFX = PlayerPrefs.GetFloat("volumeSFX");
-    }
+        SettingsManager.windowed = PlayerPrefs.GetInt("Windowed");
+        SettingsManager.postProcessing = PlayerPrefs.GetInt("PostProcessing");
 
-    public void ClearData()
-    {
-        DataManager.windowed = 1;
-        DataManager.volumeMaster = 1f;
-        DataManager.volumeMusic = 0.8f;
-        DataManager.volumeSFX = 0.75f;
+        SettingsManager.volumeMaster = PlayerPrefs.GetFloat("VolumeMaster");
+        SettingsManager.volumeMusic = PlayerPrefs.GetFloat("VolumeMusic");
+        SettingsManager.volumeSFX = PlayerPrefs.GetFloat("VolumeSFX");
 
-        SaveData();
+        SettingsManager.brightness = PlayerPrefs.GetFloat("Brightness");
+        SettingsManager.contrast = PlayerPrefs.GetFloat("Contrast");
+        SettingsManager.saturation = PlayerPrefs.GetFloat("Saturation");
+
+        ChangeSetting.instance.SetSettings();
     }
 }

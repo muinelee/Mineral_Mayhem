@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,31 +11,82 @@ public class SETTING_Slider : MonoBehaviour
     [SerializeField] Slider slider;
 
     [SerializeField] string settingType;
-    float value;
+    public float value;
 
     //--------------------------------------//
 
     private void Start()
     {
+        SetSettings();
+    }
+
+    public void SetSettings()
+    {
+        if (settingType == "volumeMaster")
+        {
+            slider.value = SettingsManager.volumeMaster;
+            SliderValueChanged();
+        }
+        if (settingType == "volumeSFX")
+        {
+            Debug.Log("SFX: " + SettingsManager.volumeSFX);
+            slider.value = SettingsManager.volumeSFX;
+            SliderValueChanged();
+        }
+        if (settingType == "volumeMusic")
+        {
+            Debug.Log("Music: " + SettingsManager.volumeMusic);
+            slider.value = SettingsManager.volumeMusic;
+            SliderValueChanged();
+        }
         if (settingType == "brightness")
         {
-            slider.value = DataManager.brightness;
-            UpdateSetting();
+            slider.value = SettingsManager.brightness;
+            SliderValueChanged();
         }
-        else if (settingType == "volumeMaster")
+        if (settingType == "contrast")
         {
-            slider.value = DataManager.volumeMaster;
-            UpdateSetting();
+            slider.value = SettingsManager.contrast;
+            SliderValueChanged();
         }
-        else if (settingType == "volumeMusic")
+        if (settingType == "saturation")
         {
-            slider.value = DataManager.volumeMusic;
-            UpdateSetting();
+            slider.value = SettingsManager.saturation;
+            SliderValueChanged();
         }
-        else if (settingType == "volumeSFX")
+    }
+
+    public void ResetSettings()
+    {
+        if (settingType == "volumeMaster")
         {
-            slider.value = DataManager.volumeSFX;
-            UpdateSetting();
+            slider.value = 1;
+            SliderValueChanged();
+        }
+        if (settingType == "volumeSFX")
+        {
+            slider.value = 1;
+            SliderValueChanged();
+        }
+        if (settingType == "volumeMusic")
+        {
+            slider.value = 1;
+            SliderValueChanged();
+        }
+        if (settingType == "brightness")
+        {
+            slider.value = 0.5f;
+            SliderValueChanged();
+        }
+        if (settingType == "contrast")
+        {
+            slider.value = 0.5f;
+            SliderValueChanged();
+        }
+        if (settingType == "saturation")
+        {
+            slider.value = 0.5f;
+            SliderValueChanged();
         }
     }
 
