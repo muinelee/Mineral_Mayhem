@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6787,6 +6787,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1593739270}
   - component: {fileID: 1593739269}
+  - component: {fileID: 1593739271}
   m_Layer: 0
   m_Name: Arena
   m_TagString: Untagged
@@ -6810,7 +6811,7 @@ MonoBehaviour:
   spawnPoints: []
   healthPickup: {fileID: 0}
   altPickup: {fileID: 0}
-  core: {fileID: 0}
+  core: {fileID: 8853772122572866974, guid: a0f5adf9e67a267418d6999756824dd1, type: 3}
   definition: {fileID: 0}
   spline: {fileID: 0}
 --- !u!4 &1593739270
@@ -6829,6 +6830,30 @@ Transform:
   - {fileID: 451529275}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1593739271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593739268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInterest: 1
+  DefaultInterestGroups: []
+  DestroyWhenStateAuthorityLeaves: 0
+  AllowStateAuthorityOverride: 1
+  AoiPositionSource: {fileID: 0}
+  Flags: 2561
+  NetworkGuid:
+    RawGuidValue: f627ca6cd3034da78b6e8001706bbf80
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 1593739269}
+  SimulationBehaviours: []
 --- !u!1 &1597203930
 GameObject:
   m_ObjectHideFlags: 3
