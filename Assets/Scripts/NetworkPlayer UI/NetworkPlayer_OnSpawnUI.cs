@@ -22,7 +22,7 @@ public class NetworkPlayer_OnSpawnUI : CharacterComponent
     {
         if (!Object.HasInputAuthority) return;
 
-        RoundManager.Instance.MatchStartEvent += SpawnPlayerUI;
+        if (RoundManager.Instance) RoundManager.Instance.MatchStartEvent += SpawnPlayerUI;
     }
 
     public void SpawnPlayerUI()
@@ -56,6 +56,6 @@ public class NetworkPlayer_OnSpawnUI : CharacterComponent
 
     private void OnDestroy()
     {
-        RoundManager.Instance.MatchStartEvent -= SpawnPlayerUI;
+        if (RoundManager.Instance) RoundManager.Instance.MatchStartEvent -= SpawnPlayerUI;
     }
 }

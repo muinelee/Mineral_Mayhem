@@ -9,7 +9,7 @@ using UnityEngine.Events;
 public class PlayerJoinScreenUI : MonoBehaviour
 {
     private NetworkRunnerHandler networkRunnerHandler;
-    private string[] roomAddress = new string[] { "RaeLeda/RaeLedaTrainingRoom", "RichardCPhoton" };
+    private string[] roomAddress = new string[] { "TrainingRoom", "RichardCPhoton" };
     private string map;
 
     public UnityEvent BackToMainMenu;
@@ -27,7 +27,8 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
     public void OnStartNewSessionClicked()
     {
-        networkRunnerHandler.CreateGame(ClientInfo.LobbyName, "RichardCPhoton");
+        if (networkRunnerHandler.GetRoomSize() <= 1) return;
+        CreateGame(roomAddress[1]); 
     }
 
     public void OnBackClicked()
@@ -45,11 +46,17 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
     public void OnTrainingClicked()
     {
-        map = roomAddress[0];
+        SetRoomSize(1);
+        networkRunnerHandler.CreateGame("TrainingRoom", roomAddress[0]);
     }
 
     public void OnQuitClicked()
     {
         BackToMainMenu?.Invoke();
+    }
+
+    private void CreateGame(string game)
+    {
+        networkRunnerHandler.CreateGame(ClientInfo.LobbyName, game);
     }
 }
