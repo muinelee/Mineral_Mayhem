@@ -17,7 +17,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     // Dictionary for holding player UserIDs
     private Dictionary<int, NetworkPlayer> mapTokenIDWithNetworkPlayer = new Dictionary<int, NetworkPlayer>();
 
-    private string[] roomAddress = new string[] { "TrainingRoom", "RichardCPhoton" };
+    private string[] roomAddress = new string[] { "RaeLeda/RaeLedaTrainingRoom", "RichardCPhoton" };
 
     public void AddPlayerToMap(int token, NetworkPlayer player)
     {
@@ -26,12 +26,8 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)                          // Spawns player in scene
     {
-        if (!roomAddress.Contains(SceneManager.GetActiveScene().name))
-        {
-            Debug.Log("Cannot get active scene name"); 
-            return;
-        }
-        Debug.Log("Spawning Player"); 
+        if (!roomAddress.Contains(SceneManager.GetActiveScene().name)) return;
+
         if (runner.IsServer)
         {
             runner.Spawn(playerPrefab, transform.position, Quaternion.identity, player);
