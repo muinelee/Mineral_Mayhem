@@ -76,7 +76,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
 
     public void CameraHitEffect(int damage)
     {
-        if (damage < hitEffectThreshold || !Runner.IsServer) return;
+        if (damage < hitEffectThreshold) return;
 
         // Broadcast to all clients to hit stop and camera shake if damage is over a threshold
         RPC_CameraShake();

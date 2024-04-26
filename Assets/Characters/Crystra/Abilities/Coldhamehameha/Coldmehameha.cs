@@ -42,9 +42,8 @@ public class Coldmehameha : NetworkAttack_Base
         //offset spawn position to match hands
         transform.position += transform.forward * offset;
     }
-    public override void FixedUpdateNetwork()
+    void FixedUpdate()
     {
-        if (!Runner.IsServer) return;
         //if the lifetime of the attack has expired
         if (lifeTimer.Expired(Runner)) {
             //end the attack
