@@ -193,13 +193,11 @@ public class CharacterSelect : NetworkBehaviour
     /// </summary>
     public void FinalizeChoice()
     {
+        // Enable player control
         characterLookup[NetworkPlayer.Local].Input.CharacterSelected = true;
         characterLookup[NetworkPlayer.Local].PlayerUI.SpawnPlayerUI();
-        //
-        // ----  Disabling Cinematic Call For Now - Re-enable When Ready ----
-        //re-enabled for now as it caused issues MS
-        //
-        NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
+
+        NetworkCameraEffectsManager.instance.GoToTopCamera();
         ResetButtonVisual(currentSelectedCharacterButton);
         characterSelectScreen.SetActive(false);
         reselectButton.gameObject.SetActive(true);
