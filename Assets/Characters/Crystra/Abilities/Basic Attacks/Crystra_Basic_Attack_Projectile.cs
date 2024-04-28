@@ -23,6 +23,8 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
     {
         base.Spawned();
 
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+
         transform.position += Vector3.up * spawnHeight;
         float offsetX = Random.Range(-offset, offset);
         float offsetY = Random.Range(0, offset);
@@ -32,6 +34,7 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
         GetComponent<NetworkRigidbody>().Rigidbody.velocity = transform.forward * speed;
 
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifeDuration);
+
     }
 
     // Update is called once per frame

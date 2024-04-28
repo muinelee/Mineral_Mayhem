@@ -26,6 +26,8 @@ public class FrostCloud : NetworkAttack_Base
     {
         base.Spawned();
 
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+
         GetComponent<Rigidbody>().velocity = transform.forward * speed;
 
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifetime);

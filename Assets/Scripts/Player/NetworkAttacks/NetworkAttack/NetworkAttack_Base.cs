@@ -11,7 +11,7 @@ public abstract class NetworkAttack_Base : NetworkBehaviour
     [Header("Base Attack Properties")]
     [SerializeField] protected int damage;
     [SerializeField] protected float knockback;
-    [SerializeField] protected AudioClip SFX;
+    [SerializeField] protected AudioClip[] SFX;
     [SerializeField] protected List<StatusEffect> statusEffectSO;
     protected NetworkPlayer.Team thisTeam;
 

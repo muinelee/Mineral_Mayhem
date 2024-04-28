@@ -21,6 +21,7 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     [Header("Dash Properties")]
     [SerializeField] private SO_NetworkDash dash;
+    //[SerializeField] private AudioClip[] dashSounds;
     private TickTimer dashCoolDownTimer = TickTimer.None;
     private TickTimer dashDurationTimer = TickTimer.None;
     private bool isDashing = false;
@@ -86,6 +87,8 @@ public class NetworkPlayer_Movement : CharacterComponent
         }
 
         else dashSpeed = dash.GetDashValue();
+        
+        //AudioSFXManager.instance.PlayRandomAudioClip(dashSounds, transform, 1.0f);
 
         // Start the timers
         dashCoolDownTimer = TickTimer.CreateFromSeconds(Runner, dash.GetCoolDown());
