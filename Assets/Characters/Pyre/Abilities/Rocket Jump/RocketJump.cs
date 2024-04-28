@@ -43,7 +43,7 @@ public class RocketJump : NetworkAttack_Base
         {
             //Spawn Particles
             slamVFXInstance = Runner.Spawn(slamVFX, rigTransform.position, rigTransform.rotation);
-            AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
+            RPC_RocketJumpLandingSFX();
             attackLifeTimer = TickTimer.CreateFromSeconds(Runner, vfxDuration);
 
             DealDamage();
@@ -111,5 +111,11 @@ public class RocketJump : NetworkAttack_Base
             playerHit.OnTakeDamage(damage);
             playerHit.OnKnockBack(knockback, rigTransform.position);
         }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_RocketJumpLandingSFX()
+    {
+        AudioManager.Instance.PlayAudioSFX(this.SFX[1], transform.position);
     }
 }

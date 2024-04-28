@@ -23,9 +23,9 @@ public class UnshackleBuff : NetworkAttack_Base
 
     public override void Spawned()
     {
-        if (!Object.HasStateAuthority) return;
-
         AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        
+        if (!Object.HasStateAuthority) return;
 
         timer = TickTimer.CreateFromSeconds(Runner, lifetimeDuration);
         transform.position += transform.forward * offset;
