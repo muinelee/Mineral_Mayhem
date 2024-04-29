@@ -95,9 +95,9 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
 
         //loop to check for hits
         for (int i = 0; i < hits.Count; i++) {
-            NetworkPlayer_Health healthHandler = hits[i].GameObject.GetComponentInParent<NetworkPlayer_Health>();
+            IHealthComponent healthComponent = hits[i].GameObject.GetComponentInParent<IHealthComponent>();
 
-            if (healthHandler) {
+            if (healthComponent != null) {
                 //if its the first hit, ignore the multiplier
                 if (attackIndex < 1) {
                     //total damage equal to damage
@@ -110,7 +110,7 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
                 }
 
                 //send damage to health handler as int
-                healthHandler.OnTakeDamage((int)totalDamage);
+                healthComponent.OnTakeDamage((int)totalDamage);
                 TrackAttacks();
 
                 //debug attack index
