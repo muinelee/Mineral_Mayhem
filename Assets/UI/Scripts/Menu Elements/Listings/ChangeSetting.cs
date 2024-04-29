@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Rendering;
 
-[DefaultExecutionOrder(1)]
 public class ChangeSetting : MonoBehaviour
 {
     public static ChangeSetting instance;
@@ -36,7 +35,7 @@ public class ChangeSetting : MonoBehaviour
     }
     private void Start()
     {
-        SetSettings();
+        
     }
 
     public void SetSettings()
@@ -60,8 +59,6 @@ public class ChangeSetting : MonoBehaviour
         S_Brightness.SetSettings();
         S_Contrast.SetSettings();
         S_Saturation.SetSettings();
-
-        Debug.Log("Settings Set");
     }
 
     public void ResetSettings()
@@ -76,7 +73,7 @@ public class ChangeSetting : MonoBehaviour
         PP_Contrast.weight = 0.5f;
         PP_Saturation.weight = 0.5f;
 
-        S_Windowed.SetSettings();
+        S_Windowed.ResetSettings();
         S_PostProcessing.ResetSettings();
         S_Master.ResetSettings();
         S_SFX.ResetSettings();
@@ -84,8 +81,6 @@ public class ChangeSetting : MonoBehaviour
         S_Brightness.ResetSettings();
         S_Contrast.ResetSettings();
         S_Saturation.ResetSettings();
-
-        Debug.Log("Settings Reset");
     }
 
     public void ChangeSelection(int selection, string type)
@@ -112,6 +107,7 @@ public class ChangeSetting : MonoBehaviour
         if (type == "brightness")
         {
             SettingsManager.brightness = value;
+            Debug.Log("Brightness: " + SettingsManager.brightness + " / " + value);
 
             // Setting Effect
             PP_Brightness.weight = value;

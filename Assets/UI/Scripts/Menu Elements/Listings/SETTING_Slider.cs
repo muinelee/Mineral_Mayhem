@@ -15,11 +15,6 @@ public class SETTING_Slider : MonoBehaviour
 
     //--------------------------------------//
 
-    private void Start()
-    {
-        SetSettings();
-    }
-
     public void SetSettings()
     {
         if (settingType == "volumeMaster")
@@ -29,13 +24,11 @@ public class SETTING_Slider : MonoBehaviour
         }
         if (settingType == "volumeSFX")
         {
-            Debug.Log("SFX: " + SettingsManager.volumeSFX);
             slider.value = SettingsManager.volumeSFX;
             SliderValueChanged();
         }
         if (settingType == "volumeMusic")
         {
-            Debug.Log("Music: " + SettingsManager.volumeMusic);
             slider.value = SettingsManager.volumeMusic;
             SliderValueChanged();
         }

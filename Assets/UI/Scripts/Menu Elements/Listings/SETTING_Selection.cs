@@ -12,21 +12,6 @@ public class SETTING_Selection : MonoBehaviour
     [SerializeField] bool loop = true;
     int selected = 0;
 
-    //--------------------------------------//
-
-    private void Start()
-    {
-        if (settingType == "postProcessing")
-        {
-            selected = SettingsManager.postProcessing;
-        }
-        if (settingType == "windowed")
-        {
-            selected = SettingsManager.windowed;
-            UpdateSetting();
-        }
-    }
-
     public void SetSettings()
     {
         if (settingType == "postProcessing")
@@ -64,7 +49,6 @@ public class SETTING_Selection : MonoBehaviour
         }
         else if (loop)
         {
-            Debug.Log("!");
             selected = 0;
             UpdateSetting();
         }

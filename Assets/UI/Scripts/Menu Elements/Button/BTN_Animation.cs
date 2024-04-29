@@ -13,7 +13,10 @@ public class BTN_Animation : MonoBehaviour
     [SerializeField] float sizeMultiplier = -0.25f;
     [SerializeField] Image[] imagesToChangeColor;
     [SerializeField] Color[] colorNormal;
-    [SerializeField] Color[] colorPressed;
+    [SerializeField] Color[] colorChanged;
+    [SerializeField] Image[] imagesToSpriteSwap;
+    [SerializeField] Sprite[] spriteNormal;
+    [SerializeField] Sprite[] spriteChanged;
 
     private float curScale;
     private float lastScale;
@@ -42,7 +45,14 @@ public class BTN_Animation : MonoBehaviour
             {
                 for (int i = 0; i < imagesToChangeColor.Length; i++)
                 {
-                    imagesToChangeColor[i].color = colorPressed[i];
+                    imagesToChangeColor[i].color = colorChanged[i];
+                }
+            }
+            if (imagesToSpriteSwap.Length > 0)
+            {
+                for (int i = 0; i < imagesToSpriteSwap.Length; i++)
+                {
+                    imagesToSpriteSwap[i].sprite = spriteChanged[i];
                 }
             }
         }
@@ -56,6 +66,13 @@ public class BTN_Animation : MonoBehaviour
                 for (int i = 0; i < imagesToChangeColor.Length; i++)
                 {
                     imagesToChangeColor[i].color = colorNormal[i];
+                }
+            }
+            if (imagesToSpriteSwap.Length > 0)
+            {
+                for (int i = 0; i < imagesToSpriteSwap.Length; i++)
+                {
+                    imagesToSpriteSwap[i].sprite = spriteNormal[i];
                 }
             }
         }

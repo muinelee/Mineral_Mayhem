@@ -9,6 +9,10 @@ public class SaveManager : MonoBehaviour
     {
         LoadData();
     }
+    private void OnDisable()
+    {
+        //SaveData();
+    }
 
     public void SaveData()
     {
