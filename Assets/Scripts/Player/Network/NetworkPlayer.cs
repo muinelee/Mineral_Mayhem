@@ -35,7 +35,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     [Networked] public NetworkBool isReady { get; set; } = false;
 
-    public enum Team { Undecided, Red, Blue};
+    public enum Team { Undecided, Red, Blue, Neutral};
     [Networked] public Team team { get; set; } = Team.Undecided;
 
     [Networked] public int tokenID { get; set; }        // Value is set when spawned by CharacterSpawner

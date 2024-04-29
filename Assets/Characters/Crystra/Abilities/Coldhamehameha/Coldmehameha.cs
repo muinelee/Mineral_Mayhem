@@ -65,6 +65,8 @@ public class Coldmehameha : NetworkAttack_Base
 
     protected override void DealDamage()
     {
+        if (!Runner.IsServer) return;
+
         //get the character rotation
         Quaternion rotation = Quaternion.LookRotation(character.transform.forward);
         //signature for hits using the characterposition + (rotation * 3(half size of the box)
@@ -72,9 +74,14 @@ public class Coldmehameha : NetworkAttack_Base
         //loop to check for hits
         foreach (LagCompensatedHit hit in hits) {
             //get health component interface
+            Debug.Log(hit.GameObject.name);
+
             IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
             //if health component is not null
             if (healthComponent != null) {
+
+                Debug.Log($"is it dead? {healthComponent.isDead}, What's the team? {healthComponent.team}");
+
                 //if health component is not dead, or if the team is the same, continue
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
                 //call the on take damage function from the health component

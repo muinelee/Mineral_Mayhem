@@ -33,6 +33,7 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
             return;
 
         HP = maxHealth;
+        team = NetworkPlayer.Team.Neutral;
     }
 
     public void OnTakeDamage(int damageAmount)
