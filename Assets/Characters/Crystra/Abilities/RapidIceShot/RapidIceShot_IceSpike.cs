@@ -31,6 +31,8 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
 
     public override void Spawned()
     {
+        base.Spawned();
+
         transform.position += Vector3.up * spawnHeight;
         float offsetX = Random.Range(-offset, offset);
         float offsetY = Random.Range(0, offset);
@@ -98,6 +100,9 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
             IHealthComponent healthComponent = hits[i].GameObject.GetComponentInParent<IHealthComponent>();
 
             if (healthComponent != null) {
+
+                if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
+
                 //if its the first hit, ignore the multiplier
                 if (attackIndex < 1) {
                     //total damage equal to damage
