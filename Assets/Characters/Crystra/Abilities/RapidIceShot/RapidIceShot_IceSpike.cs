@@ -31,6 +31,8 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
 
     public override void Spawned()
     {
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+
         transform.position += Vector3.up * spawnHeight;
         float offsetX = Random.Range(-offset, offset);
         float offsetY = Random.Range(0, offset);
