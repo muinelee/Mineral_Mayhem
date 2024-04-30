@@ -11,16 +11,23 @@ public class BTN_Animation : MonoBehaviour
     private float startValue = 1;
     private float endValue = 1.25f;
     [SerializeField] float sizeMultiplier = -0.25f;
+
+    [Header("MouseOver/Off Animation")]
     [SerializeField] Image[] imagesToChangeColor;
     [SerializeField] Color[] colorNormal;
     [SerializeField] Color[] colorChanged;
     [SerializeField] Image[] imagesToSpriteSwap;
     [SerializeField] Sprite[] spriteNormal;
     [SerializeField] Sprite[] spriteChanged;
+    [SerializeField] TextMeshProUGUI[] textToChangeFont;
+    [SerializeField] TMP_FontAsset[] fontNormal;
+    [SerializeField] TMP_FontAsset[] fontChanged;
+
+    [SerializeField] bool lockColor;
 
     private float curScale;
     private float lastScale;
-    [SerializeField] bool lockColor;
+    
 
     //-----------------------------------//
 
@@ -55,6 +62,13 @@ public class BTN_Animation : MonoBehaviour
                     imagesToSpriteSwap[i].sprite = spriteChanged[i];
                 }
             }
+            if (textToChangeFont.Length > 0)
+            {
+                for (int i = 0; i < textToChangeFont.Length; i++)
+                {
+                    textToChangeFont[i].font = fontChanged[i];
+                }
+            }
         }
     }
     public void ColorRevert()
@@ -73,6 +87,13 @@ public class BTN_Animation : MonoBehaviour
                 for (int i = 0; i < imagesToSpriteSwap.Length; i++)
                 {
                     imagesToSpriteSwap[i].sprite = spriteNormal[i];
+                }
+            }
+            if (textToChangeFont.Length > 0)
+            {
+                for (int i = 0; i < textToChangeFont.Length; i++)
+                {
+                    textToChangeFont[i].font = fontNormal[i];
                 }
             }
         }
