@@ -137,7 +137,7 @@ public class RoundManager : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
         if (roundEndTimer.Expired(Runner))
-        {
+        { 
             roundEndTimer = TickTimer.None; 
             ResetRound?.Invoke();
         }

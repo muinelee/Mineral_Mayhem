@@ -50,19 +50,21 @@ MonoBehaviour:
   _interpolationDataSource: 0
   damage: 20
   knockback: 200
-  SFX: {fileID: 0}
+  SFX:
+  - {fileID: 8300000, guid: bb8ff83fb3f714b46aeb7d13ef29eba5, type: 3}
+  - {fileID: 8300000, guid: 0ea1c59e79d46a24d9a854dfcd866413, type: 3}
+  - {fileID: 8300000, guid: ecf1f911dc6a1ff4285a2f470c93f9e6, type: 3}
   statusEffectSO:
   - {fileID: 11400000, guid: 8f4c96a15ba57a04380148f2dae97480, type: 2}
   searchRadius: 0.1
   collisionLayer:
     serializedVersion: 2
     m_Bits: 128
-  diveDistance: 5
   boxWidth: 3
   tickRate: 0.5
   tickDamage: 3
   trail: {fileID: 8327935440845661510}
-  dashDuration: 3
+  dashDuration: 0.75
   forceForward: 45
   lingerTime: 3
   attackRadius: 2

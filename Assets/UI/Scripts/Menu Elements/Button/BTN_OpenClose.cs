@@ -23,12 +23,14 @@ public class BTN_OpenClose : MonoBehaviour
 
     public void OnPress()
     {
+        onPress?.Invoke();
+
         if (!disabled)
             StartCoroutine(iOnPress());
     }
     private IEnumerator iOnPress()
     {
-        onPress?.Invoke();
+        
 
         yield return new WaitForSecondsRealtime(delayTime);
 

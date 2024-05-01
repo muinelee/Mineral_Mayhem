@@ -31,6 +31,11 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
 
     public override void Spawned()
     {
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        
+        base.Spawned();
+
+
         transform.position += Vector3.up * spawnHeight;
         float offsetX = Random.Range(-offset, offset);
         float offsetY = Random.Range(0, offset);
@@ -95,9 +100,12 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
 
         //loop to check for hits
         for (int i = 0; i < hits.Count; i++) {
-            NetworkPlayer_Health healthHandler = hits[i].GameObject.GetComponentInParent<NetworkPlayer_Health>();
+            IHealthComponent healthComponent = hits[i].GameObject.GetComponentInParent<IHealthComponent>();
 
-            if (healthHandler) {
+            if (healthComponent != null) {
+
+                if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
+
                 //if its the first hit, ignore the multiplier
                 if (attackIndex < 1) {
                     //total damage equal to damage
@@ -110,7 +118,7 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
                 }
 
                 //send damage to health handler as int
-                healthHandler.OnTakeDamage((int)totalDamage);
+                healthComponent.OnTakeDamage((int)totalDamage);
                 TrackAttacks();
 
                 //debug attack index

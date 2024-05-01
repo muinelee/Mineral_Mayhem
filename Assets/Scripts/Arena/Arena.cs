@@ -10,11 +10,47 @@ public class Arena : NetworkBehaviour
     public Transform[] spawnPoints;
     public GameObject healthPickup;
     public GameObject altPickup;    // at time of writing I forget name of other collectible in-game lol - there may also be more than one, can create list
-    public GameObject core;
+    public NetworkObject core;
 
     public SO_ArenaDefinition definition;    //Will have information relative to the specific arena we are on (music/name/index/icon/image, etc)
 
     public SplineContainer spline;
+
+    private NetworkObject currentCore;
+    private Coroutine coreSpawnCoroutine;
+
+    private void StartCoreSpawnTimer(float delay)
+    {
+        if (coreSpawnCoroutine != null)
+            StopCoroutine(coreSpawnCoroutine);
+
+        coreSpawnCoroutine = StartCoroutine(SpawnCoreAfterDelay(delay));
+    }
+
+    private IEnumerator SpawnCoreAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        Vector3 spawnPosition = GetNewCoreSpawnLocation();
+        currentCore = Runner.Spawn(core, spawnPosition, Quaternion.identity);
+
+        StartCoroutine(WaitForCoreDestroyed());
+    }
+
+    private IEnumerator WaitForCoreDestroyed()
+    {
+        if(!Runner.IsServer)
+        {
+            yield return null;
+        }
+        while (currentCore != null)
+        {
+            yield return null;
+        }
+
+        StartCoreSpawnTimer(5f);
+    }
+
 
     private void Awake()
     {
@@ -32,7 +68,8 @@ public class Arena : NetworkBehaviour
         /*if (NetworkPlayer.Local.IsLeader)
         {
 
-        }*/ 
+        }*/
+        StartCoreSpawnTimer(5f);
     }
 
     private void OnDestroy()
@@ -63,21 +100,6 @@ public class Arena : NetworkBehaviour
         Debug.Log($"Spawning character for {player.playerName} as {entity.name}");
         entity.transform.name = $"Character ({player.playerName})";
     }
-    private void StartArenaCinematic()
-    {
-        Debug.Log("Starting Arena Cinematic"); 
-        if (NetworkPlayer.Local) NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
-    }
-
-
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Z)) 
-        {
-            // Go to Player Camera (Top-Down View)
-            StartArenaCinematic();  
-        }
-    }
 
     /// <summary>
     /// Returns the center point of the core's spawn path.
@@ -94,7 +116,24 @@ public class Arena : NetworkBehaviour
     /// <returns></returns>
     public Vector3 GetNewCoreSpawnLocation()
     {
-        float randomLocation = Random.Range(0f, 1f);
-        return spline.EvaluatePosition(randomLocation);
+        if (spline != null)
+        {
+            float randomLocation = Random.Range(0f, 1f);
+            return spline.EvaluatePosition(randomLocation);
+        }
+        else
+        {
+            Debug.LogWarning("Spline is not assigned for core spawning.");
+            return Vector3.zero;
+        }
+    }
+
+    public void DestroyCore()
+    {
+        if (currentCore != null)
+        {
+            Runner.Despawn(currentCore);
+            currentCore = null;
+        }
     }
 }

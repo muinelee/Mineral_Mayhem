@@ -28,6 +28,8 @@ public class RocketJump : NetworkAttack_Base
     {
         base.Spawned();
         
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        
         if (!Runner.IsServer) return;
 
         AttackStart();
@@ -41,6 +43,7 @@ public class RocketJump : NetworkAttack_Base
         {
             //Spawn Particles
             slamVFXInstance = Runner.Spawn(slamVFX, rigTransform.position, rigTransform.rotation);
+            RPC_RocketJumpLandingSFX();
             attackLifeTimer = TickTimer.CreateFromSeconds(Runner, vfxDuration);
 
             DealDamage();
@@ -56,6 +59,7 @@ public class RocketJump : NetworkAttack_Base
     private void AttackStart()
     {
         Runner.LagCompensation.OverlapSphere(transform.position, searchRadius, player: Object.InputAuthority, hits, collisionLayer);
+
 
         for (int i = 0; i < hits.Count; i++)
         {
@@ -89,11 +93,6 @@ public class RocketJump : NetworkAttack_Base
         Runner.Despawn(Object);
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(rigTransform.position, attackRadius);
-    }
-
     protected override void DealDamage()
     {
         Runner.LagCompensation.OverlapSphere(rigTransform.position, attackRadius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
@@ -107,5 +106,11 @@ public class RocketJump : NetworkAttack_Base
             playerHit.OnTakeDamage(damage);
             playerHit.OnKnockBack(knockback, rigTransform.position);
         }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_RocketJumpLandingSFX()
+    {
+        AudioManager.Instance.PlayAudioSFX(this.SFX[1], transform.position);
     }
 }
