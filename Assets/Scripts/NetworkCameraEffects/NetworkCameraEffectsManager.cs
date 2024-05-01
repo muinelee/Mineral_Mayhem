@@ -248,6 +248,8 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
 
     private void SetTeamCamera()
     {
+        if (Runner.SessionInfo.MaxPlayers <= 2) return;
+
         CharacterEntity[] characterEntities = FindObjectsOfType<CharacterEntity>();
 
         foreach (CharacterEntity character in characterEntities) 
