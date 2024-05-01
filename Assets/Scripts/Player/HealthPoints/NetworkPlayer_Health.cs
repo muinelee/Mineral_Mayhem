@@ -45,7 +45,6 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     // Start is called before the first frame update
     public override void Spawned()
     {
-        Debug.Log("Spawned was called on network player health"); 
         if (HP == startingHP) isDead = false;
         RoundManager rm = RoundManager.Instance; 
         if (rm != null)

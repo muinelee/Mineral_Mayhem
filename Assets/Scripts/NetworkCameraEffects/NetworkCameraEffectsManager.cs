@@ -70,6 +70,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.J))
         {
+
             GoToTeamCamera();
         }
     }
@@ -96,6 +97,11 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         SetTeamCamera();
         GoToTopCamera(); 
     } 
+
+    public void SetPlayerCamera(Transform player)
+    {
+        topCameraPriority.Follow = player;
+    }
 
     #region <----- Camera Priority ----->
     public void GoToRedCamera()
