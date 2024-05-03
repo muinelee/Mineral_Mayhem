@@ -51,11 +51,11 @@ public class LavaDive : NetworkAttack_Base
 
             character.Rigidbody.Rigidbody.AddForce(transform.forward * forceForward);
 
-            if (finishDive) return;
-            if (dashTimer.Expired(Runner)) DiveEnd();
-            trail.position = character.transform.position;
         }
 
+        if (finishDive) return;
+        if (dashTimer.Expired(Runner)) DiveEnd();
+        trail.position = character.transform.position;
     }
 
     private void AttackStart()
