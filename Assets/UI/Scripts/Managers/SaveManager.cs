@@ -5,9 +5,12 @@ using UnityEngine;
 [DefaultExecutionOrder(0)]
 public class SaveManager : MonoBehaviour
 {
-    private void Awake()
+    private void Start()
     {
-        LoadData();
+        if (PlayerPrefs.HasKey("Windowed"))
+            LoadData();
+        else
+            ChangeSetting.instance.ResetSettings();
     }
     private void OnDisable()
     {
@@ -42,5 +45,11 @@ public class SaveManager : MonoBehaviour
         SettingsManager.saturation = PlayerPrefs.GetFloat("Saturation");
 
         ChangeSetting.instance.SetSettings();
+    }
+
+    [ContextMenu("Delete All PlayerPrefs Entries")]
+    public void DeletePrefs()
+    {
+        PlayerPrefs.DeleteAll();
     }
 }

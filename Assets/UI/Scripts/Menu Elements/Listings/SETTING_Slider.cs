@@ -63,22 +63,22 @@ public class SETTING_Slider : MonoBehaviour
         }
         if (settingType == "volumeMusic")
         {
-            slider.value = 1;
+            slider.value = 0.8f;
             SliderValueChanged();
         }
         if (settingType == "brightness")
         {
-            slider.value = 0.5f;
+            slider.value = 0.55f;
             SliderValueChanged();
         }
         if (settingType == "contrast")
         {
-            slider.value = 0.5f;
+            slider.value = 0.7f;
             SliderValueChanged();
         }
         if (settingType == "saturation")
         {
-            slider.value = 0.5f;
+            slider.value = 0.6f;
             SliderValueChanged();
         }
     }
