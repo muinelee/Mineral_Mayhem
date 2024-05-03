@@ -42,9 +42,6 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     [Header("Team Properties")]
 
-    [Header("Camera Offset")]
-    [SerializeField] private float cameraAngle;
-
     [Header("Username UI")]
     public TextMeshProUGUI playerNameTMP;
     [Networked(OnChanged = nameof(OnStateChanged))] public NetworkBool IsReady {  get; set; }
