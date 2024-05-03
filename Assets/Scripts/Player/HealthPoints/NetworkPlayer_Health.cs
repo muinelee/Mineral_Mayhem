@@ -97,6 +97,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     private void HandleTeamCam()
     {
+        if (!Object.HasInputAuthority) return;
+
         if (HP > 0)
         {
             if (teamCamTimer.IsRunning) teamCamTimer = TickTimer.None;
