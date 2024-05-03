@@ -6,14 +6,10 @@ using UnityEngine;
 public class FrostCloud : NetworkAttack_Base
 {
     [Header("Movement Properties")]
-    [SerializeField] private float speed;
     [SerializeField] private float lifetime;
-    [SerializeField] private float maxTravelDistance;
-    private float distanceTravelled = 0;
-    [SerializeField] private Vector3 offset;
+    [SerializeField] private float offset;
 
     [Header("Lifetime Components")]
-    //[SerializeField] private float lifeDuration;
     private TickTimer lifeTimer = TickTimer.None;
 
     [Header("Other Attack Properties")]
@@ -25,8 +21,10 @@ public class FrostCloud : NetworkAttack_Base
     public override void Spawned()
     {
         base.Spawned();
+ 
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
 
-        GetComponent<Rigidbody>().velocity = transform.forward * speed;
+        transform.position += transform.up * offset;
 
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifetime);
     }
@@ -40,12 +38,6 @@ public class FrostCloud : NetworkAttack_Base
         }
 
         DealDamage();
-
-        float moveDistance = speed * Runner.DeltaTime;
-
-        if (distanceTravelled + moveDistance > maxTravelDistance) return;        
-
-        distanceTravelled += moveDistance;
     }
 
     public void AttackEnd()

@@ -24,11 +24,25 @@ public class SetText : MonoBehaviour
 
     public void ChangeText(string newText)
     {
+        StopAllCoroutines();
+        StartCoroutine(iChangeText(newText));
+    }
+    private IEnumerator iChangeText(string newText)
+    {
+        yield return new WaitForSecondsRealtime(0.2f);
+
         text.text = newText;
     }
 
     public void RevertText()
     {
+        StopAllCoroutines();
+        StartCoroutine(iRevertText());
+    }
+    private IEnumerator iRevertText()
+    {
+        yield return new WaitForSecondsRealtime(0.2f);
+
         text.text = originalText;
     }
 }

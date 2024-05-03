@@ -6,10 +6,10 @@ using UnityEngine.Audio;
 public class AudioManager : MonoBehaviour
 {
     private Queue<AudioSource> threeDAudioPool;
-    private Queue<AudioSource> twoDAudioPool;
-
-    [SerializeField] private AudioSource twoDTemplate;
-    [SerializeField] private AudioSource threeDTemplate;
+/*    private Queue<AudioSource> twoDAudioPool;
+*/
+/*    [SerializeField] private AudioSource twoDTemplate;
+*/    [SerializeField] private AudioSource threeDTemplate;
     [SerializeField] private int numberOfPool = 15;
     [SerializeField] private AudioMixer mixer;
 
@@ -26,28 +26,29 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         threeDAudioPool = new Queue<AudioSource>();
-        twoDAudioPool = new Queue<AudioSource>();
-
+/*        twoDAudioPool = new Queue<AudioSource>();
+*/
         for (int i = 0; i < numberOfPool; i++)
         {
             AudioSource threeD = Instantiate(threeDTemplate, transform);
             threeDAudioPool.Enqueue(threeD);
 
-            AudioSource twoD = Instantiate(twoDTemplate, transform);
-            twoDAudioPool.Enqueue(twoD);
+/*            AudioSource twoD = Instantiate(twoDTemplate, transform);
+            twoDAudioPool.Enqueue(twoD);*/
         }
     }
 
-    public AudioSource GetTwoDimensionalSource()
+/*    public AudioSource GetTwoDimensionalSource()
     {
         AudioSource source = twoDAudioPool.Dequeue();
         twoDAudioPool.Enqueue(source);
         return source;
-    }
+    }*/
 
-    public void PlayAudioSFX(AudioClip clip)
+    public void PlayAudioSFX(AudioClip clip, Vector3 origin)
     {
-        AudioSource source = GetTwoDimensionalSource();
+        //AudioSource source = GetTwoDimensionalSource();
+        AudioSource source = GetThreeDimensionalSource(origin);
         source.clip = clip;
         source.Play();
     }

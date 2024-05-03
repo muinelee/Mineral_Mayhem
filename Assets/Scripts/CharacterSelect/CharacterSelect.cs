@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class CharacterSelect : NetworkBehaviour
 {
+    // Character select event for storm mechanics
+    public delegate void CharacterSelectEvent();
+
     [Header("Character Select")]
     public List<SO_Character> characters;
     public Dictionary<NetworkPlayer, CharacterEntity> characterLookup = new Dictionary<NetworkPlayer, CharacterEntity>();
@@ -30,6 +33,8 @@ public class CharacterSelect : NetworkBehaviour
     public Transform[] spawnPoints;
     private int spawnPoint;
 
+    //public event for storm mechanics
+    public static event CharacterSelectEvent OnCharacterSelect;
     private void Start()
     {
         for (int i = 0; i < characterButtons.Length; i++)
@@ -135,6 +140,27 @@ public class CharacterSelect : NetworkBehaviour
 
     public void ActivateCharacterSelect()
     {
+        characterSelectScreen.SetActive(true);
+        RoundManager.Instance.ResetRound += SetPlayerToSpawn;
+        foreach (NetworkPlayer player in NetworkPlayer.Players)
+        {
+            int spawnLocation = (player.team == NetworkPlayer.Team.Red) ? 0 : 2;
+            spawnLocation += ReadyUpManager.instance.GetIndex(player);
+            Vector3 spawnVector = spawnPoints[spawnLocation].position;
+            RoundManager.Instance.respawnPoints.Add(player, spawnVector);
+        }
+
+        // Set camera location
+        spawnPoint = (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) ? 0 : 2;
+        spawnPoint += ReadyUpManager.instance.GetIndex(NetworkPlayer.Local);
+        if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
+        else NetworkCameraEffectsManager.instance.GoToBlueCamera();
+
+        // Character Select Timer
+        characterSelectTimer = TickTimer.CreateFromSeconds(Runner, characterSelectDuration);
+
+        //invoke the event for the storm
+        //OnCharacterSelect?.Invoke();
         StartCoroutine(SpawnPrevCharacter());
     }
 
@@ -201,6 +227,7 @@ public class CharacterSelect : NetworkBehaviour
         ResetButtonVisual(currentSelectedCharacterButton);
         characterSelectScreen.SetActive(false);
         reselectButton.gameObject.SetActive(true);
+        OnCharacterSelect?.Invoke();
     }
 
     /// <summary>
