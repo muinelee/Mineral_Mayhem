@@ -33,6 +33,8 @@ public class LavaDive : NetworkAttack_Base
 
     public override void Spawned()
     {
+        base.Spawned();
+
         AttackStart();
     }
 
@@ -129,6 +131,7 @@ public class LavaDive : NetworkAttack_Base
             if (healthComponent != null)
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.team)) continue;
+
                 healthComponent.OnTakeDamage(tickDamage);
             }
 
