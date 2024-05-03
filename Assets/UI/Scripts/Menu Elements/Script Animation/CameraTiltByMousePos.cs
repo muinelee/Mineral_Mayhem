@@ -28,8 +28,8 @@ public class CameraTiltByMousePos : MonoBehaviour
             mousePos.x = Input.mousePosition.x / Screen.width - 0.5f;
             mousePos.y = Input.mousePosition.y / Screen.height - 0.5f;
 
-            cam.transform.position = new Vector3(startCamPos.x + (mousePos.x / 2), startCamPos.y + (mousePos.y / 2), startCamPos.z);
-            cam.transform.localEulerAngles = new Vector3(Mathf.Clamp(0 + (mousePos.y * -2f), -5, 5), Mathf.Clamp(idleCamRotY + (mousePos.x * 5), -5, 5), 0);
+            cam.transform.position = new Vector3(startCamPos.x + (mousePos.x / 2), startCamPos.y + (mousePos.y / 3), startCamPos.z);
+            cam.transform.localEulerAngles = new Vector3(Mathf.Clamp(0 + (mousePos.y * -2f), -5, 5), Mathf.Clamp(idleCamRotY + (mousePos.x * 4), -5, 5), 0);
         }
     }
 }

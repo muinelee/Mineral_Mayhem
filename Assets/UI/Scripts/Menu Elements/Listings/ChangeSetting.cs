@@ -66,12 +66,12 @@ public class ChangeSetting : MonoBehaviour
         //Set Windowed Setting
         postProcessingGameObject.SetActive(true);
         mixer.SetFloat("master", 1 * 80 - 80);
-        mixer.SetFloat("music", 1 * 80 - 80);
+        mixer.SetFloat("music", 0.8f * 80 - 80);
         mixer.SetFloat("sfx", 1 * 80 - 80);
 
-        PP_Brightness.weight = 0.5f;
-        PP_Contrast.weight = 0.5f;
-        PP_Saturation.weight = 0.5f;
+        PP_Brightness.weight = 0.55f;
+        PP_Contrast.weight = 0.7f;
+        PP_Saturation.weight = 0.6f;
 
         S_Windowed.ResetSettings();
         S_PostProcessing.ResetSettings();
