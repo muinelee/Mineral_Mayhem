@@ -7,6 +7,8 @@ public class INP_Pause : MonoBehaviour
 {
     [SerializeField] KeyCode pauseKey = KeyCode.Escape;
     [SerializeField] CG_Fade menu;
+    [SerializeField] GameObject[] windowsToOpen;
+    [SerializeField] GameObject[] windowsToClose;
     [SerializeField] float delay = 0.5f;
 
     bool paused = false;
@@ -45,6 +47,23 @@ public class INP_Pause : MonoBehaviour
 
             menu.gameObject.SetActive(true);
             menu.FadeIn();
+
+            if (windowsToClose.Length > 0)
+            {
+                for (int i = 0; i < windowsToClose.Length; i++)
+                {
+                    windowsToClose[i].GetComponent<CanvasGroup>().alpha = 0;
+                    windowsToClose[i].gameObject.SetActive(false);
+                }
+            }
+            if (windowsToOpen.Length > 0)
+            {
+                for (int i = 0; i < windowsToOpen.Length; i++)
+                {
+                    windowsToOpen[i].gameObject.SetActive(true);
+                    windowsToOpen[i].GetComponent<CanvasGroup>().alpha = 1;
+                }
+            }
 
             //Cursor.lockState = CursorLockMode.Confined;
             //Cursor.visible = true;
