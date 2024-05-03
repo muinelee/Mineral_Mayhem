@@ -36,6 +36,9 @@ public class LavaDive : NetworkAttack_Base
         base.Spawned();
 
         AttackStart();
+
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
     }
 
     public override void FixedUpdateNetwork()
@@ -93,6 +96,7 @@ public class LavaDive : NetworkAttack_Base
     private void DiveEnd()
     {
         character.Animator.anim.CrossFade("LavaDiveEnd", 0.1f);
+        AudioManager.Instance.PlayAudioSFX(SFX[2], transform.position);
 
         DealDamage();
         if (Runner.IsServer) Runner.Spawn(attackEndVFX, character.transform.position, Quaternion.identity);
