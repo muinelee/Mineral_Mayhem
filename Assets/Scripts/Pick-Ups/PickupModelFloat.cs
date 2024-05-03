@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PickupModelFloat : MonoBehaviour
 {
-    public float speed = 1.0f;
+    public float hoverSpeed = 1.0f;
+    public float rotateSpeed = 15.0f;
     public float distance = 1.0f;
 
     private Vector3 initialPosition;
@@ -15,8 +16,12 @@ public class PickupModelFloat : MonoBehaviour
     }
 
     void Update()
-    {
-        float Yupdate = initialPosition.y + Mathf.Sin(Time.time * speed) * distance;
+    {   
+        //Floating
+        float Yupdate = initialPosition.y + Mathf.Sin(Time.time * hoverSpeed) * distance;
         transform.position = new Vector3(transform.position.x, Yupdate, transform.position.z);
+
+        //Rotating
+        transform.Rotate(Vector3.forward, rotateSpeed * Time.deltaTime);
     }
 }
