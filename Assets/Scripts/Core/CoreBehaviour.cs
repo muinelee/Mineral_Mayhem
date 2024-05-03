@@ -38,6 +38,8 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
 
     public void OnTakeDamage(int damageAmount)
     {
+        if (!Object.HasStateAuthority) return;
+
         HP -= damageAmount;
         RPC_CheckHealth(HP);
     }

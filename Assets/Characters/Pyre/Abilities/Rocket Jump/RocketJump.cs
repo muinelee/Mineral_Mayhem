@@ -49,7 +49,6 @@ public class RocketJump : NetworkAttack_Base
             DealDamage();
 
             //Enable colliders
-            character.Collider.enabled = true;
             character.Rigidbody.Rigidbody.useGravity = true;
         }
 
@@ -79,7 +78,6 @@ public class RocketJump : NetworkAttack_Base
 
                 // Disable collider and gravity
                 character.Rigidbody.Rigidbody.useGravity = false;
-                character.Collider.enabled = false;
                 hits.Clear();
             }
         }

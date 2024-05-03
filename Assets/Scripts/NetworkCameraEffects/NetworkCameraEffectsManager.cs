@@ -31,6 +31,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     [SerializeField] private CinemachineVirtualCamera victoryCameraPriority;
     [SerializeField] private CinemachineVirtualCamera redCinematicCameraPriority;
     [SerializeField] private CinemachineVirtualCamera blueCinematicCameraPriority;
+    [SerializeField] private CinemachineVirtualCamera teamCameraPriority;
 
     [Header("Camera Tracking")]
     [SerializeField]  private int currentCamTrack = 0;
@@ -66,6 +67,12 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
             // Go to Player Camera (Top-Down View)
             GoToVictoryCamera();
         }
+
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+
+            GoToTeamCamera();
+        }
     }
 
     void Start()
@@ -87,50 +94,49 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         if (!cinematicTimer.Expired(Runner)) return;
 
         cinematicTimer = TickTimer.None;
+        SetTeamCamera();
         GoToTopCamera(); 
     } 
+
+    public void SetPlayerCamera(Transform player)
+    {
+        topCameraPriority.Follow = player;
+    }
 
     #region <----- Camera Priority ----->
     public void GoToRedCamera()
     {
+        ResetCameraPriorities();
         redCameraPriority.Priority = 100;
-        blueCameraPriority.Priority = 10;
-        topCameraPriority.Priority = 10;
-        victoryCameraPriority.Priority = 10;
     }
 
     public void GoToBlueCamera()
     {
-        redCameraPriority.Priority = 10;
+        ResetCameraPriorities();
         blueCameraPriority.Priority = 100;
-        topCameraPriority.Priority = 10;
-        victoryCameraPriority.Priority = 10;
     }
 
     public void GoToTopCamera()
     {
-        redCameraPriority.Priority = 10;
-        blueCameraPriority.Priority = 10;
+        ResetCameraPriorities();
         topCameraPriority.Priority = 100;
-        victoryCameraPriority.Priority = 10;
     }
 
     public void GoToVictoryCamera()
     {
-        redCameraPriority.Priority = 10;
-        blueCameraPriority.Priority = 10;
-        topCameraPriority.Priority = 10;
+        ResetCameraPriorities();
         victoryCameraPriority.Priority = 100;
+    }
+
+    public void GoToTeamCamera()
+    {
+        ResetCameraPriorities();
+        teamCameraPriority.Priority = 100;
     }
 
     public void GoToRedCinematicCamera()
     {
-        redCameraPriority.Priority = 0;
-        blueCameraPriority.Priority = 0;
-        topCameraPriority.Priority = 0;
-        victoryCameraPriority.Priority = 0;
-        blueCinematicCameraPriority.Priority = 0;  
-
+        ResetCameraPriorities();
         redCinematicCameraPriority.Priority = 100;
 
         ControlCamera(redCinematicCameraPriority); 
@@ -138,15 +144,21 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
 
     public void GoToBlueCinematicCamera()
     {
+        ResetCameraPriorities();
+        blueCinematicCameraPriority.Priority = 100;
+
+        ControlCamera(blueCinematicCameraPriority); 
+    }
+
+    private void ResetCameraPriorities()
+    {
         redCameraPriority.Priority = 0;
         blueCameraPriority.Priority = 0;
         topCameraPriority.Priority = 0;
         victoryCameraPriority.Priority = 0;
         redCinematicCameraPriority.Priority = 0;
-
-        blueCinematicCameraPriority.Priority = 100;
-
-        ControlCamera(blueCinematicCameraPriority); 
+        blueCinematicCameraPriority.Priority = 0;
+        teamCameraPriority.Priority = 0;
     }
 
     public void StartCinematic(NetworkPlayer player)
@@ -238,6 +250,24 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
 
     #endregion
 
+    #region <----- Team Camera ----->
+
+    private void SetTeamCamera()
+    {
+        if (Runner.SessionInfo.MaxPlayers <= 2) return;
+
+        CharacterEntity[] characterEntities = FindObjectsOfType<CharacterEntity>();
+
+        foreach (CharacterEntity character in characterEntities) 
+        { 
+            if (character.Team == NetworkPlayer.Local.team && !character.Object.HasInputAuthority)
+            {
+                teamCameraPriority.Follow = character.gameObject.transform;
+            }
+        }
+    }
+
+    #endregion
 
     #region <----- Screen Shake ----->
     public void ScreenShake()

@@ -126,6 +126,8 @@ public class CharacterEntity : CharacterComponent
             if (component == this) continue;
             component.Init(this);
         }
+
+        if (Object.HasInputAuthority) NetworkCameraEffectsManager.instance.SetPlayerCamera(transform);
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
