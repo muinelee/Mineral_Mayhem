@@ -8,7 +8,7 @@ public class HealthPickup : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!Object.HasStateAuthority) return;
+        if (!FindAnyObjectByType<NetworkRunner>().IsServer) return;
 
         if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
         {

@@ -9,7 +9,7 @@ public class SpeedBoost : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!Runner.IsServer) return;
+        if (!FindAnyObjectByType<NetworkRunner>().IsServer) return;
 
         if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
         {

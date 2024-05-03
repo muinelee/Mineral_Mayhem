@@ -31,6 +31,10 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     [SerializeField] private float blockRechargeRate = 10.0f;   // Can change for balancing
     public bool canBlock = true;
 
+    // Team Cam Properties
+    [SerializeField] private float timeUntilTeamCam = 5;
+    [SerializeField] private TickTimer teamCamTimer = TickTimer.None;
+
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
@@ -40,12 +44,12 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public override void FixedUpdateNetwork()
     {
         HandleBlockMeter();
+        HandleTeamCam();
     }
 
     // Start is called before the first frame update
     public override void Spawned()
     {
-        Debug.Log("Spawned was called on network player health"); 
         if (HP == startingHP) isDead = false;
         RoundManager rm = RoundManager.Instance; 
         if (rm != null)
@@ -89,6 +93,23 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         Character.OnStatusBegin(blockDepletedStun);
         Runner.Despawn(Character.Shield);
         Character.Shield = null;
+    }
+
+    private void HandleTeamCam()
+    {
+        if (!Object.HasInputAuthority) return;
+
+        if (HP > 0)
+        {
+            if (teamCamTimer.IsRunning) teamCamTimer = TickTimer.None;
+            return;
+        }
+
+        if (teamCamTimer.Expired(Runner))
+        {
+            teamCamTimer = TickTimer.None;
+            NetworkCameraEffectsManager.instance.GoToTeamCamera();
+        }
     }
 
     // Function only called on the server
@@ -137,6 +158,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     private void HandleDeath()
     {
         DisableControls();
+
+        teamCamTimer = TickTimer.CreateFromSeconds(Runner, timeUntilTeamCam);
 
         Character.Animator.anim.CrossFade("Death", 0.2f);
 
