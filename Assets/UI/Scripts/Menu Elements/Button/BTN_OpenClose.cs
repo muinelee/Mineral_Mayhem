@@ -23,10 +23,11 @@ public class BTN_OpenClose : MonoBehaviour
 
     public void OnPress()
     {
-        onPress?.Invoke();
-
         if (!disabled)
+        {
+            onPress?.Invoke();
             StartCoroutine(iOnPress());
+        }
     }
     private IEnumerator iOnPress()
     {

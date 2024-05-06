@@ -15,14 +15,11 @@ public class CharacterSelect : NetworkBehaviour
     public Dictionary<NetworkPlayer, CharacterEntity> characterLookup = new Dictionary<NetworkPlayer, CharacterEntity>();
 
     [Header("UI Elements")]
-    [SerializeField] private GameObject characterSelectScreen;
-    [SerializeField] private Button[] characterButtons;
+    [SerializeField] private CG_Fade characterSelectScreen;
+    [SerializeField] private BTN_OpenClose[] characterButtons;
     [SerializeField] private Button[] abilityPortraits;
-    [SerializeField] private Button selectButton;
-    [SerializeField] private Button reselectButton;
     [SerializeField] private TMP_Text currentAbilityDescription;
     [SerializeField] private TMP_Text backstory;
-    private Button currentSelectedCharacterButton;
 
     [Header("Level start")]
     [SerializeField] private float characterSelectDuration = 10;
@@ -37,19 +34,7 @@ public class CharacterSelect : NetworkBehaviour
     public static event CharacterSelectEvent OnCharacterSelect;
     private void Start()
     {
-        for (int i = 0; i < characterButtons.Length; i++)
-        {
-            int index = i;
-            characterButtons[index].onClick.AddListener(() => SelectCharacter(index, characterButtons[index]));
-        }
-        if (selectButton)
-        {
-            selectButton.onClick.AddListener(FinalizeChoice);
-        }
-        if (reselectButton)
-        {
-            reselectButton.onClick.AddListener(RenableCharacterSelect);
-        }
+        
     }
 
     private void FixedUpdate()
@@ -64,7 +49,7 @@ public class CharacterSelect : NetworkBehaviour
         this.gameObject.SetActive(false);
     }
 
-    private void SelectCharacter (int characterIndex, Button selectedButton)
+    public void SelectCharacter (int characterIndex)
     {
         int index = NetworkPlayer.Players.IndexOf(NetworkPlayer.Local);
         NetworkPlayer.Local.RPC_SetCharacterID(characterIndex);  
@@ -84,15 +69,7 @@ public class CharacterSelect : NetworkBehaviour
 
         RPC_SpawnCharacter(index, spawnPoint);
         Debug.Log($"Character lookup contains player {characterLookup.ContainsKey(player)}");  
-        // Update UI for selected character button
-        if (currentSelectedCharacterButton != null)
-        {
-            // Reset the previous selected button to its normal state
-            ResetButtonVisual(currentSelectedCharacterButton);
-        }
 
-        // Update the current selection and its visual state
-        currentSelectedCharacterButton = selectedButton;
         PlayerPrefs.SetInt("lastSelectedCharacter", characterIndex);
     }
 
@@ -123,16 +100,6 @@ public class CharacterSelect : NetworkBehaviour
         }
     }
 
-    private void SetButtonAsSelected(Button button)
-    {
-        button.interactable = false;
-    }
-
-    private void ResetButtonVisual(Button button)
-    {
-        button.interactable = true;
-    }
-
     private void UpdateAbilityDescription(string description)
     {
         currentAbilityDescription.text = description;
@@ -140,7 +107,9 @@ public class CharacterSelect : NetworkBehaviour
 
     public void ActivateCharacterSelect()
     {
-        characterSelectScreen.SetActive(true);
+        characterSelectScreen.gameObject.SetActive(true);
+        characterSelectScreen.FadeIn();
+
         RoundManager.Instance.ResetRound += SetPlayerToSpawn;
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
@@ -224,9 +193,9 @@ public class CharacterSelect : NetworkBehaviour
         characterLookup[NetworkPlayer.Local].PlayerUI.SpawnPlayerUI();
 
         NetworkCameraEffectsManager.instance.GoToTopCamera();
-        ResetButtonVisual(currentSelectedCharacterButton);
-        characterSelectScreen.SetActive(false);
-        reselectButton.gameObject.SetActive(true);
+        //  ResetButtonVisual(currentSelectedCharacterButton);
+        //  characterSelectScreen.gameObject.SetActive(true);
+        //  characterSelectScreen.FadeOut();
         OnCharacterSelect?.Invoke();
     }
 
@@ -235,8 +204,8 @@ public class CharacterSelect : NetworkBehaviour
     /// </summary>
     public void RenableCharacterSelect()
     {
-        characterSelectScreen.SetActive(true);
-        reselectButton.gameObject.SetActive(false);
+        //  characterSelectScreen.SetActive(true);
+        //  reselectButton.gameObject.SetActive(false);
         if (Runner.SessionInfo.MaxPlayers > 1) Destroy(characterLookup[NetworkPlayer.Local].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
         else Destroy(FindObjectOfType<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);   
         RPC_CharacterReselect(NetworkPlayer.Local);
@@ -271,7 +240,9 @@ public class CharacterSelect : NetworkBehaviour
     {
         yield return 0;
 
-        characterSelectScreen.SetActive(true);
+        characterSelectScreen.gameObject.SetActive(true);
+        characterSelectScreen.FadeIn();
+
         RoundManager.Instance.ResetRound += SetPlayerToSpawn;
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
@@ -291,6 +262,6 @@ public class CharacterSelect : NetworkBehaviour
         characterSelectTimer = TickTimer.CreateFromSeconds(Runner, characterSelectDuration);
 
         int lastSelectedCharacter = PlayerPrefs.GetInt("lastSelectedCharacter", 0);
-        SelectCharacter(lastSelectedCharacter, characterButtons[lastSelectedCharacter]);
+        SelectCharacter(lastSelectedCharacter);
     }
 }
