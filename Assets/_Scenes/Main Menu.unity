@@ -548,7 +548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IsGlobal: 0
+  m_IsGlobal: 1
   priority: 0
   blendDistance: 0
   weight: 1
@@ -565,7 +565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IsGlobal: 0
+  m_IsGlobal: 1
   priority: 1
   blendDistance: 0
   weight: 0.7
@@ -587,7 +587,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 200, y: 20, z: 100}
   m_Center: {x: 0, y: 0, z: 0}
@@ -3930,7 +3930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IsGlobal: 0
+  m_IsGlobal: 1
   priority: 0
   blendDistance: 0
   weight: 1
@@ -3952,7 +3952,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 200, y: 20, z: 100}
   m_Center: {x: 0, y: 0, z: 0}
@@ -6203,6 +6203,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -6218,6 +6222,10 @@ PrefabInstance:
       propertyPath: fontChanged.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -6562,7 +6570,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: fontDisabled.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
@@ -6582,8 +6590,12 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteDisabled.Array.size
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: d20b689562e56ab4f8baba7ea3854158, type: 2}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -6644,6 +6656,14 @@ PrefabInstance:
       propertyPath: colorPressed.Array.data[1].r
       value: 0.2509804
       objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: ffc29dfe19435dd458fb1e444b76d7f1, type: 3}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 4b00e31b96efc534388ab191566ea9db, type: 3}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: imagesToSpriteSwap.Array.size
       value: 2
@@ -9860,7 +9880,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: fontDisabled.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
@@ -9880,8 +9900,12 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteDisabled.Array.size
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: d20b689562e56ab4f8baba7ea3854158, type: 2}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -9942,6 +9966,14 @@ PrefabInstance:
       propertyPath: colorPressed.Array.data[1].r
       value: 0.2509804
       objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 7b157685af04e36479df098fa36b0c7f, type: 3}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 4b00e31b96efc534388ab191566ea9db, type: 3}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: imagesToSpriteSwap.Array.size
       value: 2
@@ -11897,7 +11929,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IsGlobal: 0
+  m_IsGlobal: 1
   priority: 1
   blendDistance: 0
   weight: 0.6
@@ -11914,7 +11946,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IsGlobal: 0
+  m_IsGlobal: 1
   priority: 0
   blendDistance: 0
   weight: 1
@@ -11951,7 +11983,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 200, y: 20, z: 100}
   m_Center: {x: 0, y: 0, z: 0}
@@ -12001,7 +12033,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IsGlobal: 0
+  m_IsGlobal: 1
   priority: 1
   blendDistance: 0
   weight: 0.55
@@ -12018,7 +12050,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IsGlobal: 0
+  m_IsGlobal: 1
   priority: 0
   blendDistance: 0
   weight: 1
@@ -12040,7 +12072,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 200, y: 20, z: 100}
   m_Center: {x: 0, y: 0, z: 0}
@@ -12444,7 +12476,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: fontDisabled.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
@@ -12464,8 +12496,12 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteDisabled.Array.size
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: d20b689562e56ab4f8baba7ea3854158, type: 2}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -12526,6 +12562,14 @@ PrefabInstance:
       propertyPath: colorPressed.Array.data[1].r
       value: 0.2509804
       objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 0ec4d6c08bf17e74594013bbed1d2860, type: 3}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 4b00e31b96efc534388ab191566ea9db, type: 3}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: imagesToSpriteSwap.Array.size
       value: 2
@@ -15525,6 +15569,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -15540,6 +15588,10 @@ PrefabInstance:
       propertyPath: fontChanged.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -18434,7 +18486,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: fontDisabled.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
@@ -18454,8 +18506,12 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteDisabled.Array.size
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: d20b689562e56ab4f8baba7ea3854158, type: 2}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -18516,6 +18572,14 @@ PrefabInstance:
       propertyPath: colorPressed.Array.data[1].r
       value: 0.2509804
       objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 7040e0a89786e2f479318b734ff036f0, type: 3}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 4b00e31b96efc534388ab191566ea9db, type: 3}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: imagesToSpriteSwap.Array.size
       value: 2
@@ -22567,7 +22631,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: fontDisabled.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
@@ -22587,8 +22651,12 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteDisabled.Array.size
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: d20b689562e56ab4f8baba7ea3854158, type: 2}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -22665,6 +22733,14 @@ PrefabInstance:
       propertyPath: colorPressed.Array.data[1].r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 7040e0a89786e2f479318b734ff036f0, type: 3}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 4b00e31b96efc534388ab191566ea9db, type: 3}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: imagesToSpriteSwap.Array.size
       value: 2
@@ -23373,6 +23449,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -23388,6 +23468,10 @@ PrefabInstance:
       propertyPath: fontChanged.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -24421,7 +24505,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: fontDisabled.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
@@ -24441,8 +24525,12 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteDisabled.Array.size
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: d20b689562e56ab4f8baba7ea3854158, type: 2}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -24503,6 +24591,14 @@ PrefabInstance:
       propertyPath: colorPressed.Array.data[1].r
       value: 0.2509804
       objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: aebdabc178d06a4479e2a626862d83e4, type: 3}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 4b00e31b96efc534388ab191566ea9db, type: 3}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: imagesToSpriteSwap.Array.size
       value: 2
