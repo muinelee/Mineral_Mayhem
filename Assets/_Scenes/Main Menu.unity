@@ -585,7 +585,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -2286,6 +2286,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -2301,6 +2305,10 @@ PrefabInstance:
       propertyPath: fontChanged.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -3445,6 +3453,14 @@ PrefabInstance:
       propertyPath: imagesToChangeColor.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: textToChangeFont.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: imagesToSpriteSwap.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1961172781670766095, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_text
       value: Multiplayer
@@ -3934,7 +3950,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -4433,6 +4449,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 684877562}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: imagesToSpriteSwap.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: imagesToChangeColor.Array.data[0]
       value: 
       objectReference: {fileID: 666906721}
@@ -4893,6 +4913,10 @@ PrefabInstance:
       propertyPath: textToChangeColor.Array.data[0]
       value: 
       objectReference: {fileID: 351890027}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: imagesToSpriteSwap.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: imagesToChangeColor.Array.data[0]
       value: 
@@ -5387,6 +5411,14 @@ PrefabInstance:
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: imagesToChangeColor.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: textToChangeFont.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: imagesToSpriteSwap.Array.data[1]
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1961172781670766095, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_text
@@ -6116,11 +6148,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 234282106318141785, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.00041849
+      value: -0.0004196167
       objectReference: {fileID: 0}
     - target: {fileID: 234282106318141785, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000010145
+      value: -0.000009536743
       objectReference: {fileID: 0}
     - target: {fileID: 378071005385144096, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_Sprite
@@ -6486,7 +6518,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 234282106318141785, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.62748
+      value: 0.62747955
       objectReference: {fileID: 0}
     - target: {fileID: 378071005385144096, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_Sprite
@@ -6529,6 +6561,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -6544,6 +6580,10 @@ PrefabInstance:
       propertyPath: fontChanged.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -9160,11 +9200,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 234282106318141785, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.00041849
+      value: -0.0004196167
       objectReference: {fileID: 0}
     - target: {fileID: 234282106318141785, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000010145
+      value: -0.000009536743
       objectReference: {fileID: 0}
     - target: {fileID: 378071005385144096, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_Sprite
@@ -9230,6 +9270,10 @@ PrefabInstance:
       propertyPath: fontChanged.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -9815,6 +9859,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -9830,6 +9878,10 @@ PrefabInstance:
       propertyPath: fontChanged.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -11897,7 +11949,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -11986,7 +12038,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -12391,6 +12443,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -12406,6 +12462,10 @@ PrefabInstance:
       propertyPath: fontChanged.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -14097,6 +14157,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -14112,6 +14176,10 @@ PrefabInstance:
       propertyPath: fontChanged.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -15402,11 +15470,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 234282106318141785, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.00041849
+      value: -0.0004196167
       objectReference: {fileID: 0}
     - target: {fileID: 234282106318141785, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000010145
+      value: -0.000009536743
       objectReference: {fileID: 0}
     - target: {fileID: 378071005385144096, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_Sprite
@@ -16512,6 +16580,14 @@ PrefabInstance:
       propertyPath: imagesToChangeColor.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: textToChangeFont.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: imagesToSpriteSwap.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1961172781670766095, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_text
       value: Multiplayer
@@ -17209,6 +17285,14 @@ PrefabInstance:
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: imagesToChangeColor.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: textToChangeFont.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: imagesToSpriteSwap.Array.data[1]
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1961172781670766095, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_text
@@ -18349,6 +18433,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -18364,6 +18452,10 @@ PrefabInstance:
       propertyPath: fontChanged.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -22474,6 +22566,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -22489,6 +22585,10 @@ PrefabInstance:
       propertyPath: fontChanged.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
@@ -23218,11 +23318,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 234282106318141785, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.00041849
+      value: -0.0004196167
       objectReference: {fileID: 0}
     - target: {fileID: 234282106318141785, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000010145
+      value: -0.000009536743
       objectReference: {fileID: 0}
     - target: {fileID: 378071005385144096, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: m_Sprite
@@ -24320,6 +24420,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: fontDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -24335,6 +24439,10 @@ PrefabInstance:
       propertyPath: fontChanged.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
+    - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
+      propertyPath: spriteDisabled.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1221227997937199981, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: spriteNormal.Array.data[0]
       value: 
