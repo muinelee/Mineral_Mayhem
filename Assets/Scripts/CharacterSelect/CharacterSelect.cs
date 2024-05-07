@@ -16,8 +16,7 @@ public class CharacterSelect : NetworkBehaviour
 
     [Header("UI Elements")]
     [SerializeField] private CG_Fade characterSelectScreen;
-    [SerializeField] private BTN_OpenClose[] characterButtons;
-    [SerializeField] private Button[] abilityPortraits;
+    [SerializeField] private BTN_OpenClose[] abilityPortraits;
     [SerializeField] private TMP_Text currentAbilityDescription;
     [SerializeField] private TMP_Text backstory;
 
@@ -95,8 +94,8 @@ public class CharacterSelect : NetworkBehaviour
         {
             this.abilityPortraits[i].GetComponent<Image>().sprite = abilityPortraits[i];
             int index = i;
-            this.abilityPortraits[i].onClick.RemoveAllListeners();
-            this.abilityPortraits[i].onClick.AddListener(() => UpdateAbilityDescription(abilityDescriptions[index]));
+            this.abilityPortraits[i].onPress.RemoveAllListeners();
+            this.abilityPortraits[i].onPress.AddListener(() => UpdateAbilityDescription(abilityDescriptions[index]));
         }
     }
 
