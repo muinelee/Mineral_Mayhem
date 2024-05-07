@@ -23,6 +23,7 @@ public class FrostCloud : NetworkAttack_Base
         base.Spawned();
  
         AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        //AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
 
         transform.position += transform.up * offset;
 

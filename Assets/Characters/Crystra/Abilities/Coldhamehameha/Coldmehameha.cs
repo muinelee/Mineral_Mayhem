@@ -29,6 +29,7 @@ public class Coldmehameha : NetworkAttack_Base
         base.Spawned();
 
         AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        //AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
 
         //lifetimer ticktimer created from lifetime variable
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifetime);

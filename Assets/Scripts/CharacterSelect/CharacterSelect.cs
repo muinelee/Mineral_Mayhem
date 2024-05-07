@@ -83,7 +83,12 @@ public class CharacterSelect : NetworkBehaviour
         CharacterEntity[] character = FindObjectsOfType<CharacterEntity>();
 
         RPC_SpawnCharacter(index, spawnPoint);
-        // Debug.Log($"Character lookup contains player {characterLookup.ContainsKey(player)}");
+
+        // Play voice line for selected character
+        AudioManager.Instance.PlayAudioSFX(characters[characterIndex].voiceLine[0], spawnPoints[spawnPoint].position);
+
+        Debug.Log($"Character lookup contains player {characterLookup.ContainsKey(player)}");
+
         // Update UI for selected character button
         if (currentSelectedCharacterButton != null)
         {
