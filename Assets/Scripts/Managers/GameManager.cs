@@ -50,4 +50,10 @@ public class GameManager : NetworkBehaviour
     {
         CurrentArena = arena;
     }
+
+    public static void LoadLayout()
+    {
+        Assert.Check(CurrentArena != null);
+
+    }
 }
