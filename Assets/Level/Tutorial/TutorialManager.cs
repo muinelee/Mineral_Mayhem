@@ -16,10 +16,18 @@ public class TutorialManager : MonoBehaviour
     [Header("Tutorial Text")]
     [SerializeField] private string[] tutorialTexts;
     [SerializeField] private int index = 0;
+    private bool tutorialTimer = false;
 
-    public void Update() {
-        CharacterSelect.OnCharacterSelect += StartTutorial;
+    public void Start()
+    {
+        CharacterSelect.OnCharacterSelect += StartTutorial;        
     }
+
+    public void OnDestroy()
+    {
+        CharacterSelect.OnCharacterSelect -= StartTutorial;
+    }
+
     public void Deny() {
         //close the tutorial UI if they deny
         tutorialUI.SetActive(false);
@@ -30,9 +38,14 @@ public class TutorialManager : MonoBehaviour
         tutorialUI.SetActive(true);
     }
 
+    //button ont the UI to start the tutorial
     public void ContinueTutorial() {
+        //pressing confirm closes the confirm UI and opens the tutorial screen
         tutorialConfirmUI.SetActive(false);
         tutorialScreenUI.SetActive(true);
+        //sets timer to true
+        tutorialTimer = true;
+        //calls the cycle index function
         CycleIndex();
     }
 
@@ -49,17 +62,48 @@ public class TutorialManager : MonoBehaviour
     private IEnumerator ChangeText(int clearTime) {
         //wait for 5 seconds
         yield return new WaitForSeconds(clearTime);
-        tutorialText.text = "";
+        tutorialTimer = true;
         CycleIndex();
     }
 
     private void CycleIndex() {
-        //send current index to the tutorial text
-        TutorialText(tutorialTexts[index]);
-        //increment the index
+        //if the timer is true
+        if (tutorialTimer) {
+            //set the timer to false
+            tutorialTimer = false;
+            //send current index to the tutorial text
+            TutorialText(tutorialTexts[index]);
+            //increment the index
+            index++;
+            //if the index is greater than the length of the tutorial text array
+            if (index >= tutorialTexts.Length) {
+                //end the tutorial
+                EndTutorial();
+            }
+        }
+    }
+
+    public void NextHint() {
         index++;
         if (index >= tutorialTexts.Length) {
             EndTutorial();
+        }
+        else {
+            //stop coroutine
+            StopAllCoroutines();
+            TutorialText(tutorialTexts[index]);
+        }
+    }
+
+    public void PreviousHint() {
+        index--;
+        if (index < 0) {
+            index = 0;
+        }
+        else {
+            //stop coroutine
+            StopAllCoroutines();
+            TutorialText(tutorialTexts[index]);
         }
     }
 }
