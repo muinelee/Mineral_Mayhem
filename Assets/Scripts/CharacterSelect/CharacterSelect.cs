@@ -75,7 +75,7 @@ public class CharacterSelect : NetworkBehaviour
         {
             if (characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI != null)
             {
-                Debug.Log("Deleted player UI");
+                // Debug.Log("Deleted player UI");
                 Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
             }
         }
@@ -83,7 +83,7 @@ public class CharacterSelect : NetworkBehaviour
         CharacterEntity[] character = FindObjectsOfType<CharacterEntity>();
 
         RPC_SpawnCharacter(index, spawnPoint);
-        Debug.Log($"Character lookup contains player {characterLookup.ContainsKey(player)}");
+        // Debug.Log($"Character lookup contains player {characterLookup.ContainsKey(player)}");
         // Update UI for selected character button
         if (currentSelectedCharacterButton != null)
         {
@@ -140,6 +140,7 @@ public class CharacterSelect : NetworkBehaviour
 
     public void ActivateCharacterSelect()
     {
+        /*
         characterSelectScreen.SetActive(true);
         RoundManager.Instance.ResetRound += SetPlayerToSpawn;
         foreach (NetworkPlayer player in NetworkPlayer.Players)
@@ -158,6 +159,7 @@ public class CharacterSelect : NetworkBehaviour
 
         // Character Select Timer
         characterSelectTimer = TickTimer.CreateFromSeconds(Runner, characterSelectDuration);
+        */
 
         //invoke the event for the storm
         //OnCharacterSelect?.Invoke();

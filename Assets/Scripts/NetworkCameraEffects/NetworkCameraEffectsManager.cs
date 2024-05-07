@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using Cinemachine;
@@ -43,37 +42,6 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
 
     [SerializeField] private float cinematicTimerDuration = 10;
     private TickTimer cinematicTimer = TickTimer.None;
-
-    // Update Method is for testing. Remove/Move/Replace when done and logic for player's team has been implemented
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            // Go to Team Red Camera
-            RPC_CameraPriority(isRedTeam = true);
-        }
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            // Go to Team Blue Camera
-            RPC_CameraPriority(isRedTeam = false);
-        }
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            // Go to Player Camera (Top-Down View)
-            GoToTopCamera();
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            // Go to Player Camera (Top-Down View)
-            GoToVictoryCamera();
-        }
-
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-
-            GoToTeamCamera();
-        }
-    }
 
     void Start()
     {

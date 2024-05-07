@@ -136,4 +136,9 @@ public class Arena : NetworkBehaviour
             currentCore = null;
         }
     }
+
+    public void QuitToMenu()
+    {
+        FindAnyObjectByType<CharacterSpawner>().OnDisconnectedFromServer(Runner);
+    }
 }

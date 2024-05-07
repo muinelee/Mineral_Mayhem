@@ -1,10 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
-using Unity.VisualScripting;
-using static Fusion.NetworkCharacterController;
-using UnityEngine.TextCore.Text;
 
 public class ShrinkingStorm : NetworkAttack_Base { 
 
@@ -41,10 +37,16 @@ public class ShrinkingStorm : NetworkAttack_Base {
             Debug.LogError("No collider found");
         }
         //subscribe to the event
-        Debug.Log("Subscribed to event");
+        //Debug.Log("Subscribed to event");
 
         RoundManager.resetStorm += ResetStorm;
         RoundManager.startStorm += ShrinkStorm;
+    }
+
+    private void OnDestroy()
+    {
+        RoundManager.resetStorm -= ResetStorm;
+        RoundManager.startStorm -= ShrinkStorm;
     }
 
     // Update is called once per frame
@@ -55,11 +57,11 @@ public class ShrinkingStorm : NetworkAttack_Base {
             if (damageTimer.Expired(Runner)) {
             //for each player in the scene
             foreach (CharacterEntity playerchar in characters) {
-                Debug.Log(playerchar.transform.position);
+                //Debug.Log(playerchar.transform.position);
                     //if the player is not in the collider
                     if (!stormCollider.bounds.Contains(playerchar.transform.position)) {
                         //hurt em
-                        Debug.Log("Player is in the storm");
+                        //Debug.Log("Player is in the storm");
                         DealDamage();
                         //ManageDamage();
                     }
@@ -83,7 +85,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
             if (healthComponent != null) {
                 if (!stormCollider.bounds.Contains(hit.GameObject.transform.position)) {
                     healthComponent.OnTakeDamage(damage);
-                    Debug.Log("player dealt " + damage);
+                    //Debug.Log("player dealt " + damage);
                 }
             }
         }
@@ -103,7 +105,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
         characters = FindObjectsOfType<CharacterEntity>();
         //set damage timer to 1 second
         damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
-        Debug.Log(isShrinking);
+        //Debug.Log(isShrinking);
     }
     
     private void StormScaleChange() {
