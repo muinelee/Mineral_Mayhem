@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
-using Unity.VisualScripting;
 
 public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 {
@@ -117,7 +114,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         if (damageAmount < 0)
         {
-            Debug.Log("Damage is negative");
+            //Debug.Log("Damage is negative");
             return;
         }
 
@@ -174,6 +171,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         EnableControls();
         Character.Animator.anim.Play("Run");
+        if (Object.HasInputAuthority) NetworkCameraEffectsManager.instance.GoToTopCamera();
     }
 
     static void OnHPChanged(Changed<NetworkPlayer_Health> changed)

@@ -17,9 +17,16 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private string[] tutorialTexts;
     [SerializeField] private int index = 0;
 
-    public void Update() {
-        CharacterSelect.OnCharacterSelect += StartTutorial;
+    public void Start()
+    {
+        CharacterSelect.OnCharacterSelect += StartTutorial;        
     }
+
+    public void OnDestroy()
+    {
+        CharacterSelect.OnCharacterSelect -= StartTutorial;
+    }
+
     public void Deny() {
         //close the tutorial UI if they deny
         tutorialUI.SetActive(false);

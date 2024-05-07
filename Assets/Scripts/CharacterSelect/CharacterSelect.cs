@@ -75,7 +75,7 @@ public class CharacterSelect : NetworkBehaviour
         {
             if (characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI != null)
             {
-                Debug.Log("Deleted player UI");
+                // Debug.Log("Deleted player UI");
                 Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
             }
         }
@@ -83,7 +83,7 @@ public class CharacterSelect : NetworkBehaviour
         CharacterEntity[] character = FindObjectsOfType<CharacterEntity>();
 
         RPC_SpawnCharacter(index, spawnPoint);
-        Debug.Log($"Character lookup contains player {characterLookup.ContainsKey(player)}");
+        // Debug.Log($"Character lookup contains player {characterLookup.ContainsKey(player)}");
         // Update UI for selected character button
         if (currentSelectedCharacterButton != null)
         {

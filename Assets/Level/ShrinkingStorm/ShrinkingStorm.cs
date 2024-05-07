@@ -1,10 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
-using Unity.VisualScripting;
-using static Fusion.NetworkCharacterController;
-using UnityEngine.TextCore.Text;
 
 public class ShrinkingStorm : NetworkAttack_Base { 
 
@@ -59,7 +55,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
                     //if the player is not in the collider
                     if (!stormCollider.bounds.Contains(playerchar.transform.position)) {
                         //hurt em
-                        Debug.Log("Player is in the storm");
+                        //Debug.Log("Player is in the storm");
                         DealDamage();
                         //ManageDamage();
                     }
@@ -83,7 +79,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
             if (healthComponent != null) {
                 if (!stormCollider.bounds.Contains(hit.GameObject.transform.position)) {
                     healthComponent.OnTakeDamage(damage);
-                    Debug.Log("player dealt " + damage);
+                    //Debug.Log("player dealt " + damage);
                 }
             }
         }
