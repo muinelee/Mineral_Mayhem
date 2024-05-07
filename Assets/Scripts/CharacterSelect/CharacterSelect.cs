@@ -106,8 +106,8 @@ public class CharacterSelect : NetworkBehaviour
 
     public void ActivateCharacterSelect()
     {
-        characterSelectScreen.gameObject.SetActive(true);
-        characterSelectScreen.FadeIn();
+        //  characterSelectScreen.gameObject.SetActive(true);
+        //  characterSelectScreen.FadeIn();
 
         RoundManager.Instance.ResetRound += SetPlayerToSpawn;
         foreach (NetworkPlayer player in NetworkPlayer.Players)
