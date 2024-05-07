@@ -30,10 +30,11 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
     private static int spawnIndex = 0;
 
     public override void Spawned()
-    {
-        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
-        
+    {        
         base.Spawned();
+
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        //AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
 
         transform.position += Vector3.up * spawnHeight;
         float offsetX = Random.Range(-offset, offset);

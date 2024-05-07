@@ -26,9 +26,9 @@ public class RocketJump : NetworkAttack_Base
 
     public override void Spawned()
     {
-        base.Spawned();
-        
-        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        //base.Spawned();        
+
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.localPosition);
         
         if (!Runner.IsServer) return;
 
@@ -109,6 +109,6 @@ public class RocketJump : NetworkAttack_Base
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_RocketJumpLandingSFX()
     {
-        AudioManager.Instance.PlayAudioSFX(this.SFX[1], transform.position);
+        AudioManager.Instance.PlayAudioSFX(this.SFX[1], transform.localPosition);
     }
 }

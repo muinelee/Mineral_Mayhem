@@ -60,6 +60,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         // Start Attack animation
         canAttack = false;
         Character.Animator.anim.CrossFade(attack.attackName, 0.2f);
+        AudioManager.Instance.PlayAudioSFX(attack.GetVoiceLine(), transform.localPosition);
         attackTimer = TickTimer.CreateFromSeconds(Runner, attack.GetCoolDown());
 
         // Slow player
@@ -71,6 +72,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         // Start Ult animation
         canAttack = false;
         Character.Animator.anim.CrossFade(fAttack.attackName, 0.2f);
+        AudioManager.Instance.PlayAudioSFX(fAttack.GetVoiceLine(), transform.localPosition);
 
         // Slow player
         Character.Movement.ApplyAbility(fAttack);
