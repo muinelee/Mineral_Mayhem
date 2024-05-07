@@ -60,7 +60,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         // Start Attack animation
         canAttack = false;
         Character.Animator.anim.CrossFade(attack.attackName, 0.2f);
-        AudioManager.Instance.PlayAudioSFX(attack.GetVoiceLine(), transform.localPosition);
+        RPC_PlayVoiceLine(attack.GetVoiceLine(), transform.localPosition);
         attackTimer = TickTimer.CreateFromSeconds(Runner, attack.GetCoolDown());
 
         // Slow player
@@ -72,10 +72,16 @@ public class NetworkPlayer_Attack : CharacterComponent
         // Start Ult animation
         canAttack = false;
         Character.Animator.anim.CrossFade(fAttack.attackName, 0.2f);
-        AudioManager.Instance.PlayAudioSFX(fAttack.GetVoiceLine(), transform.localPosition);
+        RPC_PlayVoiceLine(fAttack.GetVoiceLine(), transform.localPosition);
 
         // Slow player
         Character.Movement.ApplyAbility(fAttack);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    private void RPC_PlayVoiceLine(AudioClip voiceLine, Vector3 position)
+    {
+        AudioManager.Instance.PlayAudioSFX(voiceLine, position);
     }
 
     private void ActivateBasicAttack()
