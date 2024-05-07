@@ -43,6 +43,12 @@ public class ShrinkingStorm : NetworkAttack_Base {
         RoundManager.startStorm += ShrinkStorm;
     }
 
+    private void OnDestroy()
+    {
+        RoundManager.resetStorm -= ResetStorm;
+        RoundManager.startStorm -= ShrinkStorm;
+    }
+
     // Update is called once per frame
     void FixedUpdate() {
         if (isShrinking) {
