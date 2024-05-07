@@ -37,7 +37,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
             Debug.LogError("No collider found");
         }
         //subscribe to the event
-        Debug.Log("Subscribed to event");
+        //Debug.Log("Subscribed to event");
 
         RoundManager.resetStorm += ResetStorm;
         RoundManager.startStorm += ShrinkStorm;
@@ -51,7 +51,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
             if (damageTimer.Expired(Runner)) {
             //for each player in the scene
             foreach (CharacterEntity playerchar in characters) {
-                Debug.Log(playerchar.transform.position);
+                //Debug.Log(playerchar.transform.position);
                     //if the player is not in the collider
                     if (!stormCollider.bounds.Contains(playerchar.transform.position)) {
                         //hurt em
@@ -99,7 +99,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
         characters = FindObjectsOfType<CharacterEntity>();
         //set damage timer to 1 second
         damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
-        Debug.Log(isShrinking);
+        //Debug.Log(isShrinking);
     }
     
     private void StormScaleChange() {
