@@ -124,6 +124,7 @@ public class RoundManager : NetworkBehaviour
         if (redRoundsWon > blueRoundsWon) RPC_DisplayGameOver(true);
         else if (blueRoundsWon > redRoundsWon) RPC_DisplayGameOver(false);
         else Debug.Log("Tie!");
+        RPC_GoToVictoryCamera();
     }
 
     public void MatchStart()
@@ -160,5 +161,11 @@ public class RoundManager : NetworkBehaviour
     {
         GameOverManager.Instance.DisplayWinners(isRedWins);
         NetworkPlayer_InGameUI.instance.enabled = false;
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_GoToVictoryCamera()
+    {
+        NetworkCameraEffectsManager.instance.GoToVictoryCamera();
     }
 }
