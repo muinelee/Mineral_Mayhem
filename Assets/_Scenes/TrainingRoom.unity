@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5958,6 +5958,8 @@ Transform:
   - {fileID: 1763301489}
   - {fileID: 1273719249}
   - {fileID: 1472252062}
+  - {fileID: 344053558}
+  - {fileID: 710313748}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1458701467
@@ -6927,7 +6929,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1654727196
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8490,6 +8492,30 @@ PrefabInstance:
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5343555911357230952, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5393794516778759700, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6130437334817021035, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
+      propertyPath: spawnPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 262827291}
+    - target: {fileID: 6130437334817021035, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
+      propertyPath: spawnPoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 1458701468}
+    - target: {fileID: 6130437334817021035, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
+      propertyPath: spawnPoints.Array.data[2]
+      value: 
+      objectReference: {fileID: 1812592176}
+    - target: {fileID: 6130437334817021035, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
+      propertyPath: spawnPoints.Array.data[3]
+      value: 
+      objectReference: {fileID: 1611107056}
     - target: {fileID: 6630486779887719990, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
       propertyPath: nextSceneName
       value: 
@@ -8522,29 +8548,13 @@ PrefabInstance:
       propertyPath: onPress.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    - target: {fileID: 7054360139511156468, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6130437334817021035, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
-      propertyPath: spawnPoints.Array.data[0]
-      value: 
-      objectReference: {fileID: 262827291}
-    - target: {fileID: 6130437334817021035, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
-      propertyPath: spawnPoints.Array.data[1]
-      value: 
-      objectReference: {fileID: 1458701468}
-    - target: {fileID: 6130437334817021035, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
-      propertyPath: spawnPoints.Array.data[2]
-      value: 
-      objectReference: {fileID: 1812592176}
-    - target: {fileID: 6130437334817021035, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
-      propertyPath: spawnPoints.Array.data[3]
-      value: 
-      objectReference: {fileID: 1611107056}
     - target: {fileID: 7038713137982202791, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
       propertyPath: lerpDuration
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7054360139511156468, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7351423396268742542, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
       propertyPath: m_AnchorMax.x
@@ -8897,8 +8907,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1596800849579836642}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.009972544, y: 0.9752591, z: -0.2162098, w: 0.04498335}
-  m_LocalPosition: {x: -0.30000007, y: 1.5, z: 8.6}
+  m_LocalRotation: {x: 0.53729963, y: -0, z: -0, w: 0.8433915}
+  m_LocalPosition: {x: 7.5, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
