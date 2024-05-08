@@ -1,6 +1,7 @@
 using UnityEngine;
 using Fusion;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GameManager : NetworkBehaviour
 {
@@ -49,5 +50,11 @@ public class GameManager : NetworkBehaviour
     public static void SetArena(Arena arena)
     {
         CurrentArena = arena;
+    }
+
+    public static void LoadLayout()
+    {
+        Assert.Check(CurrentArena != null);
+        SceneManager.LoadScene(CurrentArena.definition.buildIndex, LoadSceneMode.Additive);
     }
 }
