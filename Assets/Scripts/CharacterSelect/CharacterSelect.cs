@@ -109,6 +109,7 @@ public class CharacterSelect : NetworkBehaviour
         //  characterSelectScreen.gameObject.SetActive(true);
         //  characterSelectScreen.FadeIn();
 
+        /*
         RoundManager.Instance.ResetRound += SetPlayerToSpawn;
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
@@ -126,6 +127,7 @@ public class CharacterSelect : NetworkBehaviour
 
         // Character Select Timer
         characterSelectTimer = TickTimer.CreateFromSeconds(Runner, characterSelectDuration);
+        */
 
         //invoke the event for the storm
         //OnCharacterSelect?.Invoke();
