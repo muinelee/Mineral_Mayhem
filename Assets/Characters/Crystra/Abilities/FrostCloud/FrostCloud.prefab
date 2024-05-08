@@ -88,6 +88,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 128
+  attackVFX: {fileID: 6821738634456582036, guid: ef6676c5948c5984ea99098a6100d291, type: 3}
 --- !u!54 &-2895732768150714903
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -245,6 +246,10 @@ PrefabInstance:
     - target: {fileID: 6821738634456582036, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
       propertyPath: m_Name
       value: FrostCloud_VFX
+      objectReference: {fileID: 0}
+    - target: {fileID: 6821738634456582036, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8169952483096280876, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
       propertyPath: m_LocalPosition.x
