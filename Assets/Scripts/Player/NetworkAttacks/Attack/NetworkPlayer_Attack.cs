@@ -58,8 +58,11 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     private void ActivateAttack(ref SO_NetworkAttack attack, ref TickTimer attackTimer)
     {
+        if (Runner.IsServer == false) return;
+
         // Start Attack animation
         canAttack = false;
+
         if (attack == qAttack) RPC_PlayQVoiceLine();
         else RPC_PlayEVoiceLine();
         
@@ -72,6 +75,8 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     private void ActivateUlt()
     {
+        if (Runner.IsServer == false) return;
+
         // Start Ult animation
         canAttack = false;
         Character.Animator.anim.CrossFade(fAttack.attackName, 0.2f);
@@ -81,19 +86,19 @@ public class NetworkPlayer_Attack : CharacterComponent
         Character.Movement.ApplyAbility(fAttack);
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_PlayQVoiceLine()
     {
         this.PlayQVoiceLine();
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_PlayEVoiceLine()
     {
         this.PlayEVoiceLine();
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_PlayFVoiceLine()
     {
         this.PlayFVoiceLine();
