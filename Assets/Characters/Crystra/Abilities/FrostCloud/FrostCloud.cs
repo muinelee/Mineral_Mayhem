@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using Fusion;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class FrostCloud : NetworkAttack_Base
 {
@@ -17,11 +19,14 @@ public class FrostCloud : NetworkAttack_Base
     [SerializeField] private LayerMask playerLayer;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
+    [Header("VFX Properties")]
+    [SerializeField] private GameObject attackVFX;
 
     public override void Spawned()
     {
         base.Spawned();
- 
+         
+        Instantiate(attackVFX, this.transform.position, Quaternion.identity);
         AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
         //AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
 
