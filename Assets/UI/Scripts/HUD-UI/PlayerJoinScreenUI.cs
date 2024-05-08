@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -40,7 +41,9 @@ public class PlayerJoinScreenUI : MonoBehaviour
     public void OnTrainingClicked()
     {
         SetRoomSize(1);
-        networkRunnerHandler.CreateGame("TrainingRoom", roomAddress[0]);
+        float variableRoomName = Random.Range(0, 30000);
+        string trainingRoomName = "TrainingRoom" + variableRoomName.ToString();
+        networkRunnerHandler.CreateGame(trainingRoomName, roomAddress[0]);
     }
 
     public void OnQuitClicked()

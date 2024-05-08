@@ -9,6 +9,8 @@ public class SO_Character : ScriptableObject
 {
     public CharacterEntity prefab;
 
+    public AudioClip[] voiceLine;
+
     public Sprite characterBasicAbilityPortrait;
     public Sprite characterQAbilityPortrait;
     public Sprite characterEAbilityPortrait;

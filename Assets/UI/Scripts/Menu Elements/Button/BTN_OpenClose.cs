@@ -18,6 +18,7 @@ public class BTN_OpenClose : MonoBehaviour
     public bool disabled = false;
 
     public UnityEvent onPress;
+    public UnityEvent onPressDelayed;
 
     //------------------------------------//
 
@@ -31,9 +32,9 @@ public class BTN_OpenClose : MonoBehaviour
     }
     private IEnumerator iOnPress()
     {
-        
-
         yield return new WaitForSecondsRealtime(delayTime);
+
+        onPressDelayed?.Invoke();
 
         if (quit)
         {

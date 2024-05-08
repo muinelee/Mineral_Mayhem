@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using System.Security.Cryptography.X509Certificates;
+using UnityEngine.UIElements;
 
 public class NetworkPlayer_Attack : CharacterComponent
 {
@@ -40,8 +41,8 @@ public class NetworkPlayer_Attack : CharacterComponent
         if (GetInput(out NetworkInputData input) && canAttack)
         {
             if (input.IsDown(NetworkInputData.ButtonF) && Character.Energy.IsUltCharged()) ActivateUlt();
-            else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning) ActivateAttack(qAttack, ref qAttackCoolDownTimer);
-            else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning) ActivateAttack(eAttack, ref eAttackCoolDownTimer);
+            else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning) ActivateAttack(ref qAttack, ref qAttackCoolDownTimer);
+            else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning) ActivateAttack(ref eAttack, ref eAttackCoolDownTimer);
             else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack) ActivateBasicAttack();
             ActivateBlock(input.IsDown(NetworkInputData.ButtonBlock));
         }
@@ -55,10 +56,13 @@ public class NetworkPlayer_Attack : CharacterComponent
         if (timer.Expired(Runner)) timer = TickTimer.None;
     }
 
-    private void ActivateAttack(SO_NetworkAttack attack, ref TickTimer attackTimer)
+    private void ActivateAttack(ref SO_NetworkAttack attack, ref TickTimer attackTimer)
     {
         // Start Attack animation
         canAttack = false;
+        if (attack == qAttack) RPC_PlayQVoiceLine();
+        else RPC_PlayEVoiceLine();
+        
         Character.Animator.anim.CrossFade(attack.attackName, 0.2f);
         attackTimer = TickTimer.CreateFromSeconds(Runner, attack.GetCoolDown());
 
@@ -71,9 +75,43 @@ public class NetworkPlayer_Attack : CharacterComponent
         // Start Ult animation
         canAttack = false;
         Character.Animator.anim.CrossFade(fAttack.attackName, 0.2f);
+        RPC_PlayFVoiceLine();
 
         // Slow player
         Character.Movement.ApplyAbility(fAttack);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    private void RPC_PlayQVoiceLine()
+    {
+        this.PlayQVoiceLine();
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    private void RPC_PlayEVoiceLine()
+    {
+        this.PlayEVoiceLine();
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    private void RPC_PlayFVoiceLine()
+    {
+        this.PlayFVoiceLine();
+    }
+
+    public void PlayQVoiceLine()
+    {
+        if (qAttack.GetVoiceLine() != null) AudioManager.Instance.PlayAudioSFX(qAttack.GetVoiceLine(), transform.localPosition);
+    }
+
+    public void PlayEVoiceLine()
+    {
+        if (eAttack.GetVoiceLine() != null) AudioManager.Instance.PlayAudioSFX(eAttack.GetVoiceLine(), transform.localPosition);
+    }
+
+    public void PlayFVoiceLine()
+    {
+        if (fAttack.GetVoiceLine() != null) AudioManager.Instance.PlayAudioSFX(fAttack.GetVoiceLine(), transform.localPosition);
     }
 
     private void ActivateBasicAttack()
