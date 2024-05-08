@@ -69,4 +69,9 @@ public class INP_Pause : MonoBehaviour
             //Cursor.visible = true;
         }
     }
+
+    public void ChangePauseBool(bool isPaused)
+    {
+        paused = isPaused;
+    }
 }

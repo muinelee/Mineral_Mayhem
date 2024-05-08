@@ -26,7 +26,6 @@ public class BTN_Animation : MonoBehaviour
     [SerializeField] TMP_FontAsset[] fontChanged;
     [SerializeField] TMP_FontAsset[] fontDisabled;
 
-    
     [SerializeField] bool lockColor;
 
     private float curScale;
@@ -44,13 +43,20 @@ public class BTN_Animation : MonoBehaviour
     }
     private void OnDisable()
     {
-        SpriteRevert();
+        ColorRevert();
     }
 
-    public void SpriteChange()
+    public void ColorChange()
     {
         if (!lockColor)
         {
+            if (imagesToChangeColor.Length > 0)
+            {
+                for (int i = 0; i < imagesToChangeColor.Length; i++)
+                {
+                    imagesToChangeColor[i].color = colorChanged[i];
+                }
+            }
             if (imagesToSpriteSwap.Length > 0)
             {
                 for (int i = 0; i < imagesToSpriteSwap.Length; i++)
@@ -67,10 +73,17 @@ public class BTN_Animation : MonoBehaviour
             }
         }
     }
-    public void SpriteRevert()
+    public void ColorRevert()
     {
         if (!lockColor)
         {
+            if (imagesToChangeColor.Length > 0)
+            {
+                for (int i = 0; i < imagesToChangeColor.Length; i++)
+                {
+                    imagesToChangeColor[i].color = colorNormal[i];
+                }
+            }
             if (imagesToSpriteSwap.Length > 0)
             {
                 for (int i = 0; i < imagesToSpriteSwap.Length; i++)
@@ -87,8 +100,15 @@ public class BTN_Animation : MonoBehaviour
             }
         }
     }
-    public void SpriteDisable()
+    public void ColorDisable()
     {
+        if (imagesToChangeColor.Length > 0)
+        {
+            for (int i = 0; i < imagesToChangeColor.Length; i++)
+            {
+                imagesToChangeColor[i].color = colorDisabled[i];
+            }
+        }
         if (imagesToSpriteSwap.Length > 0)
         {
             for (int i = 0; i < imagesToSpriteSwap.Length; i++)
@@ -101,37 +121,6 @@ public class BTN_Animation : MonoBehaviour
             for (int i = 0; i < textToChangeFont.Length; i++)
             {
                 textToChangeFont[i].font = fontDisabled[i];
-            }
-        }
-    }
-
-    public void ColorChange()
-    {
-        if (imagesToChangeColor.Length > 0)
-        {
-            for (int i = 0; i < imagesToChangeColor.Length; i++)
-            {
-                imagesToChangeColor[i].color = colorChanged[i];
-            }
-        }
-    }
-    public void ColorRevert()
-    {
-        if (imagesToChangeColor.Length > 0)
-        {
-            for (int i = 0; i < imagesToChangeColor.Length; i++)
-            {
-                imagesToChangeColor[i].color = colorNormal[i];
-            }
-        }
-    }
-    public void ColorDisable()
-    {
-        if (imagesToChangeColor.Length > 0)
-        {
-            for (int i = 0; i < imagesToChangeColor.Length; i++)
-            {
-                imagesToChangeColor[i].color = colorDisabled[i];
             }
         }
     }

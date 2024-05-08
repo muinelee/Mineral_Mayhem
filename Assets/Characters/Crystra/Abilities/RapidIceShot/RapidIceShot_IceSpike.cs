@@ -1,8 +1,6 @@
 using Fusion;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class RapidIceShot_IceSpike : NetworkAttack_Base
 {
@@ -22,7 +20,6 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
     [Header("Damage Properties")]
     [SerializeField] private static float damageMultiplier = 1f;
 
-
     //attack indexing
     private static int attackIndex = 0;
 
@@ -30,10 +27,11 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
     private static int spawnIndex = 0;
 
     public override void Spawned()
-    {
-        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
-        
+    {        
         base.Spawned();
+
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        //AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
 
         transform.position += Vector3.up * spawnHeight;
         float offsetX = Random.Range(-offset, offset);
@@ -52,12 +50,13 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
     {
         // move
         transform.Translate(Vector3.forward * speed);
+        
+        DealDamage();
 
         // manage lifetime
         lifeTimer += Time.deltaTime;
         if (lifeTimer > lifetime) Runner.Despawn(Object);
 
-        DealDamage();
     }
 
     private void TrackAttacks() {
@@ -89,10 +88,10 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
     }
     
 
-    protected override void DealDamage() {
+    protected override void DealDamage() {;
 
         if (!Runner.IsServer) return;
-        
+
         float totalDamage = 0;
         //hit signature to check 
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
@@ -127,7 +126,7 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
                 //debug log to check if damage is being dealt
                 //Debug.Log($"Dealt {totalDamage} damage to {healthHandler.gameObject.name}");
 
-                Runner.Despawn(GetComponent<NetworkObject>());
+                Runner.Despawn(Object);
             }
         }
     }
