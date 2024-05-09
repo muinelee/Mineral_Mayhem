@@ -31,6 +31,10 @@ public class CharacterSelect : NetworkBehaviour
 
     //public event for storm mechanics
     public static event CharacterSelectEvent OnCharacterSelect;
+    private void Start()
+    {
+
+    }
 
     private void FixedUpdate()
     {

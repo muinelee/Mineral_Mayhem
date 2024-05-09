@@ -41,9 +41,6 @@ public class RoundManager : NetworkBehaviour
     //Start the storm
     public static event StartStorm startStorm;
 
-    private TickTimer matchEndTimer = TickTimer.None;
-    [SerializeField] private float matchEndCountdownDuration = 5f;
-
     public override void Spawned() 
     {
         if (Instance == null)
@@ -59,13 +56,7 @@ public class RoundManager : NetworkBehaviour
         ResetRound += LoadRound;
         MatchEndEvent += MatchEnd;
     }
-
-    private void OnDestroy()
-    {
-        ResetRound -= LoadRound;
-        MatchEndEvent -= MatchEnd;
-    }
-
+    
     public void RedPlayersDies()
     {
         //OnPlayerDeath?.Invoke(player); 
@@ -121,7 +112,7 @@ public class RoundManager : NetworkBehaviour
 
         if (redRoundsWon == Mathf.CeilToInt((float)maxRounds / 2) || blueRoundsWon == Mathf.CeilToInt((float)maxRounds / 2))
         {
-            matchEndTimer = TickTimer.CreateFromSeconds(Runner, matchEndCountdownDuration);
+            MatchEndEvent?.Invoke();
             return;
         }
 
@@ -130,9 +121,10 @@ public class RoundManager : NetworkBehaviour
 
     public void MatchEnd()
     {
-        matchEndTimer = TickTimer.None;
         if (redRoundsWon > blueRoundsWon) RPC_DisplayGameOver(true);
         else if (blueRoundsWon > redRoundsWon) RPC_DisplayGameOver(false);
+        else Debug.Log("Tie!");
+        RPC_GoToVictoryCamera();
     }
 
     public void MatchStart()
@@ -150,8 +142,6 @@ public class RoundManager : NetworkBehaviour
             roundEndTimer = TickTimer.None; 
             ResetRound?.Invoke();
         }
-
-        if (matchEndTimer.Expired(Runner)) MatchEndEvent?.Invoke();
     } 
 
     public void OnResetRound()
@@ -171,6 +161,11 @@ public class RoundManager : NetworkBehaviour
     {
         GameOverManager.Instance.DisplayWinners(isRedWins);
         NetworkPlayer_InGameUI.instance.enabled = false;
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_GoToVictoryCamera()
+    {
         NetworkCameraEffectsManager.instance.GoToVictoryCamera();
     }
 }
