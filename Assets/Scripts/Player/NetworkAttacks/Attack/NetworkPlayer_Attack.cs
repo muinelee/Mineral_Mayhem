@@ -58,12 +58,14 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     private void ActivateAttack(ref SO_NetworkAttack attack, ref TickTimer attackTimer)
     {
+        if (Runner.IsServer == false) return;
+
         // Start Attack animation
         canAttack = false;
-        if (attack == qAttack) RPC_PlayQVoiceLine();
-        else RPC_PlayEVoiceLine();
-        
-        Character.Animator.anim.CrossFade(attack.attackName, 0.2f);
+
+        if (attack == qAttack) RPC_PlayQEffects();
+        else RPC_PlayEEffects();        
+
         attackTimer = TickTimer.CreateFromSeconds(Runner, attack.GetCoolDown());
 
         // Slow player
@@ -72,31 +74,35 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     private void ActivateUlt()
     {
+        if (Runner.IsServer == false) return;
+
         // Start Ult animation
         canAttack = false;
-        Character.Animator.anim.CrossFade(fAttack.attackName, 0.2f);
-        RPC_PlayFVoiceLine();
+        RPC_PlayFEffects();
 
         // Slow player
         Character.Movement.ApplyAbility(fAttack);
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    private void RPC_PlayQVoiceLine()
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayQEffects()
     {
         this.PlayQVoiceLine();
+        Character.Animator.anim.CrossFade(qAttack.attackName, 0.2f);
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    private void RPC_PlayEVoiceLine()
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayEEffects()
     {
         this.PlayEVoiceLine();
+        Character.Animator.anim.CrossFade(eAttack.attackName, 0.2f);
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    private void RPC_PlayFVoiceLine()
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayFEffects()
     {
         this.PlayFVoiceLine();
+        Character.Animator.anim.CrossFade(fAttack.attackName, 0.2f);
     }
 
     public void PlayQVoiceLine()
