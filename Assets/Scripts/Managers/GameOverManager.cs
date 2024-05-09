@@ -17,6 +17,9 @@ public class GameOverManager : NetworkBehaviour
     [SerializeField] private float gameOverScreenDuration;
     private TickTimer gameOverTimer = TickTimer.None;
 
+    [Header("Victory Positions")]
+    [SerializeField] private Transform[] victoryPositions;
+
     private void Awake()
     {
         Instance = this;
@@ -30,11 +33,31 @@ public class GameOverManager : NetworkBehaviour
     private void DisplayBlueWins()
     {
         blueWinImage.SetActive(true);
+        MoveWinners(NetworkPlayer.Team.Blue);
     }
 
     private void DisplayRedWins()
     {
         redWinImage.SetActive(true);
+        MoveWinners(NetworkPlayer.Team.Red);
+    }
+
+    private void MoveWinners(NetworkPlayer.Team team)
+    {
+        CharacterEntity[] players = FindObjectsOfType<CharacterEntity>();
+
+        int index = 0;
+
+        foreach (CharacterEntity player in players)
+        {
+            if (player.Team == team)
+            {
+                player.transform.position = victoryPositions[index].position;
+                player.transform.rotation = victoryPositions[index].rotation;
+
+                index++;
+            }
+        }
     }
 
     public void DisplayWinners(bool isRedWins)
