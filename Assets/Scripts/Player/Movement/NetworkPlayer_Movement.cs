@@ -79,6 +79,7 @@ public class NetworkPlayer_Movement : CharacterComponent
     private void MobilityAbility(Vector3 moveDirection)
     {
         if (dashCoolDownTimer.IsRunning) return;
+        if (Runner.IsServer == false) return;
 
         RPC_DashSFX();
 
