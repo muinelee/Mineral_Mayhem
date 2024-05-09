@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using static UnityEngine.Rendering.DebugUI;
 
 public class NetworkPlayer_Energy : CharacterComponent
 {
@@ -31,12 +32,6 @@ public class NetworkPlayer_Energy : CharacterComponent
         else energy = fullCharge;
     }
 
-    public void AddEnergy(float value)
-    {
-        // Add value by percentage
-        energy += value/100 * fullCharge;
-    }
-
     public float GetEnergyPercentage()
     {
         return energy/fullCharge;
@@ -44,11 +39,11 @@ public class NetworkPlayer_Energy : CharacterComponent
 
     public bool IsUltCharged()
     {
-        if (energy == fullCharge)
-        {
-            energy = 0;                         // if returns true, then the player is firing their ult. Reset the energy
-            return true;
-        }        
-        else return false;
+        return energy == fullCharge;
+    }
+
+    public override void OnEnergyChange(float x)
+    {
+        energy += x / 100 * fullCharge;
     }
 }

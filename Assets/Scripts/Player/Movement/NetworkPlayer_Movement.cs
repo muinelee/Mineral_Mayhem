@@ -8,6 +8,7 @@ public class NetworkPlayer_Movement : CharacterComponent
 {
     [Header("Movement properties")]
     [SerializeField] private float turnTime;
+    [SerializeField, Range(0, 100)] private float blockSpeedReduction = 50f;
     public bool canMove = true;
     private Vector3 targetDirection;
     private float dashSpeed = 0;
@@ -17,6 +18,7 @@ public class NetworkPlayer_Movement : CharacterComponent
     // Variables to apply slow;
     private float turnSlow = 0;
     private float abilitySlow = 1;
+    private float blockSlow = 1;
     private float statusSlow = 1;
 
     [Header("Dash Properties")]
@@ -52,7 +54,7 @@ public class NetworkPlayer_Movement : CharacterComponent
                     Vector3 moveDir = new Vector3(horizontalDir, 0, verticalDir).normalized;
 
                     // Move
-                    Character.Rigidbody.Rigidbody.AddForce(moveDir * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
+                    Character.Rigidbody.Rigidbody.AddForce((GetCombinedSpeed() + dashSpeed) * blockSlow * abilitySlow * statusSlow * moveDir);
 
                     // Dash (Can be a boost or buff)
                     if (input.IsDown(NetworkInputData.ButtonDash)) MobilityAbility(moveDir);
@@ -197,6 +199,12 @@ public class NetworkPlayer_Movement : CharacterComponent
     private float GetCombinedSpeed()
     {
         return Character.StatusHandler.speed.GetValue() + currentBoostValue;
+    }
+
+    public override void OnBlock(bool isBlocking)
+    {
+        if (isBlocking) blockSlow = blockSpeedReduction / 100f;
+        else blockSlow = 1f;
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
