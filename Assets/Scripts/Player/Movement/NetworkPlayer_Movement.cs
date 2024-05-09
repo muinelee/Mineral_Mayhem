@@ -21,6 +21,7 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     [Header("Dash Properties")]
     [SerializeField] private SO_NetworkDash dash;
+    [SerializeField] private AudioClip[] dashSounds;
     private TickTimer dashCoolDownTimer = TickTimer.None;
     private TickTimer dashDurationTimer = TickTimer.None;
     private bool isDashing = false;
@@ -78,15 +79,21 @@ public class NetworkPlayer_Movement : CharacterComponent
     private void MobilityAbility(Vector3 moveDirection)
     {
         if (dashCoolDownTimer.IsRunning) return;
+        if (Runner.IsServer == false) return;
+
+        RPC_DashSFX();
+
+        Vector3 dashDirection = moveDirection == Vector3.zero ? targetDirection : moveDirection;
+        dashDirection.Normalize();
 
         if (!dash.GetCanSteer())
         {
-            Character.Rigidbody.Rigidbody.velocity = moveDirection * dash.GetDashValue();
+            Character.Rigidbody.Rigidbody.velocity = dashDirection * dash.GetDashValue();
             isDashing = true;
         }
 
         else dashSpeed = dash.GetDashValue();
-
+        
         // Start the timers
         dashCoolDownTimer = TickTimer.CreateFromSeconds(Runner, dash.GetCoolDown());
         dashDurationTimer = TickTimer.CreateFromSeconds(Runner, dash.GetDashDuration());
@@ -190,5 +197,11 @@ public class NetworkPlayer_Movement : CharacterComponent
     private float GetCombinedSpeed()
     {
         return Character.StatusHandler.speed.GetValue() + currentBoostValue;
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_DashSFX()
+    {
+        AudioManager.Instance.PlayAudioSFX(this.dashSounds[0], transform.position);
     }
 }

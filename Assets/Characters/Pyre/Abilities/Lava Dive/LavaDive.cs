@@ -33,12 +33,17 @@ public class LavaDive : NetworkAttack_Base
 
     public override void Spawned()
     {
+        base.Spawned();
+
         AttackStart();
+
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
     }
 
     public override void FixedUpdateNetwork()
     {
-        if (Runner.IsServer)
+        if (Object.HasStateAuthority)
         {
             if (lingerTimer.Expired(Runner)) AttackEnd();
 
@@ -48,6 +53,7 @@ public class LavaDive : NetworkAttack_Base
             if (finishDive) return;
 
             character.Rigidbody.Rigidbody.AddForce(transform.forward * forceForward);
+
         }
 
         if (finishDive) return;
@@ -90,6 +96,7 @@ public class LavaDive : NetworkAttack_Base
     private void DiveEnd()
     {
         character.Animator.anim.CrossFade("LavaDiveEnd", 0.1f);
+        AudioManager.Instance.PlayAudioSFX(SFX[2], transform.position);
 
         DealDamage();
         if (Runner.IsServer) Runner.Spawn(attackEndVFX, character.transform.position, Quaternion.identity);
@@ -126,7 +133,12 @@ public class LavaDive : NetworkAttack_Base
             // Apply damage
             IHealthComponent healthComponent = hits[i].GameObject.GetComponentInParent<IHealthComponent>();
 
-            if (healthComponent != null) healthComponent.OnTakeDamage(tickDamage);
+            if (healthComponent != null)
+            {
+                if (healthComponent.isDead || CheckIfSameTeam(healthComponent.team)) continue;
+
+                healthComponent.OnTakeDamage(tickDamage);
+            }
 
             // Apply status effect
             CharacterEntity playerHit = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
@@ -163,6 +175,8 @@ public class LavaDive : NetworkAttack_Base
 
             if (healthComponent != null)
             {
+                if (healthComponent.isDead || CheckIfSameTeam(healthComponent.team)) continue;
+
                 healthComponent.OnTakeDamage(damage);
 
                 Vector3 playerhitPosition = hits[i].GameObject.transform.position;

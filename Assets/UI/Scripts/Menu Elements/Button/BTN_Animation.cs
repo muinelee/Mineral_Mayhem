@@ -11,13 +11,25 @@ public class BTN_Animation : MonoBehaviour
     private float startValue = 1;
     private float endValue = 1.25f;
     [SerializeField] float sizeMultiplier = -0.25f;
+
+    [Header("MouseOver/Off Animation")]
     [SerializeField] Image[] imagesToChangeColor;
     [SerializeField] Color[] colorNormal;
-    [SerializeField] Color[] colorPressed;
+    [SerializeField] Color[] colorChanged;
+    [SerializeField] Color[] colorDisabled;
+    [SerializeField] Image[] imagesToSpriteSwap;
+    [SerializeField] Sprite[] spriteNormal;
+    [SerializeField] Sprite[] spriteChanged;
+    [SerializeField] Sprite[] spriteDisabled;
+    [SerializeField] TextMeshProUGUI[] textToChangeFont;
+    [SerializeField] TMP_FontAsset[] fontNormal;
+    [SerializeField] TMP_FontAsset[] fontChanged;
+    [SerializeField] TMP_FontAsset[] fontDisabled;
+
+    [SerializeField] bool lockColor;
 
     private float curScale;
     private float lastScale;
-    [SerializeField] bool lockColor;
 
     //-----------------------------------//
 
@@ -42,7 +54,21 @@ public class BTN_Animation : MonoBehaviour
             {
                 for (int i = 0; i < imagesToChangeColor.Length; i++)
                 {
-                    imagesToChangeColor[i].color = colorPressed[i];
+                    imagesToChangeColor[i].color = colorChanged[i];
+                }
+            }
+            if (imagesToSpriteSwap.Length > 0)
+            {
+                for (int i = 0; i < imagesToSpriteSwap.Length; i++)
+                {
+                    imagesToSpriteSwap[i].sprite = spriteChanged[i];
+                }
+            }
+            if (textToChangeFont.Length > 0)
+            {
+                for (int i = 0; i < textToChangeFont.Length; i++)
+                {
+                    textToChangeFont[i].font = fontChanged[i];
                 }
             }
         }
@@ -57,6 +83,44 @@ public class BTN_Animation : MonoBehaviour
                 {
                     imagesToChangeColor[i].color = colorNormal[i];
                 }
+            }
+            if (imagesToSpriteSwap.Length > 0)
+            {
+                for (int i = 0; i < imagesToSpriteSwap.Length; i++)
+                {
+                    imagesToSpriteSwap[i].sprite = spriteNormal[i];
+                }
+            }
+            if (textToChangeFont.Length > 0)
+            {
+                for (int i = 0; i < textToChangeFont.Length; i++)
+                {
+                    textToChangeFont[i].font = fontNormal[i];
+                }
+            }
+        }
+    }
+    public void ColorDisable()
+    {
+        if (imagesToChangeColor.Length > 0)
+        {
+            for (int i = 0; i < imagesToChangeColor.Length; i++)
+            {
+                imagesToChangeColor[i].color = colorDisabled[i];
+            }
+        }
+        if (imagesToSpriteSwap.Length > 0)
+        {
+            for (int i = 0; i < imagesToSpriteSwap.Length; i++)
+            {
+                imagesToSpriteSwap[i].sprite = spriteDisabled[i];
+            }
+        }
+        if (textToChangeFont.Length > 0)
+        {
+            for (int i = 0; i < textToChangeFont.Length; i++)
+            {
+                textToChangeFont[i].font = fontDisabled[i];
             }
         }
     }

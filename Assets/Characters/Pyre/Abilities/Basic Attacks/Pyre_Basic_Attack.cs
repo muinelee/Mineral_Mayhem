@@ -23,6 +23,8 @@ public class Pyre_Basic_Attack : NetworkAttack_Base
     {
         base.Spawned();
 
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+
         transform.position += transform.forward * offset;
 
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifeDuration);

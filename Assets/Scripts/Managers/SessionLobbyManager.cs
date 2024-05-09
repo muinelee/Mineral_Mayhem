@@ -30,6 +30,8 @@ public class SessionLobbyManager : MonoBehaviour
 
     public void AddToList(SessionInfo sessionInfo)
     {
+        if (sessionInfo.MaxPlayers == 1) return;
+
         // Add a new item to the list
         SessionListItem addedSessionListItem = Instantiate(sessionListItemPF, sessionList.transform).GetComponent<SessionListItem>();
 

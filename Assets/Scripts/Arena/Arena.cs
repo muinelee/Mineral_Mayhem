@@ -56,26 +56,22 @@ public class Arena : NetworkBehaviour
     {
         Current = this;
         if (spline == null) spline = GetComponentInChildren<SplineContainer>();
-        //  Give GameManager a reference to the Arena we're on;
-        //GameManager.SetArena(this);
+
+        GameManager.SetArena(this);
+        GameManager.LoadLayout();
+
     }
 
     public override void Spawned()
     {
         base.Spawned();
-        //RoundManager.Instance.MatchStartEvent += StartArenaCinematic; 
-        // Custom Host functionality present here if need be:
-        /*if (NetworkPlayer.Local.IsLeader)
-        {
 
-        }*/
         StartCoreSpawnTimer(5f);
     }
 
     private void OnDestroy()
     {
         GameManager.SetArena(null);
-        //RoundManager.Instance.MatchStartEvent -= StartArenaCinematic;
     }
 
     public void SpawnCharacter(NetworkRunner runner, NetworkPlayer player)
@@ -135,5 +131,10 @@ public class Arena : NetworkBehaviour
             Runner.Despawn(currentCore);
             currentCore = null;
         }
+    }
+
+    public void QuitToMenu()
+    {
+        FindAnyObjectByType<CharacterSpawner>().OnDisconnectedFromServer(Runner);
     }
 }

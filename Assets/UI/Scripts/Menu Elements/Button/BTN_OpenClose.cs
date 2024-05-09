@@ -18,21 +18,23 @@ public class BTN_OpenClose : MonoBehaviour
     public bool disabled = false;
 
     public UnityEvent onPress;
+    public UnityEvent onPressDelayed;
 
     //------------------------------------//
 
     public void OnPress()
     {
-        onPress?.Invoke();
-
         if (!disabled)
+        {
+            onPress?.Invoke();
             StartCoroutine(iOnPress());
+        }
     }
     private IEnumerator iOnPress()
     {
-        
-
         yield return new WaitForSecondsRealtime(delayTime);
+
+        onPressDelayed?.Invoke();
 
         if (quit)
         {

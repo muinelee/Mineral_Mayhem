@@ -1,16 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using TMPro;
-using System.Linq;
 using UnityEngine.Events;
 
 public class PlayerJoinScreenUI : MonoBehaviour
 {
     private NetworkRunnerHandler networkRunnerHandler;
     private string[] roomAddress = new string[] { "TrainingRoom", "RichardCPhoton" };
-    private string map;
 
     public UnityEvent BackToMainMenu;
 
@@ -34,7 +29,6 @@ public class PlayerJoinScreenUI : MonoBehaviour
     public void OnBackClicked()
     {
         networkRunnerHandler.SetRoomSize(1);
-        map = "";
     }
 
     // Maybe hide panels on game joined?
@@ -47,7 +41,9 @@ public class PlayerJoinScreenUI : MonoBehaviour
     public void OnTrainingClicked()
     {
         SetRoomSize(1);
-        networkRunnerHandler.CreateGame("TrainingRoom", roomAddress[0]);
+        float variableRoomName = Random.Range(0, 30000);
+        string trainingRoomName = "TrainingRoom" + variableRoomName.ToString();
+        networkRunnerHandler.CreateGame(trainingRoomName, roomAddress[0]);
     }
 
     public void OnQuitClicked()

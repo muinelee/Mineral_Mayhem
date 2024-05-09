@@ -33,10 +33,13 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
             return;
 
         HP = maxHealth;
+        team = NetworkPlayer.Team.Neutral;
     }
 
     public void OnTakeDamage(int damageAmount)
     {
+        if (!Object.HasStateAuthority) return;
+
         HP -= damageAmount;
         RPC_CheckHealth(HP);
     }

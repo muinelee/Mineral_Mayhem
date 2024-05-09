@@ -17,10 +17,8 @@ public class PickupThrow : NetworkBehaviour
     {
         if (transform.position.y <= yStop && objectStop == false)
         {
-            Debug.Log("Spawn Model");
             rb.Rigidbody.useGravity = false;
             rb.Rigidbody.velocity = Vector3.zero;
-            Debug.Log("Gravity Deactivate");
             objectStop = true;
         }
     }

@@ -26,6 +26,8 @@ public class CG_ScreenFade : MonoBehaviour
     }
     private IEnumerator iFadeIn()
     {
+        group.alpha = startValue;
+
         float timeElapsed = 0;
         while (timeElapsed < lerpDuration)
         {
@@ -47,6 +49,9 @@ public class CG_ScreenFade : MonoBehaviour
     }
     private IEnumerator iFadeOut()
     {
+        group.alpha = endValue;
+        Debug.Log("!");
+
         float timeElapsed = 0;
         while (timeElapsed < lerpDuration)
         {

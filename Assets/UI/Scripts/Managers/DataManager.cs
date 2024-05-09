@@ -7,6 +7,7 @@ public class DataManager
 
     // Settings Data
     public static int windowed = 1;
+    public static int postProcessing = 0;
 
     public static float brightness = 0.5f;
     public static float contrast = 0.5f;

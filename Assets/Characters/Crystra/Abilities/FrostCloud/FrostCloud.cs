@@ -1,19 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using Fusion;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class FrostCloud : NetworkAttack_Base
 {
     [Header("Movement Properties")]
-    [SerializeField] private float speed;
     [SerializeField] private float lifetime;
-    [SerializeField] private float maxTravelDistance;
-    private float distanceTravelled = 0;
-    [SerializeField] private Vector3 offset;
+    [SerializeField] private float offset;
 
     [Header("Lifetime Components")]
-    //[SerializeField] private float lifeDuration;
     private TickTimer lifeTimer = TickTimer.None;
 
     [Header("Other Attack Properties")]
@@ -21,12 +19,18 @@ public class FrostCloud : NetworkAttack_Base
     [SerializeField] private LayerMask playerLayer;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
+    [Header("VFX Properties")]
+    [SerializeField] private GameObject attackVFX;
 
     public override void Spawned()
     {
         base.Spawned();
+         
+        Instantiate(attackVFX, this.transform.position, Quaternion.identity);
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        //AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
 
-        GetComponent<Rigidbody>().velocity = transform.forward * speed;
+        transform.position += transform.up * offset;
 
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifetime);
     }
@@ -40,12 +44,6 @@ public class FrostCloud : NetworkAttack_Base
         }
 
         DealDamage();
-
-        float moveDistance = speed * Runner.DeltaTime;
-
-        if (distanceTravelled + moveDistance > maxTravelDistance) return;        
-
-        distanceTravelled += moveDistance;
     }
 
     public void AttackEnd()

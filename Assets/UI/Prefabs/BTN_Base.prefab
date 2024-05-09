@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4b00e31b96efc534388ab191566ea9db, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 44dccfb244e585d489857ae22f49de3a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -182,10 +182,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7381538373552651368}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: 0}
-  m_SizeDelta: {x: 900, y: 207.49}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5186988074902778802
 CanvasRenderer:
@@ -352,14 +352,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.8235294, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: aebdabc178d06a4479e2a626862d83e4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 57a973060a1b22e44b27ee60102f66f2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -405,15 +405,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lerpDuration: 0.15
   sizeMultiplier: -0.15
-  imagesToChangeColor:
+  imagesToChangeColor: []
+  colorNormal: []
+  colorChanged: []
+  colorDisabled: []
+  imagesToSpriteSwap:
   - {fileID: 378071005385144096}
   - {fileID: 901506962564536124}
-  colorNormal:
-  - {r: 0, g: 0.8235294, b: 1, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  colorPressed:
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 0, g: 0.8235294, b: 1, a: 1}
+  spriteNormal:
+  - {fileID: 21300000, guid: 57a973060a1b22e44b27ee60102f66f2, type: 3}
+  - {fileID: 21300000, guid: 44dccfb244e585d489857ae22f49de3a, type: 3}
+  spriteChanged:
+  - {fileID: 21300000, guid: 7bef90261c340f44e8546787bc959fa5, type: 3}
+  - {fileID: 21300000, guid: ef8d28ed1f53a4341bec6efff3e7d451, type: 3}
+  spriteDisabled:
+  - {fileID: 21300000, guid: aebdabc178d06a4479e2a626862d83e4, type: 3}
+  - {fileID: 21300000, guid: 4b00e31b96efc534388ab191566ea9db, type: 3}
+  textToChangeFont:
+  - {fileID: 1961172781670766095}
+  fontNormal:
+  - {fileID: 11400000, guid: 37322b0691302d749bd4d82b50286f27, type: 2}
+  fontChanged:
+  - {fileID: 11400000, guid: f9088decbb59fd046b53b249f92ed6dd, type: 2}
+  fontDisabled:
+  - {fileID: 11400000, guid: d20b689562e56ab4f8baba7ea3854158, type: 2}
   lockColor: 0
 --- !u!114 &7101209778254897212
 MonoBehaviour:

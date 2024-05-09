@@ -27,6 +27,10 @@ public class Coldmehameha : NetworkAttack_Base
     public override void Spawned() {
         //call base class spawn function
         base.Spawned();
+
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        //AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
+
         //lifetimer ticktimer created from lifetime variable
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifetime);
 
@@ -65,6 +69,8 @@ public class Coldmehameha : NetworkAttack_Base
 
     protected override void DealDamage()
     {
+        if (!Runner.IsServer) return;
+
         //get the character rotation
         Quaternion rotation = Quaternion.LookRotation(character.transform.forward);
         //signature for hits using the characterposition + (rotation * 3(half size of the box)
@@ -72,9 +78,14 @@ public class Coldmehameha : NetworkAttack_Base
         //loop to check for hits
         foreach (LagCompensatedHit hit in hits) {
             //get health component interface
+            Debug.Log(hit.GameObject.name);
+
             IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
             //if health component is not null
             if (healthComponent != null) {
+
+                Debug.Log($"is it dead? {healthComponent.isDead}, What's the team? {healthComponent.team}");
+
                 //if health component is not dead, or if the team is the same, continue
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
                 //call the on take damage function from the health component
