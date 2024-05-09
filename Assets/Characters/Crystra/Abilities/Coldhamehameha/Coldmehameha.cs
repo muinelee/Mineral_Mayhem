@@ -34,14 +34,17 @@ public class Coldmehameha : NetworkAttack_Base
         //lifetimer ticktimer created from lifetime variable
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifetime);
 
-        //call sphere to check player
-        Runner.LagCompensation.OverlapSphere(transform.position, 0.1f, player: Object.InputAuthority, hits, collisionLayer);
-        //loop for hits
-        for (int i = 0; i < hits.Count; i++) {
-            //get character entity as parent of hit object
-            character = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
-            //set parent of the object to the character entity
-            this.transform.SetParent(character.transform);
+        if (Runner.IsServer)
+        {
+            //call sphere to check player
+            Runner.LagCompensation.OverlapSphere(transform.position, 0.1f, player: Object.InputAuthority, hits, collisionLayer);
+            //loop for hits
+            for (int i = 0; i < hits.Count; i++) {
+                //get character entity as parent of hit object
+                character = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
+                //set parent of the object to the character entity
+                this.transform.SetParent(character.transform);
+            }
         }
         //offset spawn position to match hands
         transform.position += transform.forward * offset;
