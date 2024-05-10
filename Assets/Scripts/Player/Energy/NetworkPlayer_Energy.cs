@@ -12,7 +12,7 @@ public class NetworkPlayer_Energy : CharacterComponent
     */
 
     [SerializeField] private float fullCharge;
-    private float energy;
+    private float energy =  0;
     public override void Init(CharacterEntity character)
     {
         base.Init(character);

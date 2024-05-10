@@ -122,6 +122,13 @@ public class ShrinkingStorm : NetworkAttack_Base {
     }
 
     private void ResetStorm(){
-        transform.localScale = startScale;
+        if (!Runner.IsServer) return;
+        RPC_ResetStorm();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_ResetStorm()
+    {
+        this.transform.localScale = startScale;
     }
 }

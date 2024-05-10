@@ -114,7 +114,7 @@ public class NetworkPlayer_Movement : CharacterComponent
         if (dashDurationTimer.Expired(Runner))
         {
             dashSpeed = 0;
-            if (!dash.GetCanSteer()) Character.Rigidbody.Rigidbody.velocity *= 0.2f;
+            //if (!dash.GetCanSteer()) Character.Rigidbody.Rigidbody.velocity *= 0.2f;
             isDashing = false;
             dashDurationTimer = TickTimer.None;
         }

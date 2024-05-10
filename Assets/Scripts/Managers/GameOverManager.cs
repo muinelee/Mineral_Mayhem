@@ -63,10 +63,11 @@ public class GameOverManager : NetworkBehaviour
             {
                 player.Health.DisableControls();
 
+                player.transform.rotation = victoryPositionSolo.rotation;
+                
                 if (Runner.SessionInfo.MaxPlayers > 2)
                 {
                     player.transform.position = victoryPositionsTeam[index].position;
-                    player.transform.rotation = victoryPositionsTeam[index].rotation;
 
                     index++;
                 }

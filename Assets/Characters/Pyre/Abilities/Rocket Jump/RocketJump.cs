@@ -103,6 +103,16 @@ public class RocketJump : NetworkAttack_Base
 
             playerHit.OnTakeDamage(damage);
             playerHit.OnKnockBack(knockback, rigTransform.position);
+
+            StatusHandler statusHandler = hit.GameObject.GetComponentInParent<StatusHandler>();
+
+            if (statusHandler != null)
+            {
+                foreach (StatusEffect status in statusEffectSO)
+                {
+                    statusHandler.AddStatus(status);
+                }
+            }
         }
     }
 
