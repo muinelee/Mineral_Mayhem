@@ -40,6 +40,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (GetInput(out NetworkInputData input) && canAttack)
         {
+
             if (input.IsDown(NetworkInputData.ButtonF) && Character.Energy.IsUltCharged()) ActivateUlt();
             else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning) ActivateAttack(ref qAttack, ref qAttackCoolDownTimer);
             else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning) ActivateAttack(ref eAttack, ref eAttackCoolDownTimer);
@@ -102,7 +103,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     private void RPC_PlayFEffects()
     {
         this.PlayFVoiceLine();
-        Character.Animator.anim.CrossFade(fAttack.attackName, 0.2f);
+        Character.Animator.anim.CrossFade(fAttack.attackName, 0.1f);
     }
 
     public void PlayQVoiceLine()

@@ -78,6 +78,9 @@ public class ShrinkingStorm : NetworkAttack_Base {
     //}
 
     protected override void DealDamage() {
+
+        if (!Runner.IsServer) return;
+
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
         foreach (LagCompensatedHit hit in hits) {
             IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();

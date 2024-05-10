@@ -61,7 +61,7 @@ public class NetworkPlayer_OnSpawnUI : CharacterComponent
     {
         if (RoundManager.Instance)
         {
-            RoundManager.Instance.MatchStartEvent -= SpawnPlayerUI;
+            //RoundManager.Instance.MatchStartEvent -= SpawnPlayerUI;
         }
     }
 }

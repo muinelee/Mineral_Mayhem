@@ -12,7 +12,7 @@ public class NetworkPlayer_Energy : CharacterComponent
     */
 
     [SerializeField] private float fullCharge;
-    private float energy =  0;
+    [Networked] public float energy { get; set; }
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
@@ -21,6 +21,8 @@ public class NetworkPlayer_Energy : CharacterComponent
 
     public override void FixedUpdateNetwork()
     {
+        if (!Runner.IsServer) return;
+
         ManageEnergyGain();
     }
 
@@ -44,7 +46,8 @@ public class NetworkPlayer_Energy : CharacterComponent
 
     public bool IsUltCharged()
     {
-        if (energy == fullCharge)
+        Debug.Log($"Energy is {energy}, and full charge is {fullCharge}");
+        if (energy >= fullCharge)
         {
             energy = 0;                         // if returns true, then the player is firing their ult. Reset the energy
             return true;
