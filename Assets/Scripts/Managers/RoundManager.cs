@@ -41,6 +41,10 @@ public class RoundManager : NetworkBehaviour
     //Start the storm
     public static event StartStorm startStorm;
 
+    [Header("Round End Properties")]
+    [SerializeField] private float matchEndDelay = 5;
+    private TickTimer matchEndTimer = TickTimer.None;
+
     public override void Spawned() 
     {
         if (Instance == null)
@@ -60,7 +64,7 @@ public class RoundManager : NetworkBehaviour
     public void RedPlayersDies()
     {
         //OnPlayerDeath?.Invoke(player); 
-        Debug.Log("Red player died!");
+        //Debug.Log("Red player died!");
         redPlayersAlive--;
 
         if (redPlayersAlive != 0) return; 
@@ -70,7 +74,7 @@ public class RoundManager : NetworkBehaviour
     public void BluePlayersDies()
     {
         //OnPlayerDeath?.Invoke(player);   
-        Debug.Log("Blue player died!");
+        //Debug.Log("Blue player died!");
         bluePlayersAlive--;
 
         if (bluePlayersAlive != 0) return;
@@ -112,7 +116,7 @@ public class RoundManager : NetworkBehaviour
 
         if (redRoundsWon == Mathf.CeilToInt((float)maxRounds / 2) || blueRoundsWon == Mathf.CeilToInt((float)maxRounds / 2))
         {
-            MatchEndEvent?.Invoke();
+            matchEndTimer = TickTimer.CreateFromSeconds(Runner, matchEndDelay);
             return;
         }
 
@@ -141,6 +145,12 @@ public class RoundManager : NetworkBehaviour
         { 
             roundEndTimer = TickTimer.None; 
             ResetRound?.Invoke();
+        }
+
+        if (matchEndTimer.Expired(Runner))
+        {
+            matchEndTimer = TickTimer.None;
+            MatchEndEvent?.Invoke();
         }
     } 
 
