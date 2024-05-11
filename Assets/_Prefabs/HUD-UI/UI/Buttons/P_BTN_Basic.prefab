@@ -303,6 +303,7 @@ MonoBehaviour:
   groupToOpen: []
   nextSceneName: 
   restart: 0
+  quit: 0
   disabled: 0
   onPress:
     m_PersistentCalls:
@@ -321,8 +322,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lerpDuration: 0.25
   sizeMultiplier: -0.25
-  colorNormal: {r: 1, g: 1, b: 1, a: 1}
-  colorPressed: {r: 0.68235296, g: 0.68235296, b: 0.68235296, a: 1}
+  imagesToChangeColor: []
+  colorNormal:
+  - {r: -1.4102467e+17, g: 6.75e-43, b: 5.235902e+22, a: 0.00000021438385}
+  - {r: -2.0245617e-35, g: 6.73e-43, b: 4.6e-44, a: 0.000054693202}
+  - {r: -1.4102467e+17, g: 6.75e-43, b: -1.4102494e+17, a: 6.75e-43}
+  - {r: -2.0245663e-35, g: 6.73e-43, b: 6.9e-44, a: 2.9339305e+32}
+  colorChanged: []
+  colorDisabled: []
+  imagesToSpriteSwap: []
+  spriteNormal: []
+  spriteChanged: []
+  spriteDisabled: []
+  textToChangeFont: []
+  fontNormal: []
+  fontChanged: []
+  fontDisabled: []
+  lockColor: 0
 --- !u!114 &5032569065449241649
 MonoBehaviour:
   m_ObjectHideFlags: 0
