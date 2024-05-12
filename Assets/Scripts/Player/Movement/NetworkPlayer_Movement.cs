@@ -38,6 +38,8 @@ public class NetworkPlayer_Movement : CharacterComponent
     {
         if (Object.HasInputAuthority || Object.HasStateAuthority)
         {
+            if(Object.name.Contains("Pyre")) Debug.Log($"Input Authority: " + (Object.HasInputAuthority ? "Yes" : "No"));
+            if(Object.name.Contains("Pyre")) Debug.Log($"State Authority: " + (Object.HasStateAuthority ? "Yes" : "No"));
             if (GetInput(out NetworkInputData input))
             {
                 if (canMove && !isDashing)
