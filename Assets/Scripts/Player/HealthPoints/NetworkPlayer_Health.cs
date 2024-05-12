@@ -158,7 +158,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
         teamCamTimer = TickTimer.CreateFromSeconds(Runner, timeUntilTeamCam);
 
-        Character.Animator.anim.CrossFade("Death", 0.2f);
+        //Character.Animator.anim.CrossFade("Death", 0.2f);
 
         if (!NetworkPlayer.Local.HasStateAuthority) return;
         if (RoundManager.Instance)

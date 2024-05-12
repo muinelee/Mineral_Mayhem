@@ -103,7 +103,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     private void RPC_PlayFEffects()
     {
         this.PlayFVoiceLine();
-        Character.Animator.anim.CrossFade(fAttack.attackName, 0.2f);
+        Character.Animator.anim.CrossFade(fAttack.attackName, 0.1f);
     }
 
     public void PlayQVoiceLine()

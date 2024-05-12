@@ -13,7 +13,7 @@ public class NetworkPlayer_Energy : CharacterComponent
     */
 
     [SerializeField] private float fullCharge;
-    private float energy;
+    [Networked] public float energy { get; set; }
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
@@ -22,6 +22,8 @@ public class NetworkPlayer_Energy : CharacterComponent
 
     public override void FixedUpdateNetwork()
     {
+        if (!Runner.IsServer) return;
+
         ManageEnergyGain();
     }
 
