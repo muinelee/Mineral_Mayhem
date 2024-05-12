@@ -36,40 +36,34 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     public override void FixedUpdateNetwork()
     {
-        if (Object.HasInputAuthority || Object.HasStateAuthority)
+        if (GetInput(out NetworkInputData input))
         {
-            if(Object.name.Contains("Pyre")) Debug.Log($"Input Authority: " + (Object.HasInputAuthority ? "Yes" : "No"));
-            if(Object.name.Contains("Pyre")) Debug.Log($"State Authority: " + (Object.HasStateAuthority ? "Yes" : "No"));
-            if (GetInput(out NetworkInputData input))
+            if (canMove && !isDashing)
             {
-                if (canMove && !isDashing)
-                {
-                    // Set direction player is looking at
-                    targetDirection = (new Vector3(input.cursorLocation.x, 0, input.cursorLocation.y) - transform.position);
-                    targetDirection.Normalize();
+                // Set direction player is looking at
+                targetDirection = (new Vector3(input.cursorLocation.x, 0, input.cursorLocation.y) - transform.position);
+                targetDirection.Normalize();
 
-                    // Rotate
-                    Aim();
+                // Rotate
+                Aim();
 
-                    float horizontalDir = (input.IsDown(NetworkInputData.ButtonD) ? 1 : 0) - (input.IsDown(NetworkInputData.ButtonA) ? 1 : 0);
-                    float verticalDir = (input.IsDown(NetworkInputData.ButtonW) ? 1 : 0) - (input.IsDown(NetworkInputData.ButtonS) ? 1 : 0);
-                    Vector3 moveDir = new Vector3(horizontalDir, 0, verticalDir).normalized;
+                float horizontalDir = (input.IsDown(NetworkInputData.ButtonD) ? 1 : 0) - (input.IsDown(NetworkInputData.ButtonA) ? 1 : 0);
+                float verticalDir = (input.IsDown(NetworkInputData.ButtonW) ? 1 : 0) - (input.IsDown(NetworkInputData.ButtonS) ? 1 : 0);
+                Vector3 moveDir = new Vector3(horizontalDir, 0, verticalDir).normalized;
 
-                    // Move
-                    Character.Rigidbody.Rigidbody.AddForce((GetCombinedSpeed() + dashSpeed) * blockSlow * abilitySlow * statusSlow * moveDir);
+                // Move
+                Character.Rigidbody.Rigidbody.AddForce((GetCombinedSpeed() + dashSpeed) * blockSlow * abilitySlow * statusSlow * moveDir);
 
-                    // Dash (Can be a boost or buff)
-                    if (input.IsDown(NetworkInputData.ButtonDash)) MobilityAbility(moveDir);
+                // Dash (Can be a boost or buff)
+                if (input.IsDown(NetworkInputData.ButtonDash)) MobilityAbility(moveDir);
 
-                    // Play movement animation
-                    PlayMovementAnimation(moveDir);
-                }
-
-                // Manage Timers and ability effects
-                ManageTimers();
+                // Play movement animation
+                PlayMovementAnimation(moveDir);
             }
-        }
 
+            // Manage Timers and ability effects
+            ManageTimers();
+        }
     }
 
     private void Aim()
