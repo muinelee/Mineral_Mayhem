@@ -32,32 +32,46 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     [SerializeField] private float timeUntilTeamCam = 5;
     [SerializeField] private TickTimer teamCamTimer = TickTimer.None;
 
+    [SerializeField] private Material shaderGraphMaterial;
+    private Material materialInstance;
+
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
         character.SetHealth(this);
+        PrimeShieldMaterial();
     }
 
     public override void FixedUpdateNetwork()
     {
         HandleBlockMeter();
         HandleTeamCam();
+        HandleBlockVisual();
     }
 
     // Start is called before the first frame update
     public override void Spawned()
     {
         if (HP == startingHP) isDead = false;
-        RoundManager rm = RoundManager.Instance; 
+        RoundManager rm = RoundManager.Instance;
         if (rm != null)
         {
             rm.ResetRound += Respawn;
-            rm.MatchEndEvent += DisableControls; 
+            rm.MatchEndEvent += DisableControls;
         }
         else
         {
-            Respawn(); 
+            Respawn();
         }
+    }
+
+    private void PrimeShieldMaterial()
+    {
+        if (!shaderGraphMaterial) return;
+        materialInstance = new Material(shaderGraphMaterial);
+        Renderer renderer = Character.Shield.GetComponent<Renderer>();
+        if (renderer) renderer.material = materialInstance;
+        else Debug.Log($"No Renderer on Shield found for {gameObject.name}");
     }
 
     public override void OnHit(float x)
@@ -88,8 +102,14 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         canBlock = false;
         Character.OnStatusBegin(blockDepletedStun);
-        Runner.Despawn(Character.Shield);
-        Character.Shield = null;
+    }
+
+    private void HandleBlockVisual()
+    {
+        if (materialInstance)
+        {
+            materialInstance.SetFloat("_alpha", BP / startingBP);
+        }
     }
 
     private void HandleTeamCam()
@@ -112,16 +132,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     // Function only called on the server
     public void OnTakeDamage(float damageAmount)
     {
-        if (damageAmount < 0)
-        {
-            //Debug.Log("Damage is negative");
-            return;
-        }
-
-        if (isDead)
-        {
-            return;
-        }
+        if (damageAmount < 0 || isDead) return;
 
         //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
         float currDamageAmount = damageAmount * Character.StatusHandler.GetDamageReduction();

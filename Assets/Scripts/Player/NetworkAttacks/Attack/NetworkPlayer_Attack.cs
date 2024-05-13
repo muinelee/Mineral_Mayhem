@@ -9,7 +9,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 {
     // Control variables
     public bool canAttack = true;
-    [Networked] public bool isDefending { get; set; } = false;
+    [Networked(OnChanged = nameof(OnStateChanged))] public NetworkBool isDefending { get; set; } = false;
 
     [Header("Basic Attacks Properties")]
     [SerializeField] private SO_NetworkBasicAttack[] basicAttacks;
@@ -26,9 +26,6 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     [Header("(Ult) F Attack Properties")]
     [SerializeField] private SO_NetworkUlt fAttack;
-
-    [Header("Block Properties")]
-    [SerializeField] private NetworkObject blockShield;
 
     public override void Init(CharacterEntity character)
     {
@@ -152,27 +149,23 @@ public class NetworkPlayer_Attack : CharacterComponent
         {
             if (Object.HasStateAuthority)
             {
-                Character.Shield = Runner.Spawn(blockShield, transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
-                Character.Shield.transform.SetParent(Character.transform);
                 Character.OnBlock(true);
             }
-            Character.Animator.anim.CrossFade("Block", 0.1f);
         }
         else if (!blockButtonDown && isDefending)
         {
             if (Object.HasStateAuthority)
             {
-                Runner.Despawn(Character.Shield);
-                Character.Shield = null;
                 Character.OnBlock(false);
             }
-            Character.Animator.ResetAnimation();
         }
     }
 
     public override void OnBlock(bool isBlocking)
     {
         isDefending = isBlocking;
+        Assert.Check(Character.Shield);
+        Character.Shield.gameObject.SetActive(isBlocking);
     }
 
     // Needs to be linked via NetworkPlayer_AnimationLink Script
@@ -241,5 +234,12 @@ public class NetworkPlayer_Attack : CharacterComponent
         canBasicAttack = true;
         basicAttackCount = 0;
         Character.Movement.ResetSlows();
+    }
+
+    //[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private static void OnStateChanged(Changed<NetworkPlayer_Attack> changed)
+    {
+        changed.LoadNew();
+        changed.Behaviour.Character.Shield.gameObject.SetActive(changed.Behaviour.isDefending);
     }
 }
