@@ -9,7 +9,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 {
     // Control variables
     public bool canAttack = true;
-    [Networked(OnChanged = nameof(OnStateChanged))] public bool isDefending { get; set; } = false;
+    [Networked(OnChanged = nameof(OnStateChanged))] public NetworkBool isDefending { get; set; } = false;
 
     [Header("Basic Attacks Properties")]
     [SerializeField] private SO_NetworkBasicAttack[] basicAttacks;
@@ -240,8 +240,9 @@ public class NetworkPlayer_Attack : CharacterComponent
     }
 
     //[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void OnStateChanged(Changed<NetworkPlayer_Attack> changed)
+    private static void OnStateChanged(Changed<NetworkPlayer_Attack> changed)
     {
-        Character.Shield.gameObject.SetActive(changed.Behaviour.isDefending);
+        changed.LoadNew();
+        changed.Behaviour.Character.Shield.gameObject.SetActive(changed.Behaviour.isDefending);
     }
 }
