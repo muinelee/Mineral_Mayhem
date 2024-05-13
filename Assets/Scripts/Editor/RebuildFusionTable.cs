@@ -8,13 +8,17 @@ public class RebuildFusionTable : Editor
 {
     static RebuildFusionTable()
     {
-        AssemblyReloadEvents.beforeAssemblyReload += OnAssemblyReload;
+        EditorApplication.update += OnAssemblyReload;
     }
 
     private static void OnAssemblyReload()
     {
-        Fusion.Editor.NetworkProjectConfigUtilities.RebuildPrefabTable();
-        Debug.Log("Table rebuilt");
-        AssetDatabase.Refresh();
+        if (!EditorApplication.isPlayingOrWillChangePlaymode && !EditorApplication.isPlaying)
+        {
+            Fusion.Editor.NetworkProjectConfigUtilities.RebuildPrefabTable();
+            Debug.Log("Table rebuild");
+            AssetDatabase.Refresh();
+            EditorApplication.update -= OnAssemblyReload;
+        }
     }
 }
