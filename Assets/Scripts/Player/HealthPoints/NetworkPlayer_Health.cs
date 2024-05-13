@@ -124,15 +124,15 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         }
 
         //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
-        int currDamageAmount = (int) (damageAmount * Character.StatusHandler.GetDamageReduction());
+        float currDamageAmount = damageAmount * Character.StatusHandler.GetDamageReduction();
 
         if (Character.Attack.isDefending)
         {
-            int blockDamageAmount = (int) (currDamageAmount * (blockDamageReduction));
+            float blockDamageAmount = (currDamageAmount * (blockDamageReduction));
             BP = Mathf.Max(BP - blockDamageAmount, 0);
-            currDamageAmount = (int) (currDamageAmount * (1 - blockDamageReduction));
+            currDamageAmount = (currDamageAmount * (1 - blockDamageReduction));
         }
-        HP -= (int) currDamageAmount;
+        HP -= currDamageAmount;
 
         if (HP <= 0)
         {
