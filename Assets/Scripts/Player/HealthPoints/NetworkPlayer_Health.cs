@@ -110,7 +110,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     }
 
     // Function only called on the server
-    public void OnTakeDamage(int damageAmount)
+    public void OnTakeDamage(float damageAmount)
     {
         if (damageAmount < 0)
         {
