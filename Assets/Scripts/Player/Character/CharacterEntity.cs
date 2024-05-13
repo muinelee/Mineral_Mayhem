@@ -113,7 +113,7 @@ public class CharacterEntity : CharacterComponent
     public bool hasDespawned = false;
     public SpriteRenderer TeamIndicator;
 
-    public NetworkObject Shield;
+    public GameObject Shield;
 
     public static readonly List<CharacterEntity> Characters = new List<CharacterEntity>();
 

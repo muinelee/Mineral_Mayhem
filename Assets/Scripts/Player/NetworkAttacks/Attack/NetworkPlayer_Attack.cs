@@ -152,27 +152,23 @@ public class NetworkPlayer_Attack : CharacterComponent
         {
             if (Object.HasStateAuthority)
             {
-                Character.Shield = Runner.Spawn(blockShield, transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
-                Character.Shield.transform.SetParent(Character.transform);
                 Character.OnBlock(true);
             }
-            Character.Animator.anim.CrossFade("Block", 0.1f);
         }
         else if (!blockButtonDown && isDefending)
         {
             if (Object.HasStateAuthority)
             {
-                Runner.Despawn(Character.Shield);
-                Character.Shield = null;
                 Character.OnBlock(false);
             }
-            Character.Animator.ResetAnimation();
         }
     }
 
     public override void OnBlock(bool isBlocking)
     {
         isDefending = isBlocking;
+        Assert.Check(Character.Shield);
+        Character.Shield.gameObject.SetActive(isBlocking);
     }
 
     // Needs to be linked via NetworkPlayer_AnimationLink Script

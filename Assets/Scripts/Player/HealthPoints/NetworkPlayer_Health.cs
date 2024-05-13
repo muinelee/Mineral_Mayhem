@@ -88,8 +88,6 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         canBlock = false;
         Character.OnStatusBegin(blockDepletedStun);
-        Runner.Despawn(Character.Shield);
-        Character.Shield = null;
     }
 
     private void HandleTeamCam()
@@ -112,16 +110,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     // Function only called on the server
     public void OnTakeDamage(float damageAmount)
     {
-        if (damageAmount < 0)
-        {
-            //Debug.Log("Damage is negative");
-            return;
-        }
-
-        if (isDead)
-        {
-            return;
-        }
+        if (damageAmount < 0 || isDead) return;
 
         //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
         float currDamageAmount = damageAmount * Character.StatusHandler.GetDamageReduction();

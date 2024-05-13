@@ -16,7 +16,7 @@ public class RebuildFusionTable : Editor
         if (!EditorApplication.isPlayingOrWillChangePlaymode && !EditorApplication.isPlaying)
         {
             Fusion.Editor.NetworkProjectConfigUtilities.RebuildPrefabTable();
-            Debug.Log("Table rebuild");
+            Debug.Log("Table rebuilt");
             AssetDatabase.Refresh();
             EditorApplication.update -= OnAssemblyReload;
         }
