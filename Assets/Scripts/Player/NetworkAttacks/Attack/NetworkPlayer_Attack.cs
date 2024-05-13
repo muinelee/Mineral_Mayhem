@@ -27,9 +27,6 @@ public class NetworkPlayer_Attack : CharacterComponent
     [Header("(Ult) F Attack Properties")]
     [SerializeField] private SO_NetworkUlt fAttack;
 
-    [Header("Block Properties")]
-    [SerializeField] private NetworkObject blockShield;
-
     public override void Init(CharacterEntity character)
     {
         base.Init(character);

@@ -212,7 +212,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   canAttack: 1
-  _isDefending: 0
+  _isDefending:
+    _value: 0
   basicAttacks:
   - {fileID: 11400000, guid: d2ff822e41c2019458e9b93bcb75760d, type: 2}
   - {fileID: 11400000, guid: 24b9ea15226a82d4ca7694bd26303898, type: 2}
@@ -260,6 +261,7 @@ MonoBehaviour:
   blockRechargeRate: 10
   canBlock: 1
   timeUntilTeamCam: 5
+  shaderGraphMaterial: {fileID: 2100000, guid: 308c39fb49ecac24da421e99d96fb6e7, type: 2}
 --- !u!114 &2098500895633039834
 MonoBehaviour:
   m_ObjectHideFlags: 0

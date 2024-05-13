@@ -32,32 +32,46 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     [SerializeField] private float timeUntilTeamCam = 5;
     [SerializeField] private TickTimer teamCamTimer = TickTimer.None;
 
+    [SerializeField] private Material shaderGraphMaterial;
+    private Material materialInstance;
+
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
         character.SetHealth(this);
+        PrimeShieldMaterial();
     }
 
     public override void FixedUpdateNetwork()
     {
         HandleBlockMeter();
         HandleTeamCam();
+        HandleBlockVisual();
     }
 
     // Start is called before the first frame update
     public override void Spawned()
     {
         if (HP == startingHP) isDead = false;
-        RoundManager rm = RoundManager.Instance; 
+        RoundManager rm = RoundManager.Instance;
         if (rm != null)
         {
             rm.ResetRound += Respawn;
-            rm.MatchEndEvent += DisableControls; 
+            rm.MatchEndEvent += DisableControls;
         }
         else
         {
-            Respawn(); 
+            Respawn();
         }
+    }
+
+    private void PrimeShieldMaterial()
+    {
+        if (!shaderGraphMaterial) return;
+        materialInstance = new Material(shaderGraphMaterial);
+        Renderer renderer = Character.Shield.GetComponent<Renderer>();
+        if (renderer) renderer.material = materialInstance;
+        else Debug.Log($"No Renderer on Shield found for {gameObject.name}");
     }
 
     public override void OnHit(float x)
@@ -88,6 +102,14 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         canBlock = false;
         Character.OnStatusBegin(blockDepletedStun);
+    }
+
+    private void HandleBlockVisual()
+    {
+        if (materialInstance)
+        {
+            materialInstance.SetFloat("_alpha", BP / startingBP);
+        }
     }
 
     private void HandleTeamCam()
