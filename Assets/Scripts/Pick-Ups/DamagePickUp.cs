@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DamagePickup : NetworkBehaviour
 {
-    [SerializeField] private int damageAmount = 20;
+    [SerializeField] private int energyAmount = 20;
     [SerializeField] private LayerMask targetLayer;
     private void OnTriggerEnter(Collider other)
     {
@@ -11,10 +11,10 @@ public class DamagePickup : NetworkBehaviour
 
         if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
         {
-            NetworkPlayer_Health playerHealth = other.GetComponent<NetworkPlayer_Health>();
-            if (playerHealth != null)
+            CharacterEntity character = other.GetComponent<CharacterEntity>();
+            if (character != null)
             {
-                playerHealth.OnTakeDamage(damageAmount);
+                character.OnEnergyChange(energyAmount);
                 Runner.Despawn(Object);
             }
         }

@@ -33,12 +33,9 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
         AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
         //AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
 
-        transform.position += Vector3.up * spawnHeight;
-        float offsetX = Random.Range(-offset, offset);
-        float offsetY = Random.Range(0, offset);
+        Vector3 offsetVector = new Vector3(Random.Range(-offset, offset), Random.Range(0, offset), Random.Range(-offset, offset));
 
-        Vector3 offsetVector = new Vector3(offsetX, offsetY, 0);
-
+        transform.position += offsetVector;
         GetComponent<NetworkRigidbody>().Rigidbody.velocity = transform.forward * speed;
 
         //track the spawns

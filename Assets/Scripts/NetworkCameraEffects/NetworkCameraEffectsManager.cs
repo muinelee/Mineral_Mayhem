@@ -11,7 +11,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     [SerializeField] private CinemachineBrain cam;
 
     [Header("Hit Effect Trigger")]
-    [SerializeField] private int hitEffectThreshold;
+    [SerializeField] private float hitEffectThreshold;
 
     [Header("Hit Stop Properties")]
     [SerializeField] private float hitStopDuration;
@@ -49,7 +49,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         cam = Camera.main.GetComponentInChildren<CinemachineBrain>();
     }
 
-    public void CameraHitEffect(int damage)
+    public void CameraHitEffect(float damage)
     {
         if (damage < hitEffectThreshold || !Runner.IsServer) return;
 
