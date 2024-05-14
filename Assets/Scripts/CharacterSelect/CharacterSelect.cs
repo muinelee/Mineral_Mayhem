@@ -29,6 +29,9 @@ public class CharacterSelect : NetworkBehaviour
     public Transform[] spawnPoints;
     private int spawnPoint;
 
+    [Header("Match Start Points")]
+    public Transform[] matchStartPoints;
+
     //public event for storm mechanics
     public static event CharacterSelectEvent OnCharacterSelect;
     private void Start()
@@ -252,7 +255,7 @@ public class CharacterSelect : NetworkBehaviour
         {
             int spawnLocation = (player.team == NetworkPlayer.Team.Red) ? 0 : 2;
             spawnLocation += ReadyUpManager.instance.GetIndex(player);
-            Vector3 spawnVector = spawnPoints[spawnLocation].position;
+            Vector3 spawnVector = matchStartPoints[spawnLocation].position;
             RoundManager.Instance.respawnPoints.Add(player, spawnVector);
         }
 

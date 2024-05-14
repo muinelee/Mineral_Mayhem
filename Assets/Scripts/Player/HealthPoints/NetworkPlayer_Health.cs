@@ -201,6 +201,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         isDead = false;
         HP = startingHP;
+        Character.Energy.energy = 0;
     }
 
     public void DisableControls()

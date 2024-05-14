@@ -63,7 +63,9 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
 
         cinematicTimer = TickTimer.None;
         SetTeamCamera();
-        GoToTopCamera(); 
+        GoToTopCamera();
+
+        if (Runner.IsServer) RoundManager.Instance.OnResetRound();
     } 
 
     public void SetPlayerCamera(Transform player)
