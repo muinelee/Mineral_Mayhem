@@ -59,7 +59,6 @@ public class ReadyUpManager : MonoBehaviour
         runner.Spawn(roundManagerPF, Vector3.zero, Quaternion.identity);
 
         RoundManager.Instance.teammSize = blueTeamList.Count;
-        RoundManager.Instance.OnResetRound();
         NetworkPlayer.Local.RPC_StartGame();
     }
 

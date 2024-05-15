@@ -88,8 +88,12 @@ public class GameOverManager : NetworkBehaviour
 
         NetworkRunner runner = FindAnyObjectByType<NetworkRunner>();
 
+        int num = 0;
+
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
+            Debug.Log($"this ran {num}");
+            num++;
             if (player.Object.HasStateAuthority) continue;
             runner.Disconnect(player.Object.InputAuthority);
         }

@@ -20,7 +20,6 @@ public class CharacterComponent : NetworkBehaviour
         Character.OnStatusEndedEvent += OnStatusEnded;
         Character.OnCleanseEvent += OnCleanse;
         Character.OnPickupEvent += OnPickup;
-        Character.OnEnergyChangeEvent += OnEnergyChange;
         Character.OnCharacterDeathEvent += OnCharacterDeath;
         Character.OnRoundEndEvent += OnRoundEnd;
     }
@@ -69,9 +68,4 @@ public class CharacterComponent : NetworkBehaviour
     /// Called when a character picks something up
     /// </summary>
     public virtual void OnPickup() { }
-
-    /// <summary>
-    /// Called when a players energy changes
-    /// </summary>
-    public virtual void OnEnergyChange(float x) { }
 }
