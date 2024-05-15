@@ -36,7 +36,7 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
         team = NetworkPlayer.Team.Neutral;
     }
 
-    public void OnTakeDamage(float damageAmount)
+    public void OnTakeDamage(int damageAmount)
     {
         if (!Object.HasStateAuthority) return;
 

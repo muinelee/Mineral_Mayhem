@@ -9,7 +9,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 {
     // Control variables
     public bool canAttack = true;
-    [Networked(OnChanged = nameof(OnStateChanged))] public NetworkBool isDefending { get; set; } = false;
+    [Networked] public bool isDefending { get; set; } = false;
 
     [Header("Basic Attacks Properties")]
     [SerializeField] private SO_NetworkBasicAttack[] basicAttacks;
@@ -27,6 +27,9 @@ public class NetworkPlayer_Attack : CharacterComponent
     [Header("(Ult) F Attack Properties")]
     [SerializeField] private SO_NetworkUlt fAttack;
 
+    [Header("Block Properties")]
+    [SerializeField] private NetworkObject blockShield;
+
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
@@ -37,10 +40,11 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (GetInput(out NetworkInputData input) && canAttack)
         {
-            if (input.IsDown(NetworkInputData.ButtonF) && Character.Energy.IsUltCharged() && !isDefending) ActivateUlt();
-            else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref qAttack, ref qAttackCoolDownTimer);
-            else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref eAttack, ref eAttackCoolDownTimer);
-            else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack && !isDefending) ActivateBasicAttack();
+
+            if (input.IsDown(NetworkInputData.ButtonF) && Character.Energy.IsUltCharged()) ActivateUlt();
+            else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning) ActivateAttack(ref qAttack, ref qAttackCoolDownTimer);
+            else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning) ActivateAttack(ref eAttack, ref eAttackCoolDownTimer);
+            else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack) ActivateBasicAttack();
             ActivateBlock(input.IsDown(NetworkInputData.ButtonBlock));
         }
 
@@ -76,7 +80,6 @@ public class NetworkPlayer_Attack : CharacterComponent
         // Start Ult animation
         canAttack = false;
         RPC_PlayFEffects();
-        Character.OnEnergyChange(-100f);
 
         // Slow player
         Character.Movement.ApplyAbility(fAttack);
@@ -144,28 +147,32 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public void ActivateBlock(bool blockButtonDown)
     {
-        if (blockButtonDown == isDefending) return;
+
         if (blockButtonDown && !isDefending && Character.Health.canBlock)
         {
             if (Object.HasStateAuthority)
             {
+                Character.Shield = Runner.Spawn(blockShield, transform.position + Vector3.up, transform.rotation, Object.InputAuthority);
+                Character.Shield.transform.SetParent(Character.transform);
                 Character.OnBlock(true);
             }
+            Character.Animator.anim.CrossFade("Block", 0.1f);
         }
         else if (!blockButtonDown && isDefending)
         {
             if (Object.HasStateAuthority)
             {
+                Runner.Despawn(Character.Shield);
+                Character.Shield = null;
                 Character.OnBlock(false);
             }
+            Character.Animator.ResetAnimation();
         }
     }
 
     public override void OnBlock(bool isBlocking)
     {
         isDefending = isBlocking;
-        Assert.Check(Character.Shield);
-        Character.Shield.gameObject.SetActive(isBlocking);
     }
 
     // Needs to be linked via NetworkPlayer_AnimationLink Script
@@ -234,12 +241,5 @@ public class NetworkPlayer_Attack : CharacterComponent
         canBasicAttack = true;
         basicAttackCount = 0;
         Character.Movement.ResetSlows();
-    }
-
-    //[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private static void OnStateChanged(Changed<NetworkPlayer_Attack> changed)
-    {
-        changed.LoadNew();
-        changed.Behaviour.Character.Shield.gameObject.SetActive(changed.Behaviour.isDefending);
     }
 }
