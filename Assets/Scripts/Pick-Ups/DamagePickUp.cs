@@ -11,10 +11,10 @@ public class DamagePickup : NetworkBehaviour
 
         if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
         {
-            NetworkPlayer_Energy playerEnergy = other.GetComponent<NetworkPlayer_Energy>();
-            if (playerEnergy != null)
+            CharacterEntity character = other.GetComponent<CharacterEntity>();
+            if (character != null)
             {
-                playerEnergy.AddEnergy(energyAmount);
+                character.OnEnergyChange(energyAmount);
                 Runner.Despawn(Object);
             }
         }

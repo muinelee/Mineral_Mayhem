@@ -8,6 +8,7 @@ public class NetworkPlayer_Movement : CharacterComponent
 {
     [Header("Movement properties")]
     [SerializeField] private float turnTime;
+    [SerializeField, Range(0, 100)] private float blockSpeedReduction = 50f;
     public bool canMove = true;
     private Vector3 targetDirection;
     private float dashSpeed = 0;
@@ -17,6 +18,7 @@ public class NetworkPlayer_Movement : CharacterComponent
     // Variables to apply slow;
     private float turnSlow = 0;
     private float abilitySlow = 1;
+    private float blockSlow = 1;
     private float statusSlow = 1;
 
     [Header("Dash Properties")]
@@ -34,38 +36,34 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     public override void FixedUpdateNetwork()
     {
-        if (Object.HasInputAuthority || Object.HasStateAuthority)
+        if (GetInput(out NetworkInputData input))
         {
-            if (GetInput(out NetworkInputData input))
+            if (canMove && !isDashing)
             {
-                if (canMove && !isDashing)
-                {
-                    // Set direction player is looking at
-                    targetDirection = (new Vector3(input.cursorLocation.x, 0, input.cursorLocation.y) - transform.position);
-                    targetDirection.Normalize();
+                // Set direction player is looking at
+                targetDirection = (new Vector3(input.cursorLocation.x, 0, input.cursorLocation.y) - transform.position);
+                targetDirection.Normalize();
 
-                    // Rotate
-                    Aim();
+                // Rotate
+                Aim();
 
-                    float horizontalDir = (input.IsDown(NetworkInputData.ButtonD) ? 1 : 0) - (input.IsDown(NetworkInputData.ButtonA) ? 1 : 0);
-                    float verticalDir = (input.IsDown(NetworkInputData.ButtonW) ? 1 : 0) - (input.IsDown(NetworkInputData.ButtonS) ? 1 : 0);
-                    Vector3 moveDir = new Vector3(horizontalDir, 0, verticalDir).normalized;
+                float horizontalDir = (input.IsDown(NetworkInputData.ButtonD) ? 1 : 0) - (input.IsDown(NetworkInputData.ButtonA) ? 1 : 0);
+                float verticalDir = (input.IsDown(NetworkInputData.ButtonW) ? 1 : 0) - (input.IsDown(NetworkInputData.ButtonS) ? 1 : 0);
+                Vector3 moveDir = new Vector3(horizontalDir, 0, verticalDir).normalized;
 
-                    // Move
-                    Character.Rigidbody.Rigidbody.AddForce(moveDir * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
+                // Move
+                Character.Rigidbody.Rigidbody.AddForce((GetCombinedSpeed() + dashSpeed) * blockSlow * abilitySlow * statusSlow * moveDir);
 
-                    // Dash (Can be a boost or buff)
-                    if (input.IsDown(NetworkInputData.ButtonDash)) MobilityAbility(moveDir);
+                // Dash (Can be a boost or buff)
+                if (input.IsDown(NetworkInputData.ButtonDash)) MobilityAbility(moveDir);
 
-                    // Play movement animation
-                    PlayMovementAnimation(moveDir);
-                }
-
-                // Manage Timers and ability effects
-                ManageTimers();
+                // Play movement animation
+                PlayMovementAnimation(moveDir);
             }
-        }
 
+            // Manage Timers and ability effects
+            ManageTimers();
+        }
     }
 
     private void Aim()
@@ -197,6 +195,12 @@ public class NetworkPlayer_Movement : CharacterComponent
     private float GetCombinedSpeed()
     {
         return Character.StatusHandler.speed.GetValue() + currentBoostValue;
+    }
+
+    public override void OnBlock(bool isBlocking)
+    {
+        if (isBlocking) blockSlow = blockSpeedReduction / 100f;
+        else blockSlow = 1f;
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
