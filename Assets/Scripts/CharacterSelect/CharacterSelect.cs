@@ -44,8 +44,8 @@ public class CharacterSelect : NetworkBehaviour
         if (!characterSelectTimer.Expired(Runner)) return;
 
         characterSelectTimer = TickTimer.None;
-        FinalizeChoice();
-        RoundUI.instance.StartRound();
+        if (!characterLookup[NetworkPlayer.Local].Input.CharacterSelected) FinalizeChoice();
+
         NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
         if (RoundManager.Instance) RoundManager.Instance.MatchStart();
         this.gameObject.SetActive(false);

@@ -46,7 +46,6 @@ public class NetworkPlayer_Energy : CharacterComponent
 
     public bool IsUltCharged()
     {
-        Debug.Log($"Energy is {energy}, and full charge is {fullCharge}");
         if (energy >= fullCharge)
         {
             energy = 0;                         // if returns true, then the player is firing their ult. Reset the energy

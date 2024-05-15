@@ -1,5 +1,6 @@
 using UnityEngine;
 using Fusion;
+using System.Collections;
 
 public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 {
@@ -201,6 +202,13 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         isDead = false;
         HP = startingHP;
+        StartCoroutine(ResetEnergy());
+    }
+
+    private IEnumerator ResetEnergy()
+    {
+        yield return 0;
+
         Character.Energy.energy = 0;
     }
 

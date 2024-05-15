@@ -100,6 +100,8 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
 
     public void GoToTeamCamera()
     {
+        if (victoryCameraPriority.Priority > 0) return;
+
         ResetCameraPriorities();
         teamCameraPriority.Priority = 100;
     }
