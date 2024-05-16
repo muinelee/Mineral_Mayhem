@@ -105,6 +105,7 @@ public class GameOverManager : NetworkBehaviour
 
         runner.Shutdown();
 
-        SceneManager.LoadScene(0);
+        if (gameOver) SceneManager.LoadScene(0);
+        else SceneManager.LoadScene(4);
     }
 }
