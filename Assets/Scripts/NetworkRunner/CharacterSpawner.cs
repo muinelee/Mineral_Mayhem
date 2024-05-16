@@ -57,6 +57,13 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         Debug.Log("Player Left");
+
+        if (ReadyUpManager.instance.gameObject.activeSelf)
+        {
+            ReadyUpManager.instance.PlayerLeft();
+        }
+
+        else Debug.Log("This thing is no longer active");
     }
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
