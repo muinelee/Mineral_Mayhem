@@ -61,9 +61,22 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (ReadyUpManager.instance.gameObject.activeSelf)
         {
             ReadyUpManager.instance.PlayerLeft();
+            return;
         }
 
-        else Debug.Log("This thing is no longer active");
+        if (!runner.IsServer) return;
+
+        NetworkPlayer[] players = FindObjectsOfType<NetworkPlayer>();
+
+        foreach (NetworkPlayer np in players)
+        {
+            if (np.GetComponent<NetworkObject>().InputAuthority == PlayerRef.None)
+            {
+                NetworkPlayer.Players.Remove(np);
+            }
+        }
+
+        GameOverManager.Instance.ReturnToLobby();
     }
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)

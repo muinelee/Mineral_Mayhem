@@ -217,7 +217,6 @@ public class ReadyUpManager : MonoBehaviour
 
         foreach (NetworkPlayer player in playerTeamDisplayPair.Keys)
         {
-            Debug.Log(player.GetComponent<NetworkObject>().InputAuthority);
             if (player.GetComponent<NetworkObject>().InputAuthority == PlayerRef.None)
             {
                 Destroy(playerTeamDisplayPair[player].gameObject);
