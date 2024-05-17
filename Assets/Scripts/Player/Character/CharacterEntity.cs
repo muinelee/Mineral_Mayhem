@@ -15,7 +15,6 @@ public class CharacterEntity : CharacterComponent
     public event Action<StatusEffect> OnStatusEndedEvent;
     public event Action OnCleanseEvent;
     public event Action OnPickupEvent;
-    public event Action<float> OnEnergyChangeEvent;
     public event Action OnCharacterDeathEvent;
     public event Action OnRoundEndEvent;
 
@@ -55,10 +54,6 @@ public class CharacterEntity : CharacterComponent
     public override void OnPickup()
     {
         OnPickupEvent?.Invoke();
-    }
-    public override void OnEnergyChange(float x)
-    {
-        OnEnergyChangeEvent?.Invoke(x);
     }
     #endregion
 
@@ -113,7 +108,7 @@ public class CharacterEntity : CharacterComponent
     public bool hasDespawned = false;
     public SpriteRenderer TeamIndicator;
 
-    public GameObject Shield;
+    public NetworkObject Shield;
 
     public static readonly List<CharacterEntity> Characters = new List<CharacterEntity>();
 

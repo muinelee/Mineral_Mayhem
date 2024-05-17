@@ -47,6 +47,7 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
     [SerializeField] private Image fAttackIcon;
     [SerializeField] private Image fImageBlock;
 
+    private bool uIDisplayed = true;
     // cooldown comes from Scriptable Objects passed from local player
     private void Awake()
     {
@@ -55,6 +56,8 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!uIDisplayed) return;
+
         // Update Health Bar
         DisplayHealth();
 
@@ -153,8 +156,27 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
         playerAttack = playerAttackScript;
     }
 
-    public void ResetValues()
+    public void ShowPlayerUI()
     {
-        
+        uIDisplayed = true;
+
+        healthBar.gameObject.SetActive(true);
+        energyBar.gameObject.SetActive(true);
+        dashIcon.gameObject.SetActive(true);
+        qAttackIcon.gameObject.SetActive(true);
+        eAttackIcon.gameObject.SetActive(true);
+        fAttackIcon.gameObject.SetActive(true);
+    }
+
+    public void HidePlayerUI()
+    {
+        uIDisplayed = false;
+
+        healthBar.gameObject.SetActive(false);
+        energyBar.gameObject.SetActive(false);
+        dashIcon.gameObject.SetActive(false);
+        qAttackIcon.gameObject.SetActive(false);
+        eAttackIcon.gameObject.SetActive(false);
+        fAttackIcon.gameObject.SetActive(false);
     }
 }

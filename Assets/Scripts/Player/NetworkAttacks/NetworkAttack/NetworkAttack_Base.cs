@@ -9,7 +9,7 @@ public abstract class NetworkAttack_Base : NetworkBehaviour
     //private PlayerRef playerRef;
 
     [Header("Base Attack Properties")]
-    [SerializeField] protected float damage;
+    [SerializeField] protected int damage;
     [SerializeField] protected float knockback;
     [SerializeField] protected AudioClip[] SFX;
     [SerializeField] protected List<StatusEffect> statusEffectSO;

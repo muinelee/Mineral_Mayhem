@@ -21,6 +21,8 @@ public class GameOverManager : NetworkBehaviour
     [SerializeField] private Transform[] victoryPositionsTeam;
     [SerializeField] private Transform victoryPositionSolo;
 
+    public bool gameOver = false;
+
     private void Awake()
     {
         Instance = this;
@@ -49,6 +51,7 @@ public class GameOverManager : NetworkBehaviour
         else DisplayBlueWins();
 
         gameOverTimer = TickTimer.CreateFromSeconds(Runner, gameOverScreenDuration);
+        gameOver = true;
     }
 
     private void MoveWinners(NetworkPlayer.Team team)
@@ -88,8 +91,12 @@ public class GameOverManager : NetworkBehaviour
 
         NetworkRunner runner = FindAnyObjectByType<NetworkRunner>();
 
+        int num = 0;
+
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
+            Debug.Log($"this ran {num}");
+            num++;
             if (player.Object.HasStateAuthority) continue;
             runner.Disconnect(player.Object.InputAuthority);
         }
@@ -98,6 +105,7 @@ public class GameOverManager : NetworkBehaviour
 
         runner.Shutdown();
 
-        SceneManager.LoadScene(0);
+        if (gameOver) SceneManager.LoadScene(0);
+        else SceneManager.LoadScene(4);
     }
 }

@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 
 public class RoundUI : MonoBehaviour
@@ -103,8 +102,13 @@ public class RoundUI : MonoBehaviour
         }
     }
 
-    public void StartRound()
+    public void ShowRoundUI()
     {
         roundUIBar.gameObject.SetActive(true);
+    }
+
+    public void HideRoundUI()
+    {
+        roundUIBar.gameObject.SetActive(false);
     }
 }

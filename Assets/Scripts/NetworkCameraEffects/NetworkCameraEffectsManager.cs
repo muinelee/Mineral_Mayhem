@@ -11,7 +11,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     [SerializeField] private CinemachineBrain cam;
 
     [Header("Hit Effect Trigger")]
-    [SerializeField] private float hitEffectThreshold;
+    [SerializeField] private int hitEffectThreshold;
 
     [Header("Hit Stop Properties")]
     [SerializeField] private float hitStopDuration;
@@ -49,7 +49,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         cam = Camera.main.GetComponentInChildren<CinemachineBrain>();
     }
 
-    public void CameraHitEffect(float damage)
+    public void CameraHitEffect(int damage)
     {
         if (damage < hitEffectThreshold || !Runner.IsServer) return;
 
@@ -63,7 +63,9 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
 
         cinematicTimer = TickTimer.None;
         SetTeamCamera();
-        GoToTopCamera(); 
+        GoToTopCamera();
+
+        if (Runner.IsServer) RoundManager.Instance.OnResetRound();
     } 
 
     public void SetPlayerCamera(Transform player)
@@ -98,6 +100,8 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
 
     public void GoToTeamCamera()
     {
+        if (victoryCameraPriority.Priority > 0) return;
+
         ResetCameraPriorities();
         teamCameraPriority.Priority = 100;
     }

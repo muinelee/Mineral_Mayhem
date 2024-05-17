@@ -80,14 +80,10 @@ public class Coldmehameha : NetworkAttack_Base
         Runner.LagCompensation.OverlapBox((character.transform.position + (character.transform.forward * 3)), extends, rotation, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
         //loop to check for hits
         foreach (LagCompensatedHit hit in hits) {
-            //get health component interface
-            Debug.Log(hit.GameObject.name);
 
             IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
             //if health component is not null
             if (healthComponent != null) {
-
-                Debug.Log($"is it dead? {healthComponent.isDead}, What's the team? {healthComponent.team}");
 
                 //if health component is not dead, or if the team is the same, continue
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;

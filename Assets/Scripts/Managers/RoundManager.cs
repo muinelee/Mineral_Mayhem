@@ -96,6 +96,9 @@ public class RoundManager : NetworkBehaviour
         // 10 second wait time for game to start for doors to open OR input to be enabled 
         redPlayersAlive = teammSize; 
         bluePlayersAlive = teammSize;
+
+        // Show Round UI
+        RPC_ShowRoundUI();
     }
 
     public void RoundEnd() 
@@ -128,6 +131,7 @@ public class RoundManager : NetworkBehaviour
         if (redRoundsWon > blueRoundsWon) RPC_DisplayGameOver(true);
         else if (blueRoundsWon > redRoundsWon) RPC_DisplayGameOver(false);
         else Debug.Log("Tie!");
+        RPC_HideRoundUI();
         RPC_GoToVictoryCamera();
     }
 
@@ -137,6 +141,8 @@ public class RoundManager : NetworkBehaviour
         MatchStartEvent?.Invoke();
         resetStorm?.Invoke();
         startStorm?.Invoke();
+        
+        if (Runner.IsServer) RPC_HideRoundUI();
     }
 
     public override void FixedUpdateNetwork()
@@ -177,5 +183,19 @@ public class RoundManager : NetworkBehaviour
     private void RPC_GoToVictoryCamera()
     {
         NetworkCameraEffectsManager.instance.GoToVictoryCamera();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_ShowRoundUI()
+    {
+        RoundUI.instance.ShowRoundUI();
+        NetworkPlayer_InGameUI.instance.ShowPlayerUI();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_HideRoundUI()
+    {
+        RoundUI.instance.HideRoundUI();
+        NetworkPlayer_InGameUI.instance.HidePlayerUI();
     }
 }
