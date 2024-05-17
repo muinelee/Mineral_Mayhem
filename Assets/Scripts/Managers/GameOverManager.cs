@@ -66,6 +66,8 @@ public class GameOverManager : NetworkBehaviour
             {
                 player.Health.DisableControls();
 
+                player.gameObject.GetComponentInChildren<NetworkPlayer_WorldSpaceHUD>().HideFloatingHealthBar();
+
                 player.transform.rotation = victoryPositionSolo.rotation;
                 
                 if (Runner.SessionInfo.MaxPlayers > 2)

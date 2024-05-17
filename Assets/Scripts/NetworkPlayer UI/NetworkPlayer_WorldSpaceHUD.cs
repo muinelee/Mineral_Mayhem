@@ -54,6 +54,16 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
         transform.LookAt(cam.transform.rotation * Vector3.forward + transform.position, cam.transform.rotation * Vector3.up);
     }
 
+    public void ShowFloatingHealthBar()
+    {
+        nonLocalPlayerHealthBar.gameObject.SetActive(true);
+    }
+
+    public void HideFloatingHealthBar()
+    {
+        nonLocalPlayerHealthBar.gameObject.SetActive(false);
+    }
+
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
     public void RPC_SetPlayerName(string name, NetworkPlayer.Team team)
     {
