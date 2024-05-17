@@ -49,7 +49,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         cam = Camera.main.GetComponentInChildren<CinemachineBrain>();
     }
 
-    public void CameraHitEffect(int damage)
+    public void CameraHitEffect(float damage)
     {
         if (damage < hitEffectThreshold || !Runner.IsServer) return;
 
