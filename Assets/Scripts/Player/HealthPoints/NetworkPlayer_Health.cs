@@ -77,7 +77,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     public override void OnHit(float x)
     {
-        OnTakeDamage((int)x);
+        OnTakeDamage(x);
+        Debug.Log("Player is being hit");
     }
 
     public void HandleBlockMeter()
@@ -133,6 +134,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     // Function only called on the server
     public void OnTakeDamage(float damageAmount)
     {
+        Debug.Log($"damage taken is {damageAmount}");
+
         if (damageAmount < 0 || isDead) return;
 
         //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
@@ -144,6 +147,9 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
             BP = Mathf.Max(BP - blockDamageAmount, 0);
             currDamageAmount = (currDamageAmount * (1 - blockDamageReduction));
         }
+
+        Debug.Log($"current damage amount is {currDamageAmount}");
+
         HP -= currDamageAmount;
 
         if (HP <= 0)
