@@ -59,7 +59,6 @@ public class ReadyUpManager : MonoBehaviour
         runner.Spawn(roundManagerPF, Vector3.zero, Quaternion.identity);
 
         RoundManager.Instance.teammSize = blueTeamList.Count;
-        RoundManager.Instance.OnResetRound();
         NetworkPlayer.Local.RPC_StartGame();
     }
 
@@ -216,13 +215,15 @@ public class ReadyUpManager : MonoBehaviour
     {
         NetworkPlayer[] players = FindObjectsOfType<NetworkPlayer>();
 
-        foreach (NetworkPlayer player in players)
+        foreach (NetworkPlayer player in playerTeamDisplayPair.Keys)
         {
-            if (playerTeamDisplayPair.ContainsKey(player)) continue;
-
-            // Destroy players not in game
-            Destroy(playerTeamDisplayPair[player].gameObject);
-            playerTeamDisplayPair.Remove(player);
+            if (player.GetComponent<NetworkObject>().InputAuthority == PlayerRef.None)
+            {
+                Destroy(playerTeamDisplayPair[player].gameObject);
+                playerTeamDisplayPair.Remove(player);
+                NetworkPlayer.Players.Remove(player);
+                break;
+            }
         }
     }
 

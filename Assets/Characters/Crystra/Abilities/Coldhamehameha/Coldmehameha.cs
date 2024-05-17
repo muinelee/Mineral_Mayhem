@@ -29,18 +29,22 @@ public class Coldmehameha : NetworkAttack_Base
         base.Spawned();
 
         AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        //AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
 
         //lifetimer ticktimer created from lifetime variable
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifetime);
 
-        //call sphere to check player
-        Runner.LagCompensation.OverlapSphere(transform.position, 0.1f, player: Object.InputAuthority, hits, collisionLayer);
-        //loop for hits
-        for (int i = 0; i < hits.Count; i++) {
-            //get character entity as parent of hit object
-            character = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
-            //set parent of the object to the character entity
-            this.transform.SetParent(character.transform);
+        if (Runner.IsServer)
+        {
+            //call sphere to check player
+            Runner.LagCompensation.OverlapSphere(transform.position, 0.1f, player: Object.InputAuthority, hits, collisionLayer);
+            //loop for hits
+            for (int i = 0; i < hits.Count; i++) {
+                //get character entity as parent of hit object
+                character = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
+                //set parent of the object to the character entity
+                this.transform.SetParent(character.transform);
+            }
         }
         //offset spawn position to match hands
         transform.position += transform.forward * offset;
@@ -76,14 +80,10 @@ public class Coldmehameha : NetworkAttack_Base
         Runner.LagCompensation.OverlapBox((character.transform.position + (character.transform.forward * 3)), extends, rotation, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
         //loop to check for hits
         foreach (LagCompensatedHit hit in hits) {
-            //get health component interface
-            Debug.Log(hit.GameObject.name);
 
             IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
             //if health component is not null
             if (healthComponent != null) {
-
-                Debug.Log($"is it dead? {healthComponent.isDead}, What's the team? {healthComponent.team}");
 
                 //if health component is not dead, or if the team is the same, continue
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;

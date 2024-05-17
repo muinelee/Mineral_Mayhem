@@ -5,11 +5,13 @@ using UnityEngine.Events;
 
 public class INP_Pause : MonoBehaviour
 {
-    [SerializeField] private KeyCode pauseKey = KeyCode.Escape;
-    [SerializeField] private CG_Fade menu;
-    [SerializeField] private float delay = 0.5f;
+    [SerializeField] KeyCode pauseKey = KeyCode.Escape;
+    [SerializeField] CG_Fade menu;
+    [SerializeField] GameObject[] windowsToOpen;
+    [SerializeField] GameObject[] windowsToClose;
+    [SerializeField] float delay = 0.5f;
 
-    private bool paused = false;
+    bool paused = false;
 
     //--------------------------------//
 
@@ -34,7 +36,6 @@ public class INP_Pause : MonoBehaviour
 
             yield return new WaitForSecondsRealtime(delay);
 
-            Time.timeScale = 1;
             paused = false;
 
             //Cursor.lockState = CursorLockMode.Locked;
@@ -42,14 +43,35 @@ public class INP_Pause : MonoBehaviour
         }
         else if (!paused)
         {
-            Time.timeScale = 0;
             paused = true;
 
             menu.gameObject.SetActive(true);
             menu.FadeIn();
 
+            if (windowsToClose.Length > 0)
+            {
+                for (int i = 0; i < windowsToClose.Length; i++)
+                {
+                    windowsToClose[i].GetComponent<CanvasGroup>().alpha = 0;
+                    windowsToClose[i].gameObject.SetActive(false);
+                }
+            }
+            if (windowsToOpen.Length > 0)
+            {
+                for (int i = 0; i < windowsToOpen.Length; i++)
+                {
+                    windowsToOpen[i].gameObject.SetActive(true);
+                    windowsToOpen[i].GetComponent<CanvasGroup>().alpha = 1;
+                }
+            }
+
             //Cursor.lockState = CursorLockMode.Confined;
             //Cursor.visible = true;
         }
+    }
+
+    public void ChangePauseBool(bool isPaused)
+    {
+        paused = isPaused;
     }
 }

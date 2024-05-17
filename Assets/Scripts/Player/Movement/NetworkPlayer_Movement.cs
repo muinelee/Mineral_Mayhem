@@ -79,6 +79,7 @@ public class NetworkPlayer_Movement : CharacterComponent
     private void MobilityAbility(Vector3 moveDirection)
     {
         if (dashCoolDownTimer.IsRunning) return;
+        if (Runner.IsServer == false) return;
 
         RPC_DashSFX();
 
@@ -113,7 +114,7 @@ public class NetworkPlayer_Movement : CharacterComponent
         if (dashDurationTimer.Expired(Runner))
         {
             dashSpeed = 0;
-            if (!dash.GetCanSteer()) Character.Rigidbody.Rigidbody.velocity *= 0.2f;
+            //if (!dash.GetCanSteer()) Character.Rigidbody.Rigidbody.velocity *= 0.2f;
             isDashing = false;
             dashDurationTimer = TickTimer.None;
         }
@@ -135,10 +136,10 @@ public class NetworkPlayer_Movement : CharacterComponent
         turnSlow = slowPercentage;
     }
 
-    public void ApplyAbility(SO_NetworkAttack ult)
+    public void ApplyAbility(SO_NetworkAttack ability)
     {
-        SetTurnSlow(ult.GetTurnSlow());
-        SetAbilitySlow(ult.GetAbilitySlow());
+        SetTurnSlow(ability.GetTurnSlow());
+        SetAbilitySlow(ability.GetAbilitySlow());
     }
 
     public void ResetSlows()

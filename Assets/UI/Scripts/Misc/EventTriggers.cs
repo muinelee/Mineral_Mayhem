@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+[DefaultExecutionOrder(100)]
 public class EventTriggers : MonoBehaviour
 {
     [SerializeField] bool eventOnStart = false;

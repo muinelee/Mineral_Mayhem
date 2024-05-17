@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4671277010859855993}
   - component: {fileID: 4287955592093380396}
   - component: {fileID: -2895732768150714903}
-  - component: {fileID: -2687564878289892675}
+  - component: {fileID: 3210616736456827148}
   m_Layer: 0
   m_Name: FrostCloud
   m_TagString: Untagged
@@ -34,6 +34,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3240568431266179335}
+  - {fileID: 6352851637610197818}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4671277010859855993
@@ -59,7 +60,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 4287955592093380396}
-  - {fileID: -2687564878289892675}
+  - {fileID: 3210616736456827148}
   SimulationBehaviours: []
 --- !u!114 &4287955592093380396
 MonoBehaviour:
@@ -74,20 +75,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  damage: 1
+  damage: 0
   knockback: 0
   SFX:
   - {fileID: 8300000, guid: 06059ab591d5ce840bf7843e7e06bfff, type: 3}
+  - {fileID: 8300000, guid: 204661811a350cd45b835a3be8ae2cd6, type: 3}
   statusEffectSO:
-  - {fileID: 11400000, guid: 97d69ea5c08407e49afef73b4c011bcd, type: 2}
-  speed: 1
-  lifetime: 5
-  maxTravelDistance: 2.5
-  offset: {x: 0, y: -0.5, z: 1}
-  radius: 1
+  - {fileID: 11400000, guid: 10e1a3d178498c34aa05a534f07168cd, type: 2}
+  lifetime: 1
+  offset: 0
+  radius: 2.5
   playerLayer:
     serializedVersion: 2
     m_Bits: 128
+  attackVFX: {fileID: 6821738634456582036, guid: ef6676c5948c5984ea99098a6100d291, type: 3}
 --- !u!54 &-2895732768150714903
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -115,7 +116,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-2687564878289892675
+--- !u!114 &3210616736456827148
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,7 +125,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2490229635425242872}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1710889294, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
@@ -160,7 +161,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3240568431266179335
 Transform:
   m_ObjectHideFlags: 0
@@ -171,7 +172,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3793083176373262126}
@@ -226,3 +227,77 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1001 &2974729364203473942
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3793083176373262126}
+    m_Modifications:
+    - target: {fileID: 358103966154831000, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4da739d41876a7048bfd76d356d03479, type: 2}
+    - target: {fileID: 3113604287043247640, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b94b0ebf566bde84fac19f19a0d7827e, type: 2}
+    - target: {fileID: 6821738634456582036, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+      propertyPath: m_Name
+      value: FrostCloud_VFX
+      objectReference: {fileID: 0}
+    - target: {fileID: 6821738634456582036, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8169952483096280876, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8169952483096280876, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8169952483096280876, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8169952483096280876, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 8169952483096280876, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 8169952483096280876, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8169952483096280876, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8169952483096280876, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8169952483096280876, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8169952483096280876, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+--- !u!4 &6352851637610197818 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8169952483096280876, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
+  m_PrefabInstance: {fileID: 2974729364203473942}
+  m_PrefabAsset: {fileID: 0}

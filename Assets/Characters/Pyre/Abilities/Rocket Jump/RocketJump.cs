@@ -26,8 +26,8 @@ public class RocketJump : NetworkAttack_Base
 
     public override void Spawned()
     {
-        base.Spawned();
-        
+        base.Spawned();        
+
         AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
         
         if (!Runner.IsServer) return;
@@ -49,7 +49,6 @@ public class RocketJump : NetworkAttack_Base
             DealDamage();
 
             //Enable colliders
-            character.Collider.enabled = true;
             character.Rigidbody.Rigidbody.useGravity = true;
         }
 
@@ -79,7 +78,6 @@ public class RocketJump : NetworkAttack_Base
 
                 // Disable collider and gravity
                 character.Rigidbody.Rigidbody.useGravity = false;
-                character.Collider.enabled = false;
                 hits.Clear();
             }
         }
@@ -105,12 +103,22 @@ public class RocketJump : NetworkAttack_Base
 
             playerHit.OnTakeDamage(damage);
             playerHit.OnKnockBack(knockback, rigTransform.position);
+
+            StatusHandler statusHandler = hit.GameObject.GetComponentInParent<StatusHandler>();
+
+            if (statusHandler != null)
+            {
+                foreach (StatusEffect status in statusEffectSO)
+                {
+                    statusHandler.AddStatus(status);
+                }
+            }
         }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_RocketJumpLandingSFX()
     {
-        AudioManager.Instance.PlayAudioSFX(this.SFX[1], transform.position);
+        AudioManager.Instance.PlayAudioSFX(this.SFX[1], transform.localPosition);
     }
 }

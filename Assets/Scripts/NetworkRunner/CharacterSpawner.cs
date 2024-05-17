@@ -51,12 +51,30 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         NetworkPlayer.Players.Clear();
         await FindAnyObjectByType<NetworkRunner>().Shutdown();
-        SceneManager.LoadScene(0);
+        if (GameOverManager.Instance.gameOver) SceneManager.LoadScene(0);   //Match ended and players are being moved back to Lobby
+        else SceneManager.LoadScene(4);     //Player ddisconnected during match
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         Debug.Log("Player Left");
+
+        if (ReadyUpManager.instance.gameObject.activeSelf)
+        {
+            ReadyUpManager.instance.PlayerLeft();
+            return;
+        }
+
+        if (!runner.IsServer) return;
+
+        NetworkPlayer[] players = FindObjectsOfType<NetworkPlayer>();
+
+        foreach (NetworkPlayer np in players)
+        {
+            if (np.GetComponent<NetworkObject>().InputAuthority == PlayerRef.None) NetworkPlayer.Players.Remove(np);
+        }
+
+        if (!GameOverManager.Instance.gameOver) GameOverManager.Instance.ReturnToLobby();   //Game is still running
     }
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)

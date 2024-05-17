@@ -9,6 +9,9 @@ public class SO_NetworkAttack : ScriptableObject
     [Header("Attack Prefab")]
     [SerializeField] protected NetworkObject attack;
 
+    [Header("Voice Line")]
+    [SerializeField] protected AudioClip voiceLine;
+
     [Header("Name and Description")]
     public string attackName;
     public string attackDescription;
@@ -45,5 +48,10 @@ public class SO_NetworkAttack : ScriptableObject
     public float GetCoolDown()
     {
         return coolDown;
+    }
+
+    public AudioClip GetVoiceLine()
+    {
+        return voiceLine;
     }
 }
