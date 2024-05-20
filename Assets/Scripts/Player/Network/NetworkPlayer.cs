@@ -63,7 +63,7 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
             if (SceneManager.GetActiveScene().name != "TrainingRoom")
             {
-                ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
+                ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas 3D").transform);
                 readyUpUI.PrimeReadyUpUI(this);
                 RPC_JoinUndecided(); 
             } 
