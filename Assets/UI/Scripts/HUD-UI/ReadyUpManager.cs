@@ -9,10 +9,9 @@ public class ReadyUpManager : MonoBehaviour
 {
     public static ReadyUpManager instance { get; set; }
 
-    [SerializeField] private Button readyUp;
-    [SerializeField] private Button unReadyUp;
-    [SerializeField] private TextMeshProUGUI readyUpText;
-    [SerializeField] private Button startGame;
+    [SerializeField] private GameObject readyUp;
+    [SerializeField] private GameObject unReadyUp;
+    [SerializeField] private CG_Fade startGame;
 
     [Header("Blue Team properties")]
     [SerializeField] private List<NetworkPlayer> blueTeamList;
@@ -64,7 +63,11 @@ public class ReadyUpManager : MonoBehaviour
 
     public void PrimeReadyUpUI(NetworkPlayer player)
     {
-        if (player.HasStateAuthority) startGame.gameObject.SetActive(true);
+        if (player.HasStateAuthority)
+        {
+            startGame.gameObject.SetActive(true);
+            startGame.FadeIn();
+        }
 
         foreach (NetworkPlayer netPlayer in NetworkPlayer.Players)
         {
@@ -82,13 +85,13 @@ public class ReadyUpManager : MonoBehaviour
         if (NetworkPlayer.Local.team == NetworkPlayer.Team.Undecided) return;
 
         NetworkPlayer.Local.RPC_ReadyUp();
-        unReadyUp.gameObject.SetActive(true);
+        unReadyUp.SetActive(true);
     }
 
     public void OnUnreadyUp()
     {
         NetworkPlayer.Local.RPC_UnReadyUp();
-        unReadyUp.gameObject.SetActive(false);
+        unReadyUp.SetActive(false);
     }
 
     public void ReadyUp(NetworkPlayer player)
@@ -117,14 +120,14 @@ public class ReadyUpManager : MonoBehaviour
     public void OnJoinBlueTeam()
     {
         NetworkPlayer.Local.RPC_JoinBlueTeam();
-        unReadyUp.gameObject.SetActive(false);
+        unReadyUp.SetActive(false);
         CheckIsOthersReady();
     }
 
     public void OnJoinRedTeam()
     {
         NetworkPlayer.Local.RPC_JoinRedTeam();
-        unReadyUp.gameObject.SetActive(false);
+        unReadyUp.SetActive(false);
         CheckIsOthersReady();
     }
 
