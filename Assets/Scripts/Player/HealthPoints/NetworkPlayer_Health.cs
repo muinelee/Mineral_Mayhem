@@ -77,7 +77,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     public override void OnHit(float x)
     {
-        OnTakeDamage((int)x);
+        OnTakeDamage(x);
     }
 
     public void HandleBlockMeter()
@@ -144,6 +144,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
             BP = Mathf.Max(BP - blockDamageAmount, 0);
             currDamageAmount = (currDamageAmount * (1 - blockDamageReduction));
         }
+
         HP -= currDamageAmount;
 
         if (HP <= 0)
@@ -170,7 +171,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
         teamCamTimer = TickTimer.CreateFromSeconds(Runner, timeUntilTeamCam);
 
-        //Character.Animator.anim.CrossFade("Death", 0.2f);
+        Character.Animator.anim.CrossFade("Death", 0.2f);
 
         if (!NetworkPlayer.Local.HasStateAuthority) return;
         if (RoundManager.Instance)

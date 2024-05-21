@@ -46,7 +46,7 @@ public class NetworkPlayer_Energy : CharacterComponent
 
     public bool IsUltCharged()
     {
-        return energy == fullCharge;
+        return energy >= fullCharge;
     }
 
     public override void OnEnergyChange(float x)

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using Unity.VisualScripting;
+using UnityEditor;
 
 public class LavaDive : NetworkAttack_Base 
 {
@@ -90,6 +91,7 @@ public class LavaDive : NetworkAttack_Base
 
     private void AttackEnd()
     {
+        lingerTimer = TickTimer.None;
         Runner.Despawn(Object);
     }
 
@@ -102,7 +104,6 @@ public class LavaDive : NetworkAttack_Base
         if (Runner.IsServer) Runner.Spawn(attackEndVFX, character.transform.position, Quaternion.identity);
         lingerTimer = TickTimer.CreateFromSeconds(Runner, lingerTime);
 
-        //character.Animator.ResetAnimation();
         finishDive = true;
         character.Collider.enabled = true;
     }
@@ -122,11 +123,11 @@ public class LavaDive : NetworkAttack_Base
         if (!finishDive) midwayPointRef = transform.position + ((character.transform.position - transform.position) / 2);
         
         // Overlap box dimensions
-        float boxLength = Vector3.Magnitude(midwayPointRef - transform.position) * 2;
+        float boxLength = Vector3.Magnitude(midwayPointRef - transform.position) * 3f;
         Vector3 boxDimensions = Vector3.right * boxWidth + Vector3.up + Vector3.forward * boxLength;
 
         // Find player hit and deal damage
-        Runner.LagCompensation.OverlapBox(midwayPointRef, boxDimensions, Quaternion.identity, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
+        Runner.LagCompensation.OverlapBox(midwayPointRef, boxDimensions, transform.rotation, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
 
         for (int i = 0; i < hits.Count; i++)
         {

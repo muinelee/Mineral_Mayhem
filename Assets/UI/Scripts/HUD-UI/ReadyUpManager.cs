@@ -256,6 +256,9 @@ public class ReadyUpManager : MonoBehaviour
             {
                 Destroy(playerTeamDisplayPair[player].gameObject);
                 playerTeamDisplayPair.Remove(player);
+                if (blueTeamList.Contains(player)) blueTeamList.Remove(player);
+                if (redTeamList.Contains(player)) redTeamList.Remove(player);
+                if (undecidedTeamList.Contains(player)) undecidedTeamList.Remove(player);
                 NetworkPlayer.Players.Remove(player);
                 break;
             }

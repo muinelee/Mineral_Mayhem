@@ -236,7 +236,7 @@ AnimatorController:
   - serializedVersion: 5
     m_Name: Base Layer
     m_StateMachine: {fileID: 1482548660696854722}
-    m_Mask: {fileID: 31900000, guid: 2a428d9b3f49754409d4bceaaa444aab, type: 2}
+    m_Mask: {fileID: 31900000, guid: a47a8c64aa780db48852c79835f6d5e5, type: 2}
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0
@@ -253,7 +253,7 @@ AnimatorController:
     m_Behaviours: []
     m_BlendingMode: 0
     m_SyncedLayerIndex: -1
-    m_DefaultWeight: 0
+    m_DefaultWeight: 1
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
@@ -320,14 +320,14 @@ AnimatorStateMachine:
     m_State: {fileID: -57498519980928680}
     m_Position: {x: 1220, y: 60, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 1978664607142289445}
-    m_Position: {x: 640, y: 120, z: 0}
-  - serializedVersion: 1
     m_State: {fileID: 6092229110419123804}
     m_Position: {x: 639.86584, y: -71.04108, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -919181716064320417}
     m_Position: {x: 640, y: -20, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 3566662354547292876}
+    m_Position: {x: 640, y: 120, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -360,7 +360,7 @@ AnimatorStateMachine:
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 4292022891818310550}
---- !u!1102 &1978664607142289445
+--- !u!1102 &3566662354547292876
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
@@ -421,7 +421,7 @@ BlendTree:
   m_Name: Run
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 2bc1f62c95bc4dc48b4385590f4d473b, type: 2}
+    m_Motion: {fileID: 7400000, guid: e40464272fc479349a69dd93e47364f1, type: 2}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -429,7 +429,7 @@ BlendTree:
     m_DirectBlendParameter: Haxis
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 44899cebcac54ca48bca79eb7b9e7662, type: 2}
+    m_Motion: {fileID: 7400000, guid: 04765addf17faad4db59d05d3c76ac8c, type: 2}
     m_Threshold: 0.25
     m_Position: {x: 0, y: 0.8}
     m_TimeScale: 1
@@ -437,7 +437,7 @@ BlendTree:
     m_DirectBlendParameter: Haxis
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: da9dab349a80dac45bb01d17ef8aee36, type: 2}
+    m_Motion: {fileID: 7400000, guid: 0077da81b06703346930e136cf83a60c, type: 2}
     m_Threshold: 0.5
     m_Position: {x: 0, y: -0.8}
     m_TimeScale: 1

@@ -8,7 +8,7 @@ public class EnergyPickup : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!Object.HasStateAuthority) return;
+        if (!FindObjectOfType<NetworkRunner>().IsServer) return;
 
         if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
         {

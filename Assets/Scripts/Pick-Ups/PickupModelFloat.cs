@@ -22,6 +22,6 @@ public class PickupModelFloat : MonoBehaviour
         transform.position = new Vector3(transform.position.x, Yupdate, transform.position.z);
 
         //Rotating
-        transform.Rotate(Vector3.forward, rotateSpeed * Time.deltaTime);
+        transform.Rotate(Vector3.up, rotateSpeed * Time.deltaTime);
     }
 }

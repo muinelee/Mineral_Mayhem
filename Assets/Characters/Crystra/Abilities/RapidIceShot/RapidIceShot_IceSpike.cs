@@ -113,7 +113,7 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
                 }
 
                 //send damage to health handler as int
-                healthComponent.OnTakeDamage((int)totalDamage);
+                healthComponent.OnTakeDamage(totalDamage);
                 TrackAttacks();
 
                 //debug attack index

@@ -52,7 +52,7 @@ public class NetworkPlayer_Movement : CharacterComponent
                     Vector3 moveDir = new Vector3(horizontalDir, 0, verticalDir).normalized;
 
                     // Move
-                    Character.Rigidbody.Rigidbody.AddForce(moveDir * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
+                    if (Runner.IsServer) Character.Rigidbody.Rigidbody.AddForce(moveDir * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
 
                     // Dash (Can be a boost or buff)
                     if (input.IsDown(NetworkInputData.ButtonDash)) MobilityAbility(moveDir);
@@ -70,6 +70,8 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     private void Aim()
     {
+        if (!Runner.IsServer) return;
+
         // Rotate player over time to the target angle
         float targetAngle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
         float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVel, turnTime + turnSlow);
