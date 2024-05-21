@@ -61,6 +61,16 @@ public class ReadyUpManager : MonoBehaviour
         NetworkPlayer.Local.RPC_StartGame();
     }
 
+    public void OnQuitGame()
+    {
+        FindObjectOfType<Arena>().QuitToMenu();
+    }
+
+    public void FadeScreenIn()
+    {
+        FindObjectOfType<CG_ScreenFade>().FadeIn();
+    }
+
     public void PrimeReadyUpUI(NetworkPlayer player)
     {
         if (player.HasStateAuthority)
@@ -85,13 +95,19 @@ public class ReadyUpManager : MonoBehaviour
         if (NetworkPlayer.Local.team == NetworkPlayer.Team.Undecided) return;
 
         NetworkPlayer.Local.RPC_ReadyUp();
+        readyUp.SetActive(true);
+        readyUp.GetComponent<CG_Fade>().FadeOut();
         unReadyUp.SetActive(true);
+        unReadyUp.GetComponent<CG_Fade>().FadeIn();
     }
 
     public void OnUnreadyUp()
     {
         NetworkPlayer.Local.RPC_UnReadyUp();
-        unReadyUp.SetActive(false);
+        unReadyUp.SetActive(true);
+        unReadyUp.GetComponent<CG_Fade>().FadeOut();
+        readyUp.SetActive(true);
+        readyUp.GetComponent<CG_Fade>().FadeIn();
     }
 
     public void ReadyUp(NetworkPlayer player)
@@ -120,14 +136,14 @@ public class ReadyUpManager : MonoBehaviour
     public void OnJoinBlueTeam()
     {
         NetworkPlayer.Local.RPC_JoinBlueTeam();
-        unReadyUp.SetActive(false);
+        //unReadyUp.SetActive(false);
         CheckIsOthersReady();
     }
 
     public void OnJoinRedTeam()
     {
         NetworkPlayer.Local.RPC_JoinRedTeam();
-        unReadyUp.SetActive(false);
+        //unReadyUp.SetActive(false);
         CheckIsOthersReady();
     }
 
@@ -137,6 +153,14 @@ public class ReadyUpManager : MonoBehaviour
         if (blueTeamList.Contains(player)) return;
         if (redTeamList.Contains(player)) redTeamList.Remove(player);
         if (undecidedTeamList.Contains(player)) undecidedTeamList.Remove(player);
+
+        if (player.isReady)
+        {
+            unReadyUp.SetActive(true);
+            unReadyUp.GetComponent<CG_Fade>().FadeOut();
+            readyUp.SetActive(true);
+            readyUp.GetComponent<CG_Fade>().FadeIn();
+        }
 
         player.isReady = false;
 
@@ -161,6 +185,14 @@ public class ReadyUpManager : MonoBehaviour
         if (redTeamList.Contains(player)) return;
         if (blueTeamList.Contains(player)) blueTeamList.Remove(player);
         if (undecidedTeamList.Contains(player)) undecidedTeamList.Remove(player);
+
+        if (player.isReady)
+        {
+            unReadyUp.SetActive(true);
+            unReadyUp.GetComponent<CG_Fade>().FadeOut();
+            readyUp.SetActive(true);
+            readyUp.GetComponent<CG_Fade>().FadeIn();
+        }
 
         player.isReady = false;
 
