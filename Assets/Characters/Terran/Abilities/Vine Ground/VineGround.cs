@@ -13,7 +13,7 @@ public class VineGround : NetworkAttack_Base
     private TickTimer tickRateTimer = TickTimer.None;
 
     // Player hit variables
-    private List<StatusHandler> playersHit;
+    private List<StatusHandler> playersHit = new List<StatusHandler>();
     [SerializeField] private LayerMask playerLayer;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
