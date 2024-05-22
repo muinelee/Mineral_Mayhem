@@ -107,17 +107,38 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public void PlayQVoiceLine()
     {
-        if (qAttack.GetVoiceLine() != null) AudioManager.Instance.PlayAudioSFX(qAttack.GetVoiceLine(), transform.localPosition);
+        var voiceLines = qAttack.GetVoiceLine();
+        if (voiceLines != null && voiceLines.Length >0)
+        {
+            int randomIndex = Random.Range(0, voiceLines.Length);
+            AudioClip randomVoiceLine = voiceLines[randomIndex];
+            AudioManager.Instance.PlayAudioSFX(randomVoiceLine, transform.localPosition);
+        }
+        //if (qAttack.GetVoiceLine() != null) AudioManager.Instance.PlayAudioSFX(qAttack.GetVoiceLine(), transform.localPosition);
     }
 
     public void PlayEVoiceLine()
     {
-        if (eAttack.GetVoiceLine() != null) AudioManager.Instance.PlayAudioSFX(eAttack.GetVoiceLine(), transform.localPosition);
+        var voiceLines = eAttack.GetVoiceLine();
+        if (voiceLines != null && voiceLines.Length > 0)
+        {
+            int randomIndex = Random.Range(0, voiceLines.Length);
+            AudioClip randomVoiceLine = voiceLines[randomIndex];
+            AudioManager.Instance.PlayAudioSFX(randomVoiceLine, transform.localPosition);
+        }
+        //if (eAttack.GetVoiceLine() != null) AudioManager.Instance.PlayAudioSFX(eAttack.GetVoiceLine(), transform.localPosition);
     }
 
     public void PlayFVoiceLine()
     {
-        if (fAttack.GetVoiceLine() != null) AudioManager.Instance.PlayAudioSFX(fAttack.GetVoiceLine(), transform.localPosition);
+        var voiceLines = fAttack.GetVoiceLine();
+        if (voiceLines != null && voiceLines.Length > 0)
+        {
+            int randomIndex = Random.Range(0, voiceLines.Length);
+            AudioClip randomVoiceLine = voiceLines[randomIndex];
+            AudioManager.Instance.PlayAudioSFX(randomVoiceLine, transform.localPosition);
+        }
+        //if (fAttack.GetVoiceLine() != null) AudioManager.Instance.PlayAudioSFX(fAttack.GetVoiceLine(), transform.localPosition);
     }
 
     private void ActivateBasicAttack()
