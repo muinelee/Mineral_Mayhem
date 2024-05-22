@@ -17,8 +17,6 @@ public class Terran_BasicAttack : NetworkAttack_Base
     [SerializeField] private float lifetimeDuration;
     private TickTimer lifeTimer = TickTimer.None;
 
-
-
     public override void Spawned()
     {
         base.Spawned();
