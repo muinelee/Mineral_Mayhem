@@ -15,6 +15,7 @@ public class CharacterEntity : CharacterComponent
     public event Action<StatusEffect> OnStatusEndedEvent;
     public event Action OnCleanseEvent;
     public event Action OnPickupEvent;
+    public event Action<float> OnEnergyChangeEvent;
     public event Action OnCharacterDeathEvent;
     public event Action OnRoundEndEvent;
 
@@ -108,7 +109,7 @@ public class CharacterEntity : CharacterComponent
     public bool hasDespawned = false;
     public SpriteRenderer TeamIndicator;
 
-    public NetworkObject Shield;
+    public GameObject Shield;
 
     public static readonly List<CharacterEntity> Characters = new List<CharacterEntity>();
 
@@ -126,6 +127,8 @@ public class CharacterEntity : CharacterComponent
             if (component == this) continue;
             component.Init(this);
         }
+
+        if (Object.HasInputAuthority) NetworkCameraEffectsManager.instance.SetPlayerCamera(transform);
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)

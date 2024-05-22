@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using Unity.VisualScripting;
+using UnityEditor;
 
 public class LavaDive : NetworkAttack_Base 
 {
@@ -10,7 +11,6 @@ public class LavaDive : NetworkAttack_Base
     [SerializeField] private LayerMask collisionLayer;
 
     [Header("Trail Damage Properties")]
-    [SerializeField] private float diveDistance;
     [SerializeField] private float boxWidth;
     [SerializeField] private float tickRate = 0.5f;
     [SerializeField] private int tickDamage = 3;
@@ -34,12 +34,17 @@ public class LavaDive : NetworkAttack_Base
 
     public override void Spawned()
     {
+        base.Spawned();
+
         AttackStart();
+
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
     }
 
     public override void FixedUpdateNetwork()
     {
-        if (Runner.IsServer)
+        if (Object.HasStateAuthority)
         {
             if (lingerTimer.Expired(Runner)) AttackEnd();
 
@@ -50,11 +55,10 @@ public class LavaDive : NetworkAttack_Base
 
             character.Rigidbody.Rigidbody.AddForce(transform.forward * forceForward);
 
-            // Check if player reached max distance and let the attack linger
         }
 
         if (finishDive) return;
-        if (Vector3.Magnitude(character.transform.position - transform.position) > diveDistance || dashTimer.Expired(Runner)) DiveEnd();
+        if (dashTimer.Expired(Runner)) DiveEnd();
         trail.position = character.transform.position;
     }
 
@@ -87,23 +91,19 @@ public class LavaDive : NetworkAttack_Base
 
     private void AttackEnd()
     {
+        lingerTimer = TickTimer.None;
         Runner.Despawn(Object);
     }
 
     private void DiveEnd()
     {
-        // Temp for showcase to Brad
-
         character.Animator.anim.CrossFade("LavaDiveEnd", 0.1f);
-
-        // Temp
-
+        AudioManager.Instance.PlayAudioSFX(SFX[2], transform.position);
 
         DealDamage();
         if (Runner.IsServer) Runner.Spawn(attackEndVFX, character.transform.position, Quaternion.identity);
         lingerTimer = TickTimer.CreateFromSeconds(Runner, lingerTime);
 
-        //character.Animator.ResetAnimation();
         finishDive = true;
         character.Collider.enabled = true;
     }
@@ -123,18 +123,23 @@ public class LavaDive : NetworkAttack_Base
         if (!finishDive) midwayPointRef = transform.position + ((character.transform.position - transform.position) / 2);
         
         // Overlap box dimensions
-        float boxLength = Vector3.Magnitude(midwayPointRef - transform.position) * 2;
+        float boxLength = Vector3.Magnitude(midwayPointRef - transform.position) * 3f;
         Vector3 boxDimensions = Vector3.right * boxWidth + Vector3.up + Vector3.forward * boxLength;
 
         // Find player hit and deal damage
-        Runner.LagCompensation.OverlapBox(midwayPointRef, boxDimensions, Quaternion.identity, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
+        Runner.LagCompensation.OverlapBox(midwayPointRef, boxDimensions, transform.rotation, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
 
         for (int i = 0; i < hits.Count; i++)
         {
             // Apply damage
             IHealthComponent healthComponent = hits[i].GameObject.GetComponentInParent<IHealthComponent>();
 
-            if (healthComponent != null) healthComponent.OnTakeDamage(tickDamage);
+            if (healthComponent != null)
+            {
+                if (healthComponent.isDead || CheckIfSameTeam(healthComponent.team)) continue;
+
+                healthComponent.OnTakeDamage(tickDamage);
+            }
 
             // Apply status effect
             CharacterEntity playerHit = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
@@ -171,6 +176,8 @@ public class LavaDive : NetworkAttack_Base
 
             if (healthComponent != null)
             {
+                if (healthComponent.isDead || CheckIfSameTeam(healthComponent.team)) continue;
+
                 healthComponent.OnTakeDamage(damage);
 
                 Vector3 playerhitPosition = hits[i].GameObject.transform.position;

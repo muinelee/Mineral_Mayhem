@@ -11,14 +11,25 @@ public class BTN_Animation : MonoBehaviour
     private float startValue = 1;
     private float endValue = 1.25f;
     [SerializeField] float sizeMultiplier = -0.25f;
-    private Color colorNormal;
-    [SerializeField] Color colorPressed;
+
+    [Header("MouseOver/Off Animation")]
     [SerializeField] Image[] imagesToChangeColor;
-    [SerializeField] TextMeshProUGUI[] textToChangeColor;
+    [SerializeField] Color[] colorNormal;
+    [SerializeField] Color[] colorChanged;
+    [SerializeField] Color[] colorDisabled;
+    [SerializeField] Image[] imagesToSpriteSwap;
+    [SerializeField] Sprite[] spriteNormal;
+    [SerializeField] Sprite[] spriteChanged;
+    [SerializeField] Sprite[] spriteDisabled;
+    [SerializeField] TextMeshProUGUI[] textToChangeFont;
+    [SerializeField] TMP_FontAsset[] fontNormal;
+    [SerializeField] TMP_FontAsset[] fontChanged;
+    [SerializeField] TMP_FontAsset[] fontDisabled;
+
+    [SerializeField] bool lockColor;
 
     private float curScale;
     private float lastScale;
-    [SerializeField] bool lockColor;
 
     //-----------------------------------//
 
@@ -29,28 +40,35 @@ public class BTN_Animation : MonoBehaviour
         lastScale = curScale;
 
         endValue = startValue + (startValue * sizeMultiplier);
-
-        colorNormal = gameObject.GetComponent<Image>().color;
+    }
+    private void OnDisable()
+    {
+        ColorRevert();
     }
 
     public void ColorChange()
     {
         if (!lockColor)
         {
-            gameObject.GetComponent<Image>().color = colorPressed;
-
             if (imagesToChangeColor.Length > 0)
             {
                 for (int i = 0; i < imagesToChangeColor.Length; i++)
                 {
-                    imagesToChangeColor[i].color = colorPressed;
+                    imagesToChangeColor[i].color = colorChanged[i];
                 }
             }
-            if (textToChangeColor.Length > 0)
+            if (imagesToSpriteSwap.Length > 0)
             {
-                for (int i = 0; i < textToChangeColor.Length; i++)
+                for (int i = 0; i < imagesToSpriteSwap.Length; i++)
                 {
-                    textToChangeColor[i].color = colorPressed;
+                    imagesToSpriteSwap[i].sprite = spriteChanged[i];
+                }
+            }
+            if (textToChangeFont.Length > 0)
+            {
+                for (int i = 0; i < textToChangeFont.Length; i++)
+                {
+                    textToChangeFont[i].font = fontChanged[i];
                 }
             }
         }
@@ -59,21 +77,50 @@ public class BTN_Animation : MonoBehaviour
     {
         if (!lockColor)
         {
-            gameObject.GetComponent<Image>().color = colorNormal;
-
             if (imagesToChangeColor.Length > 0)
             {
                 for (int i = 0; i < imagesToChangeColor.Length; i++)
                 {
-                    imagesToChangeColor[i].color = colorNormal;
+                    imagesToChangeColor[i].color = colorNormal[i];
                 }
             }
-            if (textToChangeColor.Length > 0)
+            if (imagesToSpriteSwap.Length > 0)
             {
-                for (int i = 0; i < textToChangeColor.Length; i++)
+                for (int i = 0; i < imagesToSpriteSwap.Length; i++)
                 {
-                    textToChangeColor[i].color = colorNormal;
+                    imagesToSpriteSwap[i].sprite = spriteNormal[i];
                 }
+            }
+            if (textToChangeFont.Length > 0)
+            {
+                for (int i = 0; i < textToChangeFont.Length; i++)
+                {
+                    textToChangeFont[i].font = fontNormal[i];
+                }
+            }
+        }
+    }
+    public void ColorDisable()
+    {
+        if (imagesToChangeColor.Length > 0)
+        {
+            for (int i = 0; i < imagesToChangeColor.Length; i++)
+            {
+                imagesToChangeColor[i].color = colorDisabled[i];
+            }
+        }
+        if (imagesToSpriteSwap.Length > 0)
+        {
+            for (int i = 0; i < imagesToSpriteSwap.Length; i++)
+            {
+                imagesToSpriteSwap[i].sprite = spriteDisabled[i];
+            }
+        }
+        if (textToChangeFont.Length > 0)
+        {
+            for (int i = 0; i < textToChangeFont.Length; i++)
+            {
+                textToChangeFont[i].font = fontDisabled[i];
             }
         }
     }

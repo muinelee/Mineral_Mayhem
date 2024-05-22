@@ -1,6 +1,7 @@
+using Fusion;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RoundUI : MonoBehaviour
 {
@@ -10,14 +11,35 @@ public class RoundUI : MonoBehaviour
     int redWins = 0;
 
     [Header("UI Element References")]
-    [SerializeField] CG_Fade gemBlue1;
-    [SerializeField] CG_Fade gemBlue2;
-    [SerializeField] CG_Fade gemBlue3;
-    [SerializeField] CG_Fade gemRed1;
-    [SerializeField] CG_Fade gemRed2;
-    [SerializeField] CG_Fade gemRed3;
+    [SerializeField] Image gemLeft1;
+    [SerializeField] Image gemLeftOutline1;
+    [SerializeField] Image gemLeft2;
+    [SerializeField] Image gemLeftOutline2;
+    [SerializeField] Image gemLeft3;
+    [SerializeField] Image gemLeftOutline3;
+    [SerializeField] Image gemRight1;
+    [SerializeField] Image gemRightOutline1;
+    [SerializeField] Image gemRight2;
+    [SerializeField] Image gemRightOutline2;
+    [SerializeField] Image gemRight3;
+    [SerializeField] Image gemRightOutline3;
 
-    [SerializeField] GameObject roundUIBar;
+    [Header("Asset References")]
+    [SerializeField] Sprite gemGrey;
+    [SerializeField] Sprite gemGreyOutline;
+    [SerializeField] Sprite gemBlue;
+    [SerializeField] Sprite gemBlueOutline;
+    [SerializeField] Sprite gemRed;
+    [SerializeField] Sprite gemRedOutline;
+
+    [SerializeField] CG_Fade roundUIBar;
+
+    [Header("Lerp Settings")]
+    [SerializeField] private float lerpDuration = 0.5f;
+    [SerializeField] private float startScaleX = 0;
+    [SerializeField] private float endScaleX = 1f;
+
+    private float curValue;
 
     //------------------------------//
 
@@ -28,15 +50,6 @@ public class RoundUI : MonoBehaviour
             instance = this;
         }
     }
-    private void Start()
-    {
-        gemBlue1.gameObject.SetActive(false);
-        gemBlue2.gameObject.SetActive(false);
-        gemBlue3.gameObject.SetActive(false);
-        gemRed1.gameObject.SetActive(false);
-        gemRed2.gameObject.SetActive(false);
-        gemRed3.gameObject.SetActive(false);
-    }
 
     public void BlueWin()
     {
@@ -44,24 +57,22 @@ public class RoundUI : MonoBehaviour
         {
             blueWins = 1;
 
-            gemBlue1.gameObject.SetActive(true);
-            gemBlue1.FadeIn();
+            gemLeft1.sprite = gemBlue;
+            gemLeftOutline1.sprite = gemBlueOutline;
         }
         else if (blueWins == 1)
         {
             blueWins = 2;
 
-            gemBlue2.gameObject.SetActive(true);
-            gemBlue2.FadeIn();
+            gemLeft2.sprite = gemBlue;
+            gemLeftOutline2.sprite = gemBlueOutline;
         }
         else if (blueWins == 2)
         {
             blueWins = 3;
 
-            gemBlue3.gameObject.SetActive(true);
-            gemBlue3.FadeIn();
-
-            GameOver(true);
+            gemLeft3.sprite = gemBlue;
+            gemLeftOutline3.sprite = gemBlueOutline;
         }
     }
     public void RedWin()
@@ -70,41 +81,73 @@ public class RoundUI : MonoBehaviour
         {
             redWins = 1;
 
-            gemRed1.gameObject.SetActive(true);
-            gemRed1.FadeIn();
+            gemLeft1.sprite = gemRed;
+            gemLeftOutline1.sprite = gemRedOutline;
         }
         else if (redWins == 1)
         {
             redWins = 2;
 
-            gemRed2.gameObject.SetActive(true);
-            gemRed2.FadeIn();
+            gemLeft2.sprite = gemRed;
+            gemLeftOutline2.sprite = gemRedOutline;
         }
         else if (redWins == 2)
         {
             redWins = 3;
 
-            gemRed3.gameObject.SetActive(true);
-            gemRed3.FadeIn();
-
-            GameOver(false);
+            gemLeft3.sprite = gemRed;
+            gemLeftOutline3.sprite = gemRedOutline;
         }
     }
 
-    private void GameOver(bool blue)
+    public void CollapseRoundUI()
     {
-        if (blue == true)
-        { 
-            
-        }
-        else
+        StartCoroutine(iCollapseRoundUI());
+    }
+    private IEnumerator iCollapseRoundUI()
+    {
+        float timeElapsed = 0;
+        while (timeElapsed < lerpDuration)
         {
 
+            curValue = Mathf.Lerp(endScaleX, startScaleX, timeElapsed / lerpDuration);
+            roundUIBar.transform.localScale = new Vector3(curValue, roundUIBar.transform.localScale.y, roundUIBar.transform.localScale.z);
+
+            timeElapsed += Time.unscaledDeltaTime;
+            yield return null;
         }
+        curValue = startScaleX;
+        roundUIBar.transform.localScale = new Vector3(startScaleX, roundUIBar.transform.localScale.y, roundUIBar.transform.localScale.z);
     }
 
-    public void StartRound()
+    public void ExpandRoundUI()
+    {
+        StartCoroutine(iExpandRoundUI());
+    }
+    private IEnumerator iExpandRoundUI()
+    {
+        float timeElapsed = 0;
+        while (timeElapsed < lerpDuration)
+        {
+
+            curValue = Mathf.Lerp(startScaleX, endScaleX, timeElapsed / lerpDuration);
+            roundUIBar.transform.localScale = new Vector3(curValue, roundUIBar.transform.localScale.y, roundUIBar.transform.localScale.z);
+
+            timeElapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        curValue = endScaleX;
+        roundUIBar.transform.localScale = new Vector3(endScaleX, roundUIBar.transform.localScale.y, roundUIBar.transform.localScale.z);
+    }
+
+    public void ShowRoundUI()
     {
         roundUIBar.gameObject.SetActive(true);
+        roundUIBar.FadeIn();
+    }
+    public void HideRoundUI()
+    {
+        roundUIBar.gameObject.SetActive(true);
+        roundUIBar.FadeOut();
     }
 }

@@ -38,7 +38,7 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
         if (Object.HasInputAuthority)
         {
             nonLocalPlayerHealthBar.gameObject.SetActive(false);
-            RPC_SetPlayerName(NetworkPlayer.Local.playerName.ToString());
+            RPC_SetPlayerName(NetworkPlayer.Local.playerName.ToString(), NetworkPlayer.Local.team);
         }
         else nonLocalPlayerHealthBar.gameObject.SetActive(true);
 
@@ -54,9 +54,21 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
         transform.LookAt(cam.transform.rotation * Vector3.forward + transform.position, cam.transform.rotation * Vector3.up);
     }
 
+    public void ShowFloatingHealthBar()
+    {
+        nonLocalPlayerHealthBar.gameObject.SetActive(true);
+    }
+
+    public void HideFloatingHealthBar()
+    {
+        nonLocalPlayerHealthBar.gameObject.SetActive(false);
+    }
+
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    public void RPC_SetPlayerName(string name)
+    public void RPC_SetPlayerName(string name, NetworkPlayer.Team team)
     {
         this.playerName.text = name;
+        if (team == NetworkPlayer.Team.Red) this.playerName.color = Color.red;
+        else if (team == NetworkPlayer.Team.Blue) this.playerName.color = Color.blue;
     }
 }

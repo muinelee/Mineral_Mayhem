@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
-using Unity.VisualScripting;
+using System.Collections;
 
 public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 {
@@ -10,7 +8,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public float HP { get; set; }
 
     // Callback is Temporary until OnHPChanged is implemented
-    [Networked(OnChanged = nameof(OnHPChanged))] 
+    [Networked(OnChanged = nameof(OnHPChanged))]  
     public float BP { get; set; }
 
     [Networked(OnChanged = nameof(OnStateChanged))]
@@ -31,29 +29,55 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     [SerializeField] private float blockRechargeRate = 10.0f;   // Can change for balancing
     public bool canBlock = true;
 
+    // Team Cam Properties
+    [SerializeField] private float timeUntilTeamCam = 5;
+    [SerializeField] private TickTimer teamCamTimer = TickTimer.None;
+
+    [SerializeField] private Material shaderGraphMaterial;
+    private Material materialInstance;
+
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
         character.SetHealth(this);
+        PrimeShieldMaterial();
     }
 
     public override void FixedUpdateNetwork()
     {
         HandleBlockMeter();
+        HandleTeamCam();
+        HandleBlockVisual();
     }
 
     // Start is called before the first frame update
     public override void Spawned()
     {
         if (HP == startingHP) isDead = false;
+        RoundManager rm = RoundManager.Instance; 
+        if (rm != null)
+        {
+            rm.ResetRound += Respawn;
+            rm.MatchEndEvent += DisableControls; 
+        }
+        else
+        {
+            Respawn(); 
+        }
+    }
 
-        RoundManager.Instance.ResetRound += Respawn;
-        RoundManager.Instance.MatchEndEvent += DisableControls;
+    private void PrimeShieldMaterial()
+    {
+        if (!shaderGraphMaterial) return;
+        materialInstance = new Material(shaderGraphMaterial);
+        Renderer renderer = Character.Shield.GetComponent<Renderer>();
+        if (renderer) renderer.material = materialInstance;
+        else Debug.Log($"No Renderer on Shield found for {gameObject.name}");
     }
 
     public override void OnHit(float x)
     {
-        OnTakeDamage((int)x);
+        OnTakeDamage(x);
     }
 
     public void HandleBlockMeter()
@@ -79,34 +103,49 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         canBlock = false;
         Character.OnStatusBegin(blockDepletedStun);
-        Runner.Despawn(Character.Shield);
-        Character.Shield = null;
+    }
+
+    private void HandleBlockVisual()
+    {
+        if (materialInstance)
+        {
+            materialInstance.SetFloat("_alpha", BP / startingBP);
+        }
+    }
+
+    private void HandleTeamCam()
+    {
+        if (!Object.HasInputAuthority) return;
+
+        if (HP > 0)
+        {
+            if (teamCamTimer.IsRunning) teamCamTimer = TickTimer.None;
+            return;
+        }
+
+        if (teamCamTimer.Expired(Runner))
+        {
+            teamCamTimer = TickTimer.None;
+            NetworkCameraEffectsManager.instance.GoToTeamCamera();
+        }
     }
 
     // Function only called on the server
-    public void OnTakeDamage(int damageAmount)
+    public void OnTakeDamage(float damageAmount)
     {
-        if (damageAmount < 0)
-        {
-            Debug.Log("Damage is negative");
-            return;
-        }
-
-        if (isDead)
-        {
-            return;
-        }
+        if (damageAmount < 0 || isDead) return;
 
         //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
-        int currDamageAmount = (int) (damageAmount * Character.StatusHandler.GetDamageReduction());
+        float currDamageAmount = damageAmount * Character.StatusHandler.GetDamageReduction();
 
         if (Character.Attack.isDefending)
         {
-            int blockDamageAmount = (int) (currDamageAmount * (blockDamageReduction));
+            float blockDamageAmount = (currDamageAmount * (blockDamageReduction));
             BP = Mathf.Max(BP - blockDamageAmount, 0);
-            currDamageAmount = (int) (currDamageAmount * (1 - blockDamageReduction));
+            currDamageAmount = (currDamageAmount * (1 - blockDamageReduction));
         }
-        HP -= (int) currDamageAmount;
+
+        HP -= currDamageAmount;
 
         if (HP <= 0)
         {
@@ -130,16 +169,22 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         DisableControls();
 
+        teamCamTimer = TickTimer.CreateFromSeconds(Runner, timeUntilTeamCam);
+
         Character.Animator.anim.CrossFade("Death", 0.2f);
 
         if (!NetworkPlayer.Local.HasStateAuthority) return;
-        if (team == NetworkPlayer.Team.Red) RoundManager.Instance.RedPlayersDies();
-        else RoundManager.Instance.BluePlayersDies(); 
+        if (RoundManager.Instance)
+        {
+            if (team == NetworkPlayer.Team.Red) RoundManager.Instance.RedPlayersDies();
+            else RoundManager.Instance.BluePlayersDies();
+        }
     }
     public void HandleRespawn()
     {
         EnableControls();
         Character.Animator.anim.Play("Run");
+        if (Object.HasInputAuthority) NetworkCameraEffectsManager.instance.GoToTopCamera();
     }
 
     static void OnHPChanged(Changed<NetworkPlayer_Health> changed)
@@ -169,6 +214,14 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         isDead = false;
         HP = startingHP;
+        StartCoroutine(ResetEnergy());
+    }
+
+    private IEnumerator ResetEnergy()
+    {
+        yield return 0;
+
+        Character.Energy.energy = 0;
     }
 
     public void DisableControls()
@@ -202,7 +255,10 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     public void OnDestroy()
     {
-        RoundManager.Instance.ResetRound -= Respawn;
-        RoundManager.Instance.MatchEndEvent -= DisableControls;
+        if (RoundManager.Instance)
+        {
+            RoundManager.Instance.ResetRound -= Respawn;
+            RoundManager.Instance.MatchEndEvent -= DisableControls;
+        }
     }
 }

@@ -1,16 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using TMPro;
-using System.Linq;
 using UnityEngine.Events;
 
 public class PlayerJoinScreenUI : MonoBehaviour
 {
     private NetworkRunnerHandler networkRunnerHandler;
-    private string[] roomAddress = new string[] { "RaeLeda/RaeLedaTrainingRoom", "RichardCPhoton" };
-    private string map;
+    private string[] roomAddress = new string[] { "TrainingRoom", "RichardCPhoton" };
 
     public UnityEvent BackToMainMenu;
 
@@ -27,13 +22,13 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
     public void OnStartNewSessionClicked()
     {
-        networkRunnerHandler.CreateGame(ClientInfo.LobbyName, "RichardCPhoton");
+        if (networkRunnerHandler.GetRoomSize() <= 1) return;
+        CreateGame(roomAddress[1]); 
     }
 
     public void OnBackClicked()
     {
         networkRunnerHandler.SetRoomSize(1);
-        map = "";
     }
 
     // Maybe hide panels on game joined?
@@ -45,16 +40,19 @@ public class PlayerJoinScreenUI : MonoBehaviour
 
     public void OnTrainingClicked()
     {
-        map = roomAddress[0];
-    }
-
-    public void OnArenaClicked()
-    {
-        map = roomAddress[1];
+        SetRoomSize(1);
+        float variableRoomName = Random.Range(0, 30000);
+        string trainingRoomName = "TrainingRoom" + variableRoomName.ToString();
+        networkRunnerHandler.CreateGame(trainingRoomName, roomAddress[0]);
     }
 
     public void OnQuitClicked()
     {
         BackToMainMenu?.Invoke();
+    }
+
+    private void CreateGame(string game)
+    {
+        networkRunnerHandler.CreateGame(ClientInfo.LobbyName, game);
     }
 }

@@ -18,19 +18,24 @@ public class BTN_OpenClose : MonoBehaviour
     public bool disabled = false;
 
     public UnityEvent onPress;
+    public UnityEvent onPressDelayed;
 
     //------------------------------------//
 
     public void OnPress()
     {
         if (!disabled)
+        {
+            ButtonCooldownManager.instance.ButtonCooldown();
+            onPress?.Invoke();
             StartCoroutine(iOnPress());
+        }
     }
     private IEnumerator iOnPress()
     {
-        onPress?.Invoke();
-
         yield return new WaitForSecondsRealtime(delayTime);
+
+        onPressDelayed?.Invoke();
 
         if (quit)
         {
@@ -68,5 +73,10 @@ public class BTN_OpenClose : MonoBehaviour
                 groupToClose[i].FadeOut();
             }
         }
+    }
+
+    public void EnableButton()
+    {
+        enabled = true;
     }
 }

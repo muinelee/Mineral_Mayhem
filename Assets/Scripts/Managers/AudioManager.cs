@@ -5,12 +5,9 @@ using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
-    private Queue<AudioSource> threeDAudioPool;
-    private Queue<AudioSource> twoDAudioPool;
-
-    [SerializeField] private AudioSource twoDTemplate;
-    [SerializeField] private AudioSource threeDTemplate;
-    [SerializeField] private int numberOfPool = 15;
+    private Queue<AudioSource> audioPool;
+    [SerializeField] private AudioSource audioTemplate;
+    [SerializeField] private int poolSize = 15;
     [SerializeField] private AudioMixer mixer;
 
     public static AudioManager Instance { get; private set; }
@@ -25,42 +22,31 @@ public class AudioManager : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
 
-        threeDAudioPool = new Queue<AudioSource>();
-        twoDAudioPool = new Queue<AudioSource>();
+        audioPool = new Queue<AudioSource>();
 
-        for (int i = 0; i < numberOfPool; i++)
+        for (int i = 0; i < poolSize; i++)
         {
-            AudioSource threeD = Instantiate(threeDTemplate, transform);
-            threeDAudioPool.Enqueue(threeD);
-
-            AudioSource twoD = Instantiate(twoDTemplate, transform);
-            twoDAudioPool.Enqueue(twoD);
+            AudioSource sourceAudio = Instantiate(audioTemplate, transform);
+            audioPool.Enqueue(sourceAudio);
         }
     }
 
-    public AudioSource GetTwoDimensionalSource()
+    public void PlayAudioSFX(AudioClip clip, Vector3 origin)
     {
-        AudioSource source = twoDAudioPool.Dequeue();
-        twoDAudioPool.Enqueue(source);
-        return source;
-    }
-
-    public void PlayAudioSFX(AudioClip clip)
-    {
-        AudioSource source = GetTwoDimensionalSource();
+        AudioSource source = GetThreeDimensionalSource(origin);
         source.clip = clip;
         source.Play();
     }
 
     public AudioSource GetThreeDimensionalSource(Vector3 origin)
     {
-        if (threeDAudioPool.Count <= 0)
+        if (audioPool.Count <= 0)
         {
-            AudioSource threeD = Instantiate(threeDTemplate, transform);
-            threeDAudioPool.Enqueue(threeD);
+            AudioSource sourceAudio = Instantiate(audioTemplate, transform);
+            audioPool.Enqueue(sourceAudio);
         }
 
-        AudioSource source = threeDAudioPool.Dequeue();
+        AudioSource source = audioPool.Dequeue();
         //threeDAudioPool.Enqueue(source);
         source.transform.position = origin;
         return source;
@@ -73,7 +59,7 @@ public class AudioManager : MonoBehaviour
         source.pitch = 1;
         source.volume = 1;
 
-        threeDAudioPool.Enqueue(source);
+        audioPool.Enqueue(source);
     }
 
     public void SetMixerVolume(string name, float value)

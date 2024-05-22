@@ -35,15 +35,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
 
     [Networked] public NetworkBool isReady { get; set; } = false;
 
-    public enum Team { Undecided, Red, Blue};
+    public enum Team { Undecided, Red, Blue, Neutral};
     [Networked] public Team team { get; set; } = Team.Undecided;
 
     [Networked] public int tokenID { get; set; }        // Value is set when spawned by CharacterSpawner
 
     [Header("Team Properties")]
-
-    [Header("Camera Offset")]
-    [SerializeField] private float cameraAngle;
 
     [Header("Username UI")]
     public TextMeshProUGUI playerNameTMP;
@@ -64,9 +61,12 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             playerName = PlayerPrefs.GetString("PlayerName");
             RPC_SetPlayerNames(playerName.ToString());
 
-            ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
-            readyUpUI.PrimeReadyUpUI(this);
-            RPC_JoinUndecided();
+            if (SceneManager.GetActiveScene().name != "TrainingRoom")
+            {
+                ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas 3D").transform);
+                readyUpUI.PrimeReadyUpUI(this);
+                RPC_JoinUndecided(); 
+            } 
         }
 
         Players.Add(this);
