@@ -26,6 +26,7 @@ public class BTN_OpenClose : MonoBehaviour
     {
         if (!disabled)
         {
+            ButtonCooldownManager.instance.ButtonCooldown();
             onPress?.Invoke();
             StartCoroutine(iOnPress());
         }
@@ -72,5 +73,10 @@ public class BTN_OpenClose : MonoBehaviour
                 groupToClose[i].FadeOut();
             }
         }
+    }
+
+    public void EnableButton()
+    {
+        enabled = true;
     }
 }

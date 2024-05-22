@@ -33,18 +33,23 @@ public class SaveManager : MonoBehaviour
 
     public void LoadData()
     {
-        SettingsManager.windowed = PlayerPrefs.GetInt("Windowed");
-        SettingsManager.postProcessing = PlayerPrefs.GetInt("PostProcessing");
+        if (PlayerPrefs.HasKey("Windowed"))
+        {
+            SettingsManager.windowed = PlayerPrefs.GetInt("Windowed");
+            SettingsManager.postProcessing = PlayerPrefs.GetInt("PostProcessing");
 
-        SettingsManager.volumeMaster = PlayerPrefs.GetFloat("VolumeMaster");
-        SettingsManager.volumeMusic = PlayerPrefs.GetFloat("VolumeMusic");
-        SettingsManager.volumeSFX = PlayerPrefs.GetFloat("VolumeSFX");
+            SettingsManager.volumeMaster = PlayerPrefs.GetFloat("VolumeMaster");
+            SettingsManager.volumeMusic = PlayerPrefs.GetFloat("VolumeMusic");
+            SettingsManager.volumeSFX = PlayerPrefs.GetFloat("VolumeSFX");
 
-        SettingsManager.brightness = PlayerPrefs.GetFloat("Brightness");
-        SettingsManager.contrast = PlayerPrefs.GetFloat("Contrast");
-        SettingsManager.saturation = PlayerPrefs.GetFloat("Saturation");
+            SettingsManager.brightness = PlayerPrefs.GetFloat("Brightness");
+            SettingsManager.contrast = PlayerPrefs.GetFloat("Contrast");
+            SettingsManager.saturation = PlayerPrefs.GetFloat("Saturation");
 
-        ChangeSetting.instance.SetSettings();
+            ChangeSetting.instance.SetSettings();
+        }
+        else
+            ChangeSetting.instance.ResetSettings();
     }
 
     [ContextMenu("Delete All PlayerPrefs Entries")]
