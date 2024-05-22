@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 7761516756565929198}
   - component: {fileID: -1954600681211755644}
   - component: {fileID: -3749385652013728648}
-  m_Layer: 0
+  - component: {fileID: 8502372111233395771}
+  m_Layer: 6
   m_Name: Crystra_IceSpike
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -142,6 +143,27 @@ MonoBehaviour:
     RotTeleportRadians: 1.5
   UseLegacySharedModeInterpolation: 0
   TargetInterpolationDelay: 0.03
+--- !u!135 &8502372111233395771
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2877724939557886532}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 3.38, z: -1}
 --- !u!1001 &6741019234880040298
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -213,6 +235,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 57c9cae06bb03354fbe45dc4fca2952c, type: 3}
       propertyPath: m_Name
       value: Ice spike - Baked
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 57c9cae06bb03354fbe45dc4fca2952c, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

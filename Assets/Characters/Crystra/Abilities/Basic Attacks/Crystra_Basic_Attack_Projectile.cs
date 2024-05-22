@@ -71,4 +71,13 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
             }
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        NetworkRunner runner = FindObjectOfType<NetworkRunner>();
+        if (runner == null) return;
+
+        if (!runner.IsServer) return;
+        runner.Despawn(Object);
+    }
 }

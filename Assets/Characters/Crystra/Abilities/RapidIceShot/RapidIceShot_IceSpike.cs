@@ -127,4 +127,18 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
             }
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        NetworkRunner runner = FindObjectOfType<NetworkRunner>();
+        if (runner == null) return;
+
+        if (!runner.IsServer) return;
+        runner.Despawn(Object);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(transform.position, radius);
+    }
 } 
