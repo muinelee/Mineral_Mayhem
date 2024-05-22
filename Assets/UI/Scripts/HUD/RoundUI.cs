@@ -12,11 +12,17 @@ public class RoundUI : MonoBehaviour
 
     [Header("UI Element References")]
     [SerializeField] Image gemLeft1;
+    [SerializeField] Image gemLeftOutline1;
     [SerializeField] Image gemLeft2;
+    [SerializeField] Image gemLeftOutline2;
     [SerializeField] Image gemLeft3;
+    [SerializeField] Image gemLeftOutline3;
     [SerializeField] Image gemRight1;
+    [SerializeField] Image gemRightOutline1;
     [SerializeField] Image gemRight2;
+    [SerializeField] Image gemRightOutline2;
     [SerializeField] Image gemRight3;
+    [SerializeField] Image gemRightOutline3;
 
     [Header("Asset References")]
     [SerializeField] Sprite gemGrey;
@@ -52,21 +58,21 @@ public class RoundUI : MonoBehaviour
             blueWins = 1;
 
             gemLeft1.sprite = gemBlue;
-            gemLeft1.transform.GetComponentInChildren<Image>().sprite = gemBlueOutline;
+            gemLeftOutline1.sprite = gemBlueOutline;
         }
         else if (blueWins == 1)
         {
             blueWins = 2;
 
             gemLeft2.sprite = gemBlue;
-            gemLeft2.transform.GetComponentInChildren<Image>().sprite = gemBlueOutline;
+            gemLeftOutline2.sprite = gemBlueOutline;
         }
         else if (blueWins == 2)
         {
             blueWins = 3;
 
             gemLeft3.sprite = gemBlue;
-            gemLeft3.transform.GetComponentInChildren<Image>().sprite = gemBlueOutline;
+            gemLeftOutline3.sprite = gemBlueOutline;
         }
     }
     public void RedWin()
@@ -76,21 +82,21 @@ public class RoundUI : MonoBehaviour
             redWins = 1;
 
             gemLeft1.sprite = gemRed;
-            gemLeft1.transform.GetComponentInChildren<Image>().sprite = gemRedOutline;
+            gemLeftOutline1.sprite = gemRedOutline;
         }
         else if (redWins == 1)
         {
             redWins = 2;
 
             gemLeft2.sprite = gemRed;
-            gemLeft2.transform.GetComponentInChildren<Image>().sprite = gemRedOutline;
+            gemLeftOutline2.sprite = gemRedOutline;
         }
         else if (redWins == 2)
         {
             redWins = 3;
 
             gemLeft3.sprite = gemRed;
-            gemLeft3.transform.GetComponentInChildren<Image>().sprite = gemRedOutline;
+            gemLeftOutline3.sprite = gemRedOutline;
         }
     }
 
