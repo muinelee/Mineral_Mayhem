@@ -10,7 +10,7 @@ public class SO_NetworkAttack : ScriptableObject
     [SerializeField] protected NetworkObject attack;
 
     [Header("Voice Line")]
-    [SerializeField] protected AudioClip voiceLine;
+    [SerializeField] protected AudioClip[] voiceLine;
 
     [Header("Name and Description")]
     public string attackName;
@@ -50,7 +50,7 @@ public class SO_NetworkAttack : ScriptableObject
         return coolDown;
     }
 
-    public AudioClip GetVoiceLine()
+    public AudioClip[] GetVoiceLine()
     {
         return voiceLine;
     }
