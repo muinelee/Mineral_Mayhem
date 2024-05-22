@@ -33,6 +33,8 @@ public class Pyre_Basic_Attack : NetworkAttack_Base
     // Update is called once per frame
     public override void FixedUpdateNetwork()
     {
+        if (!Runner.IsServer) return;
+
         DealDamage();
 
         if (lifeTimer.Expired(Runner))
