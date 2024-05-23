@@ -24,6 +24,8 @@ public class GroundSlam : NetworkAttack_Base
 
         //AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
 
+        if (!Runner.IsServer) return;
+
         transform.position += transform.forward * offset;
 
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifetimeDuration);
