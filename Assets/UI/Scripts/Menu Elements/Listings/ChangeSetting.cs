@@ -107,7 +107,6 @@ public class ChangeSetting : MonoBehaviour
         if (type == "brightness")
         {
             SettingsManager.brightness = value;
-            Debug.Log("Brightness: " + SettingsManager.brightness + " / " + value);
 
             // Setting Effect
             PP_Brightness.weight = value;

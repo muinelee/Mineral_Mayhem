@@ -213,6 +213,7 @@ public class ReadyUpManager : MonoBehaviour
 
     public void StartGame()
     {
+        Debug.Log("UISoawned");
         FindAnyObjectByType<CharacterSelect>().ActivateCharacterSelect();
         this.gameObject.SetActive(false);
     }
