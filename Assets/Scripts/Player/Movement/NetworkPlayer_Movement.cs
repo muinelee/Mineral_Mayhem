@@ -83,13 +83,14 @@ public class NetworkPlayer_Movement : CharacterComponent
         if (dashCoolDownTimer.IsRunning) return;
         if (Runner.IsServer == false) return;
 
-        RPC_DashSFX();
+        RPC_DashFX();
 
         Vector3 dashDirection = moveDirection == Vector3.zero ? targetDirection : moveDirection;
         dashDirection.Normalize();
 
         if (!dash.GetCanSteer())
         {
+            transform.LookAt(transform.position + dashDirection);
             Character.Rigidbody.Rigidbody.velocity = dashDirection * dash.GetDashValue();
             isDashing = true;
         }
@@ -202,8 +203,9 @@ public class NetworkPlayer_Movement : CharacterComponent
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_DashSFX()
+    private void RPC_DashFX()
     {
         AudioManager.Instance.PlayAudioSFX(this.dashSounds[0], transform.position);
+        Character.Animator.anim.CrossFade("Dash", 0.03f);
     }
 }
