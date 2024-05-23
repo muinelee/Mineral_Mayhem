@@ -78,6 +78,5 @@ public class SETTING_Selection : MonoBehaviour
         }
 
         if (settingType != "") ChangeSetting.instance.ChangeSelection(selected, settingType);
-        Debug.Log("Option: " + selected);
     }
 }

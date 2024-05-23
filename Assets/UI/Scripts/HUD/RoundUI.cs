@@ -36,8 +36,8 @@ public class RoundUI : MonoBehaviour
 
     [Header("Lerp Settings")]
     [SerializeField] private float lerpDuration = 0.5f;
-    [SerializeField] private float startScaleX = 0;
-    [SerializeField] private float endScaleX = 1f;
+    [SerializeField] private float startSizeX = 0;
+    [SerializeField] private float endSizeX = 1f;
 
     private float curValue;
 
@@ -100,6 +100,7 @@ public class RoundUI : MonoBehaviour
         }
     }
 
+    [ContextMenu("Collapse Round UI")]
     public void CollapseRoundUI()
     {
         StartCoroutine(iCollapseRoundUI());
@@ -110,16 +111,17 @@ public class RoundUI : MonoBehaviour
         while (timeElapsed < lerpDuration)
         {
 
-            curValue = Mathf.Lerp(endScaleX, startScaleX, timeElapsed / lerpDuration);
-            roundUIBar.transform.localScale = new Vector3(curValue, roundUIBar.transform.localScale.y, roundUIBar.transform.localScale.z);
+            curValue = Mathf.Lerp(startSizeX, endSizeX, timeElapsed / lerpDuration);
+            roundUIBar.GetComponent<RectTransform>().sizeDelta = new Vector2(curValue, roundUIBar.GetComponent<RectTransform>().sizeDelta.y);
 
             timeElapsed += Time.unscaledDeltaTime;
             yield return null;
         }
-        curValue = startScaleX;
-        roundUIBar.transform.localScale = new Vector3(startScaleX, roundUIBar.transform.localScale.y, roundUIBar.transform.localScale.z);
+        curValue = endSizeX;
+        roundUIBar.GetComponent<RectTransform>().sizeDelta = new Vector2(curValue, roundUIBar.GetComponent<RectTransform>().sizeDelta.y);
     }
 
+    [ContextMenu("Expand Round UI")]
     public void ExpandRoundUI()
     {
         StartCoroutine(iExpandRoundUI());
@@ -130,14 +132,14 @@ public class RoundUI : MonoBehaviour
         while (timeElapsed < lerpDuration)
         {
 
-            curValue = Mathf.Lerp(startScaleX, endScaleX, timeElapsed / lerpDuration);
-            roundUIBar.transform.localScale = new Vector3(curValue, roundUIBar.transform.localScale.y, roundUIBar.transform.localScale.z);
+            curValue = Mathf.Lerp(endSizeX, startSizeX, timeElapsed / lerpDuration);
+            roundUIBar.GetComponent<RectTransform>().sizeDelta = new Vector2(curValue, roundUIBar.GetComponent<RectTransform>().sizeDelta.y);
 
             timeElapsed += Time.unscaledDeltaTime;
             yield return null;
         }
-        curValue = endScaleX;
-        roundUIBar.transform.localScale = new Vector3(endScaleX, roundUIBar.transform.localScale.y, roundUIBar.transform.localScale.z);
+        curValue = startSizeX;
+        roundUIBar.GetComponent<RectTransform>().sizeDelta = new Vector2(curValue, roundUIBar.GetComponent<RectTransform>().sizeDelta.y);
     }
 
     public void ShowRoundUI()

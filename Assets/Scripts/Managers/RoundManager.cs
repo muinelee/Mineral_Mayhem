@@ -83,6 +83,8 @@ public class RoundManager : NetworkBehaviour
 
     public void LoadRound()
     {
+        RPC_CollapseRoundUI();
+
         if (currentRound == maxRounds) return; 
         currentRound++;
         resetStorm?.Invoke();
@@ -98,11 +100,19 @@ public class RoundManager : NetworkBehaviour
         bluePlayersAlive = teammSize;
 
         // Show Round UI
-        RPC_ShowRoundUI();
+        //RPC_ShowRoundUI();
     }
 
     public void RoundEnd() 
     {
+        StartCoroutine(iRoundEnd());
+    }
+    private IEnumerator iRoundEnd()
+    {
+        RPC_ExpandRoundUI();
+
+        yield return new WaitForSecondsRealtime(1f);
+
         // Checks which team has more players alive
         // Blueplayer and red playerdies already checks if all members on team dies 
         if (redPlayersAlive > bluePlayersAlive)
@@ -113,14 +123,14 @@ public class RoundManager : NetworkBehaviour
 
         else if (bluePlayersAlive > redPlayersAlive)
         {
-            blueRoundsWon++; 
+            blueRoundsWon++;
             RPC_UpdateRoundUIForClients(false);
         }
 
         if (redRoundsWon == Mathf.CeilToInt((float)maxRounds / 2) || blueRoundsWon == Mathf.CeilToInt((float)maxRounds / 2))
         {
             matchEndTimer = TickTimer.CreateFromSeconds(Runner, matchEndDelay);
-            return;
+            yield break;
         }
 
         roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
@@ -131,8 +141,20 @@ public class RoundManager : NetworkBehaviour
         if (redRoundsWon > blueRoundsWon) RPC_DisplayGameOver(true);
         else if (blueRoundsWon > redRoundsWon) RPC_DisplayGameOver(false);
         else Debug.Log("Tie!");
-        RPC_HideRoundUI();
+        //RPC_HideRoundUI();
         RPC_GoToVictoryCamera();
+
+        StartCoroutine(iMatchEnd());
+    }
+    private IEnumerator iMatchEnd()
+    {
+        yield return new WaitForSecondsRealtime(3.5f);
+
+        RPC_CollapseRoundUI();
+
+        yield return new WaitForSecondsRealtime(1.5f);
+
+        RPC_HideRoundUI();
     }
 
     public void MatchStart()
@@ -142,7 +164,7 @@ public class RoundManager : NetworkBehaviour
         resetStorm?.Invoke();
         startStorm?.Invoke();
         
-        if (Runner.IsServer) RPC_HideRoundUI();
+        if (Runner.IsServer) RPC_ShowRoundUI();
     }
 
     public override void FixedUpdateNetwork()
@@ -197,5 +219,17 @@ public class RoundManager : NetworkBehaviour
     {
         RoundUI.instance.HideRoundUI();
         NetworkPlayer_InGameUI.instance.HidePlayerUI();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_ExpandRoundUI()
+    {
+        RoundUI.instance.ExpandRoundUI();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_CollapseRoundUI()
+    {
+        RoundUI.instance.CollapseRoundUI();
     }
 }
