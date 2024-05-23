@@ -3418,7 +3418,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1387114236
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3438,7 +3438,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0.000000040047, y: -120}
-  m_SizeDelta: {x: 1229.7115, y: 260.3}
+  m_SizeDelta: {x: 1230, y: 260.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1387114237
 MonoBehaviour:
@@ -4493,7 +4493,8 @@ PrefabInstance:
       propertyPath: onPress.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2832566721296944194, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
     m_RemovedGameObjects:
     - {fileID: 3026957799007045756, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
     - {fileID: 5183747774159930970, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
@@ -6016,8 +6017,8 @@ MonoBehaviour:
   gemRedOutline: {fileID: 21300000, guid: 00ad7617cfae72641a25b0a47b8ecfc8, type: 3}
   roundUIBar: {fileID: 1387114237}
   lerpDuration: 0.5
-  startScaleX: 0
-  endScaleX: 1
+  startSizeX: 1230
+  endSizeX: 430
 --- !u!114 &3952215591497289724
 MonoBehaviour:
   m_ObjectHideFlags: 0
