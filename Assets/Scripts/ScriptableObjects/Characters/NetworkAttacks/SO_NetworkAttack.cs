@@ -18,6 +18,8 @@ public class SO_NetworkAttack : ScriptableObject
 
     [Header("Attack Icon")]
     [SerializeField] protected Sprite attackIcon;
+    [SerializeField] protected Sprite attackBackground;
+    [SerializeField] protected Sprite attackBackgroundGrey;
 
     [Header("Ability Slow Percentage on activation")]
     [SerializeField, Range(0,1)] protected float abilitySlow;
@@ -33,6 +35,14 @@ public class SO_NetworkAttack : ScriptableObject
     public Sprite GetAttackIcon()
     {
         return attackIcon;
+    }
+    public Sprite GetAttackBackground()
+    {
+        return attackBackground;
+    }
+    public Sprite GetAttackBackgroundGrey()
+    {
+        return attackBackgroundGrey;
     }
 
     public float GetTurnSlow()
