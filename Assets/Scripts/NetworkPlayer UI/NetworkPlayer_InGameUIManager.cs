@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class NetworkPlayer_InGameUIManager : CharacterComponent
 {
-    [SerializeField] private NetworkPlayer_InGameUI playerUIPF;
+    [SerializeField] private NetworkPlayer_InGameUI playerUI;
     [SerializeField] private NetworkPlayer_WorldSpaceHUD floatingHealthBar;
 
     public override void Spawned()
@@ -14,7 +14,9 @@ public class NetworkPlayer_InGameUIManager : CharacterComponent
 
         if (Object.HasInputAuthority)
         {
-            NetworkPlayer_InGameUI playerUI = Instantiate(playerUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
+            Debug.Log("InGameUIManager");
+
+            playerUI = FindObjectOfType<NetworkPlayer_InGameUI>();
 
             // Local player health linked to player UI
             playerUI.SetPlayerHealth(GetComponent<NetworkPlayer_Health>());

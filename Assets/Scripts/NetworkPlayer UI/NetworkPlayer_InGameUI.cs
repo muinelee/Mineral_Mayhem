@@ -20,6 +20,10 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
     private NetworkPlayer_Movement playerMovement;
     private NetworkPlayer_Attack playerAttack;
 
+    // Canvas Group Fades
+    [SerializeField] private CG_Fade groupStats;
+    [SerializeField] private CG_Fade groupAbilities;
+
     // UI Properties
     [Header("Health bar")]
     [SerializeField] private Slider healthBar;
@@ -27,27 +31,44 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
     [Header("Energy bar")]
     [SerializeField] private Slider energyBar;
 
+    // Character Icon
+    [SerializeField] private Image charIcon;
+
     // Cooldown stuff
     [Header("Dash Properties")]
+    [SerializeField] private Image dashBackground;
     [SerializeField] private Image dashIcon;
     [SerializeField] private Image dashImageCooldown;
-    [SerializeField] private Text dashCooldownText;
+    [SerializeField] private TextMeshProUGUI dashCooldownText;
 
     [Header("Q Attack Properties")]
+    [SerializeField] private Image qAttackBackground;
     [SerializeField] private Image qAttackIcon;
     [SerializeField] private Image qImageCooldown;
-    [SerializeField] private Text qCooldownText;
+    [SerializeField] private TextMeshProUGUI qCooldownText;
 
     [Header("E Attack Properties")]
+    [SerializeField] private Image eAttackBackground;
     [SerializeField] private Image eAttackIcon;
     [SerializeField] private Image eImageCooldown;
-    [SerializeField] private Text eCooldownText;
+    [SerializeField] private TextMeshProUGUI eCooldownText;
 
     [Header("F (ULT) Attack Properties")]
+    [SerializeField] private Image fAttackBackground;
     [SerializeField] private Image fAttackIcon;
     [SerializeField] private Image fImageBlock;
+    [SerializeField] private Image fBorderFlair;
 
-    private bool uIDisplayed = true;
+    [Header("Asset References")]
+    [SerializeField] private Sprite iconCrysta;
+    [SerializeField] private Sprite iconLuna;
+    [SerializeField] private Sprite iconPyre;
+    [SerializeField] private Sprite iconTerran;
+
+    [SerializeField] private Sprite borderFlairCrysta;
+    [SerializeField] private Sprite borderFlairPyre;
+
+    private bool uIDisplayed = false;
     // cooldown comes from Scriptable Objects passed from local player
     private void Awake()
     {
@@ -80,9 +101,35 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
     public void PrimeUI()
     {
         dashIcon.sprite = dash.GetDashIcon();
+        dashBackground.sprite = dash.GetDashBackground();
+
         qAttackIcon.sprite = qAttack.GetAttackIcon();
+        qAttackBackground.sprite = qAttack.GetAttackBackground();
+
         eAttackIcon.sprite = eAttack.GetAttackIcon();
+        eAttackBackground.sprite = eAttack.GetAttackBackground();
+
         fAttackIcon.sprite = fAttack.GetAttackIcon();
+        fAttackBackground.sprite = fAttack.GetAttackBackground();
+
+        if (NetworkPlayer.Local.CharacterID == 0)
+        {
+            charIcon.sprite = iconCrysta;
+            fBorderFlair.sprite = borderFlairCrysta;
+        }
+        else if (NetworkPlayer.Local.CharacterID == 1)
+        {
+            charIcon.sprite = iconLuna;
+        }
+        else if (NetworkPlayer.Local.CharacterID == 2)
+        {
+            charIcon.sprite = iconPyre;
+            fBorderFlair.sprite = borderFlairPyre;
+        }
+        else if (NetworkPlayer.Local.CharacterID == 3)
+        {
+            charIcon.sprite = iconTerran;
+        }
     }
 
     private void DisplayHealth()
@@ -97,7 +144,7 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
         energyBar.value = playerEnergy.GetEnergyPercentage();
     }
 
-    private void DisplayAbilityCooldown(float coolDown, Image coolDownImage, Text coolDownText, float maxCoolDown)
+    private void DisplayAbilityCooldown(float coolDown, Image coolDownImage, TextMeshProUGUI coolDownText, float maxCoolDown)
     {
         //display the cooldown
         if (coolDown == 0)
@@ -160,23 +207,19 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
     {
         uIDisplayed = true;
 
-        healthBar.gameObject.SetActive(true);
-        energyBar.gameObject.SetActive(true);
-        dashIcon.gameObject.SetActive(true);
-        qAttackIcon.gameObject.SetActive(true);
-        eAttackIcon.gameObject.SetActive(true);
-        fAttackIcon.gameObject.SetActive(true);
+        groupStats.gameObject.SetActive(true);
+        groupStats.FadeIn();
+        groupAbilities.gameObject.SetActive(true);
+        groupAbilities.FadeIn();
     }
 
     public void HidePlayerUI()
     {
         uIDisplayed = false;
 
-        healthBar.gameObject.SetActive(false);
-        energyBar.gameObject.SetActive(false);
-        dashIcon.gameObject.SetActive(false);
-        qAttackIcon.gameObject.SetActive(false);
-        eAttackIcon.gameObject.SetActive(false);
-        fAttackIcon.gameObject.SetActive(false);
+        groupStats.gameObject.SetActive(true);
+        groupStats.FadeOut();
+        groupAbilities.gameObject.SetActive(true);
+        groupAbilities.FadeOut();
     }
 }
