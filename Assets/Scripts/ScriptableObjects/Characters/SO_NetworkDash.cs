@@ -17,6 +17,8 @@ public class SO_NetworkDash : ScriptableObject
 
     [Header("Dash Icon")]
     [SerializeField] private Sprite dashIcon;
+    [SerializeField] private Sprite dashBackground;
+    [SerializeField] private Sprite dashBackgroundGrey;
 
     [Header("Dash Sound")]
     [SerializeField] private AudioClip[] dashSounds;
@@ -44,6 +46,14 @@ public class SO_NetworkDash : ScriptableObject
     public Sprite GetDashIcon()
     {
         return dashIcon;
+    }
+    public Sprite GetDashBackground()
+    {
+        return dashBackground;
+    }
+    public Sprite GetDashBackgroundGrey()
+    {
+        return dashBackgroundGrey;
     }
 
     public AudioClip[] GetDashSounds()
