@@ -42,7 +42,7 @@ public class RocketJump : NetworkAttack_Base
         if (rigTransform.position.y < startHeight && !attackLifeTimer.IsRunning)
         {
             //Spawn Particles
-            slamVFXInstance = Runner.Spawn(slamVFX, rigTransform.position, rigTransform.rotation);
+            slamVFXInstance = Runner.Spawn(slamVFX, rigTransform.position, slamVFX.transform.rotation);
             RPC_RocketJumpLandingSFX();
             attackLifeTimer = TickTimer.CreateFromSeconds(Runner, vfxDuration);
 
