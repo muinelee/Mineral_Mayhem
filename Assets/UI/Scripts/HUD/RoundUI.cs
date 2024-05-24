@@ -81,22 +81,22 @@ public class RoundUI : MonoBehaviour
         {
             redWins = 1;
 
-            gemLeft1.sprite = gemRed;
-            gemLeftOutline1.sprite = gemRedOutline;
+            gemRight1.sprite = gemRed;
+            gemRightOutline1.sprite = gemRedOutline;
         }
         else if (redWins == 1)
         {
             redWins = 2;
 
-            gemLeft2.sprite = gemRed;
-            gemLeftOutline2.sprite = gemRedOutline;
+            gemRight2.sprite = gemRed;
+            gemRightOutline2.sprite = gemRedOutline;
         }
         else if (redWins == 2)
         {
             redWins = 3;
 
-            gemLeft3.sprite = gemRed;
-            gemLeftOutline3.sprite = gemRedOutline;
+            gemRight3.sprite = gemRed;
+            gemRightOutline3.sprite = gemRedOutline;
         }
     }
 

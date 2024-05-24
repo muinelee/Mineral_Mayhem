@@ -40,8 +40,8 @@ public class NetworkPlayer_Attack : CharacterComponent
         {
 
             if (input.IsDown(NetworkInputData.ButtonF) && Character.Energy.IsUltCharged() && !isDefending) ActivateUlt();
-            else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref qAttack, ref qAttackCoolDownTimer);
-            else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref eAttack, ref eAttackCoolDownTimer);
+            else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref qAttack, true);
+            else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref eAttack, false);
             else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack && !isDefending) ActivateBasicAttack();
             ActivateBlock(input.IsDown(NetworkInputData.ButtonBlock));
         }
@@ -55,7 +55,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         if (timer.Expired(Runner)) timer = TickTimer.None;
     }
 
-    private void ActivateAttack(ref SO_NetworkAttack attack, ref TickTimer attackTimer)
+    private void ActivateAttack(ref SO_NetworkAttack attack, bool isQAttack)
     {
         if (Runner.IsServer == false) return;
 
@@ -63,12 +63,39 @@ public class NetworkPlayer_Attack : CharacterComponent
         canAttack = false;
 
         if (attack == qAttack) RPC_PlayQEffects();
-        else RPC_PlayEEffects();        
+        else RPC_PlayEEffects();
 
-        attackTimer = TickTimer.CreateFromSeconds(Runner, attack.GetCoolDown());
+        // if isQAttack is false, it is  the eAttack
+        if (isQAttack)
+        {
+            StartQAttackCooldown();
+            RPC_StartCoolDownTimer(true);
+        }
+        else
+        {
+            StartEAttackCooldown();
+            RPC_StartCoolDownTimer(false);
+        }
 
         // Slow player
         Character.Movement.ApplyAbility(attack);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    public void RPC_StartCoolDownTimer(bool isQAttack)
+    {
+        if (isQAttack) this.StartQAttackCooldown();
+        else this.StartEAttackCooldown();
+    }
+
+    public void StartQAttackCooldown()
+    {
+        qAttackCoolDownTimer = TickTimer.CreateFromSeconds(Runner, qAttack.GetCoolDown());
+    }
+
+    public void StartEAttackCooldown()
+    {
+        eAttackCoolDownTimer = TickTimer.CreateFromSeconds(Runner, eAttack.GetCoolDown());
     }
 
     private void ActivateUlt()
