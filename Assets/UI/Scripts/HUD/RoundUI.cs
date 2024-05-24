@@ -15,14 +15,10 @@ public class RoundUI : MonoBehaviour
     [SerializeField] Image gemLeftOutline1;
     [SerializeField] Image gemLeft2;
     [SerializeField] Image gemLeftOutline2;
-    [SerializeField] Image gemLeft3;
-    [SerializeField] Image gemLeftOutline3;
     [SerializeField] Image gemRight1;
     [SerializeField] Image gemRightOutline1;
     [SerializeField] Image gemRight2;
     [SerializeField] Image gemRightOutline2;
-    [SerializeField] Image gemRight3;
-    [SerializeField] Image gemRightOutline3;
 
     [Header("Asset References")]
     [SerializeField] Sprite gemGrey;
@@ -67,13 +63,6 @@ public class RoundUI : MonoBehaviour
             gemLeft2.sprite = gemBlue;
             gemLeftOutline2.sprite = gemBlueOutline;
         }
-        else if (blueWins == 2)
-        {
-            blueWins = 3;
-
-            gemLeft3.sprite = gemBlue;
-            gemLeftOutline3.sprite = gemBlueOutline;
-        }
     }
     public void RedWin()
     {
@@ -90,13 +79,6 @@ public class RoundUI : MonoBehaviour
 
             gemRight2.sprite = gemRed;
             gemRightOutline2.sprite = gemRedOutline;
-        }
-        else if (redWins == 2)
-        {
-            redWins = 3;
-
-            gemRight3.sprite = gemRed;
-            gemRightOutline3.sprite = gemRedOutline;
         }
     }
 
