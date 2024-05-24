@@ -99,7 +99,14 @@ public class NetworkPlayer_Movement : CharacterComponent
         
         // Start the timers
         dashCoolDownTimer = TickTimer.CreateFromSeconds(Runner, dash.GetCoolDown());
+        RPC_DashCoolDown();
         dashDurationTimer = TickTimer.CreateFromSeconds(Runner, dash.GetDashDuration());
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
+    public void RPC_DashCoolDown()
+    {
+        this.dashCoolDownTimer = TickTimer.CreateFromSeconds(Runner, this.dash.GetCoolDown());
     }
 
     private void PlayMovementAnimation(Vector3 moveDirection)
