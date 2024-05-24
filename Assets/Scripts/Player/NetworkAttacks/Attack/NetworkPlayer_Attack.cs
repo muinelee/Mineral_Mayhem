@@ -20,13 +20,16 @@ public class NetworkPlayer_Attack : CharacterComponent
     [Header("Q Attack Properties")]
     [SerializeField] private SO_NetworkAttack qAttack;
     private TickTimer qAttackCoolDownTimer;
+    private List<int> qVoiceLineIndex = new List<int>();
 
     [Header("E Attack Properties")]
     [SerializeField] private SO_NetworkAttack eAttack;
     private TickTimer eAttackCoolDownTimer;
+    private List<int> eVoiceLineIndex = new List<int>();
 
     [Header("(Ult) F Attack Properties")]
     [SerializeField] private SO_NetworkUlt fAttack;
+    private List<int> fVoiceLineIndex = new List<int>();
 
     public override void Init(CharacterEntity character)
     {
@@ -134,38 +137,38 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public void PlayQVoiceLine()
     {
-        var voiceLines = qAttack.GetVoiceLine();
-        if (voiceLines != null && voiceLines.Length >0)
-        {
-            int randomIndex = Random.Range(0, voiceLines.Length);
-            AudioClip randomVoiceLine = voiceLines[randomIndex];
-            AudioManager.Instance.PlayAudioSFX(randomVoiceLine, transform.localPosition);
-        }
-        //if (qAttack.GetVoiceLine() != null) AudioManager.Instance.PlayAudioSFX(qAttack.GetVoiceLine(), transform.localPosition);
+        PlayVoiceLine(qAttack.GetVoiceLine(), ref qVoiceLineIndex);
     }
 
     public void PlayEVoiceLine()
     {
-        var voiceLines = eAttack.GetVoiceLine();
-        if (voiceLines != null && voiceLines.Length > 0)
-        {
-            int randomIndex = Random.Range(0, voiceLines.Length);
-            AudioClip randomVoiceLine = voiceLines[randomIndex];
-            AudioManager.Instance.PlayAudioSFX(randomVoiceLine, transform.localPosition);
-        }
-        //if (eAttack.GetVoiceLine() != null) AudioManager.Instance.PlayAudioSFX(eAttack.GetVoiceLine(), transform.localPosition);
+        PlayVoiceLine(eAttack.GetVoiceLine(), ref eVoiceLineIndex);
     }
 
     public void PlayFVoiceLine()
     {
-        var voiceLines = fAttack.GetVoiceLine();
+        PlayVoiceLine(fAttack.GetVoiceLine(), ref fVoiceLineIndex);
+    }
+
+    private void PlayVoiceLine(AudioClip[] voiceLines, ref List<int> voiceLineIndices)
+    {
         if (voiceLines != null && voiceLines.Length > 0)
         {
-            int randomIndex = Random.Range(0, voiceLines.Length);
-            AudioClip randomVoiceLine = voiceLines[randomIndex];
+            if (voiceLineIndices.Count == 0)
+            {
+                for (int i = 0; i < voiceLines.Length; i++)
+                {
+                    voiceLineIndices.Add(i);
+                }
+            }
+
+            int randomIndex = Random.Range(0, voiceLineIndices.Count);
+            int voiceLineIndex = voiceLineIndices[randomIndex];
+            voiceLineIndices.RemoveAt(randomIndex);
+
+            AudioClip randomVoiceLine = voiceLines[voiceLineIndex];
             AudioManager.Instance.PlayAudioSFX(randomVoiceLine, transform.localPosition);
         }
-        //if (fAttack.GetVoiceLine() != null) AudioManager.Instance.PlayAudioSFX(fAttack.GetVoiceLine(), transform.localPosition);
     }
 
     private void ActivateBasicAttack()
