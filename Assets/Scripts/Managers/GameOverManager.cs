@@ -66,6 +66,10 @@ public class GameOverManager : NetworkBehaviour
             {
                 player.Health.DisableControls();
 
+                player.Rigidbody.Rigidbody.velocity = Vector3.zero;
+
+                player.Animator.anim.Play("Victory");
+
                 player.gameObject.GetComponentInChildren<NetworkPlayer_WorldSpaceHUD>().HideFloatingHealthBar();
 
                 player.transform.rotation = victoryPositionSolo.rotation;
