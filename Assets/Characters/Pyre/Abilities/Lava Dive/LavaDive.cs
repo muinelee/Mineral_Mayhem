@@ -25,6 +25,7 @@ public class LavaDive : NetworkAttack_Base
     [SerializeField] private float lingerTime;
     [SerializeField] private float attackRadius = 2;
     [SerializeField] private NetworkObject attackEndVFX;
+    private NetworkObject smashVFX;
     private bool finishDive = false;
     private TickTimer lingerTimer;
 
@@ -92,6 +93,7 @@ public class LavaDive : NetworkAttack_Base
     private void AttackEnd()
     {
         lingerTimer = TickTimer.None;
+        Runner.Despawn(smashVFX);
         Runner.Despawn(Object);
     }
 
@@ -101,12 +103,13 @@ public class LavaDive : NetworkAttack_Base
         AudioManager.Instance.PlayAudioSFX(SFX[2], transform.position);
 
         DealDamage();
-        if (Runner.IsServer) Runner.Spawn(attackEndVFX, character.transform.position, Quaternion.identity);
+        if (Runner.IsServer) smashVFX = Runner.Spawn(attackEndVFX, character.transform.position, Quaternion.identity);
         lingerTimer = TickTimer.CreateFromSeconds(Runner, lingerTime);
 
         finishDive = true;
         character.Collider.enabled = true;
     }
+
     private void ManageTrailDamage()
     {
         if (!trailDamageTimer.Expired(Runner)) return;
