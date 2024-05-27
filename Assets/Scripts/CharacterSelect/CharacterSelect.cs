@@ -66,9 +66,8 @@ public class CharacterSelect : NetworkBehaviour
         AudioManager.Instance.PlayAudioSFX(characters[characterIndex].voiceLine[0], spawnPoints[spawnPoint].position);
 
         RPC_SpawnCharacter(index, spawnPoint);
-        Debug.Log($"Character lookup contains player {characterLookup.ContainsKey(player)}");
 
-        PlayerPrefs.SetInt("lastSelectedCharacter", characterIndex);
+        ClientInfo.CharacterID = characterIndex;
     }
 
     private void SetupAbilityUI(SO_Character character)
@@ -261,7 +260,6 @@ public class CharacterSelect : NetworkBehaviour
         // Character Select Timer
         characterSelectTimer = TickTimer.CreateFromSeconds(Runner, characterSelectDuration);
 
-        int lastSelectedCharacter = PlayerPrefs.GetInt("lastSelectedCharacter", 0);
-        SelectCharacter(lastSelectedCharacter);
+        SelectCharacter(ClientInfo.CharacterID);
     }
 }
