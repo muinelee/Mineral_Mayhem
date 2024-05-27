@@ -42,6 +42,8 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
     public void AllowChainBasicAttack()
     {
         Character.Attack.AllowChainBasicAttack();
+        anim.CrossFade("Helper", 0.2f, 1);
+        anim.SetLayerWeight(1, 0.5f);
     }
 
     public void ChainBasicAttack()
@@ -53,6 +55,8 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
     {
         Character.Attack.ResetAttackCapabilities();
         anim.CrossFade("Run", 0.2f);
+        anim.CrossFade("Run", 0.2f, 1);
+        anim.SetLayerWeight(1, 1);
     }
 
     public override void OnBlock(bool isBlocking)

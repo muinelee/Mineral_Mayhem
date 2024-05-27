@@ -172,6 +172,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         teamCamTimer = TickTimer.CreateFromSeconds(Runner, timeUntilTeamCam);
 
         Character.Animator.anim.CrossFade("Death", 0.2f);
+        Character.Animator.anim.CrossFade("Death", 0.2f, 1);
 
         if (!NetworkPlayer.Local.HasStateAuthority) return;
         if (RoundManager.Instance)
@@ -184,6 +185,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         EnableControls();
         Character.Animator.anim.Play("Run");
+        Character.Animator.anim.Play("Run", 1);
+        Character.Animator.anim.SetLayerWeight(1, 1);
         if (Object.HasInputAuthority) NetworkCameraEffectsManager.instance.GoToTopCamera();
     }
 

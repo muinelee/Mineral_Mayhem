@@ -57,6 +57,9 @@ public class UnshackleBuff : NetworkAttack_Base
             {
                 character.OnCleanse();
 
+                character.Animator.anim.Play("Helper", 1);
+                character.Animator.anim.SetLayerWeight(1, 0.5f);
+
                 if (statusEffectSO.Count > 0 && character)
                 {
                     foreach (StatusEffect status in statusEffectSO)

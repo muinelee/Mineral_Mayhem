@@ -74,6 +74,7 @@ public class LavaDive : NetworkAttack_Base
         for (int i = 0; i < hits.Count; i++)
         {
             character = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
+            character.Animator.anim.Play("Helper", 1);
 
             if (character)
             {
