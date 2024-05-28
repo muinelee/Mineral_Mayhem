@@ -20,21 +20,35 @@ public class NetworkPlayer_Attack : CharacterComponent
     [Header("Q Attack Properties")]
     [SerializeField] private SO_NetworkAttack qAttack;
     private TickTimer qAttackCoolDownTimer;
-    private List<int> qVoiceLineIndex = new List<int>();
+    private Queue<AudioClip> qVoiceLineQueue = new Queue<AudioClip>();
 
     [Header("E Attack Properties")]
     [SerializeField] private SO_NetworkAttack eAttack;
     private TickTimer eAttackCoolDownTimer;
-    private List<int> eVoiceLineIndex = new List<int>();
+    private Queue<AudioClip> eVoiceLineQueue = new Queue<AudioClip>();
 
     [Header("(Ult) F Attack Properties")]
     [SerializeField] private SO_NetworkUlt fAttack;
-    private List<int> fVoiceLineIndex = new List<int>();
+    private Queue<AudioClip> fVoiceLineQueue = new Queue<AudioClip>();
 
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
         character.SetAttack(this);
+        InitializeVoiceLineQueue(qAttack.GetVoiceLine(), qVoiceLineQueue);
+        InitializeVoiceLineQueue(eAttack.GetVoiceLine(), eVoiceLineQueue);
+        InitializeVoiceLineQueue(fAttack.GetVoiceLine(), fVoiceLineQueue);
+    }
+
+    private void InitializeVoiceLineQueue(AudioClip[] voiceLines, Queue<AudioClip> voiceLineQueue)
+    {
+        if (voiceLines != null)
+        {
+            foreach (AudioClip voiceLine in voiceLines)
+            {
+                voiceLineQueue.Enqueue(voiceLine);
+            }
+        }
     }
 
     public override void FixedUpdateNetwork()
@@ -137,37 +151,26 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public void PlayQVoiceLine()
     {
-        PlayVoiceLine(qAttack.GetVoiceLine(), ref qVoiceLineIndex);
+        PlayVoiceLine(qVoiceLineQueue);
     }
 
     public void PlayEVoiceLine()
     {
-        PlayVoiceLine(eAttack.GetVoiceLine(), ref eVoiceLineIndex);
+        PlayVoiceLine(eVoiceLineQueue);
     }
 
     public void PlayFVoiceLine()
     {
-        PlayVoiceLine(fAttack.GetVoiceLine(), ref fVoiceLineIndex);
+        PlayVoiceLine(fVoiceLineQueue);
     }
 
-    private void PlayVoiceLine(AudioClip[] voiceLines, ref List<int> voiceLineIndices)
+    private void PlayVoiceLine(Queue<AudioClip> voiceLineQueue)
     {
-        if (voiceLines != null && voiceLines.Length > 0)
+        if (voiceLineQueue != null && voiceLineQueue.Count > 0)
         {
-            if (voiceLineIndices.Count == 0)
-            {
-                for (int i = 0; i < voiceLines.Length; i++)
-                {
-                    voiceLineIndices.Add(i);
-                }
-            }
-
-            int randomIndex = Random.Range(0, voiceLineIndices.Count);
-            int voiceLineIndex = voiceLineIndices[randomIndex];
-            voiceLineIndices.RemoveAt(randomIndex);
-
-            AudioClip randomVoiceLine = voiceLines[voiceLineIndex];
-            AudioManager.Instance.PlayAudioSFX(randomVoiceLine, transform.localPosition);
+            AudioClip voiceLine = voiceLineQueue.Dequeue();
+            AudioManager.Instance.PlayAudioSFX(voiceLine, transform.localPosition);
+            voiceLineQueue.Enqueue(voiceLine);
         }
     }
 
