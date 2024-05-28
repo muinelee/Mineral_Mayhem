@@ -109,4 +109,9 @@ public class StatusHandler : CharacterComponent
     {
         return Mathf.Clamp(((200 - GetArmorValue()) / 100), 0, 2);
     }
+
+    public bool IsStunned()
+    {
+        return stun > 0;
+    }
 }

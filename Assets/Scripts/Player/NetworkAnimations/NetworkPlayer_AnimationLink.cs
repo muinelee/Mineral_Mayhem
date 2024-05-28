@@ -72,6 +72,10 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
         }
         else
         {
+            if (Character.StatusHandler.IsStunned())
+            {
+                return;
+            }
             ResetAnimation();
         }
     }
