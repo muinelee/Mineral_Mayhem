@@ -132,7 +132,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         this.PlayQVoiceLine();
         Character.Animator.anim.CrossFade(qAttack.attackName, 0.2f);
-        Character.Animator.anim.CrossFade("Helper", 0.2f, 1);
+        Character.Animator.anim.CrossFade("Helper", 0.2f, 2);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -140,7 +140,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         this.PlayEVoiceLine();
         Character.Animator.anim.CrossFade(eAttack.attackName, 0.2f);
-        Character.Animator.anim.CrossFade("Helper", 0.2f, 1);
+        Character.Animator.anim.CrossFade("Helper", 0.2f, 2);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -148,7 +148,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         this.PlayFVoiceLine();
         Character.Animator.anim.CrossFade(fAttack.attackName, 0.1f);
-        Character.Animator.anim.CrossFade("Helper", 0.2f, 1);
+        Character.Animator.anim.CrossFade("Helper", 0.2f, 2);
     }
 
     public void PlayQVoiceLine()
@@ -183,7 +183,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         if (basicAttackCount == 0)
         {
             Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.1f);
-            Character.Animator.anim.CrossFade("Helper", 0.2f, 1);
+            Character.Animator.anim.CrossFade("Helper", 0.2f, 2);
             Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
         }
     }
