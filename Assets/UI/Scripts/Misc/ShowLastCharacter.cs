@@ -12,11 +12,11 @@ public class ShowLastCharacter : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerPrefs.GetInt("lastSelectedCharacter") == 0)
+        if (ClientInfo.CharacterID == 0)
         {
             crystaObject.SetActive(true);
         }
-        else if (PlayerPrefs.GetInt("lastSelectedCharacter") == 2)
+        else if (ClientInfo.CharacterID == 2)
         {
             pyreObject.SetActive(true);
         }
