@@ -11,4 +11,6 @@ public class SO_NetworkBasicAttack : SO_NetworkAttack
     Created separate Scriptable Object for safety
       
     */
+
+    public float momentum = 0;
 }

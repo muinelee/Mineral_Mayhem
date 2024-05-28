@@ -49,6 +49,11 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
         Character.Attack.ChainBasicAttack();
     }
 
+    public void AllowMomentum()
+    {
+        Character.Attack.AttackMomentum();
+    }
+
     public void ResetAnimation()
     {
         Character.Attack.ResetAttackCapabilities();
@@ -62,11 +67,15 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
 
         if (isBlocking)
         {
-            anim.CrossFade("Block", 0.2f);
+            anim.CrossFade("Block", 0.08f);
             anim.CrossFade("Helper", 0.2f, 1);
         }
         else
         {
+            if (Character.StatusHandler.IsStunned())
+            {
+                return;
+            }
             ResetAnimation();
         }
     }

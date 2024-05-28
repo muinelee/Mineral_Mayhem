@@ -10,6 +10,7 @@ public class StunStatus : StatusEffect
     [SerializeField] public string animationName = "GravityStun";
     public override void OnStatusApplied(StatusHandler handler)
     {
+        handler.stun++;
         if (animationName != "") handler.Character.Animator.anim.CrossFade(animationName, 0.2f);
         else handler.Character.Animator.ResetAnimation();
         handler.Character.Movement.canMove = false;
