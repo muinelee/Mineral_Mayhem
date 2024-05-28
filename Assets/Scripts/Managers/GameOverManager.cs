@@ -69,6 +69,7 @@ public class GameOverManager : NetworkBehaviour
                 player.Rigidbody.Rigidbody.velocity = Vector3.zero;
 
                 player.Animator.anim.Play("Victory");
+                player.Animator.anim.Play("Victory", 1);
 
                 player.gameObject.GetComponentInChildren<NetworkPlayer_WorldSpaceHUD>().HideFloatingHealthBar();
 
