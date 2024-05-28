@@ -57,8 +57,8 @@ public class NetworkPlayer_Attack : CharacterComponent
         {
 
             if (input.IsDown(NetworkInputData.ButtonF) && Character.Energy.IsUltCharged() && !isDefending) ActivateUlt();
-            else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref qAttack, true);
-            else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref eAttack, false);
+            else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref qAttack);
+            else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref eAttack);
             else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack && !isDefending) ActivateBasicAttack();
             ActivateBlock(input.IsDown(NetworkInputData.ButtonBlock));
         }
@@ -72,24 +72,23 @@ public class NetworkPlayer_Attack : CharacterComponent
         if (timer.Expired(Runner)) timer = TickTimer.None;
     }
 
-    private void ActivateAttack(ref SO_NetworkAttack attack, bool isQAttack)
+    private void ActivateAttack(ref SO_NetworkAttack attack)
     {
         if (Runner.IsServer == false) return;
 
         // Start Attack animation
         canAttack = false;
 
-        if (attack == qAttack) RPC_PlayQEffects();
-        else RPC_PlayEEffects();
-
-        // if isQAttack is false, it is  the eAttack
-        if (isQAttack)
+        if (attack == qAttack)
         {
+            RPC_PlayQEffects();
             StartQAttackCooldown();
             RPC_StartCoolDownTimer(true);
         }
+
         else
         {
+            RPC_PlayEEffects();
             StartEAttackCooldown();
             RPC_StartCoolDownTimer(false);
         }
@@ -133,6 +132,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         this.PlayQVoiceLine();
         Character.Animator.anim.CrossFade(qAttack.attackName, 0.2f);
+        Character.Animator.anim.CrossFade("Helper", 0.2f, 1);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -140,6 +140,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         this.PlayEVoiceLine();
         Character.Animator.anim.CrossFade(eAttack.attackName, 0.2f);
+        Character.Animator.anim.CrossFade("Helper", 0.2f, 1);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -147,6 +148,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         this.PlayFVoiceLine();
         Character.Animator.anim.CrossFade(fAttack.attackName, 0.1f);
+        Character.Animator.anim.CrossFade("Helper", 0.2f, 1);
     }
 
     public void PlayQVoiceLine()
@@ -195,6 +197,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         if (canBasicAttack) return;
 
         Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.1f);
+        Character.Animator.anim.CrossFade("Helper", 0.2f, 1);
         Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
     }
 
