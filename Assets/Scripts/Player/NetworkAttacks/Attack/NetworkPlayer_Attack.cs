@@ -183,6 +183,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         if (basicAttackCount == 0)
         {
             Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.1f);
+            Character.Animator.anim.CrossFade("Helper", 0.2f, 1);
             Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
         }
     }
@@ -197,7 +198,6 @@ public class NetworkPlayer_Attack : CharacterComponent
         if (canBasicAttack) return;
 
         Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.1f);
-        Character.Animator.anim.CrossFade("Helper", 0.2f, 1);
         Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
     }
 
