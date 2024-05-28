@@ -154,7 +154,7 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
         }
         else
         {
-            coolDownText.text = coolDown.ToString("0.0");
+            coolDownText.text = coolDown.ToString("F2");
             coolDownImage.fillAmount = coolDown / maxCoolDown;
         }
     }
