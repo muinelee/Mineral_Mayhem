@@ -150,18 +150,28 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
         if (coolDown == 0)
         {
             coolDownText.text = "";
-            coolDownImage.fillAmount = 0;
+            coolDownImage.fillAmount = 1;
+
+            //dashBackground.sprite = dash.GetDashBackground();
+            //qAttackBackground.sprite = qAttack.GetAttackBackground();
+            //eAttackBackground.sprite = eAttack.GetAttackBackground();
+            //fAttackBackground.sprite = fAttack.GetAttackBackground();
         }
         else
         {
             coolDownText.text = coolDown.ToString("0.0");
-            coolDownImage.fillAmount = coolDown / maxCoolDown;
+            coolDownImage.fillAmount = 1 - (coolDown / maxCoolDown);
+
+            //dashBackground.sprite = dash.GetDashBackgroundGrey();
+            //qAttackBackground.sprite = qAttack.GetAttackBackgroundGrey();
+            //eAttackBackground.sprite = eAttack.GetAttackBackgroundGrey();
+            //fAttackBackground.sprite = fAttack.GetAttackBackgroundGrey();
         }
     }
 
     private void DisplayAbilityCooldown(Image coolDownImage, float energyFill)
     {
-        coolDownImage.fillAmount = 1- energyFill;
+        coolDownImage.fillAmount = energyFill;
     }
 
     public void SetDash(SO_NetworkDash newDash)
