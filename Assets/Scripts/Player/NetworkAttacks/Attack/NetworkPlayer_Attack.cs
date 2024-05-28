@@ -193,6 +193,11 @@ public class NetworkPlayer_Attack : CharacterComponent
         canBasicAttack = true;
     }
 
+    public void AttackMomentum()
+    {
+        Character.Rigidbody.Rigidbody.AddForce(transform.forward * basicAttacks[basicAttackCount].momentum, ForceMode.Impulse);
+    }
+
     public void ChainBasicAttack()
     {
         if (canBasicAttack) return;
