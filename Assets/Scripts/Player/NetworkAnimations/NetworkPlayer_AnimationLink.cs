@@ -66,6 +66,7 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
         if (isBlocking)
         {
             anim.CrossFade("Block", 0.2f);
+            anim.CrossFade("Helper", 0.2f, 1);
         }
         else
         {
