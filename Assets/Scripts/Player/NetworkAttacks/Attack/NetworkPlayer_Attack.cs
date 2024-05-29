@@ -195,6 +195,8 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public void AttackMomentum()
     {
+        if (!Runner.IsServer) return;
+
         Character.Rigidbody.Rigidbody.AddForce(transform.forward * basicAttacks[basicAttackCount].momentum, ForceMode.Impulse);
     }
 
