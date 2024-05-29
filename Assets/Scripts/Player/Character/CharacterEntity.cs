@@ -107,7 +107,7 @@ public class CharacterEntity : CharacterComponent
 
     public NetworkPlayer.Team Team { get; private set; }
     public bool hasDespawned = false;
-    public SpriteRenderer TeamIndicator;
+    public MeshRenderer TeamIndicator;
 
     public GameObject Shield;
 
@@ -118,7 +118,7 @@ public class CharacterEntity : CharacterComponent
         Rigidbody = GetComponent<NetworkRigidbody>();
         Collider = GetComponent<Collider>();
 
-        if (!TeamIndicator) TeamIndicator = GetComponentInChildren<SpriteRenderer>();
+        if (!TeamIndicator) TeamIndicator = transform.Find("TeamIndicator").GetComponentInChildren<MeshRenderer>();
         if (Object.HasInputAuthority) RPC_SetTeam(NetworkPlayer.Local.team);
         
         var components = GetComponentsInChildren<CharacterComponent>();
@@ -153,7 +153,7 @@ public class CharacterEntity : CharacterComponent
     {
         this.Team = team;
 
-        if (team == NetworkPlayer.Team.Red) this.TeamIndicator.color = Color.red;
-        else this.TeamIndicator.color = Color.blue;
+        if (team == NetworkPlayer.Team.Red) this.TeamIndicator.material.color = Color.red;
+        else this.TeamIndicator.material.color = Color.blue;
     }
 }
