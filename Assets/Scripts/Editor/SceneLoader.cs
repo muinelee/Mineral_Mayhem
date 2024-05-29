@@ -19,6 +19,7 @@ public class SceneLoader : Editor
             case 2:
             case 3:
                 EditorSceneManager.OpenScene("Assets/_Scenes/Level Design/AbigailMckellarLD.unity", OpenSceneMode.Additive);
+                EditorSceneManager.SetActiveScene(EditorSceneManager.GetSceneByPath("Assets/_Scenes/Level Design/AbigailMckellarLD.unity"));
                 break;
         }
     }
