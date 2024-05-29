@@ -322,7 +322,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   hasDespawned: 0
-  TeamIndicator: {fileID: 3987719224264694343}
+  TeamIndicator: {fileID: 0}
+  materialInstance: {fileID: 0}
   Shield: {fileID: 4527974533316792496}
 --- !u!114 &-1744896782790441292
 MonoBehaviour:
@@ -376,7 +377,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1498696027150130130, guid: 397fe4472c895b545b796cf273245a53, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.29
       objectReference: {fileID: 0}
     - target: {fileID: 1498696027150130130, guid: 397fe4472c895b545b796cf273245a53, type: 3}
       propertyPath: m_LocalPosition.z
@@ -414,6 +415,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Team Indicator
       objectReference: {fileID: 0}
+    - target: {fileID: 5648928601468480908, guid: 397fe4472c895b545b796cf273245a53, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 56f944a53eb7d7543aec08df4eecc7ef, type: 2}
     - target: {fileID: 6017611117395691574, guid: 397fe4472c895b545b796cf273245a53, type: 3}
       propertyPath: m_Radius
       value: 0.8
@@ -450,11 +455,6 @@ PrefabInstance:
 --- !u!4 &1841117810212969303 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1498696027150130130, guid: 397fe4472c895b545b796cf273245a53, type: 3}
-  m_PrefabInstance: {fileID: 954911539770491013}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &3987719224264694343 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 4186024925975943874, guid: 397fe4472c895b545b796cf273245a53, type: 3}
   m_PrefabInstance: {fileID: 954911539770491013}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1501128538032766386
