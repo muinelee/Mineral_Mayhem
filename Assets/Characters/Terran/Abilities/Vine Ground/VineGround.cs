@@ -21,6 +21,8 @@ public class VineGround : NetworkAttack_Base
     {
         base.Spawned();
 
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+
         tickRateTimer = TickTimer.CreateFromSeconds(Runner, tickRate);
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifetimeDuration);
     }
