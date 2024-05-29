@@ -8,7 +8,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public float HP { get; set; }
 
     // Callback is Temporary until OnHPChanged is implemented
-    [Networked(OnChanged = nameof(OnHPChanged))]  
+    [Networked(OnChanged = nameof(OnHPChanged))]
     public float BP { get; set; }
 
     [Networked(OnChanged = nameof(OnStateChanged))]
@@ -54,15 +54,15 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public override void Spawned()
     {
         if (HP == startingHP) isDead = false;
-        RoundManager rm = RoundManager.Instance; 
+        RoundManager rm = RoundManager.Instance;
         if (rm != null)
         {
             rm.ResetRound += Respawn;
-            rm.MatchEndEvent += DisableControls; 
+            rm.MatchEndEvent += DisableControls;
         }
         else
         {
-            Respawn(); 
+            Respawn();
         }
     }
 
@@ -153,11 +153,16 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         }
         else
         {
-            Character.Animator.anim.Play("Hit", 1);
             NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
+            if (damageAmount > 1) RPC_PlayHitAnimation();
         }
     }
 
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_PlayHitAnimation()
+    {
+        Character.Animator.anim.Play("Hit", 1);
+    }
 
     public void OnKnockBack(float force, Vector3 source)
     {
