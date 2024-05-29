@@ -24,23 +24,27 @@ public class NetworkRunnerHandler : MonoBehaviour
 
     void Start()
     {
-        if (FindAnyObjectByType<NetworkRunner>()) return;
 
         networkRunner = Instantiate(networkRunnerPrefab);
         networkRunner.name = "NetworkRunner";
 
         //Debug.Log($"Created a network runner at {SceneManager.GetActiveScene().name}");
-
+        /*
         if (SceneManager.GetActiveScene().name == "RichardCPhoton")     // Change "RichardCPhoton" to game scene name in future
         {
             var clientTask = InitializeNetworkRunner(networkRunner, GameMode.AutoHostOrClient, "TestSession", NetAddress.Any(), SceneManager.GetActiveScene().buildIndex, null);
         }
-
+        */
         //Debug.Log($"Server NetworkRunner started.");
     }
 
     INetworkSceneManager GetSceneManager(NetworkRunner runner)
     {
+        if (runner == null)
+        {
+            runner = FindAnyObjectByType<NetworkRunner>();
+        }
+
         var sceneManager = runner.GetComponents(typeof(MonoBehaviour)).OfType<INetworkSceneManager>().FirstOrDefault();
 
         if (sceneManager == null) sceneManager = runner.gameObject.AddComponent<NetworkSceneManagerDefault>();

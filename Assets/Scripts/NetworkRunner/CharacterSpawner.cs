@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using static Unity.Collections.Unicode;
+using System.Collections;
 
 public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -12,7 +14,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public NetworkPlayer playerPrefab;
 
     [Header("Session Lobby Manager")]
-    [SerializeField] private SessionLobbyManager sessionLobbyManager;
+    public SessionLobbyManager sessionLobbyManager;
 
     // Dictionary for holding player UserIDs
     private Dictionary<int, NetworkPlayer> mapTokenIDWithNetworkPlayer = new Dictionary<int, NetworkPlayer>();
@@ -44,7 +46,15 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         NetworkPlayer.Players.Clear();
         FindAnyObjectByType<NetworkRunner>().Shutdown();
+        StartCoroutine(DelayedDestroy());
         SceneManager.LoadScene(0);
+    }
+
+    IEnumerator DelayedDestroy()
+    {
+        yield return 0;
+
+        Destroy(this.gameObject);
     }
 
     public async void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)

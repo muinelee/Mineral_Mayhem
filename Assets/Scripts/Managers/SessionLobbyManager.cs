@@ -16,6 +16,11 @@ public class SessionLobbyManager : MonoBehaviour
         ClearList();
     }
 
+    private void OnEnable()
+    {
+        FindAnyObjectByType<CharacterSpawner>().sessionLobbyManager = this;
+    }
+
     public void ClearList()
     {
         // Clear
