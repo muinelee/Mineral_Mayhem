@@ -214,6 +214,6 @@ public class NetworkPlayer_Movement : CharacterComponent
     {
         AudioManager.Instance.PlayAudioSFX(this.dashSounds[0], transform.position);
         Character.Animator.anim.CrossFade("Dash", 0.03f);
-        Character.Animator.anim.CrossFade("Helper", 0.03f, 1);
+        Character.Animator.anim.CrossFade("Helper", 0.03f, 2);
     }
 }
