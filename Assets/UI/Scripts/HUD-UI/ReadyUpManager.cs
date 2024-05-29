@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using UnityEngine.UI;
-using TMPro;
 
 public class ReadyUpManager : MonoBehaviour
 {
@@ -31,12 +30,16 @@ public class ReadyUpManager : MonoBehaviour
     [Header("Round Manager")]
     [SerializeField] private RoundManager roundManagerPF;
 
+    // Arena
+    private Arena arena;
+
     // Keep track of which player is at team list
     private Dictionary<NetworkPlayer, ReadyUpName> playerTeamDisplayPair = new Dictionary<NetworkPlayer, ReadyUpName>();
 
     private void Awake()
     {
         instance = this;
+        arena = FindAnyObjectByType<Arena>();
     }
 
     public void OnStartGame()
@@ -63,7 +66,7 @@ public class ReadyUpManager : MonoBehaviour
 
     public void OnQuitGame()
     {
-        FindObjectOfType<Arena>().QuitToMenu();
+        arena.QuitToMenu();
     }
 
     public void FadeScreenIn()

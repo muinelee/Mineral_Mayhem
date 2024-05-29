@@ -183,7 +183,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         if (basicAttackCount == 0)
         {
             Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.1f);
-            Character.Animator.anim.CrossFade("Helper", 0.2f, 1);
+            Character.Animator.anim.CrossFade("Helper", 0.2f, 2);
             Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
         }
     }
@@ -195,6 +195,8 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public void AttackMomentum()
     {
+        if (!Runner.IsServer) return;
+
         Character.Rigidbody.Rigidbody.AddForce(transform.forward * basicAttacks[basicAttackCount].momentum, ForceMode.Impulse);
     }
 

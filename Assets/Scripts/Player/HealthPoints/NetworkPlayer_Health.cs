@@ -151,7 +151,11 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         {
             isDead = true;
         }
-        else NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
+        else
+        {
+            Character.Animator.anim.Play("Hit", 1);
+            NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
+        }
     }
 
 
@@ -172,7 +176,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         teamCamTimer = TickTimer.CreateFromSeconds(Runner, timeUntilTeamCam);
 
         Character.Animator.anim.CrossFade("Death", 0.2f);
-        Character.Animator.anim.CrossFade("Death", 0.2f, 1);
+        Character.Animator.anim.CrossFade("Death", 0.2f, 2);
 
         if (!NetworkPlayer.Local.HasStateAuthority) return;
         if (RoundManager.Instance)
@@ -185,7 +189,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         EnableControls();
         Character.Animator.anim.Play("Run");
-        Character.Animator.anim.Play("Run", 1);
+        Character.Animator.anim.Play("Run", 2);
         if (Object.HasInputAuthority) NetworkCameraEffectsManager.instance.GoToTopCamera();
     }
 
