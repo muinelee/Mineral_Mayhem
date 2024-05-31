@@ -55,12 +55,17 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (GetInput(out NetworkInputData input) && canAttack)
         {
+            bool isBlocking = input.IsDown(NetworkInputData.ButtonBlock);
 
-            if (input.IsDown(NetworkInputData.ButtonF) && Character.Energy.IsUltCharged() && !isDefending) ActivateUlt();
-            else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref qAttack);
-            else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref eAttack);
-            else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack && !isDefending) ActivateBasicAttack();
-            ActivateBlock(input.IsDown(NetworkInputData.ButtonBlock));
+            if (!isBlocking)
+            {
+                if (input.IsDown(NetworkInputData.ButtonF) && Character.Energy.IsUltCharged() && !isDefending) ActivateUlt();
+                else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref qAttack);
+                else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref eAttack);
+                else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack && !isDefending) ActivateBasicAttack();
+            }
+
+            ActivateBlock(isBlocking);
         }
 
         ManageTimers(ref qAttackCoolDownTimer);

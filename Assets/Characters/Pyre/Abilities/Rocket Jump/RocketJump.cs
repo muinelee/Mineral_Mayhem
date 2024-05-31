@@ -50,6 +50,7 @@ public class RocketJump : NetworkAttack_Base
 
             //Enable colliders
             character.Rigidbody.Rigidbody.useGravity = true;
+            character.Rigidbody.Rigidbody.velocity *= 0.2f;
         }
 
         if (attackLifeTimer.Expired(Runner)) AttackEnd();
@@ -74,7 +75,7 @@ public class RocketJump : NetworkAttack_Base
                 startHeight = rigTransform.position.y;
                 
                 // Apply force
-                character.Rigidbody.Rigidbody.AddForce(transform.forward * forceForward);
+                character.Rigidbody.Rigidbody.AddForce(transform.forward * forceForward, ForceMode.Impulse);
 
                 // Disable collider and gravity
                 character.Rigidbody.Rigidbody.useGravity = false;
@@ -101,7 +102,7 @@ public class RocketJump : NetworkAttack_Base
 
             if (playerHit == null || CheckIfSameTeam(playerHit.team)) continue;
 
-            playerHit.OnTakeDamage(damage);
+            playerHit.OnTakeDamage(damage, true);
             playerHit.OnKnockBack(knockback, rigTransform.position);
 
             StatusHandler statusHandler = hit.GameObject.GetComponentInParent<StatusHandler>();

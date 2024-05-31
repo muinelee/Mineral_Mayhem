@@ -52,7 +52,8 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
         else if (Input.GetKey(KeyCode.E)) userInput.Buttons |= NetworkInputData.ButtonE;
         else if (Input.GetKey(KeyCode.Space)) userInput.Buttons |= NetworkInputData.ButtonDash;
         else if (Input.GetKey(KeyCode.Mouse0)) userInput.Buttons |= NetworkInputData.ButtonBasic;
-        else if (Input.GetKey(KeyCode.Mouse1)) userInput.Buttons |= NetworkInputData.ButtonBlock;
+        
+        if (Input.GetKey(KeyCode.Mouse1)) userInput.Buttons |= NetworkInputData.ButtonBlock;
         
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit raycastHit, Mathf.Infinity, layerMask))
             userInput.cursorLocation = new Vector2(raycastHit.point.x, raycastHit.point.z);

@@ -77,7 +77,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     public override void OnHit(float x)
     {
-        OnTakeDamage(x);
+        OnTakeDamage(x, true);
     }
 
     public void HandleBlockMeter()
@@ -131,7 +131,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     }
 
     // Function only called on the server
-    public void OnTakeDamage(float damageAmount)
+    public void OnTakeDamage(float damageAmount, bool playReact)
     {
         if (damageAmount < 0 || isDead) return;
 
@@ -154,7 +154,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         else
         {
             NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
-            if (damageAmount > 1) RPC_PlayHitAnimation();
+            if (playReact) RPC_PlayHitAnimation();
         }
     }
 
