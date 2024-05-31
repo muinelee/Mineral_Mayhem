@@ -65,7 +65,7 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
 
-                healthComponent.OnTakeDamage(damage);
+                healthComponent.OnTakeDamage(damage, true);
                 healthComponent.OnKnockBack(knockback, transform.position);
                 AttackEnd();
             }
