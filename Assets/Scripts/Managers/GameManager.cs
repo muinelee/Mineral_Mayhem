@@ -60,6 +60,7 @@ public class GameManager : NetworkBehaviour
 
         if (sceneCheck.isLoaded) return;
         SceneManager.LoadScene(CurrentArena.definition.buildIndex, LoadSceneMode.Additive);
+        SceneManager.SetActiveScene(sceneCheck);
     }
     public static void LoadLayout(int sceneRef)
     {
@@ -67,5 +68,6 @@ public class GameManager : NetworkBehaviour
 
         if (sceneCheck.isLoaded) return;
         SceneManager.LoadScene(sceneRef, LoadSceneMode.Additive);
+        SceneManager.SetActiveScene(sceneCheck);
     }
 }

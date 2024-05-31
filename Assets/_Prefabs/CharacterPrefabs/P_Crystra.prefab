@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: -3502269285514861877}
   - component: {fileID: -1744896782790441292}
   - component: {fileID: 5727034272847374001}
+  - component: {fileID: 4274321803357636934}
   m_Layer: 7
   m_Name: P_Crystra
   m_TagString: Player
@@ -82,6 +83,7 @@ MonoBehaviour:
   - {fileID: -3502269285514861877}
   - {fileID: -1744896782790441292}
   - {fileID: 5727034272847374001}
+  - {fileID: 4274321803357636934}
   - {fileID: 644786155593121299}
   - {fileID: 6932017674382772014}
   SimulationBehaviours: []
@@ -364,6 +366,62 @@ MonoBehaviour:
   _interpolationDataSource: 0
   playerUIPF: {fileID: 2018398355284987020, guid: 07a4e68738063bb44a1e1f9c0dd509b5, type: 3}
   playerUI: {fileID: 0}
+--- !u!114 &4274321803357636934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593386485324816745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba216b44166694449b4cfd2f369d7b87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  flashCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -0.0107093295
+      outSlope: -0.0107093295
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.10583158
+      value: 0.9030039
+      inSlope: 2.097797
+      outSlope: 2.097797
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.88584894
+      outWeight: 0.30012763
+    - serializedVersion: 3
+      time: 0.28450894
+      value: 0.90465343
+      inSlope: -2.0941586
+      outSlope: -2.0941586
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.21090458
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  flashDuration: 0.3
 --- !u!1001 &954911539770491013
 PrefabInstance:
   m_ObjectHideFlags: 0
