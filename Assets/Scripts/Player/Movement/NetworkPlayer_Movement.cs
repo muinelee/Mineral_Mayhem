@@ -9,6 +9,7 @@ public class NetworkPlayer_Movement : CharacterComponent
     [Header("Movement properties")]
     [SerializeField] private float turnTime;
     public bool canMove = true;
+    public bool canDash = true;
     private Vector3 targetDirection;
     private float dashSpeed = 0;
     private float turnSmoothVel;
@@ -55,7 +56,7 @@ public class NetworkPlayer_Movement : CharacterComponent
                     if (Runner.IsServer) Character.Rigidbody.Rigidbody.AddForce(moveDir * (GetCombinedSpeed() + dashSpeed) * abilitySlow * statusSlow);
 
                     // Dash (Can be a boost or buff)
-                    if (input.IsDown(NetworkInputData.ButtonDash)) MobilityAbility(moveDir);
+                    if (input.IsDown(NetworkInputData.ButtonDash) && canDash) MobilityAbility(moveDir);
 
                     // Play movement animation
                     PlayMovementAnimation(moveDir);
@@ -82,6 +83,8 @@ public class NetworkPlayer_Movement : CharacterComponent
     {
         if (dashCoolDownTimer.IsRunning) return;
         if (Runner.IsServer == false) return;
+
+        canDash = false;
 
         RPC_DashFX();
 

@@ -76,9 +76,16 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (Runner.IsServer == false) return;
 
-        // Start Attack animation
-        canAttack = false;
+        if (!canBasicAttack) Debug.Log("Attacking in the middle of a basic attack");
 
+        // Prevent further attacks
+        canAttack = false;
+        canBasicAttack = false;
+
+        // Prevent dash cancel if applicable
+        Character.Movement.canDash = attack.GetAllowDashCancel();
+
+        // Start Attack animation
         if (attack == qAttack)
         {
             RPC_PlayQEffects();
@@ -120,6 +127,9 @@ public class NetworkPlayer_Attack : CharacterComponent
 
         // Start Ult animation
         canAttack = false;
+        canBasicAttack = false;
+
+        Character.Movement.canDash = fAttack.GetAllowDashCancel();
         Character.Energy.energy = 0;
         RPC_PlayFEffects();
 
@@ -131,7 +141,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     private void RPC_PlayQEffects()
     {
         this.PlayQVoiceLine();
-        Character.Animator.anim.CrossFade(qAttack.attackName, 0.2f);
+        Character.Animator.anim.CrossFade(qAttack.attackName, 0.05f);
         Character.Animator.anim.CrossFade("Helper", 0.2f, 2);
     }
 
@@ -139,7 +149,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     private void RPC_PlayEEffects()
     {
         this.PlayEVoiceLine();
-        Character.Animator.anim.CrossFade(eAttack.attackName, 0.2f);
+        Character.Animator.anim.CrossFade(eAttack.attackName, 0.05f);
         Character.Animator.anim.CrossFade("Helper", 0.2f, 2);
     }
 
@@ -147,7 +157,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     private void RPC_PlayFEffects()
     {
         this.PlayFVoiceLine();
-        Character.Animator.anim.CrossFade(fAttack.attackName, 0.1f);
+        Character.Animator.anim.CrossFade(fAttack.attackName, 0.05f);
         Character.Animator.anim.CrossFade("Helper", 0.2f, 2);
     }
 
@@ -178,11 +188,15 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     private void ActivateBasicAttack()
     {
+        if (!canAttack) return;
+
+        Debug.Log("Activating Basic Attack");
+
         canBasicAttack = false;
 
         if (basicAttackCount == 0)
         {
-            Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.1f);
+            Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.01f);
             Character.Animator.anim.CrossFade("Helper", 0.2f, 2);
             Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
         }
@@ -202,7 +216,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public void ChainBasicAttack()
     {
-        if (canBasicAttack) return;
+        if (canBasicAttack || !canAttack) return;
 
         Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.1f);
         Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
@@ -300,6 +314,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         canBasicAttack = true;
         basicAttackCount = 0;
         Character.Movement.ResetSlows();
+        Character.Movement.canDash = true;
     }
 
     //[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
