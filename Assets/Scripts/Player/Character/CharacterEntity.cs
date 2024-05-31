@@ -2,6 +2,7 @@ using Fusion;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class CharacterEntity : CharacterComponent
 {
@@ -107,7 +108,8 @@ public class CharacterEntity : CharacterComponent
 
     public NetworkPlayer.Team Team { get; private set; }
     public bool hasDespawned = false;
-    public SpriteRenderer TeamIndicator;
+    public DecalProjector TeamIndicator;
+    public Material materialInstance;
 
     public GameObject Shield;
 
@@ -118,7 +120,10 @@ public class CharacterEntity : CharacterComponent
         Rigidbody = GetComponent<NetworkRigidbody>();
         Collider = GetComponent<Collider>();
 
-        if (!TeamIndicator) TeamIndicator = GetComponentInChildren<SpriteRenderer>();
+        if (!TeamIndicator) TeamIndicator = GetComponentInChildren<DecalProjector>();
+        materialInstance = new Material(TeamIndicator.material);
+        TeamIndicator.material = materialInstance;
+
         if (Object.HasInputAuthority) RPC_SetTeam(NetworkPlayer.Local.team);
         
         var components = GetComponentsInChildren<CharacterComponent>();
@@ -153,7 +158,7 @@ public class CharacterEntity : CharacterComponent
     {
         this.Team = team;
 
-        if (team == NetworkPlayer.Team.Red) this.TeamIndicator.color = Color.red;
-        else this.TeamIndicator.color = Color.blue;
+        if (team == NetworkPlayer.Team.Red) materialInstance.SetColor("_Color", Color.red);
+        else materialInstance.SetColor("_Color", Color.blue);
     }
 }

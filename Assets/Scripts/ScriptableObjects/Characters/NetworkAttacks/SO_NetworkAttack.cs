@@ -28,6 +28,9 @@ public class SO_NetworkAttack : ScriptableObject
     [Header("Cooldown Properties")]
     [SerializeField] private float coolDown;
 
+    [Header("Allow Dash Cancel Property")]
+    [SerializeField] private bool allowDashCancel = false;
+
     public NetworkObject GetAttackPrefab()
     {
         return attack;
@@ -63,5 +66,10 @@ public class SO_NetworkAttack : ScriptableObject
     public AudioClip[] GetVoiceLine()
     {
         return voiceLine;
+    }
+
+    public bool GetAllowDashCancel()
+    {
+        return allowDashCancel;
     }
 }

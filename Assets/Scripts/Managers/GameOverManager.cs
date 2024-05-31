@@ -113,6 +113,6 @@ public class GameOverManager : NetworkBehaviour
         runner.Shutdown();
 
         if (gameOver) SceneManager.LoadScene(0);
-        else SceneManager.LoadScene(4);
+        else SceneManager.LoadScene(5);
     }
 }
