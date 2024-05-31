@@ -22,7 +22,7 @@ public class RotateObject : MonoBehaviour
     private IEnumerator iRotate(float degrees)
     {
         Vector3 startRotation = transform.rotation.eulerAngles;
-        Vector3 endRotation = new Vector3(0, degrees, 0);
+        Vector3 endRotation = new Vector3(transform.rotation.eulerAngles.x, degrees, transform.rotation.eulerAngles.z);
 
         yield return new WaitForSecondsRealtime(rotateDelay);
 
@@ -30,7 +30,7 @@ public class RotateObject : MonoBehaviour
         while (timeElapsed < lerpDuration)
         {
 
-            curRotation = new Vector3(0, Mathf.Lerp(startRotation.y, endRotation.y, timeElapsed / lerpDuration), 0);
+            curRotation = new Vector3(transform.rotation.eulerAngles.x, Mathf.Lerp(startRotation.y, endRotation.y, timeElapsed / lerpDuration), transform.rotation.eulerAngles.z);
             transform.localEulerAngles = curRotation;
             timeElapsed += Time.unscaledDeltaTime;
             yield return new WaitForSecondsRealtime(0.005f);

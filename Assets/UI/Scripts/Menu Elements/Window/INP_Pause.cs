@@ -82,4 +82,8 @@ public class INP_Pause : MonoBehaviour
     {
         pastCharacterSelect = true;
     }
+    public void BackToCharacterSelect()
+    {
+        pastCharacterSelect = false;
+    }
 }
