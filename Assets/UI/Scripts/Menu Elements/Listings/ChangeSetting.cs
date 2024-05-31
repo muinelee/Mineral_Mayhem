@@ -35,7 +35,11 @@ public class ChangeSetting : MonoBehaviour
     }
     private void Start()
     {
-        
+        if (!PlayerPrefs.HasKey("InitSettings"))
+        {
+            ResetSettings();
+            PlayerPrefs.SetInt("InitSettings", 1);
+        }
     }
 
     public void SetSettings()
@@ -69,9 +73,9 @@ public class ChangeSetting : MonoBehaviour
         mixer.SetFloat("music", 0.8f * 80 - 80);
         mixer.SetFloat("sfx", 1 * 80 - 80);
 
-        PP_Brightness.weight = 0.55f;
-        PP_Contrast.weight = 0.7f;
-        PP_Saturation.weight = 0.6f;
+        PP_Brightness.weight = 0.75f;
+        PP_Contrast.weight = 0.75f;
+        PP_Saturation.weight = 0.55f;
 
         S_Windowed.ResetSettings();
         S_PostProcessing.ResetSettings();

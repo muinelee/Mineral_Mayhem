@@ -27,6 +27,7 @@ public class BTN_OpenClose : MonoBehaviour
         if (!disabled)
         {
             ButtonCooldownManager.instance.ButtonCooldown();
+            gameObject.GetComponent<BTN_Animation>().ColorRevert();
             onPress?.Invoke();
             StartCoroutine(iOnPress());
         }

@@ -11,7 +11,10 @@ public class INP_Pause : MonoBehaviour
     [SerializeField] GameObject[] windowsToClose;
     [SerializeField] float delay = 0.5f;
 
-    bool paused = false;
+    public bool paused = false;
+
+    // Used for ClosePauseMenuUntilPastCharacterSelect.cs
+    public bool pastCharacterSelect = false;
 
     //--------------------------------//
 
@@ -73,5 +76,14 @@ public class INP_Pause : MonoBehaviour
     public void ChangePauseBool(bool isPaused)
     {
         paused = isPaused;
+    }
+
+    public void PastCharacterSelect()
+    {
+        pastCharacterSelect = true;
+    }
+    public void BackToCharacterSelect()
+    {
+        pastCharacterSelect = false;
     }
 }
