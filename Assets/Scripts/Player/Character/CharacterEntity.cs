@@ -69,6 +69,7 @@ public class CharacterEntity : CharacterComponent
     public NetworkPlayer_Health Health { get; private set; }
     public NetworkPlayer_Energy Energy { get; private set; }
     public NetworkPlayer_OnSpawnUI PlayerUI { get; private set; }
+    public CharacterVisualHandler VisualHandler { get; private set; }
 
     # region Private Setter Functions
     public void SetAnimationLink(NetworkPlayer_AnimationLink characterComp)
@@ -102,6 +103,10 @@ public class CharacterEntity : CharacterComponent
     public void SetPlayerUI(NetworkPlayer_OnSpawnUI characterComp)
     {
         PlayerUI = characterComp;
+    }
+    public void SetVisualHandler(CharacterVisualHandler characterComp)
+    {
+        VisualHandler = characterComp;
     }
     #endregion
 
