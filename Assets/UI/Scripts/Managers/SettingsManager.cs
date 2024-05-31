@@ -11,4 +11,7 @@ public class SettingsManager
     public static float volumeMaster = 1f;
     public static float volumeMusic = 0.8f;
     public static float volumeSFX = 1f;
+
+    // Temp Data
+    public static bool firstTimeAtMenu = true;
 }
