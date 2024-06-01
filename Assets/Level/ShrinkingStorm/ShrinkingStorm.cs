@@ -87,7 +87,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
 
             if (healthComponent != null) {
                 if (!stormCollider.bounds.Contains(hit.GameObject.transform.position)) {
-                    healthComponent.OnTakeDamage(damage);
+                    healthComponent.OnTakeDamage(damage, false);
                     //Debug.Log("player dealt " + damage);
                 }
             }
