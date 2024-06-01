@@ -12,7 +12,8 @@ public class CharacterVisualHandler : CharacterComponent
 
     private Material[] materials;
     private Color[] originalColors;
-    [Networked(OnChanged = nameof(OnBoolChanged))] public bool effectActive { get; set; } = false;
+    [Networked(OnChanged = nameof(OnBoolChanged))]
+    public bool effectActive { get; set; }
     private float flashTimer = 0;
 
     public override void Init(CharacterEntity character)
@@ -25,7 +26,7 @@ public class CharacterVisualHandler : CharacterComponent
     {
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         Assert.Check(meshRenderer);
-
+        effectActive = false;
         materials = meshRenderer.materials;
         originalColors = new Color[materials.Length];
         for (int i = 0; i < materials.Length; i++)
@@ -35,7 +36,7 @@ public class CharacterVisualHandler : CharacterComponent
         Debug.Log($"Found {materials.Length} materials on {Character.name}");
     }
 
-    private void FixedUpdate()
+    public override void FixedUpdateNetwork()
     {
         if (!effectActive) return;
 
