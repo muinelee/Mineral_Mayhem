@@ -66,7 +66,8 @@ public class CharacterVisualHandler : CharacterComponent
         effectActive = true;
     }
 
-    static void OnBoolChanged(Changed<NetworkPlayer_Health> changed)
+    static void OnBoolChanged(Changed<CharacterVisualHandler> changed)
     {
+
     }
 }
