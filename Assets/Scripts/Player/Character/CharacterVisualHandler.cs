@@ -69,3 +69,4 @@ public class CharacterVisualHandler : CharacterComponent
     static void OnBoolChanged(Changed<NetworkPlayer_Health> changed)
     {
     }
+}
