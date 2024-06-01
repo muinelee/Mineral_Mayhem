@@ -18,6 +18,7 @@ public class CharacterVisualHandler : CharacterComponent
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
+        Debug.Log("Setting CHV");
         character.SetVisualHandler(this);
     }
 
