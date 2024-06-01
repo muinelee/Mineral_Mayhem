@@ -12,13 +12,12 @@ public class CharacterVisualHandler : CharacterComponent
 
     private Material[] materials;
     private Color[] originalColors;
-    private bool effectActive = false;
+    [Networked(OnChanged = nameof(OnBoolChanged))] public bool effectActive { get; set; } = false;
     private float flashTimer = 0;
 
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
-        Debug.Log("Setting CHV");
         character.SetVisualHandler(this);
     }
 
@@ -33,13 +32,13 @@ public class CharacterVisualHandler : CharacterComponent
         {
             originalColors[i] = materials[i].color;
         }
+        Debug.Log($"Found {materials.Length} materials on {Character.name}");
     }
 
     private void FixedUpdate()
     {
         if (!effectActive) return;
 
-        Debug.Log("Flashing!!!!");
         flashTimer += Time.fixedDeltaTime;
         float t = flashTimer / flashDuration;
         float curveValue = flashCurve.Evaluate(t);
@@ -50,13 +49,13 @@ public class CharacterVisualHandler : CharacterComponent
             effectActive = false;
             for (int i = 0; i < materials.Length; i++)
             {
-                materials[i].SetColor("_Color", originalColors[i]);
+                materials[i].SetColor("_BaseColor", originalColors[i]);
             }
         }
 
         for (int i = 0; i < materials.Length; i++)
         {
-            materials[i].SetColor("_Color", Color.Lerp(originalColors[i], flashColor, curveValue));
+            materials[i].SetColor("_BaseColor", Color.Lerp(originalColors[i], flashColor, curveValue));
         }
     }
 
@@ -65,6 +64,8 @@ public class CharacterVisualHandler : CharacterComponent
         if (effectActive) return;
         flashTimer = 0f;
         effectActive = true;
-        Debug.Log("Flash!");
     }
-}
+
+    static void OnBoolChanged(Changed<NetworkPlayer_Health> changed)
+    {
+    }
