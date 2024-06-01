@@ -21,7 +21,7 @@ public class Terran_BasicAttack : NetworkAttack_Base
     {
         base.Spawned();
 
-        //AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
 
         transform.position += transform.forward * offset;
 
