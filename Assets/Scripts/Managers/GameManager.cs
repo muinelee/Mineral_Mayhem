@@ -2,6 +2,7 @@ using UnityEngine;
 using Fusion;
 using System;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : NetworkBehaviour
 {
@@ -60,7 +61,7 @@ public class GameManager : NetworkBehaviour
 
         if (sceneCheck.isLoaded) return;
         SceneManager.LoadScene(CurrentArena.definition.buildIndex, LoadSceneMode.Additive);
-        SceneManager.SetActiveScene(sceneCheck);
+        Instance.StartCoroutine(Instance.SetScene(CurrentArena.definition.buildIndex));
     }
     public static void LoadLayout(int sceneRef)
     {
@@ -68,6 +69,16 @@ public class GameManager : NetworkBehaviour
 
         if (sceneCheck.isLoaded) return;
         SceneManager.LoadScene(sceneRef, LoadSceneMode.Additive);
-        SceneManager.SetActiveScene(sceneCheck);
+        Instance.StartCoroutine(Instance.SetScene(sceneRef));
+    }
+
+    private IEnumerator SetScene(int buildIndex)
+    {
+        Scene scene = SceneManager.GetSceneByBuildIndex(buildIndex);
+        while (!scene.isLoaded)
+        {
+            yield return null;
+        }
+        SceneManager.SetActiveScene(scene);
     }
 }

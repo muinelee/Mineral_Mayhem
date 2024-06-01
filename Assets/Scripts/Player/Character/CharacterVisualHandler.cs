@@ -38,6 +38,7 @@ public class CharacterVisualHandler : CharacterComponent
     {
         if (!effectActive) return;
 
+        Debug.Log("Flashing!!!!");
         flashTimer += Time.fixedDeltaTime;
         float t = flashTimer / flashDuration;
         float curveValue = flashCurve.Evaluate(t);
@@ -48,13 +49,13 @@ public class CharacterVisualHandler : CharacterComponent
             effectActive = false;
             for (int i = 0; i < materials.Length; i++)
             {
-                materials[i].color = originalColors[i];
+                materials[i].SetColor("_Color", originalColors[i]);
             }
         }
 
         for (int i = 0; i < materials.Length; i++)
         {
-            materials[i].color = Color.Lerp(originalColors[i], flashColor, curveValue);
+            materials[i].SetColor("_Color", Color.Lerp(originalColors[i], flashColor, curveValue));
         }
     }
 
@@ -63,5 +64,6 @@ public class CharacterVisualHandler : CharacterComponent
         if (effectActive) return;
         flashTimer = 0f;
         effectActive = true;
+        Debug.Log("Flash!");
     }
 }
