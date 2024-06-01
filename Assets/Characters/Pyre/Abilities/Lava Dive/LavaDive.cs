@@ -141,7 +141,7 @@ public class LavaDive : NetworkAttack_Base
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.team)) continue;
 
-                healthComponent.OnTakeDamage(tickDamage);
+                healthComponent.OnTakeDamage(tickDamage, true);
             }
 
             // Apply status effect
@@ -181,7 +181,7 @@ public class LavaDive : NetworkAttack_Base
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.team)) continue;
 
-                healthComponent.OnTakeDamage(damage);
+                healthComponent.OnTakeDamage(damage, true);
 
                 Vector3 playerhitPosition = hits[i].GameObject.transform.position;
                 Vector3 directionTowardsTrail = playerhitPosition + (playerhitPosition - transform.position) - Vector3.up;

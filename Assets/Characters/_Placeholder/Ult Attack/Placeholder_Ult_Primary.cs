@@ -84,7 +84,7 @@ public class Placeholder_Ult_Primary : NetworkAttack_Base
                 {
                     if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
 
-                    healthComponent.OnTakeDamage(damage);
+                    healthComponent.OnTakeDamage(damage, true);
                 }
 
                 CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();

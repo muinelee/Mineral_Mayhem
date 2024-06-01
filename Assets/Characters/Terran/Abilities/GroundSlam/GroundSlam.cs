@@ -62,7 +62,7 @@ public class GroundSlam : NetworkAttack_Base
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
 
-                healthComponent.OnTakeDamage(damage);
+                healthComponent.OnTakeDamage(damage, true);
                 healthComponent.OnKnockBack(knockback, transform.position);
             }
 

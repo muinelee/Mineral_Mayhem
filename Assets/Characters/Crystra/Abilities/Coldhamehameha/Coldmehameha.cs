@@ -88,7 +88,7 @@ public class Coldmehameha : NetworkAttack_Base
                 //if health component is not dead, or if the team is the same, continue
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
                 //call the on take damage function from the health component
-                healthComponent.OnTakeDamage(damage);
+                healthComponent.OnTakeDamage(damage, true);
                 //apply knockback when hit
                 healthComponent.OnKnockBack(knockback, this.transform.position);
             }
