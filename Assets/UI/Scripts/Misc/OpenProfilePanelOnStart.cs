@@ -11,8 +11,9 @@ public class OpenProfilePanelOnStart : MonoBehaviour
 
     private void Start()
     {
-        if (SettingsManager.firstTimeAtMenu == true)
+        if (!PlayerPrefs.HasKey("FirstLoad"))
         {
+            PlayerPrefs.SetInt("FirstLoad", 1);
             for (int i = 0; i < panelsToOpen.Length; i++)
             {
                 panelsToOpen[i].gameObject.SetActive(true);
@@ -22,7 +23,6 @@ public class OpenProfilePanelOnStart : MonoBehaviour
             {
                 panelsToClose[i].gameObject.SetActive(false);
             }
-            SettingsManager.firstTimeAtMenu = false;
         }
     }
 }
