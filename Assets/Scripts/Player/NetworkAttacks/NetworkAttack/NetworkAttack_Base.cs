@@ -13,6 +13,7 @@ public abstract class NetworkAttack_Base : NetworkBehaviour
     [SerializeField] protected float knockback;
     [SerializeField] protected AudioClip[] SFX;
     [SerializeField] protected List<StatusEffect> statusEffectSO;
+    [SerializeField] protected GameObject onHitEffect;
     protected NetworkPlayer.Team thisTeam;
 
     public override void Spawned()

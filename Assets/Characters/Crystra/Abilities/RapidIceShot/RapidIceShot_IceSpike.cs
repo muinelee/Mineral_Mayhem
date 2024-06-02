@@ -96,6 +96,7 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
         //loop to check for hits
         for (int i = 0; i < hits.Count; i++) {
             IHealthComponent healthComponent = hits[i].GameObject.GetComponentInParent<IHealthComponent>();
+            Instantiate(onHitEffect, transform.position, Quaternion.identity);
 
             if (healthComponent != null) {
 
@@ -135,6 +136,7 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
 
         if (!runner.IsServer) return;
         runner.Despawn(Object);
+        Instantiate(onHitEffect, transform.position, Quaternion.identity);
     }
 
     private void OnDrawGizmos()
