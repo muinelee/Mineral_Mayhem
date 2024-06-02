@@ -30,7 +30,9 @@ public class CharacterVisualHandler : CharacterComponent
 
     public override void FixedUpdateNetwork()
     {
-        if (!effectActive) return;
+        if (!effectActive && !Object.HasStateAuthority) return;
+        
+        Debug.Log("Doin the thing");
 
         flashTimer += Time.fixedDeltaTime;
         float t = flashTimer / flashDuration;
@@ -39,11 +41,8 @@ public class CharacterVisualHandler : CharacterComponent
         if (t >= 1.0f)
         {
             t = 1.0f;
-            if (NetworkPlayer.Local.HasStateAuthority) effectActive = false;
-            for (int i = 0; i < materials.Length; i++)
-            {
-                materials[i].SetColor("_BaseColor", originalColors[i]);
-            }
+            if (Object.HasStateAuthority) effectActive = false;
+            return;
         }
 
         for (int i = 0; i < materials.Length; i++)
@@ -74,5 +73,17 @@ public class CharacterVisualHandler : CharacterComponent
     static void OnBoolChanged(Changed<CharacterVisualHandler> changed)
     {
         Debug.Log($"Effect Active on {changed.Behaviour.Character.Team} is set to: " + changed.Behaviour.effectActive.ToString());
+    }
+
+    private void DetermineFlashState(bool isActive)
+    {
+        if (isActive) flashTimer = 0f;
+        else
+        {
+            for (int i = 0; i < materials.Length; i++)
+            {
+                materials[i].SetColor("_BaseColor", originalColors[i]);
+            }
+        }
     }
 }
