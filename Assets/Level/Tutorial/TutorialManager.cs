@@ -11,7 +11,7 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private CG_Fade tutorialConfirmUI;
     [SerializeField] private CG_Fade tutorialScreenUI;
     [SerializeField] private TMP_Text tutorialText;
-    [SerializeField] private BTN_OpenClose btnPrev;
+    [SerializeField] private CG_Fade btnPrev;
 
     [Header("Tutorial Text")]
     [SerializeField] private string[] tutorialTexts;
@@ -63,6 +63,17 @@ public class TutorialManager : MonoBehaviour
     {
         if (next) index++;
         else index--;
+
+        if (index == 0)
+        {
+            btnPrev.gameObject.SetActive(true);
+            btnPrev.FadeOut();
+        }
+        else if (index == 1 && next == true)
+        {
+            btnPrev.gameObject.SetActive(true);
+            btnPrev.FadeIn();
+        }
 
         //if the index is greater than the length of the tutorial text array
         if (index >= tutorialTexts.Length)
