@@ -25,7 +25,7 @@ public class CharacterVisualHandler : CharacterComponent
 
     public override void Spawned()
     {
-        effectActive = false;
+        if (NetworkPlayer.Local.HasStateAuthority) effectActive = false;
     }
 
     public override void FixedUpdateNetwork()
@@ -39,7 +39,7 @@ public class CharacterVisualHandler : CharacterComponent
         if (t >= 1.0f)
         {
             t = 1.0f;
-            effectActive = false;
+            if (NetworkPlayer.Local.HasStateAuthority) effectActive = false;
             for (int i = 0; i < materials.Length; i++)
             {
                 materials[i].SetColor("_BaseColor", originalColors[i]);
@@ -56,7 +56,7 @@ public class CharacterVisualHandler : CharacterComponent
     {
         if (effectActive) return;
         flashTimer = 0f;
-        effectActive = true;
+        if (NetworkPlayer.Local.HasStateAuthority) effectActive = true;
     }
 
     private void PrimeMaterials()
