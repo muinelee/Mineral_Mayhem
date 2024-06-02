@@ -7,7 +7,7 @@ public class ButtonCooldownManager : MonoBehaviour
 {
     public static ButtonCooldownManager instance;
 
-    [SerializeField] BTN_OpenClose[] buttons;
+    [SerializeField] public BTN_OpenClose[] buttons;
 
     [SerializeField] float cooldownTime = 1f;
 
