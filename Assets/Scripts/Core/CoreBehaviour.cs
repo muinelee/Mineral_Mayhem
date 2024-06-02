@@ -27,6 +27,8 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     public bool isDead { get; set; }
     public NetworkPlayer.Team team { get; set; }
 
+    [SerializeField] protected AudioClip SFX;
+
     public override void Spawned()
     {
         if (!Runner.IsServer)
@@ -34,6 +36,8 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
 
         HP = maxHealth;
         team = NetworkPlayer.Team.Neutral;
+
+        AudioManager.Instance.PlayAudioSFX(SFX, transform.position);
     }
 
     public void OnTakeDamage(float damageAmount, bool isReact)
