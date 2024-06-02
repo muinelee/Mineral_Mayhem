@@ -73,6 +73,6 @@ public class CharacterVisualHandler : CharacterComponent
 
     static void OnBoolChanged(Changed<CharacterVisualHandler> changed)
     {
-        Debug.Log("Effect Active is set to: " + changed.Behaviour.effectActive.ToString());
+        Debug.Log($"Effect Active on {changed.Behaviour.Character.Team} is set to: " + changed.Behaviour.effectActive.ToString());
     }
 }
