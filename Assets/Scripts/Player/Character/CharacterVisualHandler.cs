@@ -58,7 +58,6 @@ public class CharacterVisualHandler : CharacterComponent
     public override void OnHit(float x)
     {
         if (effectActive) return;
-        flashTimer = 0f;
         if (NetworkPlayer.Local.HasStateAuthority) effectActive = true;
     }
 
@@ -77,6 +76,7 @@ public class CharacterVisualHandler : CharacterComponent
     static void OnBoolChanged(Changed<CharacterVisualHandler> changed)
     {
         Debug.Log($"Effect Active on {changed.Behaviour.Character.Team} is set to: " + changed.Behaviour.effectActive.ToString());
+        changed.Behaviour.DetermineFlashState(changed.Behaviour.effectActive);
     }
 
     private void DetermineFlashState(bool isActive)
