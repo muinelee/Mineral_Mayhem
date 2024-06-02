@@ -8,7 +8,7 @@ public class CharacterVisualHandler : CharacterComponent
     private SkinnedMeshRenderer meshRenderer;
     [SerializeField] private AnimationCurve flashCurve;
     public float flashDuration = 0.5f;
-    public Color flashColor = Color.white;
+    public Color flashColor = Color.black;
 
     private Material[] materials;
     private Color[] originalColors;
@@ -20,20 +20,12 @@ public class CharacterVisualHandler : CharacterComponent
     {
         base.Init(character);
         character.SetVisualHandler(this);
+        PrimeMaterials();
     }
 
     public override void Spawned()
     {
-        meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        Assert.Check(meshRenderer);
         effectActive = false;
-        materials = meshRenderer.materials;
-        originalColors = new Color[materials.Length];
-        for (int i = 0; i < materials.Length; i++)
-        {
-            originalColors[i] = materials[i].color;
-        }
-        Debug.Log($"Found {materials.Length} materials on {Character.name}");
     }
 
     public override void FixedUpdateNetwork()
@@ -67,8 +59,20 @@ public class CharacterVisualHandler : CharacterComponent
         effectActive = true;
     }
 
+    private void PrimeMaterials()
+    {
+        meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        Assert.Check(meshRenderer);
+        materials = meshRenderer.materials;
+        originalColors = new Color[materials.Length];
+        for (int i = 0; i < materials.Length; i++)
+        {
+            originalColors[i] = materials[i].color;
+        }
+    }
+
     static void OnBoolChanged(Changed<CharacterVisualHandler> changed)
     {
-
+        Debug.Log("Effect Active is set to: " + changed.Behaviour.effectActive.ToString());
     }
 }
