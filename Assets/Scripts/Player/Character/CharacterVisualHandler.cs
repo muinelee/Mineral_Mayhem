@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 public class CharacterVisualHandler : CharacterComponent
 {
     private SkinnedMeshRenderer meshRenderer;
-    [SerializeField] private AnimationCurve flashCurve;
+    [SerializeField] public AnimationCurve flashCurve;
     public float flashDuration = 0.5f;
     public Color flashColor = Color.black;
 
@@ -39,6 +39,7 @@ public class CharacterVisualHandler : CharacterComponent
         float curveValue = flashCurve.Evaluate(t);
 
         Debug.Log($"Curve Value: {curveValue}");
+        Debug.Log($"T Value: {t}");
 
         if (t >= 1.0f)
         {
