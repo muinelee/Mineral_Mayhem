@@ -8,102 +8,80 @@ public class TutorialManager : MonoBehaviour
 {
     //reference to the UI elements
     [Header("UI Elements")]
-    [SerializeField] private GameObject tutorialConfirmUI;
-    [SerializeField] private GameObject tutorialUI;
-    [SerializeField] private GameObject tutorialScreenUI;
+    [SerializeField] private CG_Fade tutorialConfirmUI;
+    [SerializeField] private CG_Fade tutorialScreenUI;
     [SerializeField] private TMP_Text tutorialText;
+    [SerializeField] private BTN_OpenClose btnPrev;
 
     [Header("Tutorial Text")]
     [SerializeField] private string[] tutorialTexts;
     [SerializeField] private int index = 0;
-    private bool tutorialTimer = false;
-
-    public void Start()
-    {
-        CharacterSelect.OnCharacterSelect += StartTutorial;        
-    }
-
-    public void OnDestroy()
-    {
-        CharacterSelect.OnCharacterSelect -= StartTutorial;
-    }
 
     public void Deny() {
         //close the tutorial UI if they deny
-        tutorialUI.SetActive(false);
+        tutorialConfirmUI.gameObject.SetActive(true);
+        tutorialConfirmUI.FadeOut();
     }
 
     public void StartTutorial() {
         //open the tutorial UI
-        tutorialUI.SetActive(true);
+        tutorialConfirmUI.gameObject.SetActive(true);
+        tutorialConfirmUI.FadeIn();
     }
 
     //button ont the UI to start the tutorial
     public void ContinueTutorial() {
         //pressing confirm closes the confirm UI and opens the tutorial screen
-        tutorialConfirmUI.SetActive(false);
-        tutorialScreenUI.SetActive(true);
-        //sets timer to true
-        tutorialTimer = true;
+        tutorialConfirmUI.gameObject.SetActive(true);
+        tutorialConfirmUI.FadeOut();
+        tutorialScreenUI.gameObject.SetActive(true);
+        tutorialScreenUI.FadeIn();
+
         //calls the cycle index function
-        CycleIndex();
+        index = 0;
+        TutorialText(tutorialTexts[0]);
     }
 
     public void EndTutorial() {
-        tutorialScreenUI.SetActive(false);
+        tutorialScreenUI.gameObject.SetActive(true);
+        tutorialScreenUI.FadeOut();
     }
 
     public void TutorialText(string text) {
         tutorialText.text = text;
         //start coroutine to clear notifier
-        StartCoroutine(ChangeText(5));
+        StartCoroutine(ChangeText(10));
     }
 
     private IEnumerator ChangeText(int clearTime) {
-        //wait for 5 seconds
+        //wait for 10 seconds
         yield return new WaitForSeconds(clearTime);
-        tutorialTimer = true;
-        CycleIndex();
+        CycleIndex(true);
     }
 
-    private void CycleIndex() {
-        //if the timer is true
-        if (tutorialTimer) {
-            //set the timer to false
-            tutorialTimer = false;
-            //send current index to the tutorial text
-            TutorialText(tutorialTexts[index]);
-            //increment the index
-            index++;
-            //if the index is greater than the length of the tutorial text array
-            if (index >= tutorialTexts.Length) {
-                //end the tutorial
-                EndTutorial();
-            }
+    private void CycleIndex(bool next) 
+    {
+        if (next) index++;
+        else index--;
+
+        //if the index is greater than the length of the tutorial text array
+        if (index >= tutorialTexts.Length)
+        {
+            //end the tutorial
+            EndTutorial();
         }
+
+        //send current index to the tutorial text
+        TutorialText(tutorialTexts[index]);
     }
 
     public void NextHint() {
-        index++;
-        if (index >= tutorialTexts.Length) {
-            EndTutorial();
-        }
-        else {
-            //stop coroutine
-            StopAllCoroutines();
-            TutorialText(tutorialTexts[index]);
-        }
+        StopAllCoroutines();
+        CycleIndex(true);
     }
 
     public void PreviousHint() {
-        index--;
-        if (index < 0) {
-            index = 0;
-        }
-        else {
-            //stop coroutine
-            StopAllCoroutines();
-            TutorialText(tutorialTexts[index]);
-        }
+        StopAllCoroutines();
+        CycleIndex(false);
     }
 }
