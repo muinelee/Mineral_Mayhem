@@ -60,6 +60,7 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
         foreach (LagCompensatedHit hit in hits)
         {
             IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
+            Instantiate(onHitEffect, transform.position, Quaternion.identity);
 
             if (healthComponent != null)
             {
@@ -79,5 +80,6 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
 
         if (!runner.IsServer) return;
         runner.Despawn(Object);
+        Instantiate(onHitEffect, transform.position, Quaternion.identity);
     }
 }
