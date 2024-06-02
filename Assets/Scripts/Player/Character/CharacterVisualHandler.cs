@@ -30,13 +30,15 @@ public class CharacterVisualHandler : CharacterComponent
 
     public override void FixedUpdateNetwork()
     {
-        if (!effectActive && !Object.HasStateAuthority) return;
+        if (!effectActive) return;
         
         Debug.Log("Doin the thing");
 
         flashTimer += Time.fixedDeltaTime;
         float t = flashTimer / flashDuration;
         float curveValue = flashCurve.Evaluate(t);
+
+        Debug.Log($"Curve Value: {curveValue}");
 
         if (t >= 1.0f)
         {
@@ -48,6 +50,7 @@ public class CharacterVisualHandler : CharacterComponent
         for (int i = 0; i < materials.Length; i++)
         {
             materials[i].SetColor("_BaseColor", Color.Lerp(originalColors[i], flashColor, curveValue));
+            Debug.Log("Updating Colour");
         }
     }
 
