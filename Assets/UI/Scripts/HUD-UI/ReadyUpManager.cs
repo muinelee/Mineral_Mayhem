@@ -288,7 +288,7 @@ public class ReadyUpManager : MonoBehaviour
         {
             if (player.isReady)
             {
-                playerTeamDisplayPair[player].GetComponent<Image>().color = Color.green;
+                playerTeamDisplayPair[player].transform.GetChild(0).GetComponent<Image>().color = Color.green;
                 ReadyUp(player);
             }
         }
