@@ -120,15 +120,15 @@ public class ReadyUpManager : MonoBehaviour
 
         if (undecidedTeamList.Contains(player)) return;
 
-        playerTeamDisplayPair[player].GetComponent<Image>().color = Color.green;
+        playerTeamDisplayPair[player].transform.GetChild(0).GetComponent<Image>().color = Color.green;
 
         player.isReady = true;
     }
 
     public void UnReadyUp(NetworkPlayer player)
     {
-        if (player.team == NetworkPlayer.Team.Blue) playerTeamDisplayPair[player].GetComponent<Image>().color = Color.blue;
-        else if (player.team == NetworkPlayer.Team.Red) playerTeamDisplayPair[player].GetComponent<Image>().color = Color.red;
+        if (player.team == NetworkPlayer.Team.Blue) playerTeamDisplayPair[player].transform.GetChild(0).GetComponent<Image>().color = Color.blue;
+        else if (player.team == NetworkPlayer.Team.Red) playerTeamDisplayPair[player].transform.GetChild(0).GetComponent<Image>().color = Color.red;
 
         player.isReady = false;
     }
@@ -172,7 +172,7 @@ public class ReadyUpManager : MonoBehaviour
         ReadyUpName readyUpName = Instantiate(playerTeamDisplayPF, blueTeamLayoutGroup.transform);
         readyUpName.SetPlayer(player);
 
-        readyUpName.GetComponent<Image>().color = Color.blue;
+        readyUpName.transform.GetChild(0).GetComponent<Image>().color = Color.blue;
 
         // Destroy player display name if one is already present in the other team list
         if (playerTeamDisplayPair.ContainsKey(player)) Destroy(playerTeamDisplayPair[player].gameObject);
@@ -204,7 +204,7 @@ public class ReadyUpManager : MonoBehaviour
         ReadyUpName readyUpName = Instantiate(playerTeamDisplayPF, redTeamLayoutGroup.transform);
         readyUpName.SetPlayer(player);
 
-        readyUpName.GetComponent<Image>().color = Color.red;
+        readyUpName.transform.GetChild(0).GetComponent<Image>().color = Color.red;
 
         // Destroy player display name if one is already present in the other team list
         if (playerTeamDisplayPair.ContainsKey(player)) Destroy(playerTeamDisplayPair[player].gameObject);
@@ -225,7 +225,7 @@ public class ReadyUpManager : MonoBehaviour
     {
         ReadyUpName readyUpName = Instantiate(playerTeamDisplayPF, undecidedTeamLayoutGroup.transform);
         readyUpName.SetPlayer(player);
-        readyUpName.GetComponent<Image>().color = Color.grey;
+        readyUpName.transform.GetChild(0).GetComponent<Image>().color = Color.grey;
 
         playerTeamDisplayPair[player] = readyUpName;
 
