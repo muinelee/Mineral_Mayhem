@@ -71,7 +71,7 @@ public class RocketJump : NetworkAttack_Base
 
                 // Set components
                 jumpVFXInstance = Runner.Spawn(jumpVFX, transform.position, transform.rotation);
-                rigTransform = hits[i].GameObject.transform.GetChild(0);
+                rigTransform = hits[i].GameObject.transform.GetChild(1);
                 startHeight = rigTransform.position.y;
                 
                 // Apply force
