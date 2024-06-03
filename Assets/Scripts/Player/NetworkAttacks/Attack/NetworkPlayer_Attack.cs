@@ -195,8 +195,6 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (!canAttack) return;
 
-        Debug.Log("Activating Basic Attack");
-
         canBasicAttack = false;
 
         if (basicAttackCount == 0)

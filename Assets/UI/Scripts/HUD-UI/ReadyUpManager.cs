@@ -40,6 +40,7 @@ public class ReadyUpManager : MonoBehaviour
     {
         instance = this;
         arena = FindAnyObjectByType<Arena>();
+        Debug.Log($"This is how many players are in the match {NetworkPlayer.Players.Count}");
     }
 
     public void OnStartGame()
@@ -216,7 +217,6 @@ public class ReadyUpManager : MonoBehaviour
 
     public void StartGame()
     {
-        Debug.Log("UISoawned");
         FindAnyObjectByType<CharacterSelect>().ActivateCharacterSelect();
         this.gameObject.SetActive(false);
     }
