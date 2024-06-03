@@ -77,7 +77,29 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     public override void OnHit(float x)
     {
-        OnTakeDamage(x, false);
+        if (x < 0 || isDead) return;
+
+        //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
+        float currDamageAmount = x * Character.StatusHandler.GetDamageReduction();
+
+        if (Character.Attack.isDefending)
+        {
+            float blockDamageAmount = (currDamageAmount * (blockDamageReduction));
+            BP = Mathf.Max(BP - blockDamageAmount, 0);
+            currDamageAmount = (currDamageAmount * (1 - blockDamageReduction));
+        }
+
+        HP -= currDamageAmount;
+
+        if (HP <= 0)
+        {
+            isDead = true;
+        }
+        else
+        {
+            NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
+            if (x > 1) RPC_PlayHitAnimation();
+        }
     }
 
     public void HandleBlockMeter()
@@ -133,29 +155,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     // Function only called on the server
     public void OnTakeDamage(float damageAmount, bool playReact)
     {
-        if (damageAmount < 0 || isDead) return;
-
-        //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
-        float currDamageAmount = damageAmount * Character.StatusHandler.GetDamageReduction();
-
-        if (Character.Attack.isDefending)
-        {
-            float blockDamageAmount = (currDamageAmount * (blockDamageReduction));
-            BP = Mathf.Max(BP - blockDamageAmount, 0);
-            currDamageAmount = (currDamageAmount * (1 - blockDamageReduction));
-        }
-
-        HP -= currDamageAmount;
-
-        if (HP <= 0)
-        {
-            isDead = true;
-        }
-        else
-        {
-            NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
-            if (playReact) RPC_PlayHitAnimation();
-        }
+        Character.OnHit(damageAmount);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

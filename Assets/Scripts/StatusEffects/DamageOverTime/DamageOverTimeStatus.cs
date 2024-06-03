@@ -23,7 +23,7 @@ public class DamageOverTimeStatus : StatusEffect
         // Temporary solution for between refactoring
         else
         {
-            handler.GetComponentInParent<NetworkPlayer_Health>().OnTakeDamage((int)damage, false);
+            handler.GetComponentInParent<NetworkPlayer_Health>().OnTakeDamage(damage);
         }
     }
 
