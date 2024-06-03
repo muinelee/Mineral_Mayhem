@@ -16,6 +16,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     [SerializeField] private SO_NetworkBasicAttack[] basicAttacks;
     public bool canBasicAttack = true;
     public int basicAttackCount = 0;
+    private Queue<AudioClip> basicVoiceLineQueue = new Queue<AudioClip>();
 
     [Header("Q Attack Properties")]
     [SerializeField] private SO_NetworkAttack qAttack;
@@ -35,6 +36,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         base.Init(character);
         character.SetAttack(this);
+        InitializeVoiceLineQueue(basicAttacks[basicAttackCount].GetVoiceLine(), basicVoiceLineQueue);
         InitializeVoiceLineQueue(qAttack.GetVoiceLine(), qVoiceLineQueue);
         InitializeVoiceLineQueue(eAttack.GetVoiceLine(), eVoiceLineQueue);
         InitializeVoiceLineQueue(fAttack.GetVoiceLine(), fVoiceLineQueue);
@@ -143,6 +145,11 @@ public class NetworkPlayer_Attack : CharacterComponent
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayBasicVoiceLine()
+    {
+        this.PlayBasicVoiceLine();
+    }
+
     private void RPC_PlayQEffects()
     {
         this.PlayQVoiceLine();
@@ -164,6 +171,11 @@ public class NetworkPlayer_Attack : CharacterComponent
         this.PlayFVoiceLine();
         Character.Animator.anim.CrossFade(fAttack.attackName, 0.05f);
         Character.Animator.anim.CrossFade("Helper", 0.2f, 2);
+    }
+
+    public void PlayBasicVoiceLine()
+    {
+        PlayVoiceLine(basicVoiceLineQueue);
     }
 
     public void PlayQVoiceLine()
@@ -202,6 +214,8 @@ public class NetworkPlayer_Attack : CharacterComponent
             Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.01f);
             Character.Animator.anim.CrossFade("Helper", 0.2f, 2);
             Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
+
+            RPC_PlayBasicVoiceLine();
         }
     }
 
