@@ -77,7 +77,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     public override void OnHit(float x)
     {
-        OnTakeDamage(x, true);
+        OnTakeDamage(x, false);
     }
 
     public void HandleBlockMeter()

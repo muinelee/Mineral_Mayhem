@@ -79,7 +79,11 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         foreach (NetworkPlayer np in NetworkPlayer.Players)
         {
-            if (np.GetComponent<NetworkObject>().InputAuthority == PlayerRef.None) NetworkPlayer.Players.Remove(np);
+            if (np.GetComponent<NetworkObject>().InputAuthority == PlayerRef.None)
+            {
+                FindAnyObjectByType<CharacterSelect>().characterLookup.Remove(np);
+                NetworkPlayer.Players.Remove(np);
+            }
         }
 
         if (!GameOverManager.Instance.gameOver) GameOverManager.Instance.ReturnToLobby();   //Game is still running
