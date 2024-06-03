@@ -28,11 +28,11 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)                          // Spawns player in scene
     {
-        if (!roomAddress.Contains(SceneManager.GetActiveScene().name))
+        /*if (!roomAddress.Contains(SceneManager.GetActiveScene().name))
         {
-            Debug.Log("Cannot get active scene name"); 
+            Debug.Log("Cannot get active scene name");
             return;
-        }
+        }*/
         Debug.Log("Spawning Player"); 
         if (runner.IsServer)
         {

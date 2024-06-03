@@ -9,7 +9,7 @@ public class CharacterEntity : CharacterComponent
     public static event Action<CharacterEntity> OnCharacterSpawned;
     public static event Action<CharacterEntity> OnCharacterDespawned;
 
-    public event Action<float> OnHitEvent;
+    public event Action<float, bool> OnHitEvent;
     public event Action<float> OnHealEvent;
     public event Action<bool> OnBlockEvent;
     public event Action<StatusEffect> OnStatusBeginEvent;
@@ -21,9 +21,9 @@ public class CharacterEntity : CharacterComponent
     public event Action OnRoundEndEvent;
 
     #region Exposed Delegate Function Calls
-    public override void OnHit(float x)
+    public override void OnHit(float x, bool hitReact)
     {
-        OnHitEvent?.Invoke(x);
+        OnHitEvent?.Invoke(x, hitReact);
     }
     public override void OnHeal(float x)
     {
@@ -70,6 +70,7 @@ public class CharacterEntity : CharacterComponent
     public NetworkPlayer_Health Health { get; private set; }
     public NetworkPlayer_Energy Energy { get; private set; }
     public NetworkPlayer_OnSpawnUI PlayerUI { get; private set; }
+    public CharacterVisualHandler VisualHandler { get; private set; }
 
     # region Private Setter Functions
     public void SetAnimationLink(NetworkPlayer_AnimationLink characterComp)
@@ -103,6 +104,10 @@ public class CharacterEntity : CharacterComponent
     public void SetPlayerUI(NetworkPlayer_OnSpawnUI characterComp)
     {
         PlayerUI = characterComp;
+    }
+    public void SetVisualHandler(CharacterVisualHandler characterComp)
+    {
+        VisualHandler = characterComp;
     }
     #endregion
 
