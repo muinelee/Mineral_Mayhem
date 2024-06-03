@@ -12,9 +12,8 @@ public class CharacterVisualHandler : CharacterComponent
 
     private Material[] materials;
     private Color[] originalColors;
-    [Networked(OnChanged = nameof(OnBoolChanged))]
-    public bool effectActive { get; set; }
-    private float flashTimer = 0;
+    public bool effectActive = false;
+    private float flashTimer = 0f;
 
     public override void Init(CharacterEntity character)
     {
@@ -23,42 +22,34 @@ public class CharacterVisualHandler : CharacterComponent
         PrimeMaterials();
     }
 
-    public override void Spawned()
-    {
-        if (NetworkPlayer.Local.HasStateAuthority) effectActive = false;
-    }
-
-    public override void FixedUpdateNetwork()
+    public void FixedUpdate()
     {
         if (!effectActive) return;
-        
-        Debug.Log("Doin the thing");
 
         flashTimer += Time.fixedDeltaTime;
         float t = flashTimer / flashDuration;
         float curveValue = flashCurve.Evaluate(t);
 
-        Debug.Log($"Curve Value: {curveValue}");
-        Debug.Log($"T Value: {t}");
-
-        if (t >= 1.0f)
+        if (flashTimer >= flashDuration)
         {
-            t = 1.0f;
-            if (Object.HasStateAuthority) effectActive = false;
+            effectActive = false;
+            for (int i = 0; i < materials.Length; i++)
+            {
+                materials[i].SetColor("_BaseColor", originalColors[i]);
+            }
             return;
         }
 
         for (int i = 0; i < materials.Length; i++)
         {
             materials[i].SetColor("_BaseColor", Color.Lerp(originalColors[i], flashColor, curveValue));
-            Debug.Log("Updating Colour");
         }
     }
 
     public override void OnHit(float x)
     {
         if (effectActive) return;
-        if (NetworkPlayer.Local.HasStateAuthority) effectActive = true;
+        RPC_StartFlashEffect();
     }
 
     private void PrimeMaterials()
@@ -73,21 +64,15 @@ public class CharacterVisualHandler : CharacterComponent
         }
     }
 
-    static void OnBoolChanged(Changed<CharacterVisualHandler> changed)
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_StartFlashEffect()
     {
-        Debug.Log($"Effect Active on {changed.Behaviour.Character.Team} is set to: " + changed.Behaviour.effectActive.ToString());
-        changed.Behaviour.DetermineFlashState(changed.Behaviour.effectActive);
+        StartFlashEffect();
     }
 
-    private void DetermineFlashState(bool isActive)
+    private void StartFlashEffect()
     {
-        if (isActive) flashTimer = 0f;
-        else
-        {
-            for (int i = 0; i < materials.Length; i++)
-            {
-                materials[i].SetColor("_BaseColor", originalColors[i]);
-            }
-        }
+        effectActive = true;
+        flashTimer = 0f;
     }
 }
