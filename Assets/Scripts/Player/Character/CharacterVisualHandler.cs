@@ -46,7 +46,7 @@ public class CharacterVisualHandler : CharacterComponent
         }
     }
 
-    public override void OnHit(float x)
+    public override void OnHit(float x, bool hitReact)
     {
         if (effectActive) return;
         RPC_StartFlashEffect();

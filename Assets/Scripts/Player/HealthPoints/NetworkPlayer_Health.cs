@@ -75,7 +75,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         else Debug.Log($"No Renderer on Shield found for {gameObject.name}");
     }
 
-    public override void OnHit(float x)
+    public override void OnHit(float x, bool hitReact)
     {
         if (x < 0 || isDead) return;
 
@@ -98,7 +98,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         else
         {
             NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
-            if (x > 1) RPC_PlayHitAnimation();
+            if (hitReact) RPC_PlayHitAnimation();
         }
     }
 
@@ -155,7 +155,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     // Function only called on the server
     public void OnTakeDamage(float damageAmount, bool playReact)
     {
-        Character.OnHit(damageAmount);
+        Character.OnHit(damageAmount, playReact);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

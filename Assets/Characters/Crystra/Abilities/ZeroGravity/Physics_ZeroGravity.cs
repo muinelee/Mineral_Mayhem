@@ -78,7 +78,7 @@ public class Physics_ZeroGravity : NetworkAttack_Base
 
         rb.useGravity = true;
         rb.AddForce(Vector3.down * gravityDownForce);
-        character.OnHit(damage);
+        character.OnHit(damage, false);
     }
 
     private void ManageTimer()
