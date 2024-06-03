@@ -14,8 +14,8 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     [Header("Basic Attacks Properties")]
     [SerializeField] private SO_NetworkBasicAttack[] basicAttacks;
-    private bool canBasicAttack = true;
-    private int basicAttackCount = 0;
+    public bool canBasicAttack = true;
+    public int basicAttackCount = 0;
 
     [Header("Q Attack Properties")]
     [SerializeField] private SO_NetworkAttack qAttack;
@@ -195,8 +195,6 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (!canAttack) return;
 
-        Debug.Log("Activating Basic Attack");
-
         canBasicAttack = false;
 
         if (basicAttackCount == 0)
@@ -223,13 +221,12 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (canBasicAttack || !canAttack) return;
 
-        Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.1f);
+        Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.01f);
         Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
     }
 
     public void ActivateBlock(bool blockButtonDown)
     {
-
         if (blockButtonDown && !isDefending && Character.Health.canBlock)
         {
             if (Object.HasStateAuthority)
@@ -237,6 +234,7 @@ public class NetworkPlayer_Attack : CharacterComponent
                 Character.OnBlock(true);
             }
         }
+
         else if (!blockButtonDown && isDefending)
         {
             if (Object.HasStateAuthority)
