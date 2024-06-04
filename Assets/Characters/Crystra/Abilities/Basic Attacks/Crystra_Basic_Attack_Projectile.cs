@@ -64,10 +64,10 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
         foreach (LagCompensatedHit hit in hits)
         {
             IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
-            Runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
             if (healthComponent != null)
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
+                Runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
 
                 healthComponent.OnTakeDamage(damage, true);
                 healthComponent.OnKnockBack(knockback, transform.position);
@@ -82,7 +82,7 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
         if (runner == null) return;
 
         if (!runner.IsServer) return;
-        Runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
+        runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
         runner.Despawn(Object);
     }
 }
