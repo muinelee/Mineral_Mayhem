@@ -33,6 +33,8 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
         AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
         //AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
 
+        if (!Runner.IsServer) return;
+
         Vector3 offsetVector = new Vector3(Random.Range(-offset, offset), Random.Range(0, offset), Random.Range(-offset, offset));
 
         transform.position += offsetVector;
@@ -45,6 +47,8 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
     // Update is called once per frame
     public override void FixedUpdateNetwork()
     {
+        if (!Runner.IsServer) return;
+
         // move
         transform.Translate(Vector3.forward * speed);
         
@@ -53,7 +57,6 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
         // manage lifetime
         lifeTimer += Time.deltaTime;
         if (lifeTimer > lifetime) Runner.Despawn(Object);
-
     }
 
     private void TrackAttacks() {
@@ -96,7 +99,7 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
         //loop to check for hits
         for (int i = 0; i < hits.Count; i++) {
             IHealthComponent healthComponent = hits[i].GameObject.GetComponentInParent<IHealthComponent>();
-            Instantiate(onHitEffect, transform.position, Quaternion.identity);
+            Runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
 
             if (healthComponent != null) {
 
@@ -135,8 +138,8 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
         if (runner == null) return;
 
         if (!runner.IsServer) return;
+        Runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
         runner.Despawn(Object);
-        Instantiate(onHitEffect, transform.position, Quaternion.identity);
     }
 
     private void OnDrawGizmos()
