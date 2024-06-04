@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class DummyBehaviour : MonoBehaviour, IHealthComponent
+public class DummyBehaviour : NetworkBehaviour, IHealthComponent 
 {
     // Health
     public int maxHealth = 100;
@@ -18,15 +18,17 @@ public class DummyBehaviour : MonoBehaviour, IHealthComponent
     public bool isDead { get; set; }
     public NetworkPlayer.Team team { get; set; }
 
-    private void Start()
+    public override void Spawned() 
     {
+        if (!Runner.IsServer)
+            return; 
         HP = maxHealth;
         team = NetworkPlayer.Team.Neutral;
         anim = GetComponent<Animator>();
         isDead = false;
     }
 
-    public void OnTakeDamage(float damageAmount)
+    public void OnTakeDamage(float damageAmount, bool isReact)   
     {
         if (isDead) return;
 
