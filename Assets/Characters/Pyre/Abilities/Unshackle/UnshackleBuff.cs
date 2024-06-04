@@ -21,7 +21,7 @@ public class UnshackleBuff : NetworkAttack_Base
     List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
     [SerializeField] private LayerMask collisionLayer;
 
-    [SerializeField] GameObject sphere;
+    private Transform rigTransform;
 
     public override void Spawned()
     {
@@ -53,7 +53,8 @@ public class UnshackleBuff : NetworkAttack_Base
         for (int i = 0; i < hits.Count; i++)
         {
             CharacterEntity character = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
-            this.transform.SetParent(character.transform);
+            rigTransform = hits[i].GameObject.transform.GetChild(0);
+            this.transform.SetParent(rigTransform.transform);
             
             if (character)
             {
