@@ -59,6 +59,7 @@ public class Arena : NetworkBehaviour
 
         GameManager.SetArena(this);
         GameManager.LoadLayout();
+
     }
 
     public override void Spawned()
