@@ -30,10 +30,12 @@ public class DummyBehaviour : NetworkBehaviour, IHealthComponent
 
     public void OnTakeDamage(float damageAmount, bool isReact)   
     {
+        Debug.Log("Taking Damage CHECKKKK"); 
         if (isDead) return;
 
         Debug.Log("Taking Damage"); 
         HP -= damageAmount;
+
         CheckHealth(HP);
 
         isTakingDamage = true;
@@ -43,7 +45,7 @@ public class DummyBehaviour : NetworkBehaviour, IHealthComponent
         }
         regenerateHealthCoroutine = StartCoroutine(RegenerateHealthAfterDelay());
 
-        SpinAnimation();
+        if (HP > 0) SpinAnimation();
     }
 
     private void Die()
@@ -51,7 +53,7 @@ public class DummyBehaviour : NetworkBehaviour, IHealthComponent
         if (isDead) return;
 
         isDead = true;
-        anim.SetTrigger("Die");
+        anim.Play("DummyDie");
     }
 
     private IEnumerator RegenerateHealthAfterDelay()
@@ -68,7 +70,7 @@ public class DummyBehaviour : NetworkBehaviour, IHealthComponent
 
     private void SpinAnimation()
     {
-        anim.SetTrigger("Spin");
+        anim.Play("DummySpin");
     }
 
     private void CheckHealth(float health)
@@ -76,8 +78,11 @@ public class DummyBehaviour : NetworkBehaviour, IHealthComponent
         float healthPercentage = health / maxHealth;
         healthBar.fillAmount = healthPercentage;
 
-        if (healthPercentage <= 0f)
+        Debug.Log("Checking Health: " + HP); 
+
+        if (HP <= 0f)
         {
+            Debug.Log("Dyingg"); 
             Die();
         }
     }
@@ -96,12 +101,12 @@ public class DummyBehaviour : NetworkBehaviour, IHealthComponent
         HP = maxHealth;
         isDead = false;
         healthBar.fillAmount = 1.0f;
-        anim.SetTrigger("Recover");
+        anim.Play("DummyRecover");
     }
 
     // Function for if the object can get knocked back
     public void OnKnockBack(float force, Vector3 source)
     {
-        anim.SetTrigger("KnockBack");
+        //anim.Play("DummyDie");
     }
 }
