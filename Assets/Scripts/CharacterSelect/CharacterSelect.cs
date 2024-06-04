@@ -80,6 +80,14 @@ public class CharacterSelect : NetworkBehaviour
             character.characterFAbilityPortrait
         };
 
+        Sprite[] abilityPortraitsIcons =
+        {
+            character.characterBasicAbilityPortraitIcon,
+            character.characterQAbilityPortraitIcon,
+            character.characterEAbilityPortraitIcon,
+            character.characterFAbilityPortraitIcon
+        };
+
         string[] abilityDescriptions =
         {
             character.characterBasicAbilityDescription,
@@ -91,6 +99,7 @@ public class CharacterSelect : NetworkBehaviour
         for (int i = 0; i < abilityPortraits.Length; i++)
         {
             this.abilityPortraits[i].GetComponent<Image>().sprite = abilityPortraits[i];
+            this.abilityPortraits[i].transform.GetChild(0).GetComponent<Image>().sprite = abilityPortraitsIcons[i];
             int index = i;
             this.abilityPortraits[i].onPress.RemoveAllListeners();
             this.abilityPortraits[i].onPress.AddListener(() => UpdateAbilityDescription(abilityDescriptions[index]));
