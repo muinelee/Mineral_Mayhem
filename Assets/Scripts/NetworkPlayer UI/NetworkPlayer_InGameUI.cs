@@ -68,6 +68,7 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
 
     [SerializeField] private Sprite borderFlairCrysta;
     [SerializeField] private Sprite borderFlairPyre;
+    [SerializeField] private Sprite borderFlairTerran;
 
     private bool uIDisplayed = false;
     // cooldown comes from Scriptable Objects passed from local player
@@ -130,6 +131,7 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
         else if (NetworkPlayer.Local.CharacterID == 3)
         {
             charIcon.sprite = iconTerran;
+            fBorderFlair.sprite = borderFlairTerran;
         }
     }
 

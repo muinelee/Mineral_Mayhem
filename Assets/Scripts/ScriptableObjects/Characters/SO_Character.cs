@@ -16,6 +16,11 @@ public class SO_Character : ScriptableObject
     public Sprite characterEAbilityPortrait;
     public Sprite characterFAbilityPortrait;
 
+    public Sprite characterBasicAbilityPortraitIcon;
+    public Sprite characterQAbilityPortraitIcon;
+    public Sprite characterEAbilityPortraitIcon;
+    public Sprite characterFAbilityPortraitIcon;
+
     public string characterName;
     public string characterRace;
 
