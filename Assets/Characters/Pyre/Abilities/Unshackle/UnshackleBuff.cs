@@ -1,8 +1,10 @@
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Entities.UniversalDelegates;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class UnshackleBuff : NetworkAttack_Base
 {
@@ -48,10 +50,10 @@ public class UnshackleBuff : NetworkAttack_Base
     private void ApplyBuff()
     {
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, collisionLayer);
-
         for (int i = 0; i < hits.Count; i++)
         {
             CharacterEntity character = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
+            this.transform.SetParent(character.transform);
             
             if (character)
             {
