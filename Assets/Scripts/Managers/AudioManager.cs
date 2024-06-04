@@ -36,6 +36,13 @@ public class AudioManager : MonoBehaviour
         AudioSource source = GetThreeDimensionalSource(origin);
         source.clip = clip;
         source.Play();
+        StartCoroutine(ReturnToPoolAfterPlaying(source, clip.length));
+    }
+
+    private IEnumerator ReturnToPoolAfterPlaying(AudioSource source, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ReturnAudioSourceToPool(source);
     }
 
     public AudioSource GetThreeDimensionalSource(Vector3 origin)
