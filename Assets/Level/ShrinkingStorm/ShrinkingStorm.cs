@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using UnityEngine.UI;
 
 public class ShrinkingStorm : NetworkAttack_Base { 
 
@@ -24,6 +25,13 @@ public class ShrinkingStorm : NetworkAttack_Base {
     [Header("References")]
     [SerializeField] private CapsuleCollider stormCollider;
     [SerializeField] private float damageDelay;
+
+    //UI references
+    [Header("UI References")]
+    [SerializeField] private Image stormImageBase;
+    [SerializeField] private Image stormImage2;
+    [SerializeField] private Image stormImage3;
+
 
     [Header("Damage Variables")]
     [SerializeField] private float radius;
@@ -64,6 +72,8 @@ public class ShrinkingStorm : NetworkAttack_Base {
                         //Debug.Log("Player is in the storm");
                         DealDamage();
                         //ManageDamage();
+                        //show UI screen for inside storm indicator
+                        IndicateStorm();
                     }
                 }
                 damageTimer = TickTimer.None;
@@ -133,5 +143,10 @@ public class ShrinkingStorm : NetworkAttack_Base {
     private void RPC_ResetStorm()
     {
         this.transform.localScale = startScale;
+    }
+
+    private void IndicateStorm() {
+        //show UI screen for inside storm indicator
+        stormImageBase.enabled = true;
     }
 }
