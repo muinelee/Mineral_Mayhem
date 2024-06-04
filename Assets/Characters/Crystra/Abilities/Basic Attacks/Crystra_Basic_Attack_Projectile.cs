@@ -25,6 +25,8 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
 
         AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
 
+        if (!Runner.IsServer) return;
+
         transform.position += Vector3.up * spawnHeight;
         float offsetX = Random.Range(-offset, offset);
         float offsetY = Random.Range(0, offset);
@@ -40,6 +42,8 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
     // Update is called once per frame
     public override void FixedUpdateNetwork()
     {
+        if (!Runner.IsServer) return;
+
         DealDamage();
 
         if (lifeTimer.Expired(Runner))
@@ -60,11 +64,10 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
         foreach (LagCompensatedHit hit in hits)
         {
             IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
-            Instantiate(onHitEffect, transform.position, Quaternion.identity);
-
             if (healthComponent != null)
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
+                Runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
 
                 healthComponent.OnTakeDamage(damage, true);
                 healthComponent.OnKnockBack(knockback, transform.position);
@@ -79,7 +82,7 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
         if (runner == null) return;
 
         if (!runner.IsServer) return;
+        runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
         runner.Despawn(Object);
-        Instantiate(onHitEffect, transform.position, Quaternion.identity);
     }
 }
