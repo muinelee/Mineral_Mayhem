@@ -60,7 +60,6 @@ public class RocketJump : NetworkAttack_Base
     {
         Runner.LagCompensation.OverlapSphere(transform.position, searchRadius, player: Object.InputAuthority, hits, collisionLayer);
 
-
         for (int i = 0; i < hits.Count; i++)
         {
             character = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
