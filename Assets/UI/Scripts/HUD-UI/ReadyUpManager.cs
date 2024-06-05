@@ -292,11 +292,6 @@ public class ReadyUpManager : MonoBehaviour
             {
                 Debug.Log($"Player {player.playerName} is being checked");
             }
-
-            foreach (NetworkPlayer np in playerTeamDisplayPair.Keys)
-            {
-                Debug.Log($"Player {np.playerName} is being checked from the team display pairs");
-            }
         }
 
 
@@ -304,7 +299,7 @@ public class ReadyUpManager : MonoBehaviour
         {
             if (player.isReady)
             {
-                playerTeamDisplayPair[player].transform.GetChild(0).GetComponent<Image>().color = Color.green;
+                //playerTeamDisplayPair[player].transform.GetChild(0).GetComponent<Image>().color = Color.green;
                 ReadyUp(player);
             }
         }
