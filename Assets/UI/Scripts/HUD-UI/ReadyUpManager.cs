@@ -67,6 +67,7 @@ public class ReadyUpManager : MonoBehaviour
 
     public void OnQuitGame()
     {
+        NetworkPlayer.Players.Clear();
         arena.QuitToMenu();
     }
 
