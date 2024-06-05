@@ -85,7 +85,8 @@ public class ReadyUpManager : MonoBehaviour
             startGame.FadeIn();
         }
 
-        foreach (NetworkPlayer netPlayer in NetworkPlayer.Players)
+
+        foreach (NetworkPlayer netPlayer in FindObjectsOfType<NetworkPlayer>())
         {
             // Display team colors if players not ready
             if (netPlayer.team == NetworkPlayer.Team.Blue) JoinBlueTeam(netPlayer);
@@ -214,6 +215,7 @@ public class ReadyUpManager : MonoBehaviour
 
         // Add playre to the red team
         redTeamList.Add(player);
+
         player.team = NetworkPlayer.Team.Red;
     }
 
@@ -296,7 +298,7 @@ public class ReadyUpManager : MonoBehaviour
         {
             if (player.isReady)
             {
-                //playerTeamDisplayPair[player].transform.GetChild(0).GetComponent<Image>().color = Color.green;
+                playerTeamDisplayPair[player].transform.GetChild(0).GetComponent<Image>().color = Color.green;
                 ReadyUp(player);
             }
         }

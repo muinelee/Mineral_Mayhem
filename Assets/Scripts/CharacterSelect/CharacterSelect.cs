@@ -260,11 +260,15 @@ public class CharacterSelect : NetworkBehaviour
         characterSelectScreen.gameObject.SetActive(true);
         characterSelectScreen.FadeIn();
 
+        Debug.Log($"The size of the Players list is {NetworkPlayer.Players.Count}");
+
         RoundManager.Instance.ResetRound += SetPlayerToSpawn;
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
             int spawnLocation = (player.team == NetworkPlayer.Team.Red) ? 0 : 2;
+
             spawnLocation += ReadyUpManager.instance.GetIndex(player);
+            Debug.Log($"Spawn location value is {spawnLocation}");
             Vector3 spawnVector = matchStartPoints[spawnLocation].position;
             RoundManager.Instance.respawnPoints.Add(player, spawnVector);
         }
