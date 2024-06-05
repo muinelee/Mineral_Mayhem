@@ -104,7 +104,7 @@ public class GameOverManager : NetworkBehaviour
         {
             Debug.Log($"this ran {num}");
             num++;
-            if (player.Object.HasStateAuthority) continue;
+            if (player.Object.HasInputAuthority) continue;
             runner.Disconnect(player.Object.InputAuthority);
         }
 

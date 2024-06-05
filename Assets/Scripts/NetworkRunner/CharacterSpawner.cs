@@ -77,13 +77,20 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         if (!runner.IsServer) return;
 
+        List<NetworkPlayer> playersToRemove =  new List<NetworkPlayer>();
+
         foreach (NetworkPlayer np in NetworkPlayer.Players)
         {
             if (np.GetComponent<NetworkObject>().InputAuthority == PlayerRef.None)
             {
                 FindAnyObjectByType<CharacterSelect>().characterLookup.Remove(np);
-                NetworkPlayer.Players.Remove(np);
+                playersToRemove.Add(np);
             }
+        }
+
+        foreach (NetworkPlayer np in playersToRemove)
+        {
+            NetworkPlayer.Players.Remove(np);
         }
 
         if (!GameOverManager.Instance.gameOver) GameOverManager.Instance.ReturnToLobby();   //Game is still running
