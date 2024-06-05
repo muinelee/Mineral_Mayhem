@@ -220,6 +220,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d2ff822e41c2019458e9b93bcb75760d, type: 2}
   - {fileID: 11400000, guid: 24b9ea15226a82d4ca7694bd26303898, type: 2}
   - {fileID: 11400000, guid: ba6552435339b6d418789ffd7ee693c9, type: 2}
+  canBasicAttack: 1
+  basicAttackCount: 0
   qAttack: {fileID: 11400000, guid: 30985dba2b0883b46aef86c380316a54, type: 2}
   eAttack: {fileID: 11400000, guid: 66c899a9801b41e41a744068b55c0af0, type: 2}
   fAttack: {fileID: 11400000, guid: 7a93d2c7bc185c74f87d14d34329d69a, type: 2}
@@ -423,6 +425,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   flashDuration: 0.3
   flashColor: {r: 0, g: 0, b: 0, a: 1}
+  effectActive: 0
 --- !u!1001 &954911539770491013
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -939,6 +942,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7443949920135970668}
     m_Modifications:
+    - target: {fileID: 1738208495269283916, guid: 96ec909675a0f7745afa9e98a05cdb6f, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4432909727097402284, guid: 96ec909675a0f7745afa9e98a05cdb6f, type: 3}
       propertyPath: m_IsActive
       value: 1

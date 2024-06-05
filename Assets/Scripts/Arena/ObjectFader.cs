@@ -24,6 +24,10 @@ public class ObjectFader : MonoBehaviour
         {
             objectColor[i] = objectToFade[i].material.color;
             objectToFade[i].material.color = new Color(objectColor[i].r, objectColor[i].g, objectColor[i].b, 1);
+        }
+
+        for (int i = 0; i < opaqueObject.Length; i++)
+        {
             opaqueObject[i].SetActive(true);
         }
 
