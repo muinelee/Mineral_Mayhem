@@ -56,18 +56,13 @@ public class CharacterSelect : NetworkBehaviour
 
     public void SelectCharacter(int characterIndex)
     {
-        int index = NetworkPlayer.Players.IndexOf(NetworkPlayer.Local);
+        int playerID = NetworkPlayer.Local.Object.InputAuthority.PlayerId;
         NetworkPlayer.Local.RPC_SetCharacterID(characterIndex);
-
-        // Needing for removing monobehaviour HUD before RPC call
-        NetworkPlayer player = NetworkPlayer.Players[index];
-        
-        CharacterEntity[] character = FindObjectsOfType<CharacterEntity>();
 
         // Play voice line for selected character
         AudioManager.Instance.PlayAudioSFX(characters[characterIndex].voiceLine[0], spawnPoints[spawnPoint].position);
 
-        RPC_SpawnCharacter(index, spawnPoint);
+        RPC_SpawnCharacter(playerID, spawnPoint);
 
         ClientInfo.CharacterID = characterIndex;
     }
