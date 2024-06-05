@@ -286,14 +286,11 @@ public class ReadyUpManager : MonoBehaviour
 
     private void CheckIsOthersReady()
     {
-        if (!NetworkPlayer.Local.Object.HasStateAuthority)
+        foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
-            foreach (NetworkPlayer player in NetworkPlayer.Players)
-            {
-                Debug.Log($"Player {player.playerName} is being checked");
-            }
+            Debug.Log($"Player {player.playerName} is being checked");
+            Debug.Log($"{player.playerName} index in Local Players list is {NetworkPlayer.Players.IndexOf(player)}");
         }
-
 
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
