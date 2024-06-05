@@ -139,9 +139,19 @@ public class CharacterSelect : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    private void RPC_SpawnCharacter(int playerIndex, int spawnLocation)
+    private void RPC_SpawnCharacter(int playerID, int spawnLocation)
     {
         if (!Runner.IsServer) return;
+
+        int playerIndex = 0;
+
+        foreach (NetworkPlayer p in NetworkPlayer.Players)
+        {
+            if (p.Object.InputAuthority.PlayerId == playerID)
+            {
+                playerIndex = NetworkPlayer.Players.IndexOf(p);
+            }
+        }
 
         NetworkPlayer player = NetworkPlayer.Players[playerIndex];
 
