@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class ReadyUpManager : MonoBehaviour
 {
@@ -285,6 +286,20 @@ public class ReadyUpManager : MonoBehaviour
 
     private void CheckIsOthersReady()
     {
+        if (!NetworkPlayer.Local.Object.HasStateAuthority)
+        {
+            foreach (NetworkPlayer player in NetworkPlayer.Players)
+            {
+                Debug.Log($"Player {player.playerName} is being checked");
+            }
+
+            foreach (NetworkPlayer np in playerTeamDisplayPair.Keys)
+            {
+                Debug.Log($"Player {np.playerName} is being checked from the team display pairs");
+            }
+        }
+
+
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
             if (player.isReady)
