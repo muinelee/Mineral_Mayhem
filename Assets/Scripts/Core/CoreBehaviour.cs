@@ -50,7 +50,7 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
 
     private void CheckHealth(float health)
     {
-        float healthPercentage = health + 5 / maxHealth;
+        float healthPercentage = health / maxHealth;
 
         healthBar.fillAmount = healthPercentage;
 
