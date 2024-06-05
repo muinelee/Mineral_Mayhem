@@ -2,6 +2,7 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.Collections.Unicode;
 
 public class Pyre_Basic_Attack : NetworkAttack_Base
 {
@@ -62,6 +63,7 @@ public class Pyre_Basic_Attack : NetworkAttack_Base
 
                 healthComponent.OnTakeDamage(damage, true);
                 healthComponent.OnKnockBack(knockback, transform.position);
+                Runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
                 AttackEnd();
             }
         }
