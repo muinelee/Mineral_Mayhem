@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class ReadyUpManager : MonoBehaviour
 {
@@ -67,6 +68,7 @@ public class ReadyUpManager : MonoBehaviour
 
     public void OnQuitGame()
     {
+        NetworkPlayer.Players.Clear();
         arena.QuitToMenu();
     }
 
@@ -83,7 +85,8 @@ public class ReadyUpManager : MonoBehaviour
             startGame.FadeIn();
         }
 
-        foreach (NetworkPlayer netPlayer in NetworkPlayer.Players)
+
+        foreach (NetworkPlayer netPlayer in FindObjectsOfType<NetworkPlayer>())
         {
             // Display team colors if players not ready
             if (netPlayer.team == NetworkPlayer.Team.Blue) JoinBlueTeam(netPlayer);
@@ -212,6 +215,7 @@ public class ReadyUpManager : MonoBehaviour
 
         // Add playre to the red team
         redTeamList.Add(player);
+
         player.team = NetworkPlayer.Team.Red;
     }
 
@@ -284,6 +288,12 @@ public class ReadyUpManager : MonoBehaviour
 
     private void CheckIsOthersReady()
     {
+        foreach (NetworkPlayer player in NetworkPlayer.Players)
+        {
+            Debug.Log($"Player {player.playerName} is being checked");
+            Debug.Log($"{player.playerName} index in Local Players list is {NetworkPlayer.Players.IndexOf(player)}");
+        }
+
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
             if (player.isReady)
