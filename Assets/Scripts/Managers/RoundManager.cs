@@ -165,6 +165,8 @@ public class RoundManager : NetworkBehaviour
         startStorm?.Invoke();
         
         if (Runner.IsServer) RPC_ShowRoundUI();
+
+        INP_Pause.instance.pastCharacterSelect = true;
     }
 
     public override void FixedUpdateNetwork()
