@@ -88,6 +88,7 @@ public class Sapling : NetworkAttack_Base
             if (CheckIfSameTeam(healthComponent.GetTeam())) return;
         }
 
+        Runner.Spawn(onHitEffect, this.transform.position, Quaternion.identity);
         rb.Rigidbody.drag = 5;
         fuseTimer = TickTimer.CreateFromSeconds(Runner, fuseDuration);
     }
