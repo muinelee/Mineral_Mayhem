@@ -83,7 +83,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             if (np.GetComponent<NetworkObject>().InputAuthority == PlayerRef.None)
             {
-                FindAnyObjectByType<CharacterSelect>().characterLookup.Remove(np);
+                if (CharacterSelect.instance != null) CharacterSelect.instance.characterLookup.Remove(np);
                 playersToRemove.Add(np);
             }
         }

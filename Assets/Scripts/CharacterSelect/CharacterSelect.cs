@@ -10,6 +10,8 @@ public class CharacterSelect : NetworkBehaviour
     // Character select event for storm mechanics
     public delegate void CharacterSelectEvent();
 
+    public static CharacterSelect instance;
+
     [Header("Character Select")]
     public List<SO_Character> characters;
     public Dictionary<NetworkPlayer, CharacterEntity> characterLookup = new Dictionary<NetworkPlayer, CharacterEntity>();
@@ -34,6 +36,11 @@ public class CharacterSelect : NetworkBehaviour
 
     //public event for storm mechanics
     public static event CharacterSelectEvent OnCharacterSelect;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void FixedUpdate()
     {
