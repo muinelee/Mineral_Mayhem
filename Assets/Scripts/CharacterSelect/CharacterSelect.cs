@@ -34,10 +34,6 @@ public class CharacterSelect : NetworkBehaviour
 
     //public event for storm mechanics
     public static event CharacterSelectEvent OnCharacterSelect;
-    private void Start()
-    {
-
-    }
 
     private void FixedUpdate()
     {
@@ -59,7 +55,6 @@ public class CharacterSelect : NetworkBehaviour
         // Needing for removing monobehaviour HUD before RPC call
         NetworkPlayer player = NetworkPlayer.Players[index];
         
-
         CharacterEntity[] character = FindObjectsOfType<CharacterEntity>();
 
         // Play voice line for selected character
