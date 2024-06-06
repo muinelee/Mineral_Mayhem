@@ -29,8 +29,8 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     [SerializeField] private CinemachineVirtualCamera blueCameraPriority;
     [SerializeField] private CinemachineVirtualCamera topCameraPriority;
     [SerializeField] private CinemachineVirtualCamera victoryCameraPriority;
-    [SerializeField] private CinemachineVirtualCamera redCinematicCameraPriority;
-    [SerializeField] private CinemachineVirtualCamera blueCinematicCameraPriority;
+    [SerializeField] public CinemachineVirtualCamera redCinematicCameraPriority;
+    [SerializeField] public CinemachineVirtualCamera blueCinematicCameraPriority;
     [SerializeField] private CinemachineVirtualCamera teamCameraPriority;
 
     [Header("Camera Tracking")]
@@ -71,7 +71,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         SetTeamCamera();
         GoToTopCamera();
 
-        if (Runner.IsServer) RoundManager.Instance.OnResetRound();
+        if (Runner.IsServer && RoundManager.Instance != null) RoundManager.Instance.OnResetRound();
     } 
 
     public void SetPlayerCamera(Transform player)
@@ -185,7 +185,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     public void ControlCamera(CinemachineVirtualCamera cam, bool blueTeam)
     {
         if (isCameraMoving) return;
-       
+
         if ((blueTeam && blueCinematicPositions.Length < 1) || (!blueTeam && redCinematicPositions.Length < 1))
         {
             Debug.LogError("CameraTrack component not found on CinemachineVirtualCamera.");
