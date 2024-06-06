@@ -63,7 +63,7 @@ public class VineGround : NetworkAttack_Base
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
 
-                healthComponent.OnTakeDamage(damage, true);
+                healthComponent.OnTakeDamage(damage, false);
             }
 
             // Apply status effect once per enemy player hit
@@ -75,8 +75,12 @@ public class VineGround : NetworkAttack_Base
 
                 foreach (StatusEffect status in statusEffectSO)
                 {
+                    // Apply effect
                     playerHitStatusHandler.AddStatus(status);
                     playersHit.Add(playerHitStatusHandler);
+
+                    // Activate hit react once
+                    healthComponent.OnTakeDamage(0, true);
                 }
             }
         }

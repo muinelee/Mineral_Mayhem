@@ -77,7 +77,7 @@ public class Coldmehameha : NetworkAttack_Base
         //get the character rotation
         Quaternion rotation = Quaternion.LookRotation(character.transform.forward);
         //signature for hits using the characterposition + (rotation * 3(half size of the box)
-        Runner.LagCompensation.OverlapBox((character.transform.position + (character.transform.forward * 3)), extends, rotation, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
+        Runner.LagCompensation.OverlapBox((transform.position + (transform.forward * extends.z)), extends, transform.rotation, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
         //loop to check for hits
         foreach (LagCompensatedHit hit in hits) {
 
@@ -101,5 +101,10 @@ public class Coldmehameha : NetworkAttack_Base
                 }
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube((transform.position + (transform.forward * (extends.z / 2))), extends);
     }
 }
