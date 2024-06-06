@@ -229,8 +229,8 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
             yield return null;
         }
 
-        cam.transform.position = cameraTracks[index].endPoint.position;
-        cam.transform.rotation = cameraTracks[index].endPoint.rotation;
+        cam.transform.position = cameraTracks[index-1].endPoint.position;
+        cam.transform.rotation = cameraTracks[index-1].endPoint.rotation;
 
         isCameraMoving = false;
     }
