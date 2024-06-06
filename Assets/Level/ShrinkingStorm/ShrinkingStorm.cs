@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using UnityEngine.UI;
+using UnityEngine.Splines;
 
 public class ShrinkingStorm : NetworkAttack_Base { 
 
@@ -25,6 +26,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
     [Header("References")]
     [SerializeField] private CapsuleCollider stormCollider;
     [SerializeField] private float damageDelay;
+    public SplineContainer spline;
 
     //UI references
     [Header("UI References")]
@@ -148,5 +150,16 @@ public class ShrinkingStorm : NetworkAttack_Base {
     private void IndicateStorm() {
         //show UI screen for inside storm indicator
         stormImageBase.enabled = true;
+    }
+
+    public Vector3 GetNewCoreSpawnLocation() {
+        if (spline != null) {
+            float randomLocation = Random.Range(0f, 1f);
+            return spline.EvaluatePosition(randomLocation);
+        }
+        else {
+            Debug.LogWarning("Spline is not assigned for core spawning.");
+            return Vector3.zero;
+        }
     }
 }
