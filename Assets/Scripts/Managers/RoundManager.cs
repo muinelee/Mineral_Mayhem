@@ -44,6 +44,8 @@ public class RoundManager : NetworkBehaviour
     [Header("Round End Properties")]
     [SerializeField] private float matchEndDelay = 5;
     private TickTimer matchEndTimer = TickTimer.None;
+    [SerializeField] AudioClip redTeamWins;
+    [SerializeField] AudioClip blueTeamWins;
 
     public override void Spawned() 
     {
@@ -118,12 +120,14 @@ public class RoundManager : NetworkBehaviour
         if (redPlayersAlive > bluePlayersAlive)
         {
             redRoundsWon++;
+            AudioManager.Instance.PlayAudioSFX(redTeamWins, transform.position);
             RPC_UpdateRoundUIForClients(true);
         }
 
         else if (bluePlayersAlive > redPlayersAlive)
         {
             blueRoundsWon++;
+            AudioManager.Instance.PlayAudioSFX(blueTeamWins, transform.position);
             RPC_UpdateRoundUIForClients(false);
         }
 
