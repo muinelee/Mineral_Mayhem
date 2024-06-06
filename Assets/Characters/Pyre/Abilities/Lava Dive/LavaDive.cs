@@ -29,6 +29,9 @@ public class LavaDive : NetworkAttack_Base
     private bool finishDive = false;
     private TickTimer lingerTimer;
 
+    [Header("Stage Collider Mask")]
+    [SerializeField] private LayerMask stageLayers;
+
     private CharacterEntity character;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
     private Vector3 midwayPointRef;
@@ -59,8 +62,30 @@ public class LavaDive : NetworkAttack_Base
         }
 
         if (finishDive) return;
-        if (dashTimer.Expired(Runner)) DiveEnd();
+
         trail.position = character.transform.position;
+
+        if (dashTimer.Expired(Runner)) dashTimer = TickTimer.None;
+
+        if (dashTimer.IsRunning) return;
+
+        Debug.Log("This is still  running");
+
+        RaycastHit[] ray = Physics.SphereCastAll(trail.position, 3, transform.up, 1, stageLayers);
+
+        if (ray.Length > 0)
+        {
+            for (int i = 0; i < ray.Length; i++)
+            {
+                Debug.Log(ray[i].transform.name);
+            }            return;
+        }
+
+        else
+        {
+            Debug.Log("This really should run");
+            DiveEnd();
+        }
     }
 
     private void AttackStart()
@@ -189,5 +214,10 @@ public class LavaDive : NetworkAttack_Base
                 healthComponent.OnKnockBack(knockback, directionTowardsTrail);
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, 3);
     }
 }
