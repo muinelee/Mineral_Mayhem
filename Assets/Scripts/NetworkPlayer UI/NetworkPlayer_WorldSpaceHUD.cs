@@ -54,8 +54,6 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
         nonLocalPlayerHealthBar.fillAmount = playerHealth.HP / playerHealth.GetStartingHP();
 
         transform.LookAt(cam.transform.rotation * Vector3.forward + transform.position, cam.transform.rotation * Vector3.up);
-
-        Debug.Log("Health: " + playerHealth.HP + " / Max: " + playerHealth.GetStartingHP() + " / Fill: " + nonLocalPlayerHealthBar.fillAmount);
     }
 
     public void ShowFloatingHealthBar()
