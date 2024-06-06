@@ -141,7 +141,7 @@ public class LavaDive : NetworkAttack_Base
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.team)) continue;
 
-                healthComponent.OnTakeDamage(tickDamage, true);
+                healthComponent.OnTakeDamage(tickDamage, false);
             }
 
             // Apply status effect

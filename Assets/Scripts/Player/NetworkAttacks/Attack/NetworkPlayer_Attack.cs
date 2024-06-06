@@ -214,7 +214,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (!Runner.IsServer) return;
 
-        Character.Rigidbody.Rigidbody.AddForce(transform.forward * basicAttacks[basicAttackCount].momentum, ForceMode.Impulse);
+        if (basicAttackCount < basicAttacks.Length) Character.Rigidbody.Rigidbody.AddForce(transform.forward * basicAttacks[basicAttackCount].momentum, ForceMode.Impulse);
     }
 
     public void ChainBasicAttack()
