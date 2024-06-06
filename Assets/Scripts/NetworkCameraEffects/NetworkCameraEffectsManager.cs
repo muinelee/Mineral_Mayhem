@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using Fusion;
 using Cinemachine;
+using System.Linq;
 
 public class NetworkCameraEffectsManager : NetworkBehaviour
 {
@@ -33,10 +34,10 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     [SerializeField] private CinemachineVirtualCamera teamCameraPriority;
 
     [Header("Camera Tracking")]
-    [SerializeField]  private int currentCamTrack = 0;
     [SerializeField]  private float camIntervalTime = 5.0f;
+    public CameraTrack[] blueCinematicPositions;
+    public CameraTrack[] redCinematicPositions;
     private bool isCameraMoving = false; 
-    //public CameraTrack[] camPositions; 
 
     private bool isRedTeam;
 
@@ -47,6 +48,11 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     {
         instance = this;
         cam = Camera.main.GetComponentInChildren<CinemachineBrain>();
+        cinematicTimerDuration = 0f;
+        foreach(CameraTrack track in blueCinematicPositions)
+        {
+            cinematicTimerDuration += track.duration;
+        }
     }
 
     public void CameraHitEffect(float damage)
@@ -111,7 +117,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         ResetCameraPriorities();
         redCinematicCameraPriority.Priority = 100;
 
-        ControlCamera(redCinematicCameraPriority); 
+        ControlCamera(redCinematicCameraPriority, false); 
     }
 
     public void GoToBlueCinematicCamera()
@@ -119,7 +125,7 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         ResetCameraPriorities();
         blueCinematicCameraPriority.Priority = 100;
 
-        ControlCamera(blueCinematicCameraPriority); 
+        ControlCamera(blueCinematicCameraPriority, true); 
     }
 
     private void ResetCameraPriorities()
@@ -176,46 +182,55 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
 
     #region Camera Cinematic Tracking 
 
-    public void ControlCamera(CinemachineVirtualCamera cam)
+    public void ControlCamera(CinemachineVirtualCamera cam, bool blueTeam)
     {
         if (isCameraMoving) return;
        
-        CameraTrack cameraTrack = cam.GetComponent<CameraTrack>();
-        if (cameraTrack == null)
+        if ((blueTeam && blueCinematicPositions.Length < 1) || (!blueTeam && redCinematicPositions.Length < 1))
         {
             Debug.LogError("CameraTrack component not found on CinemachineVirtualCamera.");
             return;
         }
 
-        StartCoroutine(MoveCamera(cam, cameraTrack));
+        if (blueTeam) StartCoroutine(MoveCamera(cam, blueCinematicPositions));
+        else if (!blueTeam) StartCoroutine(MoveCamera(cam, redCinematicPositions));
     }
 
-    private IEnumerator MoveCamera(CinemachineVirtualCamera cam, CameraTrack cameraTrack)
+    private IEnumerator MoveCamera(CinemachineVirtualCamera cam, CameraTrack[] cameraTracks)
     {
         isCameraMoving = true;
 
-        float elapsedTime = 0f;
-
-        while (elapsedTime < cameraTrack.duration)
+        float time = 0f;
+        int index = 0;
+        bool trackComplete = false;
+        while (!trackComplete)
         {
-            float t = elapsedTime / cameraTrack.duration;
+            float t = time / cameraTracks[index].duration;
 
             cam.transform.position = Vector3.Lerp(
-                cameraTrack.startPoint.position,
-                cameraTrack.endPoint.position,
+                cameraTracks[index].startPoint.position,
+                cameraTracks[index].endPoint.position,
                 t);
 
             cam.transform.rotation = Quaternion.Slerp(
-                cameraTrack.startPoint.rotation,
-                cameraTrack.endPoint.rotation,
+                cameraTracks[index].startPoint.rotation,
+                cameraTracks[index].endPoint.rotation,
                 t);
 
-            elapsedTime += Time.deltaTime;
+            time += Time.deltaTime;
+
+            if (time >= cameraTracks[index].duration)
+            {
+                time = 0f;
+                index++;
+                trackComplete = index >= cameraTracks.Length;
+            }
+
             yield return null;
         }
 
-        cam.transform.position = cameraTrack.endPoint.position;
-        cam.transform.rotation = cameraTrack.endPoint.rotation;
+        cam.transform.position = cameraTracks[index].endPoint.position;
+        cam.transform.rotation = cameraTracks[index].endPoint.rotation;
 
         isCameraMoving = false;
     }
