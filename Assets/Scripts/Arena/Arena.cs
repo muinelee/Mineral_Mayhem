@@ -13,7 +13,6 @@ public class Arena : NetworkBehaviour
     public NetworkObject core;
 
     public SO_ArenaDefinition definition;    //Will have information relative to the specific arena we are on (music/name/index/icon/image, etc)
-
     public SplineContainer spline;
 
     private NetworkObject currentCore;

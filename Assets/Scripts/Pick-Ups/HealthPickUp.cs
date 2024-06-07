@@ -19,11 +19,11 @@ public class HealthPickup : NetworkBehaviour
 
         if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
         {
-            NetworkPlayer_Health playerHealth = other.GetComponent<NetworkPlayer_Health>();
+            CharacterEntity character = other.GetComponent<CharacterEntity>();
 
-            if (playerHealth != null)
+            if (character != null)
             {
-                playerHealth.Heal(healthAmount);
+                character.OnHeal(healthAmount);
                 PickedUp();
             }
         }
