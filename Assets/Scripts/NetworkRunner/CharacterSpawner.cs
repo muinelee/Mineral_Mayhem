@@ -47,7 +47,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         NetworkPlayer.Players.Clear();
         FindAnyObjectByType<NetworkRunner>().Shutdown();
         StartCoroutine(DelayedDestroy());
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("Main Menu");
     }
 
     IEnumerator DelayedDestroy()
@@ -61,8 +61,8 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         NetworkPlayer.Players.Clear();
         await FindAnyObjectByType<NetworkRunner>().Shutdown();
-        if (GameOverManager.Instance.gameOver) SceneManager.LoadScene(0);   //Match ended and players are being moved back to Lobby
-        else SceneManager.LoadScene(5);     //Player ddisconnected during match
+        if (GameOverManager.Instance.gameOver) SceneManager.LoadScene("Main Menu");   //Match ended and players are being moved back to Lobby
+        else SceneManager.LoadScene("PlayerDisconnected");     //Player ddisconnected during match
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
