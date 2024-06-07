@@ -23,10 +23,13 @@ public class Sapling : NetworkAttack_Base
     [SerializeField] private float radius;
     [SerializeField] private LayerMask playerLayer;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
+    [SerializeField] private GameObject explosion;
 
     public override void Spawned()
     {
         base.Spawned();
+
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
 
         transform.position += transform.forward * offset;
 
@@ -50,9 +53,8 @@ public class Sapling : NetworkAttack_Base
 
         if (fuseTimer.Expired(Runner))
         {
-            RPC_ExplosionSFX();
             fuseTimer = TickTimer.None;
-            DealDamage();
+            DealDamage();            
             Runner.Despawn(Object);
         }
     }
@@ -73,6 +75,8 @@ public class Sapling : NetworkAttack_Base
 
                 healthComponent.OnTakeDamage(damage, true);
                 healthComponent.OnKnockBack(knockback, transform.position);
+                Runner.Spawn(explosion, this.transform.position, Quaternion.identity);
+                RPC_ExplosionSFX();
             }
         }
     }
@@ -88,7 +92,7 @@ public class Sapling : NetworkAttack_Base
             if (CheckIfSameTeam(healthComponent.GetTeam())) return;
         }
 
-        Runner.Spawn(onHitEffect, this.transform.position, Quaternion.identity);
+        RPC_ExplosionSFX();
         rb.Rigidbody.drag = 5;
         fuseTimer = TickTimer.CreateFromSeconds(Runner, fuseDuration);
     }
