@@ -10,6 +10,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 {
     // Control variables
     public bool canAttack = true;
+    public bool canDefend = true;
     [Networked(OnChanged = nameof(OnStateChanged))] public NetworkBool isDefending { get; set; } = false;
 
     [Header("Basic Attacks Properties")]
@@ -65,7 +66,7 @@ public class NetworkPlayer_Attack : CharacterComponent
                 else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack && !isDefending) ActivateBasicAttack();
             }
 
-            ActivateBlock(isBlocking);
+            if (canDefend) ActivateBlock(isBlocking);
         }
 
         ManageTimers(ref qAttackCoolDownTimer);
@@ -86,6 +87,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         // Prevent further attacks
         canAttack = false;
         canBasicAttack = false;
+        canDefend = false;
 
         // Prevent dash cancel if applicable
         Character.Movement.canDash = attack.GetAllowDashCancel();
@@ -133,6 +135,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         // Start Ult animation
         canAttack = false;
         canBasicAttack = false;
+        canDefend = false;
 
         Character.Movement.canDash = fAttack.GetAllowDashCancel();
         Character.Energy.energy = 0;
@@ -227,7 +230,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public void ActivateBlock(bool blockButtonDown)
     {
-        if (blockButtonDown && !isDefending && Character.Health.canBlock)
+        if (blockButtonDown && !isDefending && Character.Health.canBlock && Character.Animator.anim.GetCurrentAnimatorStateInfo(0).IsName("Run"))
         {
             if (Object.HasStateAuthority)
             {
@@ -315,6 +318,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         canAttack = true;
         canBasicAttack = true;
+        canDefend = true;
         basicAttackCount = 0;
         Character.Movement.ResetSlows();
         Character.Movement.canDash = true;
