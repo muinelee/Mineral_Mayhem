@@ -9,6 +9,7 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
     private Transform playerTransform;
     private float yOffset;
 
+    public GameObject healthBar;
     public Image nonLocalPlayerHealthBar;
     public TextMeshProUGUI playerName;
     [SerializeField] private NetworkPlayer_Health playerHealth;
@@ -58,12 +59,12 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
 
     public void ShowFloatingHealthBar()
     {
-        nonLocalPlayerHealthBar.gameObject.SetActive(true);
+        healthBar.gameObject.SetActive(true);
     }
 
     public void HideFloatingHealthBar()
     {
-        nonLocalPlayerHealthBar.gameObject.SetActive(false);
+        healthBar.gameObject.SetActive(false);
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
