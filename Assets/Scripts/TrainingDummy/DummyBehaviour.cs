@@ -30,10 +30,8 @@ public class DummyBehaviour : NetworkBehaviour, IHealthComponent
 
     public void OnTakeDamage(float damageAmount, bool isReact)   
     {
-        Debug.Log("Taking Damage CHECKKKK"); 
         if (isDead) return;
 
-        Debug.Log("Taking Damage"); 
         HP -= damageAmount;
 
         CheckHealth(HP);
