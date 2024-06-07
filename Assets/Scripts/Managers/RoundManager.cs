@@ -120,14 +120,12 @@ public class RoundManager : NetworkBehaviour
         if (redPlayersAlive > bluePlayersAlive)
         {
             redRoundsWon++;
-            AudioManager.Instance.PlayAudioSFX(redTeamWins, transform.position);
             RPC_UpdateRoundUIForClients(true);
         }
 
         else if (bluePlayersAlive > redPlayersAlive)
         {
             blueRoundsWon++;
-            AudioManager.Instance.PlayAudioSFX(blueTeamWins, transform.position);
             RPC_UpdateRoundUIForClients(false);
         }
 
@@ -142,8 +140,17 @@ public class RoundManager : NetworkBehaviour
 
     public void MatchEnd()
     {
-        if (redRoundsWon > blueRoundsWon) RPC_DisplayGameOver(true);
-        else if (blueRoundsWon > redRoundsWon) RPC_DisplayGameOver(false);
+        if (redRoundsWon > blueRoundsWon)
+        {
+            RPC_DisplayGameOver(true);
+            RPC_RedTeamWinsAnnouncer();
+        }
+        else if (blueRoundsWon > redRoundsWon)
+        {
+            RPC_DisplayGameOver(false);
+            RPC_BlueTeamWinsAnnouncer();
+        }
+
         else Debug.Log("Tie!");
         //RPC_HideRoundUI();
         RPC_GoToVictoryCamera();
@@ -237,5 +244,17 @@ public class RoundManager : NetworkBehaviour
     private void RPC_CollapseRoundUI()
     {
         RoundUI.instance.CollapseRoundUI();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_RedTeamWinsAnnouncer()
+    {
+        AudioManager.Instance.PlayAudioSFX(redTeamWins, transform.localPosition);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_BlueTeamWinsAnnouncer()
+    {
+        AudioManager.Instance.PlayAudioSFX(blueTeamWins, transform.localPosition);
     }
 }

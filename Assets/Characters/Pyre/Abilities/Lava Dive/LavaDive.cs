@@ -33,6 +33,8 @@ public class LavaDive : NetworkAttack_Base
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
     private Vector3 midwayPointRef;
 
+    [SerializeField] AudioClip announcerVoiceLine;
+
     public override void Spawned()
     {
         base.Spawned();
@@ -153,6 +155,11 @@ public class LavaDive : NetworkAttack_Base
                 playerEntities.Add(playerHit);
                 ApplyStatusEffect(playerHit);
             }
+
+            if (healthComponent.HP <= 0)
+            {
+                RPC_PlayAnnouncerVoiceLine();
+            }
         }
     }
 
@@ -188,6 +195,17 @@ public class LavaDive : NetworkAttack_Base
 
                 healthComponent.OnKnockBack(knockback, directionTowardsTrail);
             }
+
+            if (healthComponent.HP <= 0)
+            {
+                RPC_PlayAnnouncerVoiceLine();
+            }
         }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayAnnouncerVoiceLine()
+    {
+        AudioManager.Instance.PlayAudioSFX(announcerVoiceLine, transform.position);
     }
 }
