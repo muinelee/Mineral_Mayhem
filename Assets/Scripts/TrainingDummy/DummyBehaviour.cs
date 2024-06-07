@@ -43,7 +43,7 @@ public class DummyBehaviour : NetworkBehaviour, IHealthComponent
         {
             StopCoroutine(regenerateHealthCoroutine);
         }
-        regenerateHealthCoroutine = StartCoroutine(RegenerateHealthAfterDelay());
+        regenerateHealthCoroutine = StartCoroutine(RegenerateHealthAfterDelay(3f));
 
         if (HP > 0) SpinAnimation();
     }
@@ -56,12 +56,13 @@ public class DummyBehaviour : NetworkBehaviour, IHealthComponent
         anim.Play("DummyDie");
     }
 
-    private IEnumerator RegenerateHealthAfterDelay()
+    private IEnumerator RegenerateHealthAfterDelay(float timeBeforeRegen)
     {
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(timeBeforeRegen);
         isTakingDamage = false;
         while (!isTakingDamage && HP < maxHealth)
         {
+            if (HP >= 99) isDead = false; 
             HP += maxHealth * 0.01f; // Regenerate 1% of max health per frame
             CheckHealth(HP);
             yield return null;
@@ -98,10 +99,17 @@ public class DummyBehaviour : NetworkBehaviour, IHealthComponent
     // Function for if object respawns
     public void HandleRespawn()
     {
-        HP = maxHealth;
-        isDead = false;
-        healthBar.fillAmount = 1.0f;
+        HP = 0; 
+        isDead = true;
+        healthBar.fillAmount = 0.0f;
         anim.Play("DummyRecover");
+
+        // Start health regeneration
+        if (regenerateHealthCoroutine != null)
+        {
+            StopCoroutine(regenerateHealthCoroutine);
+        }
+        regenerateHealthCoroutine = StartCoroutine(RegenerateHealthAfterDelay(0.5f));
     }
 
     // Function for if the object can get knocked back
