@@ -55,7 +55,7 @@ public class Sapling : NetworkAttack_Base
             fuseTimer = TickTimer.None;
             Runner.Spawn(onHitEffect, this.transform.position, Quaternion.identity);
             DealDamage();
-            RPC_ExplosionSFX();
+            //RPC_ExplosionSFX();
             Runner.Despawn(Object);
         }
     }
@@ -102,6 +102,11 @@ public class Sapling : NetworkAttack_Base
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_ExplosionSFX()
+    {
+        AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
+    }
+
+    private void OnDestroy()
     {
         AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
     }
