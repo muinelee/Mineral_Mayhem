@@ -116,8 +116,10 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
             float angle = (i * angleStep) * Mathf.Deg2Rad;
             float x = transform.position.x + Mathf.Cos(angle) * radius;
             float z = transform.position.z + Mathf.Sin(angle) * radius;
-            Vector3 spawnPos = new Vector3(x, transform.position.y, z);
-            SpawnCollectible(spawnPos, spawnPoint.rotation);
+            Vector3 spawnPos = new Vector3(x, spawnPoint.position.y, z);
+            Vector3 lookDir = spawnPos - transform.position;
+            lookDir.y = 0;
+            SpawnCollectible(spawnPos, Quaternion.LookRotation(lookDir));
         }
     }
 
