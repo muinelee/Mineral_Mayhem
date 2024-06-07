@@ -63,17 +63,17 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
         }
         else if (healthPercentage <= 0.75f && healthPercentage > 0.50f && !spawn75flag)
         {
-            SpawnCollectible();
+            SpawnCollectible(spawnPoint.position, spawnPoint.rotation);
             spawn75flag = true;
         }
         else if (healthPercentage <= 0.50f && healthPercentage > 0.25f && !spawn50flag)
         {
-            SpawnCollectible();
+            SpawnCollectible(spawnPoint.position, spawnPoint.rotation);
             spawn50flag = true;
         }
         else if (healthPercentage <= 0.25f && !spawn25flag)
         {
-            SpawnCollectible();
+            SpawnCollectible(spawnPoint.position, spawnPoint.rotation);
             spawn25flag = true;
         }
     }
@@ -86,14 +86,14 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
         Runner.Despawn(Object);
     }
 
-    private void SpawnCollectible()
+    private void SpawnCollectible(Vector3 spawnPos, Quaternion spawnRot)
     {
         if (!Object.HasStateAuthority) return;
 
         if (collectiblePrefabs != null && collectiblePrefabs.Length > 0 && spawnPoint != null)
         {
             GameObject randomCollectible = collectiblePrefabs[random.Next(0, collectiblePrefabs.Length)];
-            NetworkObject spawnedItem = Runner.Spawn(randomCollectible, spawnPoint.position, spawnPoint.rotation);
+            NetworkObject spawnedItem = Runner.Spawn(randomCollectible, spawnPos, spawnRot);
             spawnedItem.GetComponent<PickupThrow>().Throw();
         }
     }
@@ -109,9 +109,15 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     // Function for when object dies
     public void HandleDeath()
     {
+        float radius = spawnPoint.GetComponent<CoreCollecibleSpawnMovement>().radius;
+        float angleStep = 360f / OnDeathCollectibleAmount;
         for (int i = 0; i < OnDeathCollectibleAmount; i++)
         {
-            SpawnCollectible();
+            float angle = (i * angleStep) * Mathf.Deg2Rad;
+            float x = transform.position.x + Mathf.Cos(angle) * radius;
+            float z = transform.position.z + Mathf.Sin(angle) * radius;
+            Vector3 spawnPos = new Vector3(x, transform.position.y, z);
+            SpawnCollectible(spawnPos, spawnPoint.rotation);
         }
     }
 
