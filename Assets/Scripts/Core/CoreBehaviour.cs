@@ -10,6 +10,7 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
 {   
     //Health
     public int maxHealth = 100;
+    [SerializeField] GameObject explosionVFX;
 
     //Pickup flags
     private bool spawn75flag = false;
@@ -28,6 +29,7 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     public NetworkPlayer.Team team { get; set; }
 
     [SerializeField] protected AudioClip SFX;
+    [SerializeField] protected AudioClip explosionSFX;
     public int OnDeathCollectibleAmount = 3;
 
     public override void Spawned()
@@ -82,6 +84,7 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     {
         if (!Object.HasStateAuthority) return;
         if (RoundManager.Instance != null) RoundManager.Instance.ResetRound -= Die;
+        Runner.Spawn(explosionVFX, transform.position, Quaternion.identity);
         HandleDeath();
         Runner.Despawn(Object);
     }
@@ -128,4 +131,9 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
 
     // Function for if the object can get knockedback
     public void OnKnockBack(float force, Vector3 source) { }
+
+    private void OnDestroy()
+    {
+        AudioManager.Instance.PlayAudioSFX(explosionSFX, transform.position);
+    }
 }
