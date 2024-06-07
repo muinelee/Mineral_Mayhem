@@ -7,9 +7,16 @@ public class SpeedBoost : NetworkBehaviour
     [SerializeField] private float duration = 5f;
     [SerializeField] private LayerMask targetLayer;
 
+    public override void Spawned()
+    {
+        if (!Runner.IsServer) return;
+
+        if (FindAnyObjectByType<RoundManager>() != null) RoundManager.Instance.ResetRound += PickedUp;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (!FindAnyObjectByType<NetworkRunner>().IsServer) return;
+        if (!Runner.IsServer) return;
 
         if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
         {
@@ -21,5 +28,11 @@ public class SpeedBoost : NetworkBehaviour
                 Runner.Despawn(Object);
             }
         }
+    }
+
+    public void PickedUp()
+    {
+        if (FindAnyObjectByType<RoundManager>() != null) RoundManager.Instance.ResetRound -= PickedUp;
+        Runner.Despawn(Object);
     }
 }

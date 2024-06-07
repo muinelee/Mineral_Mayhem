@@ -38,6 +38,8 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
         team = NetworkPlayer.Team.Neutral;
 
         AudioManager.Instance.PlayAudioSFX(SFX, transform.position);
+
+        if (RoundManager.Instance != null) RoundManager.Instance.ResetRound += Die;
     }
 
     public void OnTakeDamage(float damageAmount, bool isReact)
@@ -77,6 +79,8 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
 
     private void Die()
     {
+        if (!Object.HasStateAuthority) return;
+        if (RoundManager.Instance != null) RoundManager.Instance.ResetRound -= Die;
         Runner.Despawn(Object);
     }
 
