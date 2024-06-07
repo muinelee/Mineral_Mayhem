@@ -272,4 +272,9 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
             RoundManager.Instance.MatchEndEvent -= DisableControls;
         }
     }
+
+    public override void OnHeal(float x)
+    {
+        Heal(x);
+    }
 }
