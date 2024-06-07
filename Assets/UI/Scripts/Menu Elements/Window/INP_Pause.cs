@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 public class INP_Pause : MonoBehaviour
 {
+    public static INP_Pause instance;
+
     [SerializeField] KeyCode pauseKey = KeyCode.Escape;
     [SerializeField] CG_Fade menu;
     [SerializeField] GameObject[] windowsToOpen;
@@ -18,6 +20,13 @@ public class INP_Pause : MonoBehaviour
 
     //--------------------------------//
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
     private void Update()
     {
         if (Input.GetKeyUp(pauseKey))

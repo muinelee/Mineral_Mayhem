@@ -28,11 +28,11 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)                          // Spawns player in scene
     {
-        if (!roomAddress.Contains(SceneManager.GetActiveScene().name))
+        /*if (!roomAddress.Contains(SceneManager.GetActiveScene().name))
         {
-            Debug.Log("Cannot get active scene name"); 
+            Debug.Log("Cannot get active scene name");
             return;
-        }
+        }*/
         Debug.Log("Spawning Player"); 
         if (runner.IsServer)
         {
@@ -47,7 +47,7 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         NetworkPlayer.Players.Clear();
         FindAnyObjectByType<NetworkRunner>().Shutdown();
         StartCoroutine(DelayedDestroy());
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("Main Menu");
     }
 
     IEnumerator DelayedDestroy()
@@ -61,8 +61,8 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         NetworkPlayer.Players.Clear();
         await FindAnyObjectByType<NetworkRunner>().Shutdown();
-        if (GameOverManager.Instance.gameOver) SceneManager.LoadScene(0);   //Match ended and players are being moved back to Lobby
-        else SceneManager.LoadScene(5);     //Player ddisconnected during match
+        if (GameOverManager.Instance.gameOver) SceneManager.LoadScene("Main Menu");   //Match ended and players are being moved back to Lobby
+        else SceneManager.LoadScene("PlayerDisconnected");     //Player ddisconnected during match
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -77,9 +77,20 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         if (!runner.IsServer) return;
 
+        List<NetworkPlayer> playersToRemove =  new List<NetworkPlayer>();
+
         foreach (NetworkPlayer np in NetworkPlayer.Players)
         {
-            if (np.GetComponent<NetworkObject>().InputAuthority == PlayerRef.None) NetworkPlayer.Players.Remove(np);
+            if (np.GetComponent<NetworkObject>().InputAuthority == PlayerRef.None)
+            {
+                if (CharacterSelect.instance != null) CharacterSelect.instance.characterLookup.Remove(np);
+                playersToRemove.Add(np);
+            }
+        }
+
+        foreach (NetworkPlayer np in playersToRemove)
+        {
+            NetworkPlayer.Players.Remove(np);
         }
 
         if (!GameOverManager.Instance.gameOver) GameOverManager.Instance.ReturnToLobby();   //Game is still running

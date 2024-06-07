@@ -10,12 +10,13 @@ public class NetworkPlayer_Attack : CharacterComponent
 {
     // Control variables
     public bool canAttack = true;
+    public bool canDefend = true;
     [Networked(OnChanged = nameof(OnStateChanged))] public NetworkBool isDefending { get; set; } = false;
 
     [Header("Basic Attacks Properties")]
     [SerializeField] private SO_NetworkBasicAttack[] basicAttacks;
-    private bool canBasicAttack = true;
-    private int basicAttackCount = 0;
+    public bool canBasicAttack = true;
+    public int basicAttackCount = 0;
 
     [Header("Q Attack Properties")]
     [SerializeField] private SO_NetworkAttack qAttack;
@@ -65,7 +66,7 @@ public class NetworkPlayer_Attack : CharacterComponent
                 else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack && !isDefending) ActivateBasicAttack();
             }
 
-            ActivateBlock(isBlocking);
+            if (canDefend) ActivateBlock(isBlocking);
         }
 
         ManageTimers(ref qAttackCoolDownTimer);
@@ -86,6 +87,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         // Prevent further attacks
         canAttack = false;
         canBasicAttack = false;
+        canDefend = false;
 
         // Prevent dash cancel if applicable
         Character.Movement.canDash = attack.GetAllowDashCancel();
@@ -133,6 +135,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         // Start Ult animation
         canAttack = false;
         canBasicAttack = false;
+        canDefend = false;
 
         Character.Movement.canDash = fAttack.GetAllowDashCancel();
         Character.Energy.energy = 0;
@@ -195,8 +198,6 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (!canAttack) return;
 
-        Debug.Log("Activating Basic Attack");
-
         canBasicAttack = false;
 
         if (basicAttackCount == 0)
@@ -216,27 +217,27 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (!Runner.IsServer) return;
 
-        Character.Rigidbody.Rigidbody.AddForce(transform.forward * basicAttacks[basicAttackCount].momentum, ForceMode.Impulse);
+        if (basicAttackCount < basicAttacks.Length) Character.Rigidbody.Rigidbody.AddForce(transform.forward * basicAttacks[basicAttackCount].momentum, ForceMode.Impulse);
     }
 
     public void ChainBasicAttack()
     {
         if (canBasicAttack || !canAttack) return;
 
-        Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.1f);
+        Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.01f);
         Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
     }
 
     public void ActivateBlock(bool blockButtonDown)
     {
-
-        if (blockButtonDown && !isDefending && Character.Health.canBlock)
+        if (blockButtonDown && !isDefending && Character.Health.canBlock && Character.Animator.anim.GetCurrentAnimatorStateInfo(0).IsName("Run"))
         {
             if (Object.HasStateAuthority)
             {
                 Character.OnBlock(true);
             }
         }
+
         else if (!blockButtonDown && isDefending)
         {
             if (Object.HasStateAuthority)
@@ -317,6 +318,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         canAttack = true;
         canBasicAttack = true;
+        canDefend = true;
         basicAttackCount = 0;
         Character.Movement.ResetSlows();
         Character.Movement.canDash = true;

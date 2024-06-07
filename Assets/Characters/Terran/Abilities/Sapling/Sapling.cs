@@ -1,7 +1,6 @@
 using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
-using static Fusion.NetworkCharacterController;
 
 public class Sapling : NetworkAttack_Base
 {
@@ -17,7 +16,7 @@ public class Sapling : NetworkAttack_Base
     private NetworkRigidbody rb;
 
     [Header("Fuse Properties")]
-    [SerializeField] private float fuseDuration = 0.3f;
+    [SerializeField] private float fuseDuration = 0.05f;
     private TickTimer fuseTimer = TickTimer.None;
 
     [Header("Attack Properties")]
@@ -28,6 +27,8 @@ public class Sapling : NetworkAttack_Base
     public override void Spawned()
     {
         base.Spawned();
+
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
 
         transform.position += transform.forward * offset;
 
@@ -52,6 +53,7 @@ public class Sapling : NetworkAttack_Base
         if (fuseTimer.Expired(Runner))
         {
             fuseTimer = TickTimer.None;
+            Runner.Spawn(onHitEffect, this.transform.position, Quaternion.identity);
             DealDamage();
             Runner.Despawn(Object);
         }
@@ -88,12 +90,17 @@ public class Sapling : NetworkAttack_Base
             if (CheckIfSameTeam(healthComponent.GetTeam())) return;
         }
 
-        rb.Rigidbody.drag = 5;
+        rb.Rigidbody.velocity = Vector3.zero;
         fuseTimer = TickTimer.CreateFromSeconds(Runner, fuseDuration);
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, radius);
+    }
+
+    private void OnDestroy()
+    {
+        AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
     }
 }

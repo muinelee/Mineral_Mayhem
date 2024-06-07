@@ -41,6 +41,10 @@ public class ArchiveUIOverlay : MonoBehaviour
     [SerializeField] Slider speedSlider;
     [SerializeField] TextMeshProUGUI speedText;
 
+    [Header("Camera Sensitivity Section Info")]
+    [SerializeField] Slider sensitivitySlider;
+    [SerializeField] TextMeshProUGUI sensitivityText;
+
     [Header("Hide Panel Button")]
     [SerializeField] Button hamburgerMenuButton;
 
@@ -68,6 +72,13 @@ public class ArchiveUIOverlay : MonoBehaviour
             speedSlider.onValueChanged.AddListener(controller.SetControllerSpeed);
             UpdateSpeedText(speedSlider.value);
             controller.SetControllerSpeed(speedSlider.value);
+        }
+        if (sensitivitySlider && sensitivityText && controller)
+        {
+            sensitivitySlider.onValueChanged.AddListener(UpdateSensitivityText);
+            sensitivitySlider.onValueChanged.AddListener(controller.SetFPSensitivity);
+            UpdateSensitivityText(sensitivitySlider.value);
+            controller.SetFPSensitivity(sensitivitySlider.value);
         }
     }
 
@@ -106,5 +117,10 @@ public class ArchiveUIOverlay : MonoBehaviour
     private void UpdateSpeedText(float value)
     {
         speedText.text = ((int)value).ToString();
+    }
+
+    private void UpdateSensitivityText(float value)
+    {
+        sensitivityText.text = ((int)value).ToString();
     }
 }

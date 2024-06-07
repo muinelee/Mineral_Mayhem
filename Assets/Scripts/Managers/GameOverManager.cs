@@ -52,6 +52,8 @@ public class GameOverManager : NetworkBehaviour
 
         gameOverTimer = TickTimer.CreateFromSeconds(Runner, gameOverScreenDuration);
         gameOver = true;
+
+        FindAnyObjectByType<ShrinkingStorm>().gameObject.SetActive(false);
     }
 
     private void MoveWinners(NetworkPlayer.Team team)
@@ -87,6 +89,8 @@ public class GameOverManager : NetworkBehaviour
                     player.transform.position = victoryPositionSolo.position;
                 }
             }
+
+            else player.transform.position = Vector3.zero;
         }
     }
 
@@ -104,7 +108,7 @@ public class GameOverManager : NetworkBehaviour
         {
             Debug.Log($"this ran {num}");
             num++;
-            if (player.Object.HasStateAuthority) continue;
+            if (player.Object.HasInputAuthority) continue;
             runner.Disconnect(player.Object.InputAuthority);
         }
 
@@ -112,7 +116,7 @@ public class GameOverManager : NetworkBehaviour
 
         runner.Shutdown();
 
-        if (gameOver) SceneManager.LoadScene(0);
-        else SceneManager.LoadScene(5);
+        if (gameOver) SceneManager.LoadScene("Main Menu");
+        else SceneManager.LoadScene("PlayerDisconnected");
     }
 }

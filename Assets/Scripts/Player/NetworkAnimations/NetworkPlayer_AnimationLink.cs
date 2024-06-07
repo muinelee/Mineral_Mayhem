@@ -56,9 +56,17 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
 
     public void ResetAnimation()
     {
-        Character.Attack.ResetAttackCapabilities();
+        StartCoroutine(AttackResetHelper(0.2f));
+        //Character.Attack.ResetAttackCapabilities();
         anim.CrossFade("Run", 0.2f);
         anim.CrossFade("Run", 0.2f, 2);
+    }
+
+    IEnumerator AttackResetHelper(float timeDelay)
+    {
+        yield return new WaitForSeconds(timeDelay);
+
+        Character.Attack.ResetAttackCapabilities();
     }
 
     public override void OnBlock(bool isBlocking)

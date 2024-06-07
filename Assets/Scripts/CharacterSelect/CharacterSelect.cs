@@ -10,6 +10,8 @@ public class CharacterSelect : NetworkBehaviour
     // Character select event for storm mechanics
     public delegate void CharacterSelectEvent();
 
+    public static CharacterSelect instance;
+
     [Header("Character Select")]
     public List<SO_Character> characters;
     public Dictionary<NetworkPlayer, CharacterEntity> characterLookup = new Dictionary<NetworkPlayer, CharacterEntity>();
@@ -34,9 +36,10 @@ public class CharacterSelect : NetworkBehaviour
 
     //public event for storm mechanics
     public static event CharacterSelectEvent OnCharacterSelect;
-    private void Start()
-    {
 
+    private void Awake()
+    {
+        instance = this;
     }
 
     private void FixedUpdate()
@@ -53,19 +56,13 @@ public class CharacterSelect : NetworkBehaviour
 
     public void SelectCharacter(int characterIndex)
     {
-        int index = NetworkPlayer.Players.IndexOf(NetworkPlayer.Local);
+        int playerID = NetworkPlayer.Local.Object.InputAuthority.PlayerId;
         NetworkPlayer.Local.RPC_SetCharacterID(characterIndex);
-
-        // Needing for removing monobehaviour HUD before RPC call
-        NetworkPlayer player = NetworkPlayer.Players[index];
-        
-
-        CharacterEntity[] character = FindObjectsOfType<CharacterEntity>();
 
         // Play voice line for selected character
         AudioManager.Instance.PlayAudioSFX(characters[characterIndex].voiceLine[0], spawnPoints[spawnPoint].position);
 
-        RPC_SpawnCharacter(index, spawnPoint);
+        RPC_SpawnCharacter(playerID, spawnPoint);
 
         ClientInfo.CharacterID = characterIndex;
     }
@@ -80,6 +77,14 @@ public class CharacterSelect : NetworkBehaviour
             character.characterFAbilityPortrait
         };
 
+        Sprite[] abilityPortraitsIcons =
+        {
+            character.characterBasicAbilityPortraitIcon,
+            character.characterQAbilityPortraitIcon,
+            character.characterEAbilityPortraitIcon,
+            character.characterFAbilityPortraitIcon
+        };
+
         string[] abilityDescriptions =
         {
             character.characterBasicAbilityDescription,
@@ -91,6 +96,7 @@ public class CharacterSelect : NetworkBehaviour
         for (int i = 0; i < abilityPortraits.Length; i++)
         {
             this.abilityPortraits[i].GetComponent<Image>().sprite = abilityPortraits[i];
+            this.abilityPortraits[i].transform.GetChild(0).GetComponent<Image>().sprite = abilityPortraitsIcons[i];
             int index = i;
             this.abilityPortraits[i].onPress.RemoveAllListeners();
             this.abilityPortraits[i].onPress.AddListener(() => UpdateAbilityDescription(abilityDescriptions[index]));
@@ -133,9 +139,19 @@ public class CharacterSelect : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    private void RPC_SpawnCharacter(int playerIndex, int spawnLocation)
+    private void RPC_SpawnCharacter(int playerID, int spawnLocation)
     {
         if (!Runner.IsServer) return;
+
+        int playerIndex = 0;
+
+        foreach (NetworkPlayer p in NetworkPlayer.Players)
+        {
+            if (p.Object.InputAuthority.PlayerId == playerID)
+            {
+                playerIndex = NetworkPlayer.Players.IndexOf(p);
+            }
+        }
 
         NetworkPlayer player = NetworkPlayer.Players[playerIndex];
 
@@ -187,6 +203,8 @@ public class CharacterSelect : NetworkBehaviour
     /// </summary>
     public void FinalizeChoice()
     {
+        if (!this.gameObject.activeSelf) return;
+
         // Enable player control
         characterLookup[NetworkPlayer.Local].Input.CharacterSelected = true;
         characterLookup[NetworkPlayer.Local].PlayerUI.SpawnPlayerUI();
@@ -242,11 +260,15 @@ public class CharacterSelect : NetworkBehaviour
         characterSelectScreen.gameObject.SetActive(true);
         characterSelectScreen.FadeIn();
 
+        Debug.Log($"The size of the Players list is {NetworkPlayer.Players.Count}");
+
         RoundManager.Instance.ResetRound += SetPlayerToSpawn;
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
             int spawnLocation = (player.team == NetworkPlayer.Team.Red) ? 0 : 2;
+
             spawnLocation += ReadyUpManager.instance.GetIndex(player);
+            Debug.Log($"Spawn location value is {spawnLocation}");
             Vector3 spawnVector = matchStartPoints[spawnLocation].position;
             RoundManager.Instance.respawnPoints.Add(player, spawnVector);
         }

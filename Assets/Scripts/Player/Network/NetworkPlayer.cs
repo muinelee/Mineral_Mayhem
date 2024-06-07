@@ -61,7 +61,8 @@ public class NetworkPlayer : NetworkBehaviour, IPlayerLeft
             playerName = PlayerPrefs.GetString("PlayerName");
             RPC_SetPlayerNames(playerName.ToString());
 
-            if (SceneManager.GetActiveScene().name != "TrainingRoom")
+            Scene trainingScene = SceneManager.GetSceneByName("TrainingRoom");
+            if (!trainingScene.isLoaded)
             {
                 ReadyUpManager readyUpUI = Instantiate(readyUpUIPF, GameObject.FindGameObjectWithTag("UI Canvas 3D").transform);
                 readyUpUI.PrimeReadyUpUI(this);

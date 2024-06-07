@@ -68,6 +68,7 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
 
     [SerializeField] private Sprite borderFlairCrysta;
     [SerializeField] private Sprite borderFlairPyre;
+    [SerializeField] private Sprite borderFlairTerran;
 
     private bool uIDisplayed = false;
     // cooldown comes from Scriptable Objects passed from local player
@@ -117,19 +118,40 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
         {
             charIcon.sprite = iconCrysta;
             fBorderFlair.sprite = borderFlairCrysta;
+
+            dashIcon.color = Color.white;
+            qAttackIcon.color = Color.white;
+            eAttackIcon.color = Color.white;
+            fAttackIcon.color = Color.white;
         }
         else if (NetworkPlayer.Local.CharacterID == 1)
         {
             charIcon.sprite = iconLuna;
+
+            dashIcon.color = Color.white;
+            qAttackIcon.color = Color.white;
+            eAttackIcon.color = Color.white;
+            fAttackIcon.color = Color.white;
         }
         else if (NetworkPlayer.Local.CharacterID == 2)
         {
             charIcon.sprite = iconPyre;
             fBorderFlair.sprite = borderFlairPyre;
+
+            dashIcon.color = Color.white;
+            qAttackIcon.color = Color.white;
+            eAttackIcon.color = Color.white;
+            fAttackIcon.color = Color.white;
         }
         else if (NetworkPlayer.Local.CharacterID == 3)
         {
             charIcon.sprite = iconTerran;
+            fBorderFlair.sprite = borderFlairTerran;
+
+            dashIcon.color = Color.clear;
+            qAttackIcon.color = Color.clear;
+            eAttackIcon.color = Color.clear;
+            fAttackIcon.color = Color.clear;
         }
     }
 

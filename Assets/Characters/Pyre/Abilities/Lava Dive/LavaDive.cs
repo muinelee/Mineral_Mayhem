@@ -29,9 +29,14 @@ public class LavaDive : NetworkAttack_Base
     private bool finishDive = false;
     private TickTimer lingerTimer;
 
+    [Header("Stage Collider Mask")]
+    [SerializeField] private LayerMask stageLayers;
+
     private CharacterEntity character;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
     private Vector3 midwayPointRef;
+
+    [SerializeField] AudioClip announcerVoiceLine;
 
     public override void Spawned()
     {
@@ -59,8 +64,30 @@ public class LavaDive : NetworkAttack_Base
         }
 
         if (finishDive) return;
-        if (dashTimer.Expired(Runner)) DiveEnd();
+
         trail.position = character.transform.position;
+
+        if (dashTimer.Expired(Runner)) dashTimer = TickTimer.None;
+
+        if (dashTimer.IsRunning) return;
+
+        Debug.Log("This is still  running");
+
+        RaycastHit[] ray = Physics.SphereCastAll(trail.position, 3, transform.up, 1, stageLayers);
+
+        if (ray.Length > 0)
+        {
+            for (int i = 0; i < ray.Length; i++)
+            {
+                Debug.Log(ray[i].transform.name);
+            }            return;
+        }
+
+        else
+        {
+            Debug.Log("This really should run");
+            DiveEnd();
+        }
     }
 
     private void AttackStart()
@@ -141,7 +168,7 @@ public class LavaDive : NetworkAttack_Base
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.team)) continue;
 
-                healthComponent.OnTakeDamage(tickDamage, true);
+                healthComponent.OnTakeDamage(tickDamage, false);
             }
 
             // Apply status effect
@@ -152,6 +179,11 @@ public class LavaDive : NetworkAttack_Base
             {
                 playerEntities.Add(playerHit);
                 ApplyStatusEffect(playerHit);
+            }
+
+            if (healthComponent.HP <= 0)
+            {
+                RPC_PlayAnnouncerVoiceLine();
             }
         }
     }
@@ -188,6 +220,17 @@ public class LavaDive : NetworkAttack_Base
 
                 healthComponent.OnKnockBack(knockback, directionTowardsTrail);
             }
+
+            if (healthComponent.HP <= 0)
+            {
+                RPC_PlayAnnouncerVoiceLine();
+            }
         }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayAnnouncerVoiceLine()
+    {
+        AudioManager.Instance.PlayAudioSFX(announcerVoiceLine, transform.position);
     }
 }

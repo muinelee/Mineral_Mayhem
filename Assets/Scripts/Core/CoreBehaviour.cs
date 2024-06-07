@@ -28,6 +28,7 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     public NetworkPlayer.Team team { get; set; }
 
     [SerializeField] protected AudioClip SFX;
+    public int OnDeathCollectibleAmount = 3;
 
     public override void Spawned()
     {
@@ -38,6 +39,8 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
         team = NetworkPlayer.Team.Neutral;
 
         AudioManager.Instance.PlayAudioSFX(SFX, transform.position);
+
+        if (RoundManager.Instance != null) RoundManager.Instance.ResetRound += Die;
     }
 
     public void OnTakeDamage(float damageAmount, bool isReact)
@@ -77,6 +80,9 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
 
     private void Die()
     {
+        if (!Object.HasStateAuthority) return;
+        if (RoundManager.Instance != null) RoundManager.Instance.ResetRound -= Die;
+        HandleDeath();
         Runner.Despawn(Object);
     }
 
@@ -101,7 +107,13 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     //INTERFACE FUNCTIONS
 
     // Function for when object dies
-    public void HandleDeath() { }
+    public void HandleDeath()
+    {
+        for (int i = 0; i < OnDeathCollectibleAmount; i++)
+        {
+            SpawnCollectible();
+        }
+    }
 
     // Function for if object respawns
     public void HandleRespawn() { }

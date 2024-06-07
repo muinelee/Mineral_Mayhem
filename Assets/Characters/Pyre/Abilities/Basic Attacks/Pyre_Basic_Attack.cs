@@ -2,6 +2,7 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.Collections.Unicode;
 
 public class Pyre_Basic_Attack : NetworkAttack_Base
 {
@@ -28,14 +29,14 @@ public class Pyre_Basic_Attack : NetworkAttack_Base
         transform.position += transform.forward * offset;
 
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifeDuration);
+
+        DealDamage();
     }
 
     // Update is called once per frame
     public override void FixedUpdateNetwork()
     {
         if (!Runner.IsServer) return;
-
-        DealDamage();
 
         if (lifeTimer.Expired(Runner))
         {
@@ -62,7 +63,7 @@ public class Pyre_Basic_Attack : NetworkAttack_Base
 
                 healthComponent.OnTakeDamage(damage, true);
                 healthComponent.OnKnockBack(knockback, transform.position);
-                AttackEnd();
+                Runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
             }
         }
     }

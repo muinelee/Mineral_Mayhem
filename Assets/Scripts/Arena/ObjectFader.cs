@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class ObjectFader : MonoBehaviour
 {
-    [SerializeField] private Renderer objectToFade;
-    private Color objectColor;
+    [SerializeField] private Renderer[] objectToFade;
+    [SerializeField] private GameObject[] opaqueObject;
+    private Color[] objectColor;
 
     [Header("Fading Properties")]
     [SerializeField] private float timeToFade = 2f;
@@ -17,8 +18,18 @@ public class ObjectFader : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        objectColor = objectToFade.material.color;
-        objectToFade.material.color = new Color(objectColor.r, objectColor.g, objectColor.b, 0.4f);
+        objectColor = new Color[objectToFade.Length];
+
+        for (int i = 0; i < objectToFade.Length; i++)
+        {
+            objectColor[i] = objectToFade[i].material.color;
+            objectToFade[i].material.color = new Color(objectColor[i].r, objectColor[i].g, objectColor[i].b, 1);
+        }
+
+        for (int i = 0; i < opaqueObject.Length; i++)
+        {
+            opaqueObject[i].SetActive(true);
+        }
 
         fadeTimer = timeToFade;
     }
@@ -29,14 +40,27 @@ public class ObjectFader : MonoBehaviour
         if (isFading && fadeTimer > 0)
         {
             fadeTimer -= Time.deltaTime;
-            objectToFade.material.color = new Color(objectColor.r, objectColor.g, objectColor.b, fadeTimer / timeToFade);
+            for (int i = 0; i < objectToFade.Length; i++)
+            {
+                objectToFade[i].material.color = new Color(objectColor[i].r, objectColor[i].g, objectColor[i].b, fadeTimer / timeToFade);
+            }
         }
 
         else if (fadeTimer < timeToFade)
         {
             fadeTimer += Time.deltaTime;
 
-            objectToFade.material.color = new Color(objectColor.r, objectColor.g, objectColor.b, fadeTimer / timeToFade);
+            for (int i = 0; i < objectToFade.Length; i++)
+            {
+                objectToFade[i].material.color = new Color(objectColor[i].r, objectColor[i].g, objectColor[i].b, fadeTimer / timeToFade);
+            }
+        }
+        else if (!isFading && fadeTimer > timeToFade)
+        {
+            for (int i = 0; i <  opaqueObject.Length; i++)
+            {
+                opaqueObject[i].SetActive(true);
+            }
         }
     }
 
@@ -45,7 +69,10 @@ public class ObjectFader : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             if (playerCount == 0) isFading = true;
-            
+            for (int i = 0; i  < opaqueObject.Length; i++)
+            {
+                opaqueObject[i].SetActive(false);
+            }
             playerCount++;
         }
     }
