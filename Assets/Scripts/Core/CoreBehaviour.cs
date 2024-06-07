@@ -10,6 +10,7 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
 {   
     //Health
     public int maxHealth = 100;
+    [SerializeField] GameObject explosionVFX;
 
     //Pickup flags
     private bool spawn75flag = false;
@@ -28,6 +29,7 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     public NetworkPlayer.Team team { get; set; }
 
     [SerializeField] protected AudioClip SFX;
+    [SerializeField] protected AudioClip explosionSFX;
     public int OnDeathCollectibleAmount = 3;
 
     public override void Spawned()
@@ -63,17 +65,17 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
         }
         else if (healthPercentage <= 0.75f && healthPercentage > 0.50f && !spawn75flag)
         {
-            SpawnCollectible();
+            SpawnCollectible(spawnPoint.position, spawnPoint.rotation);
             spawn75flag = true;
         }
         else if (healthPercentage <= 0.50f && healthPercentage > 0.25f && !spawn50flag)
         {
-            SpawnCollectible();
+            SpawnCollectible(spawnPoint.position, spawnPoint.rotation);
             spawn50flag = true;
         }
         else if (healthPercentage <= 0.25f && !spawn25flag)
         {
-            SpawnCollectible();
+            SpawnCollectible(spawnPoint.position, spawnPoint.rotation);
             spawn25flag = true;
         }
     }
@@ -82,18 +84,19 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     {
         if (!Object.HasStateAuthority) return;
         if (RoundManager.Instance != null) RoundManager.Instance.ResetRound -= Die;
+        Runner.Spawn(explosionVFX, transform.position, Quaternion.identity);
         HandleDeath();
         Runner.Despawn(Object);
     }
 
-    private void SpawnCollectible()
+    private void SpawnCollectible(Vector3 spawnPos, Quaternion spawnRot)
     {
         if (!Object.HasStateAuthority) return;
 
         if (collectiblePrefabs != null && collectiblePrefabs.Length > 0 && spawnPoint != null)
         {
             GameObject randomCollectible = collectiblePrefabs[random.Next(0, collectiblePrefabs.Length)];
-            NetworkObject spawnedItem = Runner.Spawn(randomCollectible, spawnPoint.position, spawnPoint.rotation);
+            NetworkObject spawnedItem = Runner.Spawn(randomCollectible, spawnPos, spawnRot);
             spawnedItem.GetComponent<PickupThrow>().Throw();
         }
     }
@@ -109,9 +112,17 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     // Function for when object dies
     public void HandleDeath()
     {
+        float radius = spawnPoint.GetComponent<CoreCollecibleSpawnMovement>().radius;
+        float angleStep = 360f / OnDeathCollectibleAmount;
         for (int i = 0; i < OnDeathCollectibleAmount; i++)
         {
-            SpawnCollectible();
+            float angle = (i * angleStep) * Mathf.Deg2Rad;
+            float x = transform.position.x + Mathf.Cos(angle) * radius;
+            float z = transform.position.z + Mathf.Sin(angle) * radius;
+            Vector3 spawnPos = new Vector3(x, spawnPoint.position.y, z);
+            Vector3 lookDir = spawnPos - transform.position;
+            lookDir.y = 0;
+            SpawnCollectible(spawnPos, Quaternion.LookRotation(lookDir));
         }
     }
 
@@ -120,4 +131,9 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
 
     // Function for if the object can get knockedback
     public void OnKnockBack(float force, Vector3 source) { }
+
+    private void OnDestroy()
+    {
+        AudioManager.Instance.PlayAudioSFX(explosionSFX, transform.position);
+    }
 }

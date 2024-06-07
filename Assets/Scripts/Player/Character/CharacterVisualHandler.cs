@@ -60,7 +60,7 @@ public class CharacterVisualHandler : CharacterComponent
         originalColors = new Color[materials.Length];
         for (int i = 0; i < materials.Length; i++)
         {
-            originalColors[i] = materials[i].color;
+            originalColors[i] = materials[i].GetColor("_BaseColor");
         }
     }
 
