@@ -3,6 +3,7 @@ using UnityEngine;
 using Fusion;
 using UnityEngine.UI;
 using UnityEngine.Splines;
+using UnityEngine.VFX;
 
 public class ShrinkingStorm : NetworkAttack_Base { 
 
@@ -40,6 +41,11 @@ public class ShrinkingStorm : NetworkAttack_Base {
     [SerializeField] private LayerMask playerLayer;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
+    [Header("Visual Effect")]
+    [SerializeField] private VisualEffect stormVFX;
+
+    private NetworkRunner runner;
+
     // Start is called before the first frame update
     void Start() {
         stormCollider = GetComponent<CapsuleCollider>();
@@ -53,18 +59,25 @@ public class ShrinkingStorm : NetworkAttack_Base {
         //subscribe to the event
         //Debug.Log("Subscribed to event");
 
+        runner = FindAnyObjectByType<NetworkRunner>();
+
+        if (!runner.IsServer) return;
+
         RoundManager.resetStorm += ResetStorm;
         RoundManager.startStorm += ShrinkStorm;
     }
 
     private void OnDestroy()
     {
+        if (!runner.IsServer) return;
+
         RoundManager.resetStorm -= ResetStorm;
         RoundManager.startStorm -= ShrinkStorm;
     }
 
     // Update is called once per frame
     void FixedUpdate() {
+
         if (isShrinking) {
             //lerp the scale of the object to shrink it
             StormScaleChange();
@@ -79,7 +92,6 @@ public class ShrinkingStorm : NetworkAttack_Base {
                         DealDamage();
                         //ManageDamage();
                         //show UI screen for inside storm indicator
-                        IndicateStorm();
                     }
                 }
                 damageTimer = TickTimer.None;
@@ -99,9 +111,12 @@ public class ShrinkingStorm : NetworkAttack_Base {
 
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
         foreach (LagCompensatedHit hit in hits) {
+
+            // Cores don't have character entities so find objects with a character entities and a health component
+            CharacterEntity characterEntity =  hit.GameObject.GetComponentInParent<CharacterEntity>();
             IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
 
-            if (healthComponent != null) {
+            if (healthComponent != null && characterEntity != null) {
                 if (!stormCollider.bounds.Contains(hit.GameObject.transform.position)) {
                     healthComponent.OnTakeDamage(damage, false);
                     //Debug.Log("player dealt " + damage);
@@ -148,12 +163,11 @@ public class ShrinkingStorm : NetworkAttack_Base {
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_ResetStorm()
     {
+        Debug.Log("The storm's scale should have been reset");
         this.transform.localScale = startScale;
-    }
-
-    private void IndicateStorm() {
-        //show UI screen for inside storm indicator
-        stormImageBase.enabled = true;
+        this.ShrinkStorm();
+        this.stormVFX.Stop();
+        this.stormVFX.Play();
     }
 
     public Vector3 GetSpawnLocation() {
