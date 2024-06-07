@@ -38,6 +38,8 @@ public class ReadyUpManager : MonoBehaviour
     [SerializeField] Sprite unassignedBackground;
     [SerializeField] Sprite readyBackground;
 
+    private NetworkRunner runner;
+
     // Arena
     private Arena arena;
 
@@ -49,6 +51,7 @@ public class ReadyUpManager : MonoBehaviour
         instance = this;
         arena = FindAnyObjectByType<Arena>();
         Debug.Log($"This is how many players are in the match {NetworkPlayer.Players.Count}");
+        runner = FindAnyObjectByType<NetworkRunner>();
     }
 
     public void OnStartGame()
@@ -56,7 +59,6 @@ public class ReadyUpManager : MonoBehaviour
         if (!NetworkPlayer.Local.HasStateAuthority) return;
 
         //Check to see if there are enough players
-        NetworkRunner runner = FindAnyObjectByType<NetworkRunner>();
 
         if (runner.SessionInfo.PlayerCount != runner.SessionInfo.MaxPlayers) return;
 
@@ -92,7 +94,6 @@ public class ReadyUpManager : MonoBehaviour
             startGame.GetComponent<BTN_Animation>().ColorDisable();
             startGame.GetComponent<EventTrigger>().enabled = false;
         }
-
 
         foreach (NetworkPlayer netPlayer in FindObjectsOfType<NetworkPlayer>())
         {
@@ -165,7 +166,7 @@ public class ReadyUpManager : MonoBehaviour
     public void JoinBlueTeam(NetworkPlayer player)
     {
         // Manage player in team lists
-        if (blueTeamList.Contains(player)) return;
+        if (blueTeamList.Contains(player) || blueTeamList.Count ==  runner.SessionInfo.MaxPlayers/2) return;
         if (redTeamList.Contains(player)) redTeamList.Remove(player);
         if (undecidedTeamList.Contains(player)) undecidedTeamList.Remove(player);
 
@@ -197,7 +198,7 @@ public class ReadyUpManager : MonoBehaviour
     public void JoinRedTeam(NetworkPlayer player)
     {
         // Manager player in team lists
-        if (redTeamList.Contains(player)) return;
+        if (redTeamList.Contains(player) || redTeamList.Count == runner.SessionInfo.MaxPlayers / 2) return;
         if (blueTeamList.Contains(player)) blueTeamList.Remove(player);
         if (undecidedTeamList.Contains(player)) undecidedTeamList.Remove(player);
 
