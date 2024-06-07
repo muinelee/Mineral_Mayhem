@@ -46,6 +46,10 @@ public class ShrinkingStorm : NetworkAttack_Base {
         if (!stormCollider) {
             Debug.LogError("No collider found");
         }
+
+        Vector3 spawn = GetSpawnLocation();
+        transform.position = spawn;
+        Debug.Log("Storm spawned at " + spawn);
         //subscribe to the event
         //Debug.Log("Subscribed to event");
 
@@ -152,7 +156,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
         stormImageBase.enabled = true;
     }
 
-    public Vector3 GetNewCoreSpawnLocation() {
+    public Vector3 GetSpawnLocation() {
         if (spline != null) {
             float randomLocation = Random.Range(0f, 1f);
             return spline.EvaluatePosition(randomLocation);
