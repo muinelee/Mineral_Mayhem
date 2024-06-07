@@ -16,7 +16,7 @@ public class Sapling : NetworkAttack_Base
     private NetworkRigidbody rb;
 
     [Header("Fuse Properties")]
-    [SerializeField] private float fuseDuration = 0.3f;
+    [SerializeField] private float fuseDuration = 0.05f;
     private TickTimer fuseTimer = TickTimer.None;
 
     [Header("Attack Properties")]
@@ -55,7 +55,6 @@ public class Sapling : NetworkAttack_Base
             fuseTimer = TickTimer.None;
             Runner.Spawn(onHitEffect, this.transform.position, Quaternion.identity);
             DealDamage();
-            //RPC_ExplosionSFX();
             Runner.Despawn(Object);
         }
     }
@@ -98,12 +97,6 @@ public class Sapling : NetworkAttack_Base
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, radius);
-    }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_ExplosionSFX()
-    {
-        AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
     }
 
     private void OnDestroy()
