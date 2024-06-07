@@ -1,7 +1,6 @@
 using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
-using static Fusion.NetworkCharacterController;
 
 public class Sapling : NetworkAttack_Base
 {
@@ -51,6 +50,7 @@ public class Sapling : NetworkAttack_Base
 
         if (fuseTimer.Expired(Runner))
         {
+            RPC_ExplosionSFX();
             fuseTimer = TickTimer.None;
             DealDamage();
             Runner.Despawn(Object);
@@ -96,5 +96,11 @@ public class Sapling : NetworkAttack_Base
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, radius);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_ExplosionSFX()
+    {
+        AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
     }
 }
