@@ -19598,10 +19598,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2040756551493555044}
-  - component: {fileID: -890308752137203473}
-  - component: {fileID: -4661500867282093571}
-  - component: {fileID: 4937761408485848465}
-  - component: {fileID: 6096140652799314634}
+  - component: {fileID: 1628706106222107111}
+  - component: {fileID: 6302109172553405023}
+  - component: {fileID: 2615980333149550572}
+  - component: {fileID: 3760222154843233377}
   m_Layer: 0
   m_Name: VFX_Toon Explosion
   m_TagString: Untagged
@@ -19618,7 +19618,7 @@ Transform:
   m_GameObject: {fileID: 6752262487716729892}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 260.79993, y: -0.5697738, z: -443.10312}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -19629,7 +19629,7 @@ Transform:
   - {fileID: 8642660568500722850}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!198 &-890308752137203473
+--- !u!198 &1628706106222107111
 ParticleSystem:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -19639,12 +19639,12 @@ ParticleSystem:
   serializedVersion: 8
   lengthInSec: 5
   simulationSpeed: 1
-  stopAction: 2
+  stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
-  looping: 0
+  looping: 1
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -24352,7 +24352,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!199 &-4661500867282093571
+--- !u!199 &6302109172553405023
 ParticleSystemRenderer:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -24424,7 +24424,7 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &4937761408485848465
+--- !u!114 &2615980333149550572
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -24446,9 +24446,9 @@ MonoBehaviour:
     RawGuidValue: ee47fcdd934dd594ea6092a5bc4745de
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 6096140652799314634}
+  - {fileID: 3760222154843233377}
   SimulationBehaviours: []
---- !u!114 &6096140652799314634
+--- !u!114 &3760222154843233377
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
