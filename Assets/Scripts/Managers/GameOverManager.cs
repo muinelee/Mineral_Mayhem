@@ -52,6 +52,8 @@ public class GameOverManager : NetworkBehaviour
 
         gameOverTimer = TickTimer.CreateFromSeconds(Runner, gameOverScreenDuration);
         gameOver = true;
+
+        FindAnyObjectByType<ShrinkingStorm>().gameObject.SetActive(false);
     }
 
     private void MoveWinners(NetworkPlayer.Team team)
@@ -87,6 +89,8 @@ public class GameOverManager : NetworkBehaviour
                     player.transform.position = victoryPositionSolo.position;
                 }
             }
+
+            else player.transform.position = Vector3.zero;
         }
     }
 
