@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using UnityEngine.UI;
+using UnityEngine.Splines;
 
 public class ShrinkingStorm : NetworkAttack_Base { 
 
@@ -24,6 +26,14 @@ public class ShrinkingStorm : NetworkAttack_Base {
     [Header("References")]
     [SerializeField] private CapsuleCollider stormCollider;
     [SerializeField] private float damageDelay;
+    public SplineContainer spline;
+
+    //UI references
+    [Header("UI References")]
+    [SerializeField] private Image stormImageBase;
+    [SerializeField] private Image stormImage2;
+    [SerializeField] private Image stormImage3;
+
 
     [Header("Damage Variables")]
     [SerializeField] private float radius;
@@ -36,6 +46,10 @@ public class ShrinkingStorm : NetworkAttack_Base {
         if (!stormCollider) {
             Debug.LogError("No collider found");
         }
+
+        Vector3 spawn = GetSpawnLocation();
+        transform.position = spawn;
+        Debug.Log("Storm spawned at " + spawn);
         //subscribe to the event
         //Debug.Log("Subscribed to event");
 
@@ -64,6 +78,8 @@ public class ShrinkingStorm : NetworkAttack_Base {
                         //Debug.Log("Player is in the storm");
                         DealDamage();
                         //ManageDamage();
+                        //show UI screen for inside storm indicator
+                        IndicateStorm();
                     }
                 }
                 damageTimer = TickTimer.None;
@@ -133,5 +149,21 @@ public class ShrinkingStorm : NetworkAttack_Base {
     private void RPC_ResetStorm()
     {
         this.transform.localScale = startScale;
+    }
+
+    private void IndicateStorm() {
+        //show UI screen for inside storm indicator
+        stormImageBase.enabled = true;
+    }
+
+    public Vector3 GetSpawnLocation() {
+        if (spline != null) {
+            float randomLocation = Random.Range(0f, 1f);
+            return spline.EvaluatePosition(randomLocation);
+        }
+        else {
+            Debug.LogWarning("Spline is not assigned for core spawning.");
+            return Vector3.zero;
+        }
     }
 }
