@@ -306,7 +306,7 @@ public class ReadyUpManager : MonoBehaviour
         {
             if (player.isReady)
             {
-                playerTeamDisplayPair[player].GetComponent<Image>().sprite = readyBackground;
+                playerTeamDisplayPair[player].transform.GetComponent<Image>().sprite = readyBackground;
                 ReadyUp(player);
             }
         }
