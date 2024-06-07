@@ -63,10 +63,16 @@ public class Pyre_Basic_Attack : NetworkAttack_Base
 
                 healthComponent.OnTakeDamage(damage, true);
                 healthComponent.OnKnockBack(knockback, transform.position);
-                Runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
+                RPC_OnHitSFX();
                 
                 if (hits.IndexOf(hit) == hits.Count - 1) AttackEnd();
             }
         }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_OnHitSFX()
+    {
+        Runner.Spawn(onHitEffect, transform.position, Quaternion.identity);
     }
 }
