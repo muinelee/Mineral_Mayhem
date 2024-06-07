@@ -29,14 +29,14 @@ public class Pyre_Basic_Attack : NetworkAttack_Base
         transform.position += transform.forward * offset;
 
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifeDuration);
+
+        DealDamage();
     }
 
     // Update is called once per frame
     public override void FixedUpdateNetwork()
     {
         if (!Runner.IsServer) return;
-
-        DealDamage();
 
         if (lifeTimer.Expired(Runner))
         {
@@ -63,16 +63,8 @@ public class Pyre_Basic_Attack : NetworkAttack_Base
 
                 healthComponent.OnTakeDamage(damage, true);
                 healthComponent.OnKnockBack(knockback, transform.position);
-                RPC_OnHitSFX();
-                
-                if (hits.IndexOf(hit) == hits.Count - 1) AttackEnd();
+                Runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
             }
         }
-    }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_OnHitSFX()
-    {
-        Runner.Spawn(onHitEffect, transform.position, Quaternion.identity);
     }
 }
