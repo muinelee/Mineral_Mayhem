@@ -20,23 +20,22 @@ public class DummyBehaviour : NetworkBehaviour, IHealthComponent
 
     public override void Spawned() 
     {
+        anim = GetComponent<Animator>();
+        
         if (!Runner.IsServer)
             return; 
         HP = maxHealth;
         team = NetworkPlayer.Team.Neutral;
-        anim = GetComponent<Animator>();
         isDead = false;
     }
 
     public void OnTakeDamage(float damageAmount, bool isReact)   
     {
-        Debug.Log("Taking Damage CHECKKKK"); 
-        if (isDead) return;
+        if (isDead || !Object.HasStateAuthority) return;
 
-        Debug.Log("Taking Damage"); 
         HP -= damageAmount;
 
-        CheckHealth(HP);
+        RPC_CheckHealth(HP);
 
         isTakingDamage = true;
         if (regenerateHealthCoroutine != null)
@@ -44,8 +43,12 @@ public class DummyBehaviour : NetworkBehaviour, IHealthComponent
             StopCoroutine(regenerateHealthCoroutine);
         }
         regenerateHealthCoroutine = StartCoroutine(RegenerateHealthAfterDelay(3f));
+    }
 
-        if (HP > 0) SpinAnimation();
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_CheckHealth(float health)
+    {
+        this.CheckHealth(health);
     }
 
     private void Die()
@@ -79,13 +82,12 @@ public class DummyBehaviour : NetworkBehaviour, IHealthComponent
         float healthPercentage = health / maxHealth;
         healthBar.fillAmount = healthPercentage;
 
-        Debug.Log("Checking Health: " + HP); 
-
-        if (HP <= 0f)
+        if (health <= 0f)
         {
-            Debug.Log("Dyingg"); 
             Die();
         }
+
+        else if (health > 0) SpinAnimation();
     }
 
     // INTERFACE FUNCTIONS
