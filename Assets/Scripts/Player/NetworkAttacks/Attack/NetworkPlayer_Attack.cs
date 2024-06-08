@@ -186,11 +186,14 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     private void PlayVoiceLine(Queue<AudioClip> voiceLineQueue)
     {
-        if (voiceLineQueue != null && voiceLineQueue.Count > 0)
+        if (Random.Range(0f, 1f) <= 0.66f)
         {
-            AudioClip voiceLine = voiceLineQueue.Dequeue();
-            AudioManager.Instance.PlayAudioSFX(voiceLine, transform.localPosition);
-            voiceLineQueue.Enqueue(voiceLine);
+            if (voiceLineQueue != null && voiceLineQueue.Count > 0)
+            {
+                AudioClip voiceLine = voiceLineQueue.Dequeue();
+                AudioManager.Instance.PlayAudioSFX(voiceLine, transform.localPosition);
+                voiceLineQueue.Enqueue(voiceLine);
+            }
         }
     }
 
