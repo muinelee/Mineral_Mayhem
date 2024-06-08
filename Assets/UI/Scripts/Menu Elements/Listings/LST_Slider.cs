@@ -30,15 +30,15 @@ public class LST_Slider : MonoBehaviour
     {
         if (listingType == ListingType.Master)
         {
-            slider.value = (SettingsManager.volumeMaster + 30) / 30;
+            slider.value = SettingsManager.volumeMaster > 0 ? Mathf.Log10(SettingsManager.volumeMaster) * 20 : -80;
         }
         else if (listingType == ListingType.Music)
         {
-            slider.value = (SettingsManager.volumeMusic + 30) / 30;
+            slider.value = SettingsManager.volumeMusic > 0 ? Mathf.Log10(SettingsManager.volumeMusic) * 20 : -80;
         }
         else if (listingType == ListingType.SFX)
         {
-            slider.value = (SettingsManager.volumeSFX + 30) / 30;
+            slider.value = SettingsManager.volumeSFX > 0 ? Mathf.Log10(SettingsManager.volumeSFX) * 20 : -80;
         }
     }
 
@@ -50,18 +50,39 @@ public class LST_Slider : MonoBehaviour
         }
 
         if (listingType == ListingType.Master)
-        {
-            SettingsManager.volumeMaster = slider.value * 30 - 30;
+        {   
+            if (slider.value <= -80)
+            {
+                SettingsManager.volumeMaster = 0;
+            }
+            else
+            {
+                SettingsManager.volumeMaster = Mathf.Pow(10, slider.value / 20);
+            }
             mixer.SetFloat("master", SettingsManager.volumeMaster);
         }
         else if (listingType == ListingType.Music)
-        {
-            SettingsManager.volumeMusic = slider.value * 30 - 30;
+        {   
+            if (slider.value <= -80)
+            {
+                SettingsManager.volumeMusic = 0;
+            }
+            else
+            {
+                SettingsManager.volumeMusic = Mathf.Pow(10, slider.value / 20);
+            }
             mixer.SetFloat("music", SettingsManager.volumeMusic);
         }
         else if (listingType == ListingType.SFX)
-        {
-            SettingsManager.volumeSFX = slider.value * 30 - 30;
+        {   
+            if (slider.value <= -80)
+            {
+                SettingsManager.volumeSFX = 0;
+            }
+            else
+            {
+                SettingsManager.volumeSFX = Mathf.Pow(10, slider.value / 20);
+            }
             mixer.SetFloat("sfx", SettingsManager.volumeSFX);
         }
 
