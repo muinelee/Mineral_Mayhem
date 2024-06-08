@@ -28,7 +28,7 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     public bool isDead { get; set; }
     public NetworkPlayer.Team team { get; set; }
 
-    [SerializeField] protected AudioClip SFX;
+    [SerializeField] protected AudioClip spawnedSFX;
     [SerializeField] protected AudioClip explosionSFX;
     public int OnDeathCollectibleAmount = 3;
 
@@ -40,7 +40,7 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
         HP = maxHealth;
         team = NetworkPlayer.Team.Neutral;
 
-        AudioManager.Instance.PlayAudioSFX(SFX, transform.position);
+        RPC_PlaySpawnedSFX();
 
         if (RoundManager.Instance != null) RoundManager.Instance.ResetRound += Die;
     }
@@ -135,5 +135,11 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     private void OnDestroy()
     {
         AudioManager.Instance.PlayAudioSFX(explosionSFX, transform.position);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlaySpawnedSFX()
+    {
+        AudioManager.Instance.PlayAudioSFX(spawnedSFX, transform.position);
     }
 }
