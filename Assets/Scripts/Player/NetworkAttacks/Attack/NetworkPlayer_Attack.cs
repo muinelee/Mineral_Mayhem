@@ -186,7 +186,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     private void PlayVoiceLine(Queue<AudioClip> voiceLineQueue)
     {
-        if (Random.Range(0f, 1f) <= 0.66f)
+        if (Random.Range(0f, 1f) <= 0.66f || voiceLineQueue == fVoiceLineQueue)
         {
             if (voiceLineQueue != null && voiceLineQueue.Count > 0)
             {
