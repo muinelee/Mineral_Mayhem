@@ -163,11 +163,12 @@ public class ShrinkingStorm : NetworkAttack_Base {
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_ResetStorm()
     {
-        Debug.Log("The storm's scale should have been reset");
         this.transform.localScale = startScale;
         this.ShrinkStorm();
         this.stormVFX.Stop();
         this.stormVFX.Play();
+
+        transform.position = GetSpawnLocation();
     }
 
     public Vector3 GetSpawnLocation() {

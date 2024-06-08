@@ -13,6 +13,7 @@ public class Coldmehameha : NetworkAttack_Base
     //ticktimer to work with lifetime
     private TickTimer lifeTimer = TickTimer.None;
     //spawn offset
+    private List<CharacterEntity> playersHit = new List<CharacterEntity>();
 
     [Header("Spawn Properties")]
     public int offset;
@@ -99,7 +100,13 @@ public class Coldmehameha : NetworkAttack_Base
 
             if (statusEffectSO.Count > 0 && characterEntity) {
                 foreach (StatusEffect status in statusEffectSO) {
-                    characterEntity.OnStatusBegin(status);
+
+                    if (!playersHit.Contains(characterEntity)){
+
+                        characterEntity.OnStatusBegin(status);
+                        playersHit.Add(characterEntity);
+                    }
+
                 }
             }
 
