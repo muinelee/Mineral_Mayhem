@@ -17,6 +17,8 @@ public class VineGround : NetworkAttack_Base
     [SerializeField] private LayerMask playerLayer;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
+    [SerializeField] AudioClip announcerVoiceLine;
+
     public override void Spawned()
     {
         base.Spawned();
@@ -64,6 +66,11 @@ public class VineGround : NetworkAttack_Base
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
 
                 healthComponent.OnTakeDamage(damage, false);
+
+                if (healthComponent.HP <= 0)
+                {
+                    RPC_PlayAnnouncerVoiceLine();
+                }
             }
 
             // Apply status effect once per enemy player hit
@@ -89,5 +96,11 @@ public class VineGround : NetworkAttack_Base
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, radius);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayAnnouncerVoiceLine()
+    {
+        AudioManager.Instance.PlayAudioSFX(announcerVoiceLine, transform.position);
     }
 }

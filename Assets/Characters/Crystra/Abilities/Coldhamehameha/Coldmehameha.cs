@@ -24,6 +24,8 @@ public class Coldmehameha : NetworkAttack_Base
     List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
     [SerializeField] private LayerMask collisionLayer;
 
+    [SerializeField] AudioClip announcerVoiceLine;
+
     public override void Spawned() {
         //call base class spawn function
         base.Spawned();
@@ -100,11 +102,22 @@ public class Coldmehameha : NetworkAttack_Base
                     characterEntity.OnStatusBegin(status);
                 }
             }
+
+            if (healthComponent.HP <= 0)
+            {
+                RPC_PlayAnnouncerVoiceLine();
+            }
         }
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube((transform.position + (transform.forward * (extends.z / 2))), extends);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayAnnouncerVoiceLine()
+    {
+        AudioManager.Instance.PlayAudioSFX(announcerVoiceLine, transform.position);
     }
 }
