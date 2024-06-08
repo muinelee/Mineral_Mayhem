@@ -85,7 +85,7 @@ public class RoundManager : NetworkBehaviour
 
     public void LoadRound()
     {
-        RPC_CollapseRoundUI();
+        RPC_ShrinkRoundUI();
 
         if (currentRound == maxRounds) return; 
         currentRound++;
@@ -111,7 +111,7 @@ public class RoundManager : NetworkBehaviour
     }
     private IEnumerator iRoundEnd()
     {
-        RPC_ExpandRoundUI();
+        RPC_GrowRoundUI();
 
         yield return new WaitForSecondsRealtime(1f);
 
@@ -159,7 +159,7 @@ public class RoundManager : NetworkBehaviour
     }
     private IEnumerator iMatchEnd()
     {
-        yield return new WaitForSecondsRealtime(3.5f);
+        yield return new WaitForSecondsRealtime(4f);
 
         RPC_CollapseRoundUI();
 
@@ -244,6 +244,18 @@ public class RoundManager : NetworkBehaviour
     private void RPC_CollapseRoundUI()
     {
         RoundUI.instance.CollapseRoundUI();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_GrowRoundUI()
+    {
+        RoundUI.instance.GrowRoundUI();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_ShrinkRoundUI()
+    {
+        RoundUI.instance.ShrinkRoundUI();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
