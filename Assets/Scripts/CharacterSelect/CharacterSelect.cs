@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class CharacterSelect : NetworkBehaviour
@@ -36,6 +37,7 @@ public class CharacterSelect : NetworkBehaviour
 
     //public event for storm mechanics
     public static event CharacterSelectEvent OnCharacterSelect;
+    public UnityEvent finalizeCharSelect;
 
     private void Awake()
     {
@@ -214,6 +216,7 @@ public class CharacterSelect : NetworkBehaviour
         //  characterSelectScreen.gameObject.SetActive(true);
         //  characterSelectScreen.FadeOut();
         OnCharacterSelect?.Invoke();
+        finalizeCharSelect?.Invoke();
     }
 
     /// <summary>
