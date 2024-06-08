@@ -168,6 +168,8 @@ public class ShrinkingStorm : NetworkAttack_Base {
         this.ShrinkStorm();
         this.stormVFX.Stop();
         this.stormVFX.Play();
+
+        GetSpawnLocation();
     }
 
     public Vector3 GetSpawnLocation() {
