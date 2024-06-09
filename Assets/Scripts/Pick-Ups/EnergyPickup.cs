@@ -24,6 +24,7 @@ public class EnergyPickup : NetworkBehaviour
             if (playerEnergy != null )
             {
                 playerEnergy.AddEnergy(energyAmount);
+                playerEnergy.Character.OnPickup(false);
                 PickedUp();
             }
         }

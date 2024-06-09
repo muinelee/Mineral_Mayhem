@@ -15,7 +15,7 @@ public class CharacterEntity : CharacterComponent
     public event Action<StatusEffect> OnStatusBeginEvent;
     public event Action<StatusEffect> OnStatusEndedEvent;
     public event Action OnCleanseEvent;
-    public event Action OnPickupEvent;
+    public event Action<bool> OnPickupEvent;
     public event Action<float> OnEnergyChangeEvent;
     public event Action OnCharacterDeathEvent;
     public event Action OnRoundEndEvent;
@@ -53,9 +53,9 @@ public class CharacterEntity : CharacterComponent
     {
         OnRoundEndEvent?.Invoke();
     }
-    public override void OnPickup()
+    public override void OnPickup(bool isSpeed)
     {
-        OnPickupEvent?.Invoke();
+        OnPickupEvent?.Invoke(isSpeed);
     }
     #endregion
 

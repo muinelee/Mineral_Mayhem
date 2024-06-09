@@ -27,7 +27,7 @@ public class SpeedBoost : NetworkBehaviour
             if (playerMovement != null)
             {
                 playerMovement.ApplySpeedBoost(speedBoostAmount, duration);
-
+                playerMovement.Character.OnPickup(true);
                 Runner.Despawn(Object);
             }
         }

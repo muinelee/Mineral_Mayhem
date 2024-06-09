@@ -5,6 +5,14 @@ using Unity.VisualScripting;
 
 public class CharacterVisualHandler : CharacterComponent
 {
+    public enum FlashEffect
+    {
+        Hit,
+        Heal,
+        Energy,
+        Speed,
+    }
+
     private SkinnedMeshRenderer[] meshRenderers;
 
     [Header("On Hit Flash Effects")]
@@ -18,6 +26,18 @@ public class CharacterVisualHandler : CharacterComponent
     public float onHealFlashDuration = 0.5f;
     public float onHealFlashIntensity = 2f;
     public Color onHealFlashColor = Color.black;
+
+    [Header("On Energy Pickup Flash Effects")]
+    [SerializeField] public AnimationCurve onEnergizeFlashCurve;
+    public float onEnergizeFlashDuration = 0.5f;
+    public float onEnergizeFlashIntensity = 2f;
+    public Color onEnergizeFlashColor = Color.black;
+
+    [Header("On Speed Pickup Flash Effects")]
+    [SerializeField] public AnimationCurve onSpeedFlashCurve;
+    public float onSpeedFlashDuration = 0.5f;
+    public float onSpeedFlashIntensity = 2f;
+    public Color onSpeedFlashColor = Color.black;
 
     private Material[] materials;
     private Color[] originalEmissiveColors;
@@ -62,14 +82,18 @@ public class CharacterVisualHandler : CharacterComponent
 
     public override void OnHit(float x, bool hitReact)
     {
-        if (effectActive) return;
-        RPC_StartFlashEffect(onHitFlashColor, onHitFlashDuration);
+        RPC_StartFlashEffect(FlashEffect.Hit);
     }
 
     public override void OnHeal(float x)
     {
-        if (effectActive) return;
-        RPC_StartFlashEffect(onHealFlashColor, onHealFlashDuration);
+        RPC_StartFlashEffect(FlashEffect.Heal);
+    }
+
+    public override void OnPickup(bool isSpeed)
+    {
+        if (isSpeed) RPC_StartFlashEffect(FlashEffect.Speed);
+        else RPC_StartFlashEffect(FlashEffect.Energy);
     }
 
     private void PrimeMaterials()
@@ -98,14 +122,41 @@ public class CharacterVisualHandler : CharacterComponent
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_StartFlashEffect(Color target, float duration)
+    public void RPC_StartFlashEffect(FlashEffect FX)
     {
-        StartFlashEffect(target, duration);
+        StartFlashEffect(FX);
     }
 
-    private void StartFlashEffect(Color target, float duration)
+    private void StartFlashEffect(FlashEffect FX)
     {
-        targetColor = target;
+        switch(FX)
+        {
+            case FlashEffect.Hit:
+                targetColor = onHitFlashColor;
+                currentFlashDuration = onHitFlashDuration;
+                currentFlashCurve = onHitFlashCurve;
+                currentEmissionIntensity = onHitFlashIntensity;
+                break;
+            case FlashEffect.Heal:
+                targetColor = onHealFlashColor;
+                currentFlashDuration = onHealFlashDuration;
+                currentFlashCurve = onHealFlashCurve;
+                currentEmissionIntensity = onHealFlashIntensity;
+                break;
+            case FlashEffect.Energy:
+                targetColor = onEnergizeFlashColor;
+                currentFlashDuration = onEnergizeFlashDuration;
+                currentFlashCurve = onEnergizeFlashCurve;
+                currentEmissionIntensity = onEnergizeFlashIntensity;
+                break;
+            case FlashEffect.Speed:
+                targetColor = onSpeedFlashColor;
+                currentFlashDuration = onSpeedFlashDuration;
+                currentFlashCurve = onSpeedFlashCurve;
+                currentEmissionIntensity = onSpeedFlashIntensity;
+                break;
+        }
+        /*targetColor = target;
         currentFlashDuration = duration;
         if (target == onHitFlashColor && duration == onHitFlashDuration)
         {
@@ -116,7 +167,7 @@ public class CharacterVisualHandler : CharacterComponent
         {
             currentFlashCurve = onHealFlashCurve;
             currentEmissionIntensity = onHealFlashIntensity;
-        }
+        }*/
         effectActive = true;
         flashTimer = 0f;
     }
