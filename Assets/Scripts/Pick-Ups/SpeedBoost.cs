@@ -6,6 +6,7 @@ public class SpeedBoost : NetworkBehaviour
     [SerializeField] private float speedBoostAmount = 2f;
     [SerializeField] private float duration = 5f;
     [SerializeField] private LayerMask targetLayer;
+    [SerializeField] private AudioClip pickupSFX;
     private NetworkRunner runner;
 
     public override void Spawned()
@@ -24,6 +25,7 @@ public class SpeedBoost : NetworkBehaviour
         if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
         {
             NetworkPlayer_Movement playerMovement = other.GetComponent<NetworkPlayer_Movement>();
+            AudioManager.Instance.PlayAudioSFX(pickupSFX, transform.position);
             if (playerMovement != null)
             {
                 playerMovement.ApplySpeedBoost(speedBoostAmount, duration);

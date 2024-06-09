@@ -5,6 +5,7 @@ public class EnergyPickup : NetworkBehaviour
 {
     [SerializeField] private int energyAmount = 100;
     [SerializeField] private LayerMask targetLayer;
+    [SerializeField] private AudioClip pickupSFX;
 
     public override void Spawned()
     {
@@ -19,6 +20,7 @@ public class EnergyPickup : NetworkBehaviour
 
         if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
         {
+            AudioManager.Instance.PlayAudioSFX(pickupSFX, transform.position);
             NetworkPlayer_Energy playerEnergy = other.GetComponent<NetworkPlayer_Energy>();
 
             if (playerEnergy != null )
