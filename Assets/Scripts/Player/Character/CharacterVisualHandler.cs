@@ -82,19 +82,16 @@ public class CharacterVisualHandler : CharacterComponent
 
     public override void OnHit(float x, bool hitReact)
     {
-        if (effectActive) return;
         RPC_StartFlashEffect(FlashEffect.Hit);
     }
 
     public override void OnHeal(float x)
     {
-        if (effectActive) return;
         RPC_StartFlashEffect(FlashEffect.Heal);
     }
 
     public override void OnPickup(bool isSpeed)
     {
-        if (effectActive) return;
         if (isSpeed) RPC_StartFlashEffect(FlashEffect.Speed);
         else RPC_StartFlashEffect(FlashEffect.Energy);
     }
