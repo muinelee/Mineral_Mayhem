@@ -56,7 +56,7 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
 
     public void ResetAnimation()
     {
-        StartCoroutine(AttackResetHelper(0.2f));
+        StartCoroutine(AttackResetHelper(0.25f));
         //Character.Attack.ResetAttackCapabilities();
         anim.CrossFade("Run", 0.2f);
         anim.CrossFade("Run", 0.2f, 2);
