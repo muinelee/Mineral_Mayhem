@@ -68,7 +68,7 @@ public class CharacterComponent : NetworkBehaviour
     /// <summary>
     /// Called when a character picks something up
     /// </summary>
-    public virtual void OnPickup() { }
+    public virtual void OnPickup(bool isSpeed) { }
 
     public virtual void OnEnergyChange(float x) { }
 }
