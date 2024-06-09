@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using UnityEngine.UIElements;
 
 public abstract class NetworkAttack_Base : NetworkBehaviour
 {
@@ -14,6 +15,7 @@ public abstract class NetworkAttack_Base : NetworkBehaviour
     [SerializeField] protected AudioClip[] SFX;
     [SerializeField] protected List<StatusEffect> statusEffectSO;
     [SerializeField] protected GameObject onHitEffect;
+    [SerializeField] protected Vector3 onHitOffset;
     protected NetworkPlayer.Team thisTeam;
 
     public override void Spawned()
