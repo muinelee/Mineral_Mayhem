@@ -59,7 +59,7 @@ public class Terran_BasicAttack : NetworkAttack_Base
 
                 healthComponent.OnTakeDamage(damage, true);
                 healthComponent.OnKnockBack(knockback, transform.position);
-                Runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
+                Runner.Spawn(this.onHitEffect, this.transform.position + onHitOffset, Quaternion.identity);
             }
         }
     }
