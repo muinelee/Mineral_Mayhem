@@ -5,6 +5,7 @@ public class HealthPickup : NetworkBehaviour
 {
     [SerializeField] private int healthAmount = 20;
     [SerializeField] private LayerMask targetLayer;
+    [SerializeField] private AudioClip pickupSFX;
 
     public override void Spawned()
     {
@@ -19,6 +20,7 @@ public class HealthPickup : NetworkBehaviour
 
         if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
         {
+            AudioManager.Instance.PlayAudioSFX(pickupSFX, transform.position);
             CharacterEntity character = other.GetComponent<CharacterEntity>();
 
             if (character != null)
