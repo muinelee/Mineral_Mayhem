@@ -472,36 +472,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  flashCurve:
+  onHitFlashCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: -0.0107093295
-      outSlope: -0.0107093295
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 1
+      outWeight: 0
     - serializedVersion: 3
-      time: 0.10583158
-      value: 0.9030039
-      inSlope: 2.097797
-      outSlope: 2.097797
+      time: 0.1459231
+      value: 0.881043
+      inSlope: 2.5520802
+      outSlope: 2.5520802
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.88584894
-      outWeight: 0.30012763
+      inWeight: 0.32824332
+      outWeight: 0.15633263
     - serializedVersion: 3
-      time: 0.28450894
-      value: 0.90465343
-      inSlope: -2.0941586
-      outSlope: -2.0941586
+      time: 0.38552493
+      value: 0.72806525
+      inSlope: -2.6585727
+      outSlope: -2.6585727
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.21090458
-      outWeight: 0.33333334
+      inWeight: 0.33333334
+      outWeight: 0.05056158
     - serializedVersion: 3
       time: 1
       value: 0
@@ -514,8 +514,144 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  flashDuration: 0.3
-  flashColor: {r: 0, g: 0, b: 0, a: 1}
+  onHitFlashDuration: 0.3
+  onHitFlashIntensity: 1
+  onHitFlashColor: {r: 1, g: 0, b: 0, a: 1}
+  onHealFlashCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.1459231
+      value: 0.881043
+      inSlope: 2.5520802
+      outSlope: 2.5520802
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.32824332
+      outWeight: 0.15633263
+    - serializedVersion: 3
+      time: 0.38552493
+      value: 0.72806525
+      inSlope: -2.6585727
+      outSlope: -2.6585727
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.05056158
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  onHealFlashDuration: 0.3
+  onHealFlashIntensity: 1
+  onHealFlashColor: {r: 0.19118425, g: 1, b: 0.11698109, a: 1}
+  onEnergizeFlashCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.1459231
+      value: 0.881043
+      inSlope: 2.5520802
+      outSlope: 2.5520802
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.32824332
+      outWeight: 0.15633263
+    - serializedVersion: 3
+      time: 0.38552493
+      value: 0.72806525
+      inSlope: -2.6585727
+      outSlope: -2.6585727
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.05056158
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  onEnergizeFlashDuration: 0.3
+  onEnergizeFlashIntensity: 1
+  onEnergizeFlashColor: {r: 1, g: 0.97349375, b: 0.20188677, a: 1}
+  onSpeedFlashCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.1459231
+      value: 0.881043
+      inSlope: 2.5520802
+      outSlope: 2.5520802
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.32824332
+      outWeight: 0.15633263
+    - serializedVersion: 3
+      time: 0.38552493
+      value: 0.72806525
+      inSlope: -2.6585727
+      outSlope: -2.6585727
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.05056158
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  onSpeedFlashDuration: 0.3
+  onSpeedFlashIntensity: 1
+  onSpeedFlashColor: {r: 0.11698109, g: 0.42921135, b: 1, a: 1}
   effectActive: 0
 --- !u!1 &714196924547151356
 GameObject:

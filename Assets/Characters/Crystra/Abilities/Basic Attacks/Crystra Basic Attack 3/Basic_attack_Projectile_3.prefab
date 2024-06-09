@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -5531875723242617307}
   - component: {fileID: 1512431575305879919}
   m_Layer: 6
-  m_Name: Basic_attack_Projectile
+  m_Name: Basic_attack_Projectile_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56,7 +56,7 @@ MonoBehaviour:
   AoiPositionSource: {fileID: 0}
   Flags: 2305
   NetworkGuid:
-    RawGuidValue: 0485f5ccd7610ea4eab5a2f8c985cad1
+    RawGuidValue: b06f8ef73748f4d4d8c7ac13006d479f
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: -2166753976555216322}
@@ -75,12 +75,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  damage: 6
+  damage: 10
   knockback: 250
   SFX:
   - {fileID: 8300000, guid: c65cf59a82867084c8d69667411563ac, type: 3}
   statusEffectSO: []
   onHitEffect: {fileID: 3292139843344530037, guid: 45d2a9abc8359b04c94ee9457dbb113f, type: 3}
+  onHitOffset: {x: 0, y: 3.2, z: -1.5}
   speed: 60
   offset: 0
   spawnHeight: 1

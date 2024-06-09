@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,6 +10,8 @@ public class EventTriggers : MonoBehaviour
     [SerializeField] bool eventOnDisable = false;
     [SerializeField] bool eventOnTrigger = false;
     public UnityEvent unityEvent;
+
+    [SerializeField] float eventDelay = 0;
 
     //---------------------------------//
 
@@ -30,6 +33,11 @@ public class EventTriggers : MonoBehaviour
 
     public void CueEvent()
     {
+        StartCoroutine(iCueEvent());
+    }
+    private IEnumerator iCueEvent()
+    {
+        yield return new WaitForSecondsRealtime(eventDelay);
         unityEvent?.Invoke();
     }
 
