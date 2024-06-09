@@ -103,7 +103,7 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
             if (healthComponent != null) {
 
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
-                Runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
+                Runner.Spawn(this.onHitEffect, this.transform.position + onHitOffset, Quaternion.identity);
 
                 //if its the first hit, ignore the multiplier
                 if (attackIndex < 1) {
@@ -138,7 +138,7 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
         if (runner == null) return;
 
         if (!runner.IsServer) return;
-        runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
+        runner.Spawn(this.onHitEffect, this.transform.position + onHitOffset, Quaternion.identity);
         runner.Despawn(Object);
     }
 
