@@ -1,8 +1,8 @@
+using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
-using Fusion;
-using UnityEngine.UI;
 using UnityEngine.Splines;
+using UnityEngine.UI;
 using UnityEngine.VFX;
 
 public class ShrinkingStorm : NetworkAttack_Base { 
@@ -81,7 +81,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
         if (isShrinking) {
             //lerp the scale of the object to shrink it
             StormScaleChange();
-            if (damageTimer.Expired(Runner)) {
+            if (damageTimer.Expired(runner)) {
             //for each player in the scene
             foreach (CharacterEntity playerchar in characters) {
                 //Debug.Log(playerchar.transform.position);
@@ -95,7 +95,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
                     }
                 }
                 damageTimer = TickTimer.None;
-                damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
+                damageTimer = TickTimer.CreateFromSeconds(runner, damageDelay);
             }
         }
     }
@@ -107,9 +107,9 @@ public class ShrinkingStorm : NetworkAttack_Base {
 
     protected override void DealDamage() {
 
-        if (!Runner.IsServer) return;
+        if (!runner.IsServer) return;
 
-        Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
+        runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
         foreach (LagCompensatedHit hit in hits) {
 
             // Cores don't have character entities so find objects with a character entities and a health component
@@ -138,7 +138,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
         //list of character positions found
         characters = FindObjectsOfType<CharacterEntity>();
         //set damage timer to 1 second
-        damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
+        damageTimer = TickTimer.CreateFromSeconds(runner, damageDelay);
         //Debug.Log(isShrinking);
     }
     
@@ -148,15 +148,15 @@ public class ShrinkingStorm : NetworkAttack_Base {
     }
 
     private void ManageDamage() {
-        if (!damageTimer.Expired(Runner)) return;
+        if (!damageTimer.Expired(runner)) return;
 
         damageTimer = TickTimer.None;
-        damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
+        damageTimer = TickTimer.CreateFromSeconds(runner, damageDelay);
         DealDamage();
     }
 
     private void ResetStorm(){
-        if (!Runner.IsServer) return;
+        if (!runner.IsServer) return;
         RPC_ResetStorm();
     }
 
@@ -180,5 +180,10 @@ public class ShrinkingStorm : NetworkAttack_Base {
             Debug.LogWarning("Spline is not assigned for core spawning.");
             return Vector3.zero;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(transform.position, stormCollider.radius * transform.localScale.x);
     }
 }
