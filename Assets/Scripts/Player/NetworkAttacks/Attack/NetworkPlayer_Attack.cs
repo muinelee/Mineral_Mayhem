@@ -64,7 +64,8 @@ public class NetworkPlayer_Attack : CharacterComponent
             {
                 if (input.IsDown(NetworkInputData.ButtonF) && Character.Energy.IsUltCharged() && !isDefending && canAttack) ActivateUlt();
                 else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning && !isDefending && canAttack) ActivateAttack(ref qAttack);
-                else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning && !isDefending && (canAttack || eAttack.name == "UnshackleBuff")) ActivateAttack(ref eAttack);
+                else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning && !isDefending
+                    && (canAttack || (eAttack.name == "UnshackleBuff" && Character.StatusHandler.HasUncleansableStun()))) ActivateAttack(ref eAttack);
                 else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack && !isDefending && canAttack) ActivateBasicAttack();
             }
 
