@@ -61,6 +61,8 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
 
         if (healthPercentage <= 0f)
         {
+            HandleDeath();
+            Runner.Spawn(explosionVFX, transform.position, Quaternion.identity);
             Die();
         }
         else if (healthPercentage <= 0.75f && healthPercentage > 0.50f && !spawn75flag)
@@ -84,8 +86,6 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     {
         if (!Object.HasStateAuthority) return;
         if (RoundManager.Instance != null) RoundManager.Instance.ResetRound -= Die;
-        Runner.Spawn(explosionVFX, transform.position, Quaternion.identity);
-        HandleDeath();
         Runner.Despawn(Object);
     }
 
