@@ -34,7 +34,7 @@ public class ArchiveController : MonoBehaviour
 
     public void SetControllerSpeed(float speed)
     {
-        movementSpeed = speed;
+        movementSpeed = speed * 5;
     }
 
     public void SetFPSensitivity(float value)

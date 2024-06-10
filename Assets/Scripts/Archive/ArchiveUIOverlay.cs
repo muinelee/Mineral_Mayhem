@@ -71,7 +71,7 @@ public class ArchiveUIOverlay : MonoBehaviour
             speedSlider.onValueChanged.AddListener(UpdateSpeedText);
             speedSlider.onValueChanged.AddListener(controller.SetControllerSpeed);
             UpdateSpeedText(speedSlider.value);
-            controller.SetControllerSpeed(speedSlider.value * 5);
+            controller.SetControllerSpeed(speedSlider.value);
         }
         if (sensitivitySlider && sensitivityText && controller)
         {
