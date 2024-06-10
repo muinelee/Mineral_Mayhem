@@ -238,26 +238,24 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (blockButtonDown && !isDefending && Character.Health.canBlock && Character.Animator.anim.GetCurrentAnimatorStateInfo(0).IsName("Run"))
         {
-            Character.OnBlock(true);
             if (Object.HasStateAuthority)
             {
+                Character.OnBlock(true);
             }
         }
 
         else if (!blockButtonDown && isDefending)
         {
-            Character.OnBlock(false);
             if (Object.HasStateAuthority)
             {
+                Character.OnBlock(false);
             }
         }
     }
 
     public override void OnBlock(bool isBlocking)
     {
-        isDefending = isBlocking;
-        Assert.Check(Character.Shield);
-        Character.Shield.gameObject.SetActive(isBlocking);
+        RPC_BlockState(isBlocking);
     }
 
     // Needs to be linked via NetworkPlayer_AnimationLink Script
@@ -335,5 +333,13 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         changed.LoadNew();
         changed.Behaviour.Character.Shield.gameObject.SetActive(changed.Behaviour.isDefending);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_BlockState(bool isBlocking)
+    {
+        isDefending = isBlocking;
+        Assert.Check(Character.Shield);
+        Character.Shield.gameObject.SetActive(isBlocking);
     }
 }
