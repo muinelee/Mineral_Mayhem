@@ -1,16 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static ArchiveUIOverlay;
+using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.InputSystem.XR;
 
 public class ArchiveController : MonoBehaviour
 {
-    private float movementSpeed = 1f;
+    private float movementSpeed = 15f;
     private bool FPSMode = false;
 
     private float mouseSensitivity = 200f;
+    [SerializeField] private float rotationSpeed = 10f;
     private float pitch = 0f;
     private float yaw = 0f;
 
+    private Quaternion targetRotation;
 
     private void Start()
     {
@@ -29,7 +34,7 @@ public class ArchiveController : MonoBehaviour
 
     public void SetControllerSpeed(float speed)
     {
-        movementSpeed = speed;
+        movementSpeed = speed * 5;
     }
 
     public void SetFPSensitivity(float value)
@@ -40,6 +45,7 @@ public class ArchiveController : MonoBehaviour
     public void ChangeControlScheme(ArchiveCameraController.ArchiveCameraState state)
     {
         FPSMode = state == ArchiveCameraController.ArchiveCameraState.FirstPerson;
+        GetComponentInChildren<MeshRenderer>().enabled = !FPSMode;
         if (!FPSMode)
         {
             transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
@@ -55,10 +61,11 @@ public class ArchiveController : MonoBehaviour
 
         yaw += mouseX;
         pitch -= mouseY;
-
         pitch = Mathf.Clamp(pitch, -90f, 90f);
 
-        transform.eulerAngles = new Vector3(pitch, yaw, 0f);
+        targetRotation = Quaternion.Euler(pitch, yaw, 0f);
+
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
     private void HandleMovement()
@@ -82,6 +89,11 @@ public class ArchiveController : MonoBehaviour
         {
             if (FPSMode) transform.position -= transform.right * movementSpeed * Time.deltaTime;
             else transform.position -= Vector3.right * movementSpeed * Time.deltaTime;
+        }
+        if (FPSMode)
+        {
+            if (Input.GetKey(KeyCode.Q)) transform.position += Vector3.up * movementSpeed * Time.deltaTime;
+            if (Input.GetKey(KeyCode.E)) transform.position -= Vector3.up * movementSpeed * Time.deltaTime;
         }
     }
 }
