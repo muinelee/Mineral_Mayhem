@@ -179,7 +179,6 @@ public class CharacterSelect : NetworkBehaviour
         else
 
         {
-            //player.GetComponent<NetworkPlayer_InGameUI>().uIDisplayed = false;
             Runner.Despawn(characterLookup[player].Object);
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnLocation].position, Quaternion.identity, player.Object.InputAuthority);
             player.Avatar = characterLookup[player].Input;
