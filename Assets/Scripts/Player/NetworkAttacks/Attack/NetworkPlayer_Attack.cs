@@ -54,6 +54,8 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public override void FixedUpdateNetwork()
     {
+        if (Character.Health.isDead) return;
+
         if (GetInput(out NetworkInputData input) && canAttack)
         {
             bool isBlocking = input.IsDown(NetworkInputData.ButtonBlock);
