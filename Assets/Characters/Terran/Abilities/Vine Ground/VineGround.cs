@@ -5,6 +5,7 @@ using UnityEngine;
 public class VineGround : NetworkAttack_Base
 {
     [SerializeField] private float radius;
+    [SerializeField] private float radiusExpansionRate;
 
     [SerializeField] private float lifetimeDuration = 5f;
     private TickTimer lifeTimer;
@@ -53,6 +54,8 @@ public class VineGround : NetworkAttack_Base
     protected override void DealDamage()
     {
         if (!Runner.IsServer) return;
+
+        radius += radiusExpansionRate;
 
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
 
