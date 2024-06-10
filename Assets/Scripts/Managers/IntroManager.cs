@@ -16,11 +16,12 @@ public class IntroManager : MonoBehaviour
 
     private void Start()
     {
+        /*
         if (PlayerPrefs.HasKey(IntroSeenKey) && PlayerPrefs.GetInt(IntroSeenKey) == 1)
         {
             gameObject.SetActive(false);
             return;
-        }
+        }*/
 
         videoPlayer = GameObject.Find("IntroVideo").GetComponent<VideoPlayer>();
         videoPlayer.loopPointReached += EndVideo;

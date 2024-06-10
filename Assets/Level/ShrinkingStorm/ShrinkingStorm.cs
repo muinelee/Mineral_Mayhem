@@ -134,7 +134,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
     private void ShrinkStorm() {
         isShrinking = true;
         remainingTime = 0f;
-        transform.localScale = startScale;
+        //transform.localScale = startScale;
         //list of character positions found
         characters = FindObjectsOfType<CharacterEntity>();
         //set damage timer to 1 second
