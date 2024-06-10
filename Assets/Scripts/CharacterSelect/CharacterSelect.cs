@@ -23,6 +23,10 @@ public class CharacterSelect : NetworkBehaviour
     [SerializeField] private TMP_Text currentAbilityDescription;
     [SerializeField] private TMP_Text backstory;
 
+    [SerializeField] private Slider sliderHealth;
+    [SerializeField] private Slider sliderDamage;
+    [SerializeField] private Slider sliderSpeed;
+
     [Header("Level start")]
     [SerializeField] private float characterSelectDuration = 10;
     private TickTimer characterSelectTimer = TickTimer.None;
@@ -103,6 +107,13 @@ public class CharacterSelect : NetworkBehaviour
             this.abilityPortraits[i].onPress.RemoveAllListeners();
             this.abilityPortraits[i].onPress.AddListener(() => UpdateAbilityDescription(abilityDescriptions[index]));
         }
+    }
+
+    private void SetupStatbars(SO_Character character)
+    {
+        sliderHealth.value = character.health;
+        sliderDamage.value = character.damage;
+        sliderSpeed.value = character.speed;
     }
 
     private void UpdateAbilityDescription(string description)
@@ -196,6 +207,7 @@ public class CharacterSelect : NetworkBehaviour
             // Setup ability portraits and descriptions
             SetupAbilityUI(characterSO);
             UpdateAbilityDescription(characterSO.characterBasicAbilityDescription);
+            SetupStatbars(characterSO);
         }
         else characterLookup.Remove(player);
     }
