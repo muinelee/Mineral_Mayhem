@@ -25,7 +25,8 @@ public class CursorManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
     #if !UNITY_EDITOR
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
     #endif
     }
 }
