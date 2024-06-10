@@ -240,7 +240,7 @@ public class CharacterSelect : NetworkBehaviour
         characterSelectScreen.FadeIn();
         //  reselectButton.gameObject.SetActive(false);
 
-        RPC_CharacterReselect(NetworkPlayer.Local);
+        //RPC_CharacterReselect(NetworkPlayer.Local);
         if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
         else if (NetworkPlayer.Local.team == NetworkPlayer.Team.Blue) NetworkCameraEffectsManager.instance.GoToBlueCamera();
     }
