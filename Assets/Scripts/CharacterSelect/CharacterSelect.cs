@@ -236,7 +236,8 @@ public class CharacterSelect : NetworkBehaviour
     /// </summary>
     public void RenableCharacterSelect()
     {
-        //  characterSelectScreen.SetActive(true);
+        characterSelectScreen.gameObject.SetActive(true);
+        characterSelectScreen.FadeIn();
         //  reselectButton.gameObject.SetActive(false);
         if (Runner.SessionInfo.MaxPlayers > 1) Destroy(characterLookup[NetworkPlayer.Local].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
         else Destroy(FindObjectOfType<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
