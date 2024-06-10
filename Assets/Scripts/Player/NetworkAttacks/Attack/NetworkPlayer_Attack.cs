@@ -69,7 +69,7 @@ public class NetworkPlayer_Attack : CharacterComponent
                 else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack && !isDefending && canAttack) ActivateBasicAttack();
             }
 
-            if (canDefend) ActivateBlock(isBlocking);
+            if (canDefend && canAttack) ActivateBlock(isBlocking);
         }
 
         ManageTimers(ref qAttackCoolDownTimer);
