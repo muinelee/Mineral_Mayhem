@@ -64,5 +64,10 @@ public class NetworkPlayer_OnSpawnUI : CharacterComponent
         {
             //RoundManager.Instance.MatchStartEvent -= SpawnPlayerUI;
         }
+        
+    }
+    private void OnDisable()
+    {
+        playerUI.uIDisplayed = false;
     }
 }
