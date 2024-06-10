@@ -66,13 +66,13 @@ public class GroundSlam : NetworkAttack_Base
                 healthComponent.OnKnockBack(knockback, transform.position);
             }
 
-            StatusHandler enemyStatusHandlers = hit.GameObject.GetComponentInParent<StatusHandler>();
+            CharacterEntity character = hit.GameObject.GetComponentInParent<CharacterEntity>();
 
-            if (enemyStatusHandlers != null)
+            if (character != null)
             {
                 foreach (StatusEffect status in statusEffectSO)
                 {
-                    enemyStatusHandlers.AddStatus(status);
+                    character.OnStatusBegin(status);
                 }
             }
 
