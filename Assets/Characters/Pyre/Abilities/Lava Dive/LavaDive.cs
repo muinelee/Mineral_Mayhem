@@ -25,6 +25,7 @@ public class LavaDive : NetworkAttack_Base
     [SerializeField] private float lingerTime;
     [SerializeField] private float attackRadius = 2;
     [SerializeField] private NetworkObject attackEndVFX;
+    [SerializeField] private NetworkObject fireColumnVFX;
     private NetworkObject smashVFX;
     private bool finishDive = false;
     private TickTimer lingerTimer;
@@ -95,6 +96,8 @@ public class LavaDive : NetworkAttack_Base
         TrailRenderer tr = trail.GetComponent<TrailRenderer>();
         tr.startWidth = boxWidth;
         tr.endWidth = boxWidth;
+
+        Runner.Spawn(fireColumnVFX, this.transform.position, Quaternion.identity);
 
         Runner.LagCompensation.OverlapSphere(transform.position, searchRadius, player: Object.InputAuthority, hits, collisionLayer);
 
