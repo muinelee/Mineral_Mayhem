@@ -2599,7 +2599,7 @@ PrefabInstance:
       objectReference: {fileID: 4939796073446507648}
     - target: {fileID: 6399214931683395529, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: onPress.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6399214931683395529, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: onPressDelayed.m_PersistentCalls.m_Calls.Array.size
@@ -2611,7 +2611,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6399214931683395529, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: onPress.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6399214931683395529, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: onPress.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2620,7 +2620,7 @@ PrefabInstance:
     - target: {fileID: 6399214931683395529, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: onPress.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 7710412055701765378, guid: f3249505858f96b4fb3d0826ce98c25f, type: 3}
+      objectReference: {fileID: 7519729470507511437}
     - target: {fileID: 6399214931683395529, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: onPress.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -2635,7 +2635,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6399214931683395529, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: onPress.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: ChangePauseBool
+      value: HidePlayerUI
       objectReference: {fileID: 0}
     - target: {fileID: 6399214931683395529, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: onPressDelayed.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -2659,11 +2659,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6399214931683395529, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: onPress.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: INP_Pause, Assembly-CSharp
+      value: NetworkPlayer_InGameUI, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 6399214931683395529, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: onPress.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6399214931683395529, guid: 43e5ae85720da0547bd267aec391e20a, type: 3}
       propertyPath: onPressDelayed.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -8591,8 +8591,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1596800849579836642}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.32907262, y: -0, z: -0, w: 0.94430465}
-  m_LocalPosition: {x: 125.78, y: 10.76, z: -15.379999}
+  m_LocalRotation: {x: 0.5519369, y: -0, z: -0, w: 0.83388585}
+  m_LocalPosition: {x: 0, y: 13.49, z: -3.46}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10608,7 +10608,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.000004
+  field of view: 42
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
