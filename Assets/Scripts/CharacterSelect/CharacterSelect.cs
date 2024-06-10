@@ -221,6 +221,7 @@ public class CharacterSelect : NetworkBehaviour
 
         // Enable player control
         characterLookup[NetworkPlayer.Local].Input.CharacterSelected = true;
+        NetworkPlayer_InGameUI.instance.ShowPlayerUI();
         characterLookup[NetworkPlayer.Local].PlayerUI.SpawnPlayerUI();
 
         NetworkCameraEffectsManager.instance.GoToTopCamera();
