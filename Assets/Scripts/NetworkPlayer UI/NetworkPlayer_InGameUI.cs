@@ -70,7 +70,7 @@ public class NetworkPlayer_InGameUI : MonoBehaviour
     [SerializeField] private Sprite borderFlairPyre;
     [SerializeField] private Sprite borderFlairTerran;
 
-    private bool uIDisplayed = false;
+    public bool uIDisplayed = false;
     // cooldown comes from Scriptable Objects passed from local player
     private void Awake()
     {

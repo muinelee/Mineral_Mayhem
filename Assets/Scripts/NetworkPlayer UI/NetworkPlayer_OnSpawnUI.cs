@@ -26,6 +26,8 @@ public class NetworkPlayer_OnSpawnUI : CharacterComponent
         {
             //RoundManager.Instance.MatchStartEvent += SpawnPlayerUI;
         }
+
+        playerUI = FindObjectOfType<NetworkPlayer_InGameUI>();
     }
 
     public void SpawnPlayerUI()
@@ -33,8 +35,6 @@ public class NetworkPlayer_OnSpawnUI : CharacterComponent
         if (Object.HasInputAuthority)
         {
             Debug.Log("OnSpawnUI");
-
-            playerUI = FindObjectOfType<NetworkPlayer_InGameUI>();
 
             // Local player health linked to player UI
             playerUI.SetPlayerHealth(GetComponent<NetworkPlayer_Health>());

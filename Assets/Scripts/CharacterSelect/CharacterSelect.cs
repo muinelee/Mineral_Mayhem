@@ -177,6 +177,7 @@ public class CharacterSelect : NetworkBehaviour
         }
 
         else
+
         {
             Runner.Despawn(characterLookup[player].Object);
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnLocation].position, Quaternion.identity, player.Object.InputAuthority);
@@ -222,6 +223,8 @@ public class CharacterSelect : NetworkBehaviour
         // Enable player control
         characterLookup[NetworkPlayer.Local].Input.CharacterSelected = true;
         characterLookup[NetworkPlayer.Local].PlayerUI.SpawnPlayerUI();
+        NetworkPlayer_InGameUI.instance.ShowPlayerUI();
+        
 
         NetworkCameraEffectsManager.instance.GoToTopCamera();
         //  ResetButtonVisual(currentSelectedCharacterButton);
@@ -236,11 +239,11 @@ public class CharacterSelect : NetworkBehaviour
     /// </summary>
     public void RenableCharacterSelect()
     {
-        //  characterSelectScreen.SetActive(true);
+        characterSelectScreen.gameObject.SetActive(true);
+        characterSelectScreen.FadeIn();
         //  reselectButton.gameObject.SetActive(false);
-        if (Runner.SessionInfo.MaxPlayers > 1) Destroy(characterLookup[NetworkPlayer.Local].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
-        else Destroy(FindObjectOfType<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
-        RPC_CharacterReselect(NetworkPlayer.Local);
+
+        //RPC_CharacterReselect(NetworkPlayer.Local);
         if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
         else if (NetworkPlayer.Local.team == NetworkPlayer.Team.Blue) NetworkCameraEffectsManager.instance.GoToBlueCamera();
     }
