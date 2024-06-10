@@ -56,16 +56,16 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (Character.Health.isDead) return;
 
-        if (GetInput(out NetworkInputData input) && canAttack)
+        if (GetInput(out NetworkInputData input))
         {
             bool isBlocking = input.IsDown(NetworkInputData.ButtonBlock);
 
             if (!isBlocking)
             {
-                if (input.IsDown(NetworkInputData.ButtonF) && Character.Energy.IsUltCharged() && !isDefending) ActivateUlt();
-                else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref qAttack);
-                else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref eAttack);
-                else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack && !isDefending) ActivateBasicAttack();
+                if (input.IsDown(NetworkInputData.ButtonF) && Character.Energy.IsUltCharged() && !isDefending && canAttack) ActivateUlt();
+                else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning && !isDefending && canAttack) ActivateAttack(ref qAttack);
+                else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning && !isDefending && (canAttack || eAttack.name == "Unshackle")) ActivateAttack(ref eAttack);
+                else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack && !isDefending && canAttack) ActivateBasicAttack();
             }
 
             if (canDefend) ActivateBlock(isBlocking);
