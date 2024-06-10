@@ -77,7 +77,7 @@ public class BTN_OpenClose : MonoBehaviour
         {
             for (int i = 0; i < groupToClose.Length; i++)
             {
-                groupToClose[i].gameObject.SetActive(true);
+                if (groupToClose[i].gameObject.activeSelf == true)
                 groupToClose[i].FadeOut();
             }
         }
