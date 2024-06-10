@@ -239,8 +239,7 @@ public class CharacterSelect : NetworkBehaviour
         characterSelectScreen.gameObject.SetActive(true);
         characterSelectScreen.FadeIn();
         //  reselectButton.gameObject.SetActive(false);
-        if (Runner.SessionInfo.MaxPlayers > 1) Destroy(characterLookup[NetworkPlayer.Local].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
-        else Destroy(FindObjectOfType<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
+
         RPC_CharacterReselect(NetworkPlayer.Local);
         if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
         else if (NetworkPlayer.Local.team == NetworkPlayer.Team.Blue) NetworkCameraEffectsManager.instance.GoToBlueCamera();
