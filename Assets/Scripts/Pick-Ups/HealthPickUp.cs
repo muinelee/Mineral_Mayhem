@@ -6,6 +6,7 @@ public class HealthPickup : NetworkBehaviour
     [SerializeField] private int healthAmount = 20;
     [SerializeField] private LayerMask targetLayer;
     [SerializeField] private AudioClip pickupSFX;
+    [SerializeField] private NetworkObject pickupEffect;
 
     public override void Spawned()
     {
@@ -26,6 +27,15 @@ public class HealthPickup : NetworkBehaviour
             if (character != null)
             {
                 character.OnHeal(healthAmount);
+                if (pickupEffect != null)
+                {
+                    NetworkObject pickupVFX = Runner.Spawn(pickupEffect, character.transform.position, transform.rotation);
+                    
+                    if (pickupVFX != null)
+                    {
+                        pickupVFX.GetComponent<Transform>().SetParent(character.transform);
+                    }
+                }
                 PickedUp();
             }
         }
