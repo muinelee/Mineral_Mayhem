@@ -35,6 +35,8 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     public override void FixedUpdateNetwork()
     {
+        if (Character.Health.isDead) return;
+
         if (Object.HasInputAuthority || Object.HasStateAuthority)
         {
             if (GetInput(out NetworkInputData input))
