@@ -53,8 +53,7 @@ public class IntroManager : MonoBehaviour
     {
         PlayerPrefs.SetInt(IntroSeenKey, 1);  
         PlayerPrefs.Save(); 
-        gameObject.SetActive(false);
-        //SceneManager.LoadScene("Main Menu"); 
+        SceneManager.LoadScene("Main Menu"); 
     }
 
     private void OnDestroy()
