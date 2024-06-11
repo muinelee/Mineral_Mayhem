@@ -2,6 +2,7 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static CharacterVisualHandler;
 
 public class NetworkPlayer_AnimationLink : CharacterComponent
 {
@@ -16,7 +17,7 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
     // Start is called before the first frame update
     public override void Spawned()
     {
-        anim = GetComponent<Animator>();        
+        anim = GetComponent<Animator>();
     }
 
     public void FireQAttack()
@@ -71,8 +72,12 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
 
     public override void OnBlock(bool isBlocking)
     {
-        base.OnBlock(isBlocking);
+        RPC_DetermineAnimFromBlockState(isBlocking);
+    }
 
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_DetermineAnimFromBlockState(bool isBlocking)
+    {
         if (isBlocking)
         {
             anim.CrossFade("Block", 0.08f);
