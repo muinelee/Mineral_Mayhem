@@ -26,6 +26,7 @@ public class Coldmehameha : NetworkAttack_Base
     [SerializeField] private LayerMask collisionLayer;
 
     [SerializeField] AudioClip announcerVoiceLine;
+    private bool voiceLinePlayed = false;
 
     public override void Spawned() {
         //call base class spawn function
@@ -111,8 +112,9 @@ public class Coldmehameha : NetworkAttack_Base
                 }
             }
 
-            if (healthComponent.HP <= 0)
+            if (healthComponent.HP <= 0 && characterEntity && !voiceLinePlayed)
             {
+                voiceLinePlayed = true;
                 RPC_PlayAnnouncerVoiceLine();
             }
         }
