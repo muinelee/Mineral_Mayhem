@@ -91,9 +91,7 @@ public class RoundManager : NetworkBehaviour
         currentRound++;
         resetStorm?.Invoke();
         startStorm?.Invoke();
-        // Round start based on if its round 1, then its 30s, if not, 10s 
-        float startDuration = (currentRound == 1) ? gameStartDuration : roundStartDuration;
-        roundStartTimer = TickTimer.CreateFromSeconds(Runner, startDuration);
+
         // Spawning/Setting players back into their own positions 
 
         // Resetting health and lives 
@@ -214,8 +212,9 @@ public class RoundManager : NetworkBehaviour
 
     IEnumerator StartCountDown()
     {
-        yield return new WaitForSeconds(2f);
+        yield return 0;
         RPC_DisableControls(true);
+        yield return new WaitForSeconds(2f);
         RPC_PlayCountdown();
         roundStartTimer = TickTimer.CreateFromSeconds(Runner, 2.8f);
     }
