@@ -43,6 +43,10 @@ public class CharacterSelect : NetworkBehaviour
     public static event CharacterSelectEvent OnCharacterSelect;
     public UnityEvent finalizeCharSelect;
 
+    // Voice line cooldown
+    [SerializeField] private float voiceLineCooldown = 3f;
+    [SerializeField] private float lastVoiceLineTime = -3f;
+
     private void Awake()
     {
         instance = this;
@@ -66,7 +70,11 @@ public class CharacterSelect : NetworkBehaviour
         NetworkPlayer.Local.RPC_SetCharacterID(characterIndex);
 
         // Play voice line for selected character
-        AudioManager.Instance.PlayAudioSFX(characters[characterIndex].voiceLine[0], spawnPoints[spawnPoint].position);
+        if (Time.time >= lastVoiceLineTime + voiceLineCooldown)
+        {
+            AudioManager.Instance.PlayAudioSFX(characters[characterIndex].voiceLine[0], spawnPoints[spawnPoint].position);
+            lastVoiceLineTime = Time.time;
+        }
 
         RPC_SpawnCharacter(playerID, spawnPoint);
 

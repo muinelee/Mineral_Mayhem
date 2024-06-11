@@ -10,7 +10,6 @@ public class SO_Character : ScriptableObject
     public CharacterEntity prefab;
 
     public AudioClip[] voiceLine;
-    public int voiceLineCooldown;
 
     public Sprite characterBasicAbilityPortrait;
     public Sprite characterQAbilityPortrait;
