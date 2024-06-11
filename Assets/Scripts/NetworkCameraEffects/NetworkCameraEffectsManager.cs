@@ -84,12 +84,14 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     {
         ResetCameraPriorities();
         redCameraPriority.Priority = 100;
+        redCameraPriority.GetComponent<Animator>().Play("Dolly");
     }
 
     public void GoToBlueCamera()
     {
         ResetCameraPriorities();
         blueCameraPriority.Priority = 100;
+        blueCameraPriority.GetComponent<Animator>().Play("Dolly");
     }
 
     public void GoToTopCamera()
@@ -117,7 +119,8 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         ResetCameraPriorities();
         redCinematicCameraPriority.Priority = 100;
 
-        ControlCamera(redCinematicCameraPriority, false); 
+        redCinematicCameraPriority.GetComponent<Animator>().Play("Dolly");
+        //ControlCamera(redCinematicCameraPriority, false); 
     }
 
     public void GoToBlueCinematicCamera()
@@ -125,7 +128,8 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         ResetCameraPriorities();
         blueCinematicCameraPriority.Priority = 100;
 
-        ControlCamera(blueCinematicCameraPriority, true); 
+        blueCinematicCameraPriority.GetComponent<Animator>().Play("Dolly");
+        //ControlCamera(blueCinematicCameraPriority, true); 
     }
 
     private void ResetCameraPriorities()
