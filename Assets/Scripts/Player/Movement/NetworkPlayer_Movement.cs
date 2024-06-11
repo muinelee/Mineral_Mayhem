@@ -8,7 +8,7 @@ public class NetworkPlayer_Movement : CharacterComponent
 {
     [Header("Movement properties")]
     [SerializeField] private float turnTime;
-    [SerializeField] private float blockSlow = 0.5f;
+    [SerializeField] private float blockSlow = 0.25f;
     public bool canMove = true;
     public bool canDash = true;
     private Vector3 targetDirection;
