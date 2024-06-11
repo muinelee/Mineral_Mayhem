@@ -35,7 +35,7 @@ public class ObjectFader : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (isFading && fadeTimer > 0)
         {
@@ -46,7 +46,7 @@ public class ObjectFader : MonoBehaviour
             }
         }
 
-        else if (fadeTimer < timeToFade)
+        else if (!isFading && fadeTimer < timeToFade)
         {
             fadeTimer += Time.deltaTime;
 
