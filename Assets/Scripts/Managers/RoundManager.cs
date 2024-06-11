@@ -216,13 +216,13 @@ public class RoundManager : NetworkBehaviour
         RPC_DisableControls(true);
         yield return new WaitForSeconds(2f);
         RPC_PlayCountdown();
-        roundStartTimer = TickTimer.CreateFromSeconds(Runner, 2.8f);
+        roundStartTimer = TickTimer.CreateFromSeconds(Runner, 3.1f);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_PlayCountdown()
     {
-        AudioManager.Instance.PlayAudioSFX(Arena.Current.countDownVoiceLine, Camera.main.gameObject.transform.position);
+        CountDownTimer.instance.StartCountDown();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
