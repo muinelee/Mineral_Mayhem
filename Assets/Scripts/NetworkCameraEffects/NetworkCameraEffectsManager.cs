@@ -84,14 +84,12 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     {
         ResetCameraPriorities();
         redCameraPriority.Priority = 100;
-        redCameraPriority.GetComponent<Animator>().Play("Dolly");
     }
 
     public void GoToBlueCamera()
     {
         ResetCameraPriorities();
         blueCameraPriority.Priority = 100;
-        blueCameraPriority.GetComponent<Animator>().Play("Dolly");
     }
 
     public void GoToTopCamera()
