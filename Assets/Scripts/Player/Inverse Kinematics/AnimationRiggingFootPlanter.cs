@@ -36,8 +36,8 @@ public class AnimationRiggingFootPlanter : MonoBehaviour
                 var pos = hit.point;
                 pos.y += plantedYOffset;
                 iKTarget.position = pos; //Set the inverse kinematics target to the target position
-                //var tarRot = Quaternion.FromToRotation(Vector3.up, hit.normal) * footRefConstraint.transform.rotation; //Rotating the foot using the ray
-                //iKTarget.rotation = tarRot; //Set the inverse kinematics rotation to the target rotation
+                var tarRot = Quaternion.FromToRotation(Vector3.up, hit.normal) * footRefConstraint.transform.rotation; //Rotating the foot using the ray
+                iKTarget.rotation = tarRot; //Set the inverse kinematics rotation to the target rotation
             }
         }
         Debug.DrawRay(rayOrigin, Vector3.down * rayDistance, Color.red); //Simple debug function
