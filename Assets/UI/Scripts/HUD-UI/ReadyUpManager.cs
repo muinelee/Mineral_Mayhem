@@ -102,6 +102,15 @@ public class ReadyUpManager : MonoBehaviour
             else if (netPlayer.team == NetworkPlayer.Team.Red) JoinRedTeam(netPlayer);
             else if (netPlayer.team == NetworkPlayer.Team.Undecided && netPlayer != NetworkPlayer.Local) JoinUndecided(netPlayer);
         }
+
+        StartCoroutine(CheckReadyHelper());
+    }
+
+    IEnumerator CheckReadyHelper()
+    {
+        yield return 0;
+
+        CheckIsOthersReady();
     }
 
     #region <----- Ready Up Functionality ----->
