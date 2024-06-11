@@ -172,8 +172,8 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     public void SetAbilitySlow(float slowPercentage)
     {
-        Mathf.Clamp(slowPercentage, 0, 1);
-        abilitySlow = 1 - slowPercentage;
+        float slowValue = Mathf.Clamp(slowPercentage, 0, 1);
+        abilitySlow = 1 - slowValue;
     }
 
     public void ResetAbilitySlow()
@@ -183,8 +183,8 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     public void SetStatusSlow(float slowPercentage)
     {
-        Mathf.Clamp(slowPercentage, 0, 1);
-        statusSlow = 1 - slowPercentage;
+        float slowValue = Mathf.Clamp(slowPercentage, 0, 1);
+        statusSlow = 1 - slowValue;
     }
 
     public void ResetStatusSlow()
