@@ -85,7 +85,7 @@ public class NetworkPlayer_Movement : CharacterComponent
     private void MobilityAbility(Vector3 moveDirection)
     {
         if (dashCoolDownTimer.IsRunning) return;
-        if (Runner.IsServer == false) return;
+        if (!Object.HasStateAuthority) return;
         if (Character.Attack.isDefending) return;
 
         canDash = false;
