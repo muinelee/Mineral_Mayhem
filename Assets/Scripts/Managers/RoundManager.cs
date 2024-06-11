@@ -180,8 +180,6 @@ public class RoundManager : NetworkBehaviour
             RPC_DisableControls(true);
             RPC_ShowRoundUI();
         }
-
-        INP_Pause.instance.pastCharacterSelect = true;
     }
 
     public override void FixedUpdateNetwork()

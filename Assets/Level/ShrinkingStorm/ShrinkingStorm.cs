@@ -1,6 +1,7 @@
 using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Splines;
 using UnityEngine.UI;
 using UnityEngine.VFX;
@@ -45,6 +46,13 @@ public class ShrinkingStorm : NetworkAttack_Base {
     [SerializeField] private VisualEffect stormVFX;
 
     private NetworkRunner runner;
+
+    public CharacterEntity player;
+
+    public UnityEvent enterStorm;
+    public UnityEvent exitStorm;
+
+    private bool firstTrigger = false;
 
     // Start is called before the first frame update
     void Start() {
@@ -140,6 +148,8 @@ public class ShrinkingStorm : NetworkAttack_Base {
         //set damage timer to 1 second
         damageTimer = TickTimer.CreateFromSeconds(runner, damageDelay);
         //Debug.Log(isShrinking);
+
+        INP_Pause.instance.pastCharacterSelect = true;
     }
     
     private void StormScaleChange() {
@@ -156,6 +166,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
     }
 
     private void ResetStorm(){
+        firstTrigger = true;
         if (!runner.IsServer) return;
         RPC_ResetStorm();
     }
@@ -185,5 +196,32 @@ public class ShrinkingStorm : NetworkAttack_Base {
     private void OnDrawGizmos()
     {
         Gizmos.DrawSphere(transform.position, stormCollider.radius * transform.localScale.x);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            CharacterEntity entity = other.GetComponent<CharacterEntity>();
+
+            if (entity != null && entity == player)
+            {
+                if (!firstTrigger)
+                enterStorm?.Invoke();
+                firstTrigger = false;
+            }
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            CharacterEntity entity = other.GetComponent<CharacterEntity>();
+
+            if (entity != null && entity == player)
+            {
+                exitStorm?.Invoke();
+            }
+        }
     }
 }

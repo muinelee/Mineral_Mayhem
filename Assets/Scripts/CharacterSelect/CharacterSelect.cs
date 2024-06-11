@@ -13,6 +13,8 @@ public class CharacterSelect : NetworkBehaviour
 
     public static CharacterSelect instance;
 
+    [SerializeField] ShrinkingStorm storm;
+
     [Header("Character Select")]
     public List<SO_Character> characters;
     public Dictionary<NetworkPlayer, CharacterEntity> characterLookup = new Dictionary<NetworkPlayer, CharacterEntity>();
@@ -231,6 +233,8 @@ public class CharacterSelect : NetworkBehaviour
         //  characterSelectScreen.FadeOut();
         OnCharacterSelect?.Invoke();
         finalizeCharSelect?.Invoke();
+
+        if (storm) storm.player = characterLookup[NetworkPlayer.Local];
     }
 
     /// <summary>

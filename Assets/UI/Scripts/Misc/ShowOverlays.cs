@@ -19,8 +19,6 @@ public class ShowOverlays : MonoBehaviour
     }
     private IEnumerator iOnExitStorm()
     {
-        yield return new WaitForSeconds(delay);
-
         overlayStorm1.gameObject.SetActive(true);
         overlayStorm1.FadeIn();
 
@@ -40,5 +38,9 @@ public class ShowOverlays : MonoBehaviour
         StopAllCoroutines();
         overlayStorm1.gameObject.SetActive(true);
         overlayStorm1.FadeOut();
+        overlayStorm2.gameObject.SetActive(true);
+        overlayStorm2.FadeOut();
+        overlayStorm3.gameObject.SetActive(true);
+        overlayStorm3.FadeOut();
     }
 }
