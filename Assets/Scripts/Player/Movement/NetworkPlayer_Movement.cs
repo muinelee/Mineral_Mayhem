@@ -8,6 +8,7 @@ public class NetworkPlayer_Movement : CharacterComponent
 {
     [Header("Movement properties")]
     [SerializeField] private float turnTime;
+    [SerializeField] private float blockSlow = 0.5f;
     public bool canMove = true;
     public bool canDash = true;
     private Vector3 targetDirection;
@@ -85,6 +86,7 @@ public class NetworkPlayer_Movement : CharacterComponent
     {
         if (dashCoolDownTimer.IsRunning) return;
         if (Runner.IsServer == false) return;
+        if (Character.Attack.isDefending) return;
 
         canDash = false;
 
@@ -220,5 +222,17 @@ public class NetworkPlayer_Movement : CharacterComponent
         AudioManager.Instance.PlayAudioSFX(this.dashSounds[0], transform.position);
         Character.Animator.anim.CrossFade("Dash", 0.03f);
         Character.Animator.anim.CrossFade("Helper", 0.03f, 2);
+    }
+
+    public override void OnBlock(bool isBlocking)
+    {
+        RPC_DetermineSpeedFromBlockState(isBlocking);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_DetermineSpeedFromBlockState(bool isBlocking)
+    {
+        if (isBlocking) SetAbilitySlow(blockSlow);
+        else ResetAbilitySlow();
     }
 }
