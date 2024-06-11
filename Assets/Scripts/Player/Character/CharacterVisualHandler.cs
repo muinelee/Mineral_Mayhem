@@ -159,18 +159,6 @@ public class CharacterVisualHandler : CharacterComponent
                 currentEmissionIntensity = onSpeedFlashIntensity;
                 break;
         }
-        /*targetColor = target;
-        currentFlashDuration = duration;
-        if (target == onHitFlashColor && duration == onHitFlashDuration)
-        {
-            currentFlashCurve = onHitFlashCurve;
-            currentEmissionIntensity = onHitFlashIntensity;
-        }
-        else
-        {
-            currentFlashCurve = onHealFlashCurve;
-            currentEmissionIntensity = onHealFlashIntensity;
-        }*/
         effectActive = true;
         flashTimer = 0f;
     }
