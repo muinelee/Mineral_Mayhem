@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1223625096612688052}
   - component: {fileID: 8651813062834028853}
   - component: {fileID: 8786374221585237487}
+  - component: {fileID: -6410644298864195308}
   m_Layer: 0
   m_Name: VFX_Heal_Pickup
   m_TagString: Untagged
@@ -136,6 +137,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 8786374221585237487}
+  - {fileID: -6410644298864195308}
   SimulationBehaviours: []
 --- !u!114 &8786374221585237487
 MonoBehaviour:
@@ -165,3 +167,17 @@ MonoBehaviour:
     RotTeleportRadians: 1.5
   UseLegacySharedModeInterpolation: 0
   TargetInterpolationDelay: 0.03
+--- !u!114 &-6410644298864195308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4014704199673201902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 069cdc859d20a704c8c5cac27289a3bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  timer: 3
