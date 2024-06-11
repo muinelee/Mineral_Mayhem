@@ -19,6 +19,7 @@ public class VineGround : NetworkAttack_Base
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
     [SerializeField] AudioClip announcerVoiceLine;
+    private bool voiceLinePlayed = false;
 
     public override void Spawned()
     {
@@ -63,15 +64,16 @@ public class VineGround : NetworkAttack_Base
         {
             // Deal damage to all things in radius
             IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
-
+            CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
             if (healthComponent != null)
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
 
                 healthComponent.OnTakeDamage(damage, false);
 
-                if (healthComponent.HP <= 0)
+                if (healthComponent.HP <= 0 && characterEntity && !voiceLinePlayed)
                 {
+                    voiceLinePlayed = true;
                     RPC_PlayAnnouncerVoiceLine();
                 }
             }

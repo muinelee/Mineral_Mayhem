@@ -3,6 +3,7 @@ using UnityEngine;
 using Fusion;
 using Unity.VisualScripting;
 using UnityEditor;
+using static Fusion.NetworkCharacterController;
 
 public class LavaDive : NetworkAttack_Base 
 {
@@ -38,6 +39,7 @@ public class LavaDive : NetworkAttack_Base
     private Vector3 midwayPointRef;
 
     [SerializeField] AudioClip announcerVoiceLine;
+    private bool voiceLinePlayed = false;
 
     public override void Spawned()
     {
@@ -176,6 +178,7 @@ public class LavaDive : NetworkAttack_Base
 
             // Apply status effect
             CharacterEntity playerHit = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
+            CharacterEntity characterEntity = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
 
             // Ensure is applied only once per player
             if (playerEntities.Contains(playerHit))
@@ -184,7 +187,7 @@ public class LavaDive : NetworkAttack_Base
                 ApplyStatusEffect(playerHit);
             }
 
-            if (healthComponent.HP <= 0)
+            if (healthComponent.HP <= 0 && characterEntity && !voiceLinePlayed)
             {
                 RPC_PlayAnnouncerVoiceLine();
             }
@@ -211,6 +214,7 @@ public class LavaDive : NetworkAttack_Base
         for (int i = 0; i < hits.Count; i++)
         {
             IHealthComponent healthComponent = hits[i].GameObject.GetComponentInParent<IHealthComponent>();
+            CharacterEntity characterEntity = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
 
             if (healthComponent != null)
             {
@@ -224,7 +228,7 @@ public class LavaDive : NetworkAttack_Base
                 healthComponent.OnKnockBack(knockback, directionTowardsTrail);
             }
 
-            if (healthComponent.HP <= 0)
+            if (healthComponent.HP <= 0 && characterEntity && !voiceLinePlayed)
             {
                 RPC_PlayAnnouncerVoiceLine();
             }
