@@ -238,7 +238,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         if (blockButtonDown && !isDefending && Character.Health.canBlock && Character.Animator.anim.GetCurrentAnimatorStateInfo(0).IsName("Run"))
         {
-            if (Object.HasStateAuthority)
+            if (Runner.IsServer)
             {
                 Character.OnBlock(true);
             }
@@ -246,7 +246,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 
         else if (!blockButtonDown && isDefending)
         {
-            if (Object.HasStateAuthority)
+            if (Runner.IsServer)
             {
                 Character.OnBlock(false);
             }
