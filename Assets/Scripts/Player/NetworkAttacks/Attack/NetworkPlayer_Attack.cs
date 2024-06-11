@@ -232,6 +232,8 @@ public class NetworkPlayer_Attack : CharacterComponent
 
         Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.01f);
         Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
+
+        if (basicAttackCount == basicAttacks.Length - 1) canAttack = false;
     }
 
     public void ActivateBlock(bool blockButtonDown)
