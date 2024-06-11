@@ -103,6 +103,8 @@ public class RoundManager : NetworkBehaviour
 
         // Show Round UI
         //RPC_ShowRoundUI();
+
+        StartCoroutine(StartCountDown());
     }
 
     public void RoundEnd() 
@@ -175,7 +177,11 @@ public class RoundManager : NetworkBehaviour
         resetStorm?.Invoke();
         startStorm?.Invoke();
         
-        if (Runner.IsServer) RPC_ShowRoundUI();
+        if (Runner.IsServer)
+        {
+            RPC_DisableControls(true);
+            RPC_ShowRoundUI();
+        }
 
         INP_Pause.instance.pastCharacterSelect = true;
     }
@@ -184,7 +190,7 @@ public class RoundManager : NetworkBehaviour
     {
         if (roundEndTimer.Expired(Runner))
         { 
-            roundEndTimer = TickTimer.None; 
+            roundEndTimer = TickTimer.None;
             ResetRound?.Invoke();
         }
 
@@ -193,11 +199,31 @@ public class RoundManager : NetworkBehaviour
             matchEndTimer = TickTimer.None;
             MatchEndEvent?.Invoke();
         }
-    } 
+
+        if (roundStartTimer.Expired(Runner))
+        {
+            roundStartTimer = TickTimer.None;
+            RPC_DisableControls(false);
+        }
+    }
 
     public void OnResetRound()
     {
         ResetRound?.Invoke();
+    }
+
+    IEnumerator StartCountDown()
+    {
+        yield return new WaitForSeconds(2f);
+        RPC_DisableControls(true);
+        RPC_PlayCountdown();
+        roundStartTimer = TickTimer.CreateFromSeconds(Runner, 2.8f);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayCountdown()
+    {
+        AudioManager.Instance.PlayAudioSFX(Arena.Current.countDownVoiceLine, Camera.main.gameObject.transform.position);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -205,6 +231,23 @@ public class RoundManager : NetworkBehaviour
     {
         if (isRedWin) RoundUI.instance.RedWin();
         else RoundUI.instance.BlueWin();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_DisableControls(bool disable)
+    {
+        CharacterEntity[] characters = FindObjectsOfType<CharacterEntity>();
+        foreach (CharacterEntity character in characters)
+        {
+            if (disable)
+            {
+                character.Health.DisableControls();
+            }
+            else
+            {
+                character.Health.EnableControls();
+            }
+        }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

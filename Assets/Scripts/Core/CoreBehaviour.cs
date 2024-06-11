@@ -63,6 +63,7 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
         {
             HandleDeath();
             Runner.Spawn(explosionVFX, transform.position, Quaternion.identity);
+            AudioManager.Instance.PlayAudioSFX(explosionSFX, transform.position);
             Die();
         }
         else if (healthPercentage <= 0.75f && healthPercentage > 0.50f && !spawn75flag)
@@ -131,11 +132,6 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
 
     // Function for if the object can get knockedback
     public void OnKnockBack(float force, Vector3 source) { }
-
-    private void OnDestroy()
-    {
-        AudioManager.Instance.PlayAudioSFX(explosionSFX, transform.position);
-    }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_PlaySpawnedSFX()

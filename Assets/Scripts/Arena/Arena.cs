@@ -15,6 +15,8 @@ public class Arena : NetworkBehaviour
     public SO_ArenaDefinition definition;    //Will have information relative to the specific arena we are on (music/name/index/icon/image, etc)
     public SplineContainer spline;
 
+    public AudioClip countDownVoiceLine;
+
     private NetworkObject currentCore;
     private Coroutine coreSpawnCoroutine;
 
