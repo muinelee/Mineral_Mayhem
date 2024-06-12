@@ -134,21 +134,21 @@ public class ChangeSetting : MonoBehaviour
             SettingsManager.volumeMaster = value;
 
             // Setting Effect
-            mixer.SetFloat("master", SettingsManager.volumeMaster * 80 - 80);
+            mixer.SetFloat("master", SettingsManager.volumeMaster > 0 ? Mathf.Log10(SettingsManager.volumeMaster) * 20 : -80);
         }
         else if (type == "volumeMusic")
         {
             SettingsManager.volumeMusic = value;
 
             // Setting Effect
-            mixer.SetFloat("music", SettingsManager.volumeMusic * 80 - 80);
+            mixer.SetFloat("music", SettingsManager.volumeMusic > 0 ? Mathf.Log10(SettingsManager.volumeMusic) * 20 : -80);
         }
         else if (type == "volumeSFX")
         {
             SettingsManager.volumeSFX = value;
 
             //Setting Effect
-            mixer.SetFloat("sfx", SettingsManager.volumeSFX * 80 - 80);
+            mixer.SetFloat("sfx", SettingsManager.volumeSFX > 0 ? Mathf.Log10(SettingsManager.volumeSFX) * 20 : -80);
 
         }
     }
