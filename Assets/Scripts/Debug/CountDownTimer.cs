@@ -1,7 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using Fusion;
 
 public class CountDownTimer : MonoBehaviour
 {
@@ -42,5 +41,6 @@ public class CountDownTimer : MonoBehaviour
 
         index++;
         AudioManager.Instance.PlayAudioSFX(countdownAudio[index], Camera.main.gameObject.transform.position);
+        if (NetworkPlayer.Local.HasStateAuthority) RoundManager.Instance.RPC_DisableControls(false);
     }
 }
