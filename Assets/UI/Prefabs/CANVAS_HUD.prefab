@@ -1019,7 +1019,7 @@ GameObject:
   - component: {fileID: 3714188280415632780}
   - component: {fileID: 6221784802533613426}
   m_Layer: 0
-  m_Name: TXT_Minute2
+  m_Name: TXT_Minute1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5390,7 +5390,7 @@ GameObject:
   - component: {fileID: 6009779615854332072}
   - component: {fileID: 6385798323393232627}
   m_Layer: 0
-  m_Name: TXT_Minute1
+  m_Name: TXT_Minute2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5622,11 +5622,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1127105823129289861}
+  - {fileID: 3979025205338222789}
+  - {fileID: 6199741122911304467}
   - {fileID: 270489370383933642}
   - {fileID: 4494493818171374109}
-  - {fileID: 6199741122911304467}
-  - {fileID: 3979025205338222789}
-  - {fileID: 1127105823129289861}
   m_Father: {fileID: 3506935210192893814}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.23583624, y: 0.3427899}
@@ -5659,7 +5659,7 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
+  m_ReverseArrangement: 1
 --- !u!1 &6736174330804148712
 GameObject:
   m_ObjectHideFlags: 0
@@ -6978,6 +6978,7 @@ GameObject:
   - component: {fileID: 5991924347949849133}
   - component: {fileID: 6160419670955068950}
   - component: {fileID: 5037434722964552530}
+  - component: {fileID: 3785080619841782735}
   m_Layer: 0
   m_Name: CANVAS_HUD
   m_TagString: Untagged
@@ -7096,6 +7097,22 @@ MonoBehaviour:
   lerpDuration2: 0.5
   startScaleX: 0.8
   endScaleX: 0.6
+--- !u!114 &3785080619841782735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8396531737803541507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b247e7a2dd5ada4a8795bdf1b17ddf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minute1: {fileID: 6221784802533613426}
+  minute2: {fileID: 6385798323393232627}
+  second1: {fileID: 6329659793785197707}
+  second2: {fileID: 7286519656679583337}
 --- !u!1 &8780086615643042298
 GameObject:
   m_ObjectHideFlags: 0
