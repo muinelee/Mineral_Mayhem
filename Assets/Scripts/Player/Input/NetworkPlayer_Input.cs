@@ -54,9 +54,6 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
         Runner.AddCallbacks(this);
 
         if (!Object.HasInputAuthority) return;
-        /*CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
-        virtualCam.Follow = this.transform;
-        virtualCam.LookAt = this.transform;*/
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -70,7 +67,7 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
     {
         if (Input.GetKeyDown(KeyCode.Mouse2)) CameraLockOnPlayer = !CameraLockOnPlayer;
         float scrollInput = Input.GetAxis("Mouse ScrollWheel");
-        CameraDistance += scrollInput * -camScrollSpeed;
+        CameraDistance += scrollInput * - camScrollSpeed;
     }
 
     public NetworkInputData GetInput()
@@ -87,7 +84,7 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
         else if (Input.GetKey(KeyCode.Q)) userInput.Buttons |= NetworkInputData.ButtonQ;
         else if (Input.GetKey(KeyCode.E)) userInput.Buttons |= NetworkInputData.ButtonE;
         else if (Input.GetKey(KeyCode.Space)) userInput.Buttons |= NetworkInputData.ButtonDash;
-        else if (Input.GetKeyDown(KeyCode.Mouse0)) userInput.Buttons |= NetworkInputData.ButtonBasic;
+        else if (Input.GetKey(KeyCode.Mouse0)) userInput.Buttons |= NetworkInputData.ButtonBasic;
         
         if (Input.GetKey(KeyCode.Mouse1)) userInput.Buttons |= NetworkInputData.ButtonBlock;
         

@@ -142,6 +142,7 @@ public class CharacterEntity : CharacterComponent
 
         if (Object.HasInputAuthority)
         {
+            if (cameraTarget == null) cameraTarget = transform.Find("CameraTarget");
             NetworkCameraEffectsManager.instance.SetPlayerCamera(cameraTarget);
         }
     }
