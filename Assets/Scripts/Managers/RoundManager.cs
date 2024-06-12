@@ -195,12 +195,6 @@ public class RoundManager : NetworkBehaviour
             matchEndTimer = TickTimer.None;
             MatchEndEvent?.Invoke();
         }
-
-        if (roundStartTimer.Expired(Runner))
-        {
-            roundStartTimer = TickTimer.None;
-            RPC_DisableControls(false);
-        }
     }
 
     public void OnResetRound()
@@ -214,7 +208,6 @@ public class RoundManager : NetworkBehaviour
         RPC_DisableControls(true);
         yield return new WaitForSeconds(2f);
         RPC_PlayCountdown();
-        roundStartTimer = TickTimer.CreateFromSeconds(Runner, 3.1f);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -231,7 +224,7 @@ public class RoundManager : NetworkBehaviour
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_DisableControls(bool disable)
+    public void RPC_DisableControls(bool disable)
     {
         CharacterEntity[] characters = FindObjectsOfType<CharacterEntity>();
         foreach (CharacterEntity character in characters)
