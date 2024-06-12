@@ -12,6 +12,7 @@ public class CG_Fade : MonoBehaviour
     [SerializeField] private float endValue = 1f;
 
     private float curValue;
+    private float lastValue;
     [SerializeField] float delayOpen;
 
     //--------------------------------------//
@@ -19,6 +20,7 @@ public class CG_Fade : MonoBehaviour
     private void Awake()
     {
         group = GetComponent<CanvasGroup>();
+        lastValue = startValue;
     }
 
     public void FadeIn()
@@ -27,19 +29,21 @@ public class CG_Fade : MonoBehaviour
     }
     private IEnumerator iFadeIn()
     {
-        group.alpha = startValue;
+        group.alpha = lastValue;
         yield return new WaitForSecondsRealtime(delayOpen);
 
         float timeElapsed = 0;
         while (timeElapsed < lerpDuration)
         {
 
-            curValue = Mathf.Lerp(startValue, endValue, timeElapsed / lerpDuration);
+            curValue = Mathf.Lerp(lastValue, endValue, timeElapsed / lerpDuration);
             group.alpha = curValue;
+            lastValue = curValue;
 
             timeElapsed += Time.unscaledDeltaTime;
             yield return null;
         }
+        lastValue = endValue;
         curValue = endValue;
         group.alpha = curValue;
     }
@@ -54,12 +58,14 @@ public class CG_Fade : MonoBehaviour
         while (timeElapsed < lerpDuration)
         {
 
-            curValue = Mathf.Lerp(endValue, startValue, timeElapsed / lerpDuration);
+            curValue = Mathf.Lerp(lastValue, startValue, timeElapsed / lerpDuration);
             group.alpha = curValue;
+            lastValue = curValue;
 
             timeElapsed += Time.unscaledDeltaTime;
             yield return null;
         }
+        lastValue = startValue;
         curValue = startValue;
         group.alpha = curValue;
 

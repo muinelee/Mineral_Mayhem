@@ -114,4 +114,13 @@ public class StatusHandler : CharacterComponent
     {
         return stun > 0;
     }
+
+    public bool HasUncleansableStun()
+    {
+        foreach (StatusData status in statuses)
+        {
+            if (status.status.GetType() == typeof(StunStatus) && !status.status.isCleanseable) return true;
+        }
+        return false;
+    }
 }

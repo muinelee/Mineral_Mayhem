@@ -9,13 +9,15 @@ public class CharacterEntity : CharacterComponent
     public static event Action<CharacterEntity> OnCharacterSpawned;
     public static event Action<CharacterEntity> OnCharacterDespawned;
 
+    public Transform cameraTarget;
+
     public event Action<float, bool> OnHitEvent;
     public event Action<float> OnHealEvent;
     public event Action<bool> OnBlockEvent;
     public event Action<StatusEffect> OnStatusBeginEvent;
     public event Action<StatusEffect> OnStatusEndedEvent;
     public event Action OnCleanseEvent;
-    public event Action OnPickupEvent;
+    public event Action<bool> OnPickupEvent;
     public event Action<float> OnEnergyChangeEvent;
     public event Action OnCharacterDeathEvent;
     public event Action OnRoundEndEvent;
@@ -53,9 +55,9 @@ public class CharacterEntity : CharacterComponent
     {
         OnRoundEndEvent?.Invoke();
     }
-    public override void OnPickup()
+    public override void OnPickup(bool isSpeed)
     {
-        OnPickupEvent?.Invoke();
+        OnPickupEvent?.Invoke(isSpeed);
     }
     #endregion
 
@@ -138,7 +140,11 @@ public class CharacterEntity : CharacterComponent
             component.Init(this);
         }
 
-        if (Object.HasInputAuthority) NetworkCameraEffectsManager.instance.SetPlayerCamera(transform);
+        if (Object.HasInputAuthority)
+        {
+            if (cameraTarget == null) cameraTarget = transform.Find("CameraTarget");
+            NetworkCameraEffectsManager.instance.SetPlayerCamera(cameraTarget);
+        }
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)

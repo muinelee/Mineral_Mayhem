@@ -3,6 +3,7 @@ using UnityEngine;
 using Fusion;
 using Unity.VisualScripting;
 using UnityEditor;
+using static Fusion.NetworkCharacterController;
 
 public class LavaDive : NetworkAttack_Base 
 {
@@ -19,12 +20,15 @@ public class LavaDive : NetworkAttack_Base
     private TickTimer dashTimer = TickTimer.None;
     private TickTimer trailDamageTimer = TickTimer.None;
     private List<CharacterEntity> playerEntities = new List<CharacterEntity>();
+    private float numFireColumns = 3f;
+    private float fireColumnSpawnTime = 0.75f;
 
     [Header("Attack End Damage Properties")]
     [SerializeField] private float forceForward;
     [SerializeField] private float lingerTime;
     [SerializeField] private float attackRadius = 2;
     [SerializeField] private NetworkObject attackEndVFX;
+    [SerializeField] private NetworkObject fireColumnVFX;
     private NetworkObject smashVFX;
     private bool finishDive = false;
     private TickTimer lingerTimer;
@@ -37,10 +41,13 @@ public class LavaDive : NetworkAttack_Base
     private Vector3 midwayPointRef;
 
     [SerializeField] AudioClip announcerVoiceLine;
+    private bool voiceLinePlayed = false;
 
     public override void Spawned()
     {
         base.Spawned();
+
+        fireColumnSpawnTime = dashDuration / (numFireColumns + 1);
 
         AttackStart();
 
@@ -52,6 +59,16 @@ public class LavaDive : NetworkAttack_Base
     {
         if (Object.HasStateAuthority)
         {
+            // While the dash is active, spawn fire columns VFX
+            if (dashTimer.IsRunning)
+            {
+                if (dashDuration - dashTimer.RemainingTime(Runner) > fireColumnSpawnTime)
+                {
+                    Runner.Spawn(fireColumnVFX, character.transform.position, Quaternion.identity);
+                    dashDuration -= fireColumnSpawnTime;
+                }
+            }
+
             if (lingerTimer.Expired(Runner)) AttackEnd();
 
             // Ensure Trail does damage until the end
@@ -60,34 +77,19 @@ public class LavaDive : NetworkAttack_Base
             if (finishDive) return;
 
             character.Rigidbody.Rigidbody.AddForce(transform.forward * forceForward);
-
         }
 
         if (finishDive) return;
-
+        
         trail.position = character.transform.position;
 
         if (dashTimer.Expired(Runner)) dashTimer = TickTimer.None;
 
         if (dashTimer.IsRunning) return;
 
-        Debug.Log("This is still  running");
-
         RaycastHit[] ray = Physics.SphereCastAll(trail.position, 3, transform.up, 1, stageLayers);
 
-        if (ray.Length > 0)
-        {
-            for (int i = 0; i < ray.Length; i++)
-            {
-                Debug.Log(ray[i].transform.name);
-            }            return;
-        }
-
-        else
-        {
-            Debug.Log("This really should run");
-            DiveEnd();
-        }
+        if (ray.Length == 0) DiveEnd();
     }
 
     private void AttackStart()
@@ -173,6 +175,7 @@ public class LavaDive : NetworkAttack_Base
 
             // Apply status effect
             CharacterEntity playerHit = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
+            CharacterEntity characterEntity = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
 
             // Ensure is applied only once per player
             if (playerEntities.Contains(playerHit))
@@ -181,7 +184,7 @@ public class LavaDive : NetworkAttack_Base
                 ApplyStatusEffect(playerHit);
             }
 
-            if (healthComponent.HP <= 0)
+            if (healthComponent.HP <= 0 && characterEntity && !voiceLinePlayed)
             {
                 RPC_PlayAnnouncerVoiceLine();
             }
@@ -208,6 +211,7 @@ public class LavaDive : NetworkAttack_Base
         for (int i = 0; i < hits.Count; i++)
         {
             IHealthComponent healthComponent = hits[i].GameObject.GetComponentInParent<IHealthComponent>();
+            CharacterEntity characterEntity = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
 
             if (healthComponent != null)
             {
@@ -221,7 +225,7 @@ public class LavaDive : NetworkAttack_Base
                 healthComponent.OnKnockBack(knockback, directionTowardsTrail);
             }
 
-            if (healthComponent.HP <= 0)
+            if (healthComponent.HP <= 0 && characterEntity && !voiceLinePlayed)
             {
                 RPC_PlayAnnouncerVoiceLine();
             }

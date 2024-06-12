@@ -12,7 +12,7 @@ public class StunStatus : StatusEffect
     {
         handler.stun++;
         if (animationName != "") handler.Character.Animator.anim.CrossFade(animationName, 0.2f);
-        else handler.Character.Animator.ResetAnimation();
+        else handler.Character.Animator.anim.CrossFade("Run", 0.1f);
         handler.Character.Movement.canMove = false;
         handler.Character.Attack.canAttack = false;
         handler.Character.OnBlock(false);        

@@ -24,6 +24,10 @@ public class SO_Character : ScriptableObject
     public string characterName;
     public string characterRace;
 
+    public float health;
+    public float damage;
+    public float speed;
+
     [TextArea(3, 10)]
     public string backstory;
     [TextArea(3, 10)]

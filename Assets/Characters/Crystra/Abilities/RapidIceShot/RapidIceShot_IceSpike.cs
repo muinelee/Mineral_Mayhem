@@ -20,6 +20,8 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
     [Header("Damage Properties")]
     [SerializeField] private static float damageMultiplier = 1f;
 
+    private NetworkRunner runner;
+
     //attack indexing
     private static int attackIndex = 0;
 
@@ -31,9 +33,10 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
         base.Spawned();
 
         AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        runner = FindAnyObjectByType<NetworkRunner>();
         //AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
 
-        if (!Runner.IsServer) return;
+        if (!runner.IsServer) return;
 
         Vector3 offsetVector = new Vector3(Random.Range(-offset, offset), Random.Range(0, offset), Random.Range(-offset, offset));
 
@@ -47,7 +50,7 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
     // Update is called once per frame
     public override void FixedUpdateNetwork()
     {
-        if (!Runner.IsServer) return;
+        if (!runner.IsServer) return;
 
         // move
         transform.Translate(Vector3.forward * speed);
@@ -56,7 +59,7 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
 
         // manage lifetime
         lifeTimer += Time.deltaTime;
-        if (lifeTimer > lifetime) Runner.Despawn(Object);
+        if (lifeTimer > lifetime) runner.Despawn(Object);
     }
 
     private void TrackAttacks() {
@@ -90,11 +93,11 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
 
     protected override void DealDamage() {;
 
-        if (!Runner.IsServer) return;
+        if (!runner.IsServer) return;
 
         float totalDamage = 0;
         //hit signature to check 
-        Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
+        runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
 
         //loop to check for hits
         for (int i = 0; i < hits.Count; i++) {
@@ -103,7 +106,8 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
             if (healthComponent != null) {
 
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
-                Runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
+
+                runner.Spawn(this.onHitEffect, this.transform.position + onHitOffset, Quaternion.identity);
 
                 //if its the first hit, ignore the multiplier
                 if (attackIndex < 1) {
@@ -127,18 +131,17 @@ public class RapidIceShot_IceSpike : NetworkAttack_Base
                 //debug log to check if damage is being dealt
                 //Debug.Log($"Dealt {totalDamage} damage to {healthHandler.gameObject.name}");
 
-                Runner.Despawn(Object);
+                runner.Despawn(Object);
             }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        NetworkRunner runner = FindObjectOfType<NetworkRunner>();
         if (runner == null) return;
 
         if (!runner.IsServer) return;
-        runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
+        runner.Spawn(this.onHitEffect, this.transform.position + onHitOffset, Quaternion.identity);
         runner.Despawn(Object);
     }
 

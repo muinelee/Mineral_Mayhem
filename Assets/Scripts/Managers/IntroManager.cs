@@ -16,11 +16,12 @@ public class IntroManager : MonoBehaviour
 
     private void Start()
     {
+        /*
         if (PlayerPrefs.HasKey(IntroSeenKey) && PlayerPrefs.GetInt(IntroSeenKey) == 1)
         {
             gameObject.SetActive(false);
             return;
-        }
+        }*/
 
         videoPlayer = GameObject.Find("IntroVideo").GetComponent<VideoPlayer>();
         videoPlayer.loopPointReached += EndVideo;
@@ -53,8 +54,7 @@ public class IntroManager : MonoBehaviour
     {
         PlayerPrefs.SetInt(IntroSeenKey, 1);  
         PlayerPrefs.Save(); 
-        gameObject.SetActive(false);
-        //SceneManager.LoadScene("Main Menu"); 
+        SceneManager.LoadScene("Main Menu"); 
     }
 
     private void OnDestroy()

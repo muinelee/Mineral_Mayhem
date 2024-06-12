@@ -6,6 +6,8 @@ public class SpeedBoost : NetworkBehaviour
     [SerializeField] private float speedBoostAmount = 2f;
     [SerializeField] private float duration = 5f;
     [SerializeField] private LayerMask targetLayer;
+    [SerializeField] private AudioClip pickupSFX;
+    [SerializeField] private NetworkObject pickupEffect;
     private NetworkRunner runner;
 
     public override void Spawned()
@@ -24,10 +26,20 @@ public class SpeedBoost : NetworkBehaviour
         if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
         {
             NetworkPlayer_Movement playerMovement = other.GetComponent<NetworkPlayer_Movement>();
+            AudioManager.Instance.PlayAudioSFX(pickupSFX, transform.position);
             if (playerMovement != null)
             {
                 playerMovement.ApplySpeedBoost(speedBoostAmount, duration);
+                playerMovement.Character.OnPickup(true);
+                if (pickupEffect != null)
+                {
+                    NetworkObject pickupVFX = Runner.Spawn(pickupEffect, playerMovement.transform.position, transform.rotation);
 
+                    if (pickupVFX != null)
+                    {
+                        pickupVFX.GetComponent<Transform>().SetParent(playerMovement.Character.transform);
+                    }
+                }
                 Runner.Despawn(Object);
             }
         }

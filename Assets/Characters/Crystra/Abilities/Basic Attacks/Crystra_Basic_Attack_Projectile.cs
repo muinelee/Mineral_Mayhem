@@ -67,7 +67,7 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
             if (healthComponent != null)
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
-                Runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
+                Runner.Spawn(this.onHitEffect, this.transform.position + onHitOffset, Quaternion.identity);
 
                 healthComponent.OnTakeDamage(damage, true);
                 healthComponent.OnKnockBack(knockback, transform.position);
@@ -82,7 +82,7 @@ public class Crystra_Basic_Attack_Projectile : NetworkAttack_Base
         if (runner == null) return;
 
         if (!runner.IsServer) return;
-        runner.Spawn(this.onHitEffect, this.transform.position, Quaternion.identity);
+        runner.Spawn(this.onHitEffect, this.transform.position + onHitOffset, Quaternion.identity);
         runner.Despawn(Object);
     }
 }

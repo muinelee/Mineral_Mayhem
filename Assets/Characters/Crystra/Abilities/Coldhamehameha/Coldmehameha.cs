@@ -13,6 +13,7 @@ public class Coldmehameha : NetworkAttack_Base
     //ticktimer to work with lifetime
     private TickTimer lifeTimer = TickTimer.None;
     //spawn offset
+    private List<CharacterEntity> playersHit = new List<CharacterEntity>();
 
     [Header("Spawn Properties")]
     public int offset;
@@ -23,6 +24,9 @@ public class Coldmehameha : NetworkAttack_Base
     //list for hits
     List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
     [SerializeField] private LayerMask collisionLayer;
+
+    [SerializeField] AudioClip announcerVoiceLine;
+    private bool voiceLinePlayed = false;
 
     public override void Spawned() {
         //call base class spawn function
@@ -88,7 +92,7 @@ public class Coldmehameha : NetworkAttack_Base
                 //if health component is not dead, or if the team is the same, continue
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
                 //call the on take damage function from the health component
-                healthComponent.OnTakeDamage(damage, true);
+                healthComponent.OnTakeDamage(damage, false);
                 //apply knockback when hit
                 healthComponent.OnKnockBack(knockback, this.transform.position);
             }
@@ -97,8 +101,21 @@ public class Coldmehameha : NetworkAttack_Base
 
             if (statusEffectSO.Count > 0 && characterEntity) {
                 foreach (StatusEffect status in statusEffectSO) {
-                    characterEntity.OnStatusBegin(status);
+
+                    if (!playersHit.Contains(characterEntity)){
+
+                        characterEntity.OnStatusBegin(status);
+                        playersHit.Add(characterEntity);
+                        healthComponent.OnTakeDamage(0, true);
+                    }
+
                 }
+            }
+
+            if (healthComponent.HP <= 0 && characterEntity && !voiceLinePlayed)
+            {
+                voiceLinePlayed = true;
+                RPC_PlayAnnouncerVoiceLine();
             }
         }
     }
@@ -106,5 +123,11 @@ public class Coldmehameha : NetworkAttack_Base
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube((transform.position + (transform.forward * (extends.z / 2))), extends);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayAnnouncerVoiceLine()
+    {
+        AudioManager.Instance.PlayAudioSFX(announcerVoiceLine, transform.position);
     }
 }

@@ -1,8 +1,9 @@
+using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
-using Fusion;
-using UnityEngine.UI;
+using UnityEngine.Events;
 using UnityEngine.Splines;
+using UnityEngine.UI;
 using UnityEngine.VFX;
 
 public class ShrinkingStorm : NetworkAttack_Base { 
@@ -46,6 +47,13 @@ public class ShrinkingStorm : NetworkAttack_Base {
 
     private NetworkRunner runner;
 
+    public CharacterEntity player;
+
+    public UnityEvent enterStorm;
+    public UnityEvent exitStorm;
+
+    private bool firstTrigger = false;
+
     // Start is called before the first frame update
     void Start() {
         stormCollider = GetComponent<CapsuleCollider>();
@@ -81,7 +89,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
         if (isShrinking) {
             //lerp the scale of the object to shrink it
             StormScaleChange();
-            if (damageTimer.Expired(Runner)) {
+            if (damageTimer.Expired(runner)) {
             //for each player in the scene
             foreach (CharacterEntity playerchar in characters) {
                 //Debug.Log(playerchar.transform.position);
@@ -95,7 +103,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
                     }
                 }
                 damageTimer = TickTimer.None;
-                damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
+                damageTimer = TickTimer.CreateFromSeconds(runner, damageDelay);
             }
         }
     }
@@ -107,9 +115,9 @@ public class ShrinkingStorm : NetworkAttack_Base {
 
     protected override void DealDamage() {
 
-        if (!Runner.IsServer) return;
+        if (!runner.IsServer) return;
 
-        Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
+        runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
         foreach (LagCompensatedHit hit in hits) {
 
             // Cores don't have character entities so find objects with a character entities and a health component
@@ -134,12 +142,14 @@ public class ShrinkingStorm : NetworkAttack_Base {
     private void ShrinkStorm() {
         isShrinking = true;
         remainingTime = 0f;
-        transform.localScale = startScale;
+        //transform.localScale = startScale;
         //list of character positions found
         characters = FindObjectsOfType<CharacterEntity>();
         //set damage timer to 1 second
-        damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
+        damageTimer = TickTimer.CreateFromSeconds(runner, damageDelay);
         //Debug.Log(isShrinking);
+
+        INP_Pause.instance.pastCharacterSelect = true;
     }
     
     private void StormScaleChange() {
@@ -148,26 +158,28 @@ public class ShrinkingStorm : NetworkAttack_Base {
     }
 
     private void ManageDamage() {
-        if (!damageTimer.Expired(Runner)) return;
+        if (!damageTimer.Expired(runner)) return;
 
         damageTimer = TickTimer.None;
-        damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
+        damageTimer = TickTimer.CreateFromSeconds(runner, damageDelay);
         DealDamage();
     }
 
     private void ResetStorm(){
-        if (!Runner.IsServer) return;
+        firstTrigger = true;
+        if (!runner.IsServer) return;
         RPC_ResetStorm();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_ResetStorm()
     {
-        Debug.Log("The storm's scale should have been reset");
         this.transform.localScale = startScale;
         this.ShrinkStorm();
         this.stormVFX.Stop();
         this.stormVFX.Play();
+
+        transform.position = GetSpawnLocation();
     }
 
     public Vector3 GetSpawnLocation() {
@@ -178,6 +190,38 @@ public class ShrinkingStorm : NetworkAttack_Base {
         else {
             Debug.LogWarning("Spline is not assigned for core spawning.");
             return Vector3.zero;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(transform.position, stormCollider.radius * transform.localScale.x);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            CharacterEntity entity = other.GetComponent<CharacterEntity>();
+
+            if (entity != null && entity == player)
+            {
+                if (!firstTrigger)
+                enterStorm?.Invoke();
+                firstTrigger = false;
+            }
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            CharacterEntity entity = other.GetComponent<CharacterEntity>();
+
+            if (entity != null && entity == player)
+            {
+                exitStorm?.Invoke();
+            }
         }
     }
 }

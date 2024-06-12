@@ -245,8 +245,9 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         Character.Attack.enabled = false;
         // Disable sphere collider
         Character.Collider.enabled = false;
-        // Disable gravity
-        Character.Rigidbody.Rigidbody.useGravity = false;
+
+        Character.Animator.anim.SetFloat("Xaxis", 0);
+        Character.Animator.anim.SetFloat("Zaxis", 0);
     }
 
     public void EnableControls()

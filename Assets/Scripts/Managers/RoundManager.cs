@@ -85,15 +85,11 @@ public class RoundManager : NetworkBehaviour
 
     public void LoadRound()
     {
-        RPC_CollapseRoundUI();
-
         if (currentRound == maxRounds) return; 
         currentRound++;
         resetStorm?.Invoke();
         startStorm?.Invoke();
-        // Round start based on if its round 1, then its 30s, if not, 10s 
-        float startDuration = (currentRound == 1) ? gameStartDuration : roundStartDuration;
-        roundStartTimer = TickTimer.CreateFromSeconds(Runner, startDuration);
+
         // Spawning/Setting players back into their own positions 
 
         // Resetting health and lives 
@@ -103,6 +99,8 @@ public class RoundManager : NetworkBehaviour
 
         // Show Round UI
         //RPC_ShowRoundUI();
+
+        StartCoroutine(StartCountDown());
     }
 
     public void RoundEnd() 
@@ -111,8 +109,6 @@ public class RoundManager : NetworkBehaviour
     }
     private IEnumerator iRoundEnd()
     {
-        RPC_ExpandRoundUI();
-
         yield return new WaitForSecondsRealtime(1f);
 
         // Checks which team has more players alive
@@ -159,7 +155,7 @@ public class RoundManager : NetworkBehaviour
     }
     private IEnumerator iMatchEnd()
     {
-        yield return new WaitForSecondsRealtime(3.5f);
+        yield return new WaitForSecondsRealtime(4f);
 
         RPC_CollapseRoundUI();
 
@@ -174,17 +170,20 @@ public class RoundManager : NetworkBehaviour
         MatchStartEvent?.Invoke();
         resetStorm?.Invoke();
         startStorm?.Invoke();
+        NetworkPlayer_InGameUI.instance.HidePlayerUI();
         
-        if (Runner.IsServer) RPC_ShowRoundUI();
-
-        INP_Pause.instance.pastCharacterSelect = true;
+        if (Runner.IsServer)
+        {
+            RPC_DisableControls(true);
+            //RPC_ShowRoundUI();
+        }
     }
 
     public override void FixedUpdateNetwork()
     {
         if (roundEndTimer.Expired(Runner))
         { 
-            roundEndTimer = TickTimer.None; 
+            roundEndTimer = TickTimer.None;
             ResetRound?.Invoke();
         }
 
@@ -193,11 +192,25 @@ public class RoundManager : NetworkBehaviour
             matchEndTimer = TickTimer.None;
             MatchEndEvent?.Invoke();
         }
-    } 
+    }
 
     public void OnResetRound()
     {
         ResetRound?.Invoke();
+    }
+
+    IEnumerator StartCountDown()
+    {
+        yield return 0;
+        RPC_DisableControls(true);
+        yield return new WaitForSeconds(2f);
+        RPC_PlayCountdown();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayCountdown()
+    {
+        CountDownTimer.instance.StartCountDown();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -205,6 +218,23 @@ public class RoundManager : NetworkBehaviour
     {
         if (isRedWin) RoundUI.instance.RedWin();
         else RoundUI.instance.BlueWin();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_DisableControls(bool disable)
+    {
+        CharacterEntity[] characters = FindObjectsOfType<CharacterEntity>();
+        foreach (CharacterEntity character in characters)
+        {
+            if (disable)
+            {
+                character.Health.DisableControls();
+            }
+            else
+            {
+                character.Health.EnableControls();
+            }
+        }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -244,6 +274,19 @@ public class RoundManager : NetworkBehaviour
     private void RPC_CollapseRoundUI()
     {
         RoundUI.instance.CollapseRoundUI();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_GrowRoundUI()
+    {
+        TimerManager.instance.StopTimer(false);
+        RoundUI.instance.GrowRoundUI();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_ShrinkRoundUI()
+    {
+        RoundUI.instance.ShrinkRoundUI();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

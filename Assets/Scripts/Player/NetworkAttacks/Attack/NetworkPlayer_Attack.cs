@@ -54,19 +54,22 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public override void FixedUpdateNetwork()
     {
-        if (GetInput(out NetworkInputData input) && canAttack)
+        if (Character.Health.isDead) return;
+
+        if (GetInput(out NetworkInputData input))
         {
             bool isBlocking = input.IsDown(NetworkInputData.ButtonBlock);
 
             if (!isBlocking)
             {
-                if (input.IsDown(NetworkInputData.ButtonF) && Character.Energy.IsUltCharged() && !isDefending) ActivateUlt();
-                else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref qAttack);
-                else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning && !isDefending) ActivateAttack(ref eAttack);
-                else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack && !isDefending) ActivateBasicAttack();
+                if (input.IsDown(NetworkInputData.ButtonF) && Character.Energy.IsUltCharged() && !isDefending && canAttack) ActivateUlt();
+                else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning && !isDefending && canAttack) ActivateAttack(ref qAttack);
+                else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning && !isDefending
+                    && (canAttack || (eAttack.name == "UnshackleBuff" && !Character.StatusHandler.HasUncleansableStun()))) ActivateAttack(ref eAttack);
+                else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack && !isDefending && canAttack) ActivateBasicAttack();
             }
 
-            if (canDefend) ActivateBlock(isBlocking);
+            if (canDefend && canAttack) ActivateBlock(isBlocking);
         }
 
         ManageTimers(ref qAttackCoolDownTimer);
@@ -186,11 +189,14 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     private void PlayVoiceLine(Queue<AudioClip> voiceLineQueue)
     {
-        if (voiceLineQueue != null && voiceLineQueue.Count > 0)
+        if (Random.Range(0f, 1f) <= 0.5f || voiceLineQueue == fVoiceLineQueue)
         {
-            AudioClip voiceLine = voiceLineQueue.Dequeue();
-            AudioManager.Instance.PlayAudioSFX(voiceLine, transform.localPosition);
-            voiceLineQueue.Enqueue(voiceLine);
+            if (voiceLineQueue != null && voiceLineQueue.Count > 0)
+            {
+                AudioClip voiceLine = voiceLineQueue.Dequeue();
+                AudioManager.Instance.PlayAudioSFX(voiceLine, transform.localPosition);
+                voiceLineQueue.Enqueue(voiceLine);
+            }
         }
     }
 
@@ -226,13 +232,15 @@ public class NetworkPlayer_Attack : CharacterComponent
 
         Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.01f);
         Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
+
+        if (basicAttackCount == basicAttacks.Length - 1) canAttack = false;
     }
 
     public void ActivateBlock(bool blockButtonDown)
     {
         if (blockButtonDown && !isDefending && Character.Health.canBlock && Character.Animator.anim.GetCurrentAnimatorStateInfo(0).IsName("Run"))
         {
-            if (Object.HasStateAuthority)
+            if (Runner.IsServer)
             {
                 Character.OnBlock(true);
             }
@@ -240,7 +248,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 
         else if (!blockButtonDown && isDefending)
         {
-            if (Object.HasStateAuthority)
+            if (Runner.IsServer)
             {
                 Character.OnBlock(false);
             }
@@ -249,9 +257,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public override void OnBlock(bool isBlocking)
     {
-        isDefending = isBlocking;
-        Assert.Check(Character.Shield);
-        Character.Shield.gameObject.SetActive(isBlocking);
+        RPC_BlockState(isBlocking);
     }
 
     // Needs to be linked via NetworkPlayer_AnimationLink Script
@@ -329,5 +335,13 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         changed.LoadNew();
         changed.Behaviour.Character.Shield.gameObject.SetActive(changed.Behaviour.isDefending);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_BlockState(bool isBlocking)
+    {
+        isDefending = isBlocking;
+        Assert.Check(Character.Shield);
+        Character.Shield.gameObject.SetActive(isBlocking);
     }
 }

@@ -28,7 +28,7 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     public bool isDead { get; set; }
     public NetworkPlayer.Team team { get; set; }
 
-    [SerializeField] protected AudioClip SFX;
+    [SerializeField] protected AudioClip spawnedSFX;
     [SerializeField] protected AudioClip explosionSFX;
     public int OnDeathCollectibleAmount = 3;
 
@@ -40,7 +40,7 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
         HP = maxHealth;
         team = NetworkPlayer.Team.Neutral;
 
-        AudioManager.Instance.PlayAudioSFX(SFX, transform.position);
+        RPC_PlaySpawnedSFX();
 
         if (RoundManager.Instance != null) RoundManager.Instance.ResetRound += Die;
     }
@@ -61,6 +61,9 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
 
         if (healthPercentage <= 0f)
         {
+            HandleDeath();
+            Runner.Spawn(explosionVFX, transform.position, Quaternion.identity);
+            AudioManager.Instance.PlayAudioSFX(explosionSFX, transform.position);
             Die();
         }
         else if (healthPercentage <= 0.75f && healthPercentage > 0.50f && !spawn75flag)
@@ -84,8 +87,6 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     {
         if (!Object.HasStateAuthority) return;
         if (RoundManager.Instance != null) RoundManager.Instance.ResetRound -= Die;
-        Runner.Spawn(explosionVFX, transform.position, Quaternion.identity);
-        HandleDeath();
         Runner.Despawn(Object);
     }
 
@@ -132,8 +133,9 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
     // Function for if the object can get knockedback
     public void OnKnockBack(float force, Vector3 source) { }
 
-    private void OnDestroy()
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlaySpawnedSFX()
     {
-        AudioManager.Instance.PlayAudioSFX(explosionSFX, transform.position);
+        AudioManager.Instance.PlayAudioSFX(spawnedSFX, transform.position);
     }
 }

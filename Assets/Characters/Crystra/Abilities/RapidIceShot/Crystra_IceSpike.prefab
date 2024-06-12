@@ -35,6 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6486960524010769025}
+  - {fileID: 2280648801225113621}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1878492904260351275
@@ -75,12 +76,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  damage: 5
+  damage: 3.75
   knockback: 0
   SFX:
   - {fileID: 8300000, guid: 55f428b0596f4784bb751cfa61c9e028, type: 3}
   statusEffectSO: []
   onHitEffect: {fileID: 3292139843344530037, guid: 45d2a9abc8359b04c94ee9457dbb113f, type: 3}
+  onHitOffset: {x: 0, y: 3.2, z: -1.5}
   speed: 1
   lifetime: 3
   offset: 1
@@ -165,6 +167,37 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 3.38, z: -1}
+--- !u!1 &6751365037038613198
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2280648801225113621}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2280648801225113621
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6751365037038613198}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.13808595, y: 3.4648993, z: -1.4909492}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1811508530976954334}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6741019234880040298
 PrefabInstance:
   m_ObjectHideFlags: 0

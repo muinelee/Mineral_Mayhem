@@ -110,13 +110,13 @@ MonoBehaviour:
   statusEffectSO:
   - {fileID: 11400000, guid: cddc019f93384854b988a0cd41cc9397, type: 2}
   onHitEffect: {fileID: 0}
-  lifetimeDuration: 6
+  onHitOffset: {x: 0, y: 0, z: 0}
+  lifetimeDuration: 5
   offset: 0
   radius: 0.1
   collisionLayer:
     serializedVersion: 2
     m_Bits: 128
-  sphere: {fileID: 5186037153448680333, guid: 787367291a1fda2429deb56ad2736d95, type: 3}
 --- !u!1 &9099360675354311555
 GameObject:
   m_ObjectHideFlags: 0
@@ -316,7 +316,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 169879484478088963, guid: db3c0f15892efaf4180c878ba2c9c7b2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.4
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 169879484478088963, guid: db3c0f15892efaf4180c878ba2c9c7b2, type: 3}
       propertyPath: m_ConstrainProportionsScale
@@ -476,7 +476,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6503835923213486171, guid: db3c0f15892efaf4180c878ba2c9c7b2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.45
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 6503835923213486171, guid: db3c0f15892efaf4180c878ba2c9c7b2, type: 3}
       propertyPath: m_ConstrainProportionsScale
