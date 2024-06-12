@@ -77,11 +77,12 @@ public class LavaDive : NetworkAttack_Base
             if (finishDive) return;
 
             character.Rigidbody.Rigidbody.AddForce(transform.forward * forceForward);
+
+            trail.position = character.transform.position;
         }
 
         if (finishDive) return;
 
-        trail.position = character.transform.position;
 
         if (dashTimer.Expired(Runner)) dashTimer = TickTimer.None;
 
