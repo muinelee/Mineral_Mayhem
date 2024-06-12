@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class NetworkPlayer_Movement : CharacterComponent
 {
+    [SerializeField] private float cameraLeashRange = 10f;
+
     [Header("Movement properties")]
     [SerializeField] private float turnTime;
     [SerializeField] private float blockSlow = 0.25f;
@@ -46,7 +48,12 @@ public class NetworkPlayer_Movement : CharacterComponent
                 {
                     // Set direction player is looking at
                     targetDirection = (new Vector3(input.cursorLocation.x, 0, input.cursorLocation.y) - transform.position);
+                    float magnitude = targetDirection.magnitude;
                     targetDirection.Normalize();
+
+                    Vector3 cameraUnlockPosition = ((magnitude / 2) >= cameraLeashRange) ? (cameraLeashRange * targetDirection) + transform.position :
+                        ((magnitude / 2) * targetDirection) + transform.position;
+                    Character.cameraTarget.position = (Character.Input.CameraLockOnPlayer) ? transform.position : cameraUnlockPosition;
 
                     // Rotate
                     Aim();

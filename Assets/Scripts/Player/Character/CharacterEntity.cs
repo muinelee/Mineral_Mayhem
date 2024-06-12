@@ -9,6 +9,8 @@ public class CharacterEntity : CharacterComponent
     public static event Action<CharacterEntity> OnCharacterSpawned;
     public static event Action<CharacterEntity> OnCharacterDespawned;
 
+    public Transform cameraTarget;
+
     public event Action<float, bool> OnHitEvent;
     public event Action<float> OnHealEvent;
     public event Action<bool> OnBlockEvent;
@@ -138,7 +140,10 @@ public class CharacterEntity : CharacterComponent
             component.Init(this);
         }
 
-        if (Object.HasInputAuthority) NetworkCameraEffectsManager.instance.SetPlayerCamera(transform);
+        if (Object.HasInputAuthority)
+        {
+            NetworkCameraEffectsManager.instance.SetPlayerCamera(cameraTarget);
+        }
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
