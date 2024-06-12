@@ -12,21 +12,14 @@ public class RoundUI : MonoBehaviour
 
     [Header("UI Element References")]
     [SerializeField] Image gemLeft1;
-    [SerializeField] Image gemLeftOutline1;
     [SerializeField] Image gemLeft2;
-    [SerializeField] Image gemLeftOutline2;
     [SerializeField] Image gemRight1;
-    [SerializeField] Image gemRightOutline1;
     [SerializeField] Image gemRight2;
-    [SerializeField] Image gemRightOutline2;
 
     [Header("Asset References")]
     [SerializeField] Sprite gemGrey;
-    [SerializeField] Sprite gemGreyOutline;
     [SerializeField] Sprite gemBlue;
-    [SerializeField] Sprite gemBlueOutline;
     [SerializeField] Sprite gemRed;
-    [SerializeField] Sprite gemRedOutline;
 
     [SerializeField] CG_Fade roundUIBar;
 
@@ -61,14 +54,12 @@ public class RoundUI : MonoBehaviour
             blueWins = 1;
 
             gemLeft1.sprite = gemBlue;
-            gemLeftOutline1.sprite = gemBlueOutline;
         }
         else if (blueWins == 1)
         {
             blueWins = 2;
 
             gemLeft2.sprite = gemBlue;
-            gemLeftOutline2.sprite = gemBlueOutline;
         }
     }
     public void RedWin()
@@ -78,14 +69,12 @@ public class RoundUI : MonoBehaviour
             redWins = 1;
 
             gemRight1.sprite = gemRed;
-            gemRightOutline1.sprite = gemRedOutline;
         }
         else if (redWins == 1)
         {
             redWins = 2;
 
             gemRight2.sprite = gemRed;
-            gemRightOutline2.sprite = gemRedOutline;
         }
     }
 
