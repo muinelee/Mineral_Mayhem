@@ -77,34 +77,19 @@ public class LavaDive : NetworkAttack_Base
             if (finishDive) return;
 
             character.Rigidbody.Rigidbody.AddForce(transform.forward * forceForward);
-
-            trail.position = character.transform.position;
         }
 
         if (finishDive) return;
-
+        
+        trail.position = character.transform.position;
 
         if (dashTimer.Expired(Runner)) dashTimer = TickTimer.None;
 
         if (dashTimer.IsRunning) return;
 
-        Debug.Log("This is still  running");
-
         RaycastHit[] ray = Physics.SphereCastAll(trail.position, 3, transform.up, 1, stageLayers);
 
-        if (ray.Length > 0)
-        {
-            for (int i = 0; i < ray.Length; i++)
-            {
-                Debug.Log(ray[i].transform.name);
-            }            return;
-        }
-
-        else
-        {
-            Debug.Log("This really should run");
-            DiveEnd();
-        }
+        if (ray.Length == 0) DiveEnd();
     }
 
     private void AttackStart()
