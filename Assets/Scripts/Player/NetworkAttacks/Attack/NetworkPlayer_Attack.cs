@@ -189,7 +189,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     private void PlayVoiceLine(Queue<AudioClip> voiceLineQueue)
     {
-        if (Random.Range(0f, 1f) <= 0.66f || voiceLineQueue == fVoiceLineQueue)
+        if (Random.Range(0f, 1f) <= 0.5f || voiceLineQueue == fVoiceLineQueue)
         {
             if (voiceLineQueue != null && voiceLineQueue.Count > 0)
             {
@@ -232,13 +232,15 @@ public class NetworkPlayer_Attack : CharacterComponent
 
         Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.01f);
         Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
+
+        if (basicAttackCount == basicAttacks.Length - 1) canAttack = false;
     }
 
     public void ActivateBlock(bool blockButtonDown)
     {
         if (blockButtonDown && !isDefending && Character.Health.canBlock && Character.Animator.anim.GetCurrentAnimatorStateInfo(0).IsName("Run"))
         {
-            if (Object.HasStateAuthority)
+            if (Runner.IsServer)
             {
                 Character.OnBlock(true);
             }
@@ -246,7 +248,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 
         else if (!blockButtonDown && isDefending)
         {
-            if (Object.HasStateAuthority)
+            if (Runner.IsServer)
             {
                 Character.OnBlock(false);
             }

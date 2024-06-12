@@ -6,9 +6,11 @@ using UnityEngine;
 
 public class NetworkPlayer_Movement : CharacterComponent
 {
+    [SerializeField] private float cameraLeashRange = 10f;
+
     [Header("Movement properties")]
     [SerializeField] private float turnTime;
-    [SerializeField] private float blockSlow = 0.5f;
+    [SerializeField] private float blockSlow = 0.25f;
     public bool canMove = true;
     public bool canDash = true;
     private Vector3 targetDirection;
@@ -46,7 +48,12 @@ public class NetworkPlayer_Movement : CharacterComponent
                 {
                     // Set direction player is looking at
                     targetDirection = (new Vector3(input.cursorLocation.x, 0, input.cursorLocation.y) - transform.position);
+                    float magnitude = targetDirection.magnitude;
                     targetDirection.Normalize();
+
+                    Vector3 cameraUnlockPosition = ((magnitude / 2) >= cameraLeashRange) ? (cameraLeashRange * targetDirection) + transform.position :
+                        ((magnitude / 2) * targetDirection) + transform.position;
+                    Character.cameraTarget.position = (Character.Input.CameraLockOnPlayer) ? transform.position : cameraUnlockPosition;
 
                     // Rotate
                     Aim();
@@ -172,8 +179,8 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     public void SetAbilitySlow(float slowPercentage)
     {
-        Mathf.Clamp(slowPercentage, 0, 1);
-        abilitySlow = 1 - slowPercentage;
+        float slowValue = Mathf.Clamp(slowPercentage, 0, 1);
+        abilitySlow = 1 - slowValue;
     }
 
     public void ResetAbilitySlow()
@@ -183,8 +190,8 @@ public class NetworkPlayer_Movement : CharacterComponent
 
     public void SetStatusSlow(float slowPercentage)
     {
-        Mathf.Clamp(slowPercentage, 0, 1);
-        statusSlow = 1 - slowPercentage;
+        float slowValue = Mathf.Clamp(slowPercentage, 0, 1);
+        statusSlow = 1 - slowValue;
     }
 
     public void ResetStatusSlow()

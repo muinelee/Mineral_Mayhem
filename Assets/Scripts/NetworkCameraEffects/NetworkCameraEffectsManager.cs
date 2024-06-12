@@ -77,6 +77,34 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
     public void SetPlayerCamera(Transform player)
     {
         topCameraPriority.Follow = player;
+        topCameraPriority.LookAt = player;
+        player.GetComponentInParent<CharacterEntity>().Input.OnCameraLockSwapped += SetCameraDamping;
+        player.GetComponentInParent<CharacterEntity>().Input.OnCameraDistanceChange += SetCameraDistance;
+        CinemachineFramingTransposer transposer = topCameraPriority.GetCinemachineComponent<CinemachineFramingTransposer>();
+        transposer.m_CameraDistance = 48f;
+    }
+
+    private void SetCameraDamping(bool isLockOn)
+    {
+        CinemachineFramingTransposer transposer = topCameraPriority.GetCinemachineComponent<CinemachineFramingTransposer>();
+        if (isLockOn)
+        {
+            transposer.m_XDamping = 0.1f;
+            transposer.m_YDamping = 0.1f;
+            transposer.m_ZDamping = 0.1f;
+        }
+        else
+        {
+            transposer.m_XDamping = 1.8f;
+            transposer.m_YDamping = 1.8f;
+            transposer.m_ZDamping = 1.8f;
+        }
+    }
+
+    private void SetCameraDistance(float value)
+    {
+        CinemachineFramingTransposer transposer = topCameraPriority.GetCinemachineComponent<CinemachineFramingTransposer>();
+        transposer.m_CameraDistance = value;
     }
 
     #region <----- Camera Priority ----->
@@ -117,7 +145,8 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         ResetCameraPriorities();
         redCinematicCameraPriority.Priority = 100;
 
-        ControlCamera(redCinematicCameraPriority, false); 
+        redCinematicCameraPriority.GetComponent<Animator>().Play("Dolly");
+        //ControlCamera(redCinematicCameraPriority, false); 
     }
 
     public void GoToBlueCinematicCamera()
@@ -125,7 +154,8 @@ public class NetworkCameraEffectsManager : NetworkBehaviour
         ResetCameraPriorities();
         blueCinematicCameraPriority.Priority = 100;
 
-        ControlCamera(blueCinematicCameraPriority, true); 
+        blueCinematicCameraPriority.GetComponent<Animator>().Play("Dolly");
+        //ControlCamera(blueCinematicCameraPriority, true); 
     }
 
     private void ResetCameraPriorities()

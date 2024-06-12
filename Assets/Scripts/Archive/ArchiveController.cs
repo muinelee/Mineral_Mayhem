@@ -92,8 +92,8 @@ public class ArchiveController : MonoBehaviour
         }
         if (FPSMode)
         {
-            if (Input.GetKey(KeyCode.Q)) transform.position += Vector3.up * movementSpeed * Time.deltaTime;
-            if (Input.GetKey(KeyCode.E)) transform.position -= Vector3.up * movementSpeed * Time.deltaTime;
+            if (Input.GetKey(KeyCode.Q)) transform.position -= Vector3.up * movementSpeed * Time.deltaTime;
+            if (Input.GetKey(KeyCode.E)) transform.position += Vector3.up * movementSpeed * Time.deltaTime;
         }
     }
 }
