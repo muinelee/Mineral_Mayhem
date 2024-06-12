@@ -29,6 +29,8 @@ public class CountDownTimer : MonoBehaviour
 
     IEnumerator StartCountDownHelper()
     {
+        RoundUI.instance.GrowRoundUI();
+
         int index = 0;
         countDownNumber = 3;
         AudioManager.Instance.PlayAudioSFX(countdownAudio[index],Camera.main.gameObject.transform.position);
@@ -55,5 +57,8 @@ public class CountDownTimer : MonoBehaviour
         if (NetworkPlayer.Local.HasStateAuthority) RoundManager.Instance.RPC_DisableControls(false);
         //textGo.gameObject.SetActive(true);
         //textGo.FadeIn();
+
+        TimerManager.instance.ResetTimer(0);
+        RoundUI.instance.ShrinkRoundUI();
     }
 }

@@ -178,7 +178,7 @@ public class RoundManager : NetworkBehaviour
         if (Runner.IsServer)
         {
             RPC_DisableControls(true);
-            RPC_ShowRoundUI();
+            //RPC_ShowRoundUI();
         }
     }
 
@@ -282,6 +282,7 @@ public class RoundManager : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_GrowRoundUI()
     {
+        TimerManager.instance.StopTimer(false);
         RoundUI.instance.GrowRoundUI();
     }
 
