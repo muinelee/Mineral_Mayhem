@@ -10,6 +10,7 @@ public class NetworkPlayer_Attack : CharacterComponent
 {
     // Control variables
     public bool canAttack = true;
+    private bool canAbility = true;
     public bool canDefend = true;
     [Networked(OnChanged = nameof(OnStateChanged))] public NetworkBool isDefending { get; set; } = false;
 
@@ -66,7 +67,7 @@ public class NetworkPlayer_Attack : CharacterComponent
                 else if (input.IsDown(NetworkInputData.ButtonQ) && !qAttackCoolDownTimer.IsRunning && !isDefending && canAttack) ActivateAttack(ref qAttack);
                 else if (input.IsDown(NetworkInputData.ButtonE) && !eAttackCoolDownTimer.IsRunning && !isDefending
                     && (canAttack || (eAttack.name == "UnshackleBuff" && !Character.StatusHandler.HasUncleansableStun()))) ActivateAttack(ref eAttack);
-                else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack && !isDefending && canAttack) ActivateBasicAttack();
+                else if (input.IsDown(NetworkInputData.ButtonBasic) && basicAttackCount < basicAttacks.Length && canBasicAttack && !isDefending && canAttack && canAbility) ActivateBasicAttack();
             }
 
             if (canDefend && canAttack) ActivateBlock(isBlocking);
@@ -91,6 +92,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         canAttack = false;
         canBasicAttack = false;
         canDefend = false;
+        canAbility = false;
 
         // Prevent dash cancel if applicable
         Character.Movement.canDash = attack.GetAllowDashCancel();
@@ -139,6 +141,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         canAttack = false;
         canBasicAttack = false;
         canDefend = false;
+        canAbility = false;
 
         Character.Movement.canDash = fAttack.GetAllowDashCancel();
         Character.Energy.energy = 0;
@@ -217,6 +220,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     public void AllowChainBasicAttack()
     {
         canBasicAttack = true;
+        canAbility = true;
     }
 
     public void AttackMomentum()
@@ -228,12 +232,13 @@ public class NetworkPlayer_Attack : CharacterComponent
 
     public void ChainBasicAttack()
     {
-        if (canBasicAttack || !canAttack) return;
+        if (canBasicAttack || !canAttack || !canAbility) return;
 
         Character.Animator.anim.CrossFade(basicAttacks[basicAttackCount].attackName, 0.01f);
         Character.Movement.ApplyAbility(basicAttacks[basicAttackCount]);
 
         if (basicAttackCount == basicAttacks.Length - 1) canAttack = false;
+        canAbility = false;
     }
 
     public void ActivateBlock(bool blockButtonDown)
@@ -325,6 +330,7 @@ public class NetworkPlayer_Attack : CharacterComponent
         canAttack = true;
         canBasicAttack = true;
         canDefend = true;
+        canAbility = true;
         basicAttackCount = 0;
         Character.Movement.ResetSlows();
         Character.Movement.canDash = true;
