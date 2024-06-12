@@ -63,6 +63,7 @@ public class CharacterSelect : NetworkBehaviour
 
         NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
         if (RoundManager.Instance) RoundManager.Instance.MatchStart();
+        RoundUI.instance.ShrinkRoundUI();
         this.gameObject.SetActive(false);
     }
 
@@ -234,6 +235,7 @@ public class CharacterSelect : NetworkBehaviour
         characterLookup[NetworkPlayer.Local].Input.CharacterSelected = true;
         characterLookup[NetworkPlayer.Local].PlayerUI.SpawnPlayerUI();
         NetworkPlayer_InGameUI.instance.ShowPlayerUI();
+        RoundUI.instance.ShowRoundUI();
         
         NetworkCameraEffectsManager.instance.GoToTopCamera();
         //  ResetButtonVisual(currentSelectedCharacterButton);
@@ -252,6 +254,7 @@ public class CharacterSelect : NetworkBehaviour
     {
         characterSelectScreen.gameObject.SetActive(true);
         characterSelectScreen.FadeIn();
+        RoundUI.instance.HideRoundUI();
         //  reselectButton.gameObject.SetActive(false);
 
         //RPC_CharacterReselect(NetworkPlayer.Local);
@@ -310,6 +313,8 @@ public class CharacterSelect : NetworkBehaviour
 
         // Character Select Timer
         characterSelectTimer = TickTimer.CreateFromSeconds(Runner, characterSelectDuration);
+
+        TimerManager.instance.ResetTimer(characterSelectDuration);
 
         SelectCharacter(ClientInfo.CharacterID);
     }

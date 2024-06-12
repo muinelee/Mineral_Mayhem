@@ -85,8 +85,6 @@ public class RoundManager : NetworkBehaviour
 
     public void LoadRound()
     {
-        RPC_ShrinkRoundUI();
-
         if (currentRound == maxRounds) return; 
         currentRound++;
         resetStorm?.Invoke();
@@ -111,8 +109,6 @@ public class RoundManager : NetworkBehaviour
     }
     private IEnumerator iRoundEnd()
     {
-        RPC_GrowRoundUI();
-
         yield return new WaitForSecondsRealtime(1f);
 
         // Checks which team has more players alive
@@ -174,11 +170,12 @@ public class RoundManager : NetworkBehaviour
         MatchStartEvent?.Invoke();
         resetStorm?.Invoke();
         startStorm?.Invoke();
+        NetworkPlayer_InGameUI.instance.HidePlayerUI();
         
         if (Runner.IsServer)
         {
             RPC_DisableControls(true);
-            RPC_ShowRoundUI();
+            //RPC_ShowRoundUI();
         }
     }
 
@@ -282,6 +279,7 @@ public class RoundManager : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_GrowRoundUI()
     {
+        TimerManager.instance.StopTimer(false);
         RoundUI.instance.GrowRoundUI();
     }
 
