@@ -20,6 +20,8 @@ public class LavaDive : NetworkAttack_Base
     private TickTimer dashTimer = TickTimer.None;
     private TickTimer trailDamageTimer = TickTimer.None;
     private List<CharacterEntity> playerEntities = new List<CharacterEntity>();
+    private float numFireColumns = 3f;
+    private float fireColumnSpawnTime = 0.75f;
 
     [Header("Attack End Damage Properties")]
     [SerializeField] private float forceForward;
@@ -45,6 +47,8 @@ public class LavaDive : NetworkAttack_Base
     {
         base.Spawned();
 
+        fireColumnSpawnTime = dashDuration / (numFireColumns + 1);
+
         AttackStart();
 
         AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
@@ -55,6 +59,16 @@ public class LavaDive : NetworkAttack_Base
     {
         if (Object.HasStateAuthority)
         {
+            // While the dash is active, spawn fire columns VFX
+            if (dashTimer.IsRunning)
+            {
+                if (dashDuration - dashTimer.RemainingTime(Runner) > fireColumnSpawnTime)
+                {
+                    Runner.Spawn(fireColumnVFX, character.transform.position, Quaternion.identity);
+                    dashDuration -= fireColumnSpawnTime;
+                }
+            }
+
             if (lingerTimer.Expired(Runner)) AttackEnd();
 
             // Ensure Trail does damage until the end
@@ -63,7 +77,6 @@ public class LavaDive : NetworkAttack_Base
             if (finishDive) return;
 
             character.Rigidbody.Rigidbody.AddForce(transform.forward * forceForward);
-
         }
 
         if (finishDive) return;
@@ -98,8 +111,6 @@ public class LavaDive : NetworkAttack_Base
         TrailRenderer tr = trail.GetComponent<TrailRenderer>();
         tr.startWidth = boxWidth;
         tr.endWidth = boxWidth;
-
-        Runner.Spawn(fireColumnVFX, this.transform.position, Quaternion.identity);
 
         Runner.LagCompensation.OverlapSphere(transform.position, searchRadius, player: Object.InputAuthority, hits, collisionLayer);
 
