@@ -8,7 +8,7 @@ public class TimerManager : MonoBehaviour
 {
     public static TimerManager instance;
 
-    private float timer;
+    public float timer;
 
     [SerializeField] TextMeshProUGUI minute1;
     [SerializeField] TextMeshProUGUI minute2;
@@ -16,6 +16,7 @@ public class TimerManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI second2;
 
     private bool countUp = false;
+    [SerializeField] private bool timerOn = false;
 
     //-----------------------------------//
 
@@ -26,35 +27,57 @@ public class TimerManager : MonoBehaviour
             instance = this;
         }
     }
+    private void Start()
+    {
+        ResetTimer(0);
+    }
     private void Update()
     {
-        if (countUp)
+        if (timerOn)
         {
-            timer += Time.deltaTime;
-        }
+            if (countUp && timer >= 0)
+            {
+                timer += Time.deltaTime;
+            }
+            else timer -= Time.deltaTime;
 
-        UpdateTimerDisplay(timer);
+            UpdateTimerDisplay(timer);
+        }
     }
 
     public void StopTimer()
     {
+        timerOn = false;
         timer = 0f;
+
+        UpdateTimerDisplay(timer);
     }
 
     public void ResetTimer(float startTime)
     {
+        timerOn = true;
+
         timer = startTime;
+
+        UpdateTimerDisplay(timer);
         
         if (startTime == 0)
         {
             countUp = true;
         }
-        else
-            countUp= false;
+        else countUp= false;
     }
 
     private void UpdateTimerDisplay(float time)
     {
+        float minutes = Mathf.FloorToInt(time / 60);
+        float seconds = Mathf.FloorToInt(time % 60);
 
+        string timeDisplay = string.Format("{00:00}{1:00}", minutes, seconds);
+        minute1.text = timeDisplay[0].ToString();
+        minute2.text = timeDisplay[0].ToString();
+        second1.text = timeDisplay[0].ToString();
+        second2.text = timeDisplay[0].ToString();
+        Debug.Log(minutes + ":" + seconds);
     }
 }
