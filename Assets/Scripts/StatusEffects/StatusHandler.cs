@@ -69,7 +69,7 @@ public class StatusHandler : CharacterComponent
 
         statuses.Add(data);
         data.status.OnStatusApplied(this);
-        if (stun > 0) RPC_PlayEffectAnimation("Stunned");
+        if (effect is StunStatus) RPC_PlayEffectAnimation("Stunned");
     }
 
     public void RemoveStatus(StatusData data)
