@@ -192,9 +192,9 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     }
     public void HandleRespawn()
     {
-        EnableControls();
         Character.Animator.anim.Play("Run");
         Character.Animator.anim.Play("Run", 2);
+        Character.Rigidbody.Rigidbody.velocity = Vector3.zero;
         if (Object.HasInputAuthority) NetworkCameraEffectsManager.instance.GoToTopCamera();
     }
 
@@ -225,14 +225,6 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         isDead = false;
         HP = startingHP;
-        StartCoroutine(ResetEnergy());
-    }
-
-    private IEnumerator ResetEnergy()
-    {
-        yield return 0;
-
-        Character.Energy.energy = 0;
     }
 
     public void DisableControls()
@@ -252,6 +244,16 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     public void EnableControls()
     {
+        Character.Energy.energy = 0;
+
+        // Use helper to prevent player to from using ult on first frame
+        StartCoroutine(EnableControlHelper());
+    }
+
+    IEnumerator EnableControlHelper()
+    {
+        yield return 0;
+
         // Enable Input
         Character.Input.enabled = true;
         // Enable movement
