@@ -156,7 +156,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         this.PlayQVoiceLine();
         Character.Animator.anim.CrossFade(qAttack.attackName, 0.05f);
-        Character.Animator.anim.CrossFade("Helper", 0.2f, 2);
+        Character.Animator.anim.CrossFade("Helper", 0.1f, 2);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -164,7 +164,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         this.PlayEVoiceLine();
         Character.Animator.anim.CrossFade(eAttack.attackName, 0.05f);
-        Character.Animator.anim.CrossFade("Helper", 0.2f, 2);
+        Character.Animator.anim.CrossFade("Helper", 0.1f, 2);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -172,7 +172,7 @@ public class NetworkPlayer_Attack : CharacterComponent
     {
         this.PlayFVoiceLine();
         Character.Animator.anim.CrossFade(fAttack.attackName, 0.05f);
-        Character.Animator.anim.CrossFade("Helper", 0.2f, 2);
+        Character.Animator.anim.CrossFade("Helper", 0.1f, 2);
     }
 
     public void PlayQVoiceLine()
