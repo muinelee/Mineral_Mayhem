@@ -145,7 +145,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
             return;
         }
 
-        if (teamCamTimer.Expired(Runner))
+        if (teamCamTimer.Expired(Runner) && Runner.SessionInfo.MaxPlayers > 2)
         {
             teamCamTimer = TickTimer.None;
             NetworkCameraEffectsManager.instance.GoToTeamCamera();
@@ -180,8 +180,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
         teamCamTimer = TickTimer.CreateFromSeconds(Runner, timeUntilTeamCam);
 
-        Character.Animator.anim.CrossFade("Death", 0.2f);
-        Character.Animator.anim.CrossFade("Death", 0.2f, 2);
+        Character.Animator.anim.Play("Death");
+        Character.Animator.anim.Play("Death", 2);
 
         if (!NetworkPlayer.Local.HasStateAuthority) return;
         if (RoundManager.Instance)
