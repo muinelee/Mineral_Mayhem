@@ -26,6 +26,11 @@ public class CharacterSpawner : MonoBehaviour, INetworkRunnerCallbacks
         mapTokenIDWithNetworkPlayer.Add(token, player);
     }
 
+    private void Awake()
+    {
+        sessionLobbyManager = FindObjectOfType<SessionLobbyManager>(true);
+    }
+
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)                          // Spawns player in scene
     {
         /*if (!roomAddress.Contains(SceneManager.GetActiveScene().name))

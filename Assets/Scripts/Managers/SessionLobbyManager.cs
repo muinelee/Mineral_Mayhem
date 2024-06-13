@@ -11,16 +11,6 @@ public class SessionLobbyManager : MonoBehaviour
     [SerializeField] private SessionListItem sessionListItemPF;
     [SerializeField] private VerticalLayoutGroup sessionList;
 
-    private void Awake()
-    {
-        ClearList();
-    }
-
-    private void OnEnable()
-    {
-        FindAnyObjectByType<CharacterSpawner>().sessionLobbyManager = this;
-    }
-
     public void ClearList()
     {
         // Clear
