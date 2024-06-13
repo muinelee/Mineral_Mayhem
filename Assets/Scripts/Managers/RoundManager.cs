@@ -226,14 +226,8 @@ public class RoundManager : NetworkBehaviour
         CharacterEntity[] characters = FindObjectsOfType<CharacterEntity>();
         foreach (CharacterEntity character in characters)
         {
-            if (disable)
-            {
-                character.Health.DisableControls();
-            }
-            else
-            {
-                character.Health.EnableControls();
-            }
+            if (disable) character.Health.DisableControls();
+            else character.Health.EnableControls();
         }
     }
 
