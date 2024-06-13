@@ -81,7 +81,8 @@ public class LavaDive : NetworkAttack_Base
 
         if (finishDive) return;
         
-        trail.position = character.transform.position;
+        trail.position = 
+            character.transform.position;
 
         if (dashTimer.Expired(Runner)) dashTimer = TickTimer.None;
 
