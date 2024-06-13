@@ -1,3 +1,4 @@
+using Fusion;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -68,6 +69,7 @@ public class StatusHandler : CharacterComponent
 
         statuses.Add(data);
         data.status.OnStatusApplied(this);
+        if (stun > 0) RPC_PlayEffectAnimation("Stunned");
     }
 
     public void RemoveStatus(StatusData data)
@@ -122,5 +124,11 @@ public class StatusHandler : CharacterComponent
             if (status.status.GetType() == typeof(StunStatus) && !status.status.isCleanseable) return true;
         }
         return false;
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_PlayEffectAnimation(string effect)
+    {
+        this.Character.Animator.anim.CrossFade(effect, 0.1f);
     }
 }
