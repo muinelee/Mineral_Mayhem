@@ -94,4 +94,13 @@ public class SETTING_Slider : MonoBehaviour
         text.text = "  " + (value * 100).ToString("0") + "%";
         ChangeSetting.instance.ChangeValue(value, settingType);
     }
+
+    public void IncrementSlider(float value)
+    {
+        slider.value += value;
+    }
+    public void DecrementSlider(float value)
+    {
+        slider.value -= value;
+    }
 }
