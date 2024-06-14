@@ -123,6 +123,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     private void HandleBlockDepletion()
     {
+        if (!Runner.IsServer) return;
+
         canBlock = false;
         Character.OnStatusBegin(blockDepletedStun);
     }
@@ -229,6 +231,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     public void DisableControls()
     {
+        Character.Attack.ActivateBlock(false);
         // Disable Input
         Character.Input.enabled = false;
         // Disable movement
