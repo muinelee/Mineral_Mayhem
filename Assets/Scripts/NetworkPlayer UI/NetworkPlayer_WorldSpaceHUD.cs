@@ -18,6 +18,8 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
     [SerializeField] TMP_FontAsset fontRed;
     [SerializeField] TMP_FontAsset fontWhite;
 
+    [SerializeField] Image healthBarImage;
+
     public override void Spawned()
     {
         PrimeUI();
@@ -45,6 +47,7 @@ public class NetworkPlayer_WorldSpaceHUD : NetworkBehaviour
             RPC_SetPlayerName(NetworkPlayer.Local.playerName.ToString(), NetworkPlayer.Local.team);
         }
 
+        healthBarImage.pixelsPerUnitMultiplier = playerHealth.startingHP / 20f * 180f;
     }
 
     private void DisplayHUD()
