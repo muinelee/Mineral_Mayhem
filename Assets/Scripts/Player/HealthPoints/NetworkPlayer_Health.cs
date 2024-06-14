@@ -19,7 +19,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     private bool isInitialized = false;
 
     // Health Properties
-    [SerializeField] private float startingHP = 100;
+    public float startingHP = 100;
 
     // Block Properties
     [SerializeField] private float startingBP = 100;
