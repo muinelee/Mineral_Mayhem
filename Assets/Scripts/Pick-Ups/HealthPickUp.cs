@@ -12,7 +12,7 @@ public class HealthPickup : NetworkBehaviour
     {
         if (!Runner.IsServer) return;
 
-        if (RoundManager.Instance != null) RoundManager.Instance.ResetRound += PickedUp;
+        RoundManager.Instance.ResetRound += PickedUp;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -43,7 +43,10 @@ public class HealthPickup : NetworkBehaviour
 
     public void PickedUp()
     {
-        if (RoundManager.Instance != null) RoundManager.Instance.ResetRound -= PickedUp;
+        if (!Runner.IsServer) return;
+
+        RoundManager.Instance.ResetRound -= PickedUp;
+        
         Runner.Despawn(Object);
     }
 }

@@ -14,6 +14,8 @@ public class PickupSpawner : NetworkBehaviour
 
     public override void Spawned()
     {
+        if (!Runner.IsServer) return;
+        
         StartPickupSpawnTimer(respawnTime);
     }
 
@@ -45,5 +47,12 @@ public class PickupSpawner : NetworkBehaviour
         }
 
         StartPickupSpawnTimer(respawnTime);
+    }
+
+    public void PickupDestroy()
+    {
+        if (!Runner.IsServer) return;
+
+        Runner.Despawn(currentPickup);
     }
 }

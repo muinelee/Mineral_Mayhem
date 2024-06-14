@@ -16,7 +16,7 @@ public class SpeedBoost : NetworkBehaviour
 
         if (!runner.IsServer) return;
 
-        if (FindAnyObjectByType<RoundManager>() != null) RoundManager.Instance.ResetRound += PickedUp;
+        RoundManager.Instance.ResetRound += PickedUp;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -47,7 +47,9 @@ public class SpeedBoost : NetworkBehaviour
 
     public void PickedUp()
     {
-        if (FindAnyObjectByType<RoundManager>() != null) RoundManager.Instance.ResetRound -= PickedUp;
+        if (!runner.IsServer) return;
+
+        RoundManager.Instance.ResetRound -= PickedUp;
         runner.Despawn(Object);
     }
 }

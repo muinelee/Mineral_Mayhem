@@ -13,7 +13,7 @@ public class EnergyPickup : NetworkBehaviour
     {
         if (!Runner.IsServer) return;
 
-        if (FindAnyObjectByType<RoundManager>() != null) RoundManager.Instance.ResetRound += PickedUp;
+        RoundManager.Instance.ResetRound += PickedUp;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -45,7 +45,9 @@ public class EnergyPickup : NetworkBehaviour
 
     public void PickedUp()
     {
-        if (FindAnyObjectByType<RoundManager>() != null) RoundManager.Instance.ResetRound -= PickedUp;
+        if (!Runner.IsServer) return;
+        
+        RoundManager.Instance.ResetRound -= PickedUp;
         Runner.Despawn(Object);
     }
 }
