@@ -85,7 +85,7 @@ public class ArchiveUIOverlay : MonoBehaviour
     public void Update()
     {
         CheckForHKeyPress();
-        CheckForEscKeyPress();
+        //CheckForEscKeyPress();
     }
 
     private void CheckForHKeyPress()
@@ -96,13 +96,13 @@ public class ArchiveUIOverlay : MonoBehaviour
         }
     }
 
-    private void CheckForEscKeyPress()
+    /*private void CheckForEscKeyPress()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             SceneManager.LoadScene(1);
         }
-    }
+    }*/
 
     public void SwapOverlay()
     {

@@ -37,7 +37,7 @@ public class CountDownTimer : MonoBehaviour
         text3.gameObject.SetActive(true);
         text3.FadeIn();
 
-        yield return new WaitForSeconds(countDownDelay / 2);
+        yield return new WaitForSeconds(countDownDelay / 1.5f);
         text3.FadeOut();
 
         yield return new WaitForSeconds(countDownDelay);
@@ -49,7 +49,7 @@ public class CountDownTimer : MonoBehaviour
         text2.gameObject.SetActive(true);
         text2.FadeIn();
 
-        yield return new WaitForSeconds(countDownDelay / 2);
+        yield return new WaitForSeconds(countDownDelay / 1.5f);
         text2.FadeOut();
 
         yield return new WaitForSeconds(countDownDelay);
@@ -60,7 +60,7 @@ public class CountDownTimer : MonoBehaviour
         text1.gameObject.SetActive(true);
         text1.FadeIn();
 
-        yield return new WaitForSeconds(countDownDelay / 2);
+        yield return new WaitForSeconds(countDownDelay / 1.5f);
         text1.FadeOut();
 
         yield return new WaitForSeconds(countDownDelay);
@@ -77,7 +77,7 @@ public class CountDownTimer : MonoBehaviour
         yield return new WaitForSeconds(countDownDelay);
         textGo.FadeOut();
 
-        yield return new WaitForSeconds(countDownDelay / 2);
+        yield return new WaitForSeconds(countDownDelay / 1.5f);
 
         RoundUI.instance.ShrinkRoundUI();
     }

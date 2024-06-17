@@ -38,6 +38,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     // Audio
     [SerializeField] AudioClip onDeathCrowdCheer;
+    private ShowOverlays overlays;
 
     public override void Init(CharacterEntity character)
     {
@@ -67,6 +68,9 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         {
             Respawn();
         }
+
+        overlays = FindObjectOfType<ShowOverlays>();
+        overlays.ShowHealthOverlay(HP / startingHP);
     }
 
     private void PrimeShieldMaterial()
@@ -103,6 +107,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
             NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
             if (hitReact) RPC_PlayHitAnimation();
         }
+
+        RPC_HealthOverlay();
     }
 
     public void HandleBlockMeter()
@@ -183,6 +189,10 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         DisableControls();
 
+        RPC_HealthOverlay();
+        RPC_RemoveStormOverlay();
+        TimerManager.instance.StopTimer(false);
+
         teamCamTimer = TickTimer.CreateFromSeconds(Runner, timeUntilTeamCam);
 
         AudioManager.Instance.PlayAudioSFX(onDeathCrowdCheer, transform.position);
@@ -200,10 +210,15 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
             if (team == NetworkPlayer.Team.Red) RoundManager.Instance.RedPlayersDies();
             else RoundManager.Instance.BluePlayersDies();
         }
+
+
     }
     public void HandleRespawn()
     {
-        FindAnyObjectByType<ShowOverlays>().OnEnterStorm();
+        RPC_HealthOverlay();
+        RPC_RemoveStormOverlay();
+        TimerManager.instance.ResetTimer(0);
+
         Character.Animator.anim.Play("Run");
         Character.Animator.anim.Play("Run", 2);
         Character.Rigidbody.Rigidbody.velocity = Vector3.zero;
@@ -231,6 +246,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public void Heal(float amount)
     {
         HP = Mathf.Min(HP + amount, startingHP);
+        RPC_HealthOverlay();
     }
 
     public void Respawn()
@@ -292,5 +308,19 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public override void OnHeal(float x)
     {
         Heal(x);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_HealthOverlay()
+    {
+        if (NetworkPlayer.Local.Object.InputAuthority == this.Object.InputAuthority)
+            overlays.ShowHealthOverlay(HP / startingHP);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_RemoveStormOverlay()
+    {
+        if (NetworkPlayer.Local.Object.InputAuthority == this.Object.InputAuthority)
+            overlays.OnEnterStorm();
     }
 }

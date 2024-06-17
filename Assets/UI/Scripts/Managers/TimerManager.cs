@@ -79,21 +79,24 @@ public class TimerManager : MonoBehaviour
 
     private void UpdateTimerDisplay(float time)
     {
-        float minutes = Mathf.FloorToInt(time / 60);
-        float seconds = Mathf.FloorToInt(time % 60);
+        if (gameObject.activeSelf == true)
+        {
+            float minutes = Mathf.FloorToInt(time / 60);
+            float seconds = Mathf.FloorToInt(time % 60);
 
-        string timeDisplay = string.Format("{00:00}{1:00}", minutes, seconds);
-        minute1.text = timeDisplay[0].ToString();
-        minute2.text = timeDisplay[1].ToString();
-        second1.text = timeDisplay[2].ToString();
-        second2.text = timeDisplay[3].ToString();
-        if (minutes < 10)
-        {
-            minute1.gameObject.SetActive(false);
-        }
-        else
-        {
-            minute1.gameObject.SetActive(true);
+            string timeDisplay = string.Format("{00:00}{1:00}", minutes, seconds);
+            minute1.text = timeDisplay[0].ToString();
+            minute2.text = timeDisplay[1].ToString();
+            second1.text = timeDisplay[2].ToString();
+            second2.text = timeDisplay[3].ToString();
+            if (minutes < 10)
+            {
+                minute1.gameObject.SetActive(false);
+            }
+            else
+            {
+                minute1.gameObject.SetActive(true);
+            }
         }
     }
 }
