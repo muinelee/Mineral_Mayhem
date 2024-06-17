@@ -36,6 +36,9 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     [SerializeField] private Material shaderGraphMaterial;
     private Material materialInstance;
 
+    // Audio
+    [SerializeField] AudioClip onDeathCrowdCheer;
+
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
@@ -181,6 +184,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         DisableControls();
 
         teamCamTimer = TickTimer.CreateFromSeconds(Runner, timeUntilTeamCam);
+
+        AudioManager.Instance.PlayAudioSFX(onDeathCrowdCheer, transform.position);
 
         Character.Animator.anim.Play("Death");
         Character.Animator.anim.Play("Death", 2);
