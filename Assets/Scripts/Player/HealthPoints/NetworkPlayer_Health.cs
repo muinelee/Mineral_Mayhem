@@ -185,7 +185,11 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         Character.Animator.anim.Play("Death");
         Character.Animator.anim.Play("Death", 2);
 
-        if (!NetworkPlayer.Local.HasStateAuthority) return;
+        if (!NetworkPlayer.Local.HasStateAuthority)
+        {
+            return;
+        }
+
         if (RoundManager.Instance)
         {
             if (team == NetworkPlayer.Team.Red) RoundManager.Instance.RedPlayersDies();
@@ -194,6 +198,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     }
     public void HandleRespawn()
     {
+        FindAnyObjectByType<ShowOverlays>().OnEnterStorm();
         Character.Animator.anim.Play("Run");
         Character.Animator.anim.Play("Run", 2);
         Character.Rigidbody.Rigidbody.velocity = Vector3.zero;
