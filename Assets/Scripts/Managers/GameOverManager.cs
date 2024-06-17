@@ -74,19 +74,18 @@ public class GameOverManager : NetworkBehaviour
                 player.Animator.anim.Play("Victory", 2);
 
                 player.gameObject.GetComponentInChildren<NetworkPlayer_WorldSpaceHUD>().HideFloatingHealthBar();
-
-                player.transform.rotation = victoryPositionSolo.rotation;
                 
                 if (Runner.SessionInfo.MaxPlayers > 2)
                 {
                     player.transform.position = victoryPositionsTeam[index].position;
-
+                    player.transform.rotation = victoryPositionsTeam[index].rotation;
                     index++;
                 }
 
                 else if (Runner.SessionInfo.MaxPlayers == 2)
                 {
                     player.transform.position = victoryPositionSolo.position;
+                    player.transform.rotation = victoryPositionSolo.rotation;
                 }
             }
 
