@@ -33,7 +33,7 @@ public class CountDownTimer : MonoBehaviour
 
         int index = 0;
         countDownNumber = 3;
-        AudioManager.Instance.PlayAudioSFX(countdownAudio[index],Camera.main.gameObject.transform.position);
+        AudioManager.Instance.PlayAudioSFX(countdownAudio[index], transform.position);
         text3.gameObject.SetActive(true);
         text3.FadeIn();
 
@@ -45,7 +45,7 @@ public class CountDownTimer : MonoBehaviour
 
         countDownNumber--;
         index++;
-        AudioManager.Instance.PlayAudioSFX(countdownAudio[index], Camera.main.gameObject.transform.position);
+        AudioManager.Instance.PlayAudioSFX(countdownAudio[index], transform.position);
         text2.gameObject.SetActive(true);
         text2.FadeIn();
 
@@ -56,7 +56,7 @@ public class CountDownTimer : MonoBehaviour
 
         countDownNumber--;
         index++;
-        AudioManager.Instance.PlayAudioSFX(countdownAudio[index], Camera.main.gameObject.transform.position);
+        AudioManager.Instance.PlayAudioSFX(countdownAudio[index], transform.position);
         text1.gameObject.SetActive(true);
         text1.FadeIn();
 
@@ -66,7 +66,7 @@ public class CountDownTimer : MonoBehaviour
         yield return new WaitForSeconds(countDownDelay);
 
         index++;
-        AudioManager.Instance.PlayAudioSFX(countdownAudio[index], Camera.main.gameObject.transform.position);
+        AudioManager.Instance.PlayAudioSFX(countdownAudio[index], transform.position);
         if (NetworkPlayer.Local.HasStateAuthority) RoundManager.Instance.RPC_DisableControls(false);
         textGo.gameObject.SetActive(true);
         textGo.FadeIn();
