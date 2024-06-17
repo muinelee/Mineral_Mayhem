@@ -109,7 +109,7 @@ public class RoundManager : NetworkBehaviour
     }
     private IEnumerator iRoundEnd()
     {
-        yield return new WaitForSecondsRealtime(1f);
+        yield return 0;
 
         // Checks which team has more players alive
         // Blueplayer and red playerdies already checks if all members on team dies 
@@ -137,6 +137,8 @@ public class RoundManager : NetworkBehaviour
         }
 
         roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
+
+        if (Runner.IsServer) FindAnyObjectByType<ShrinkingStorm>().PreventDamage();
     }
 
     public void MatchEnd()
