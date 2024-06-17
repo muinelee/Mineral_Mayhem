@@ -125,6 +125,11 @@ public class RoundManager : NetworkBehaviour
             RPC_UpdateRoundUIForClients(false);
         }
 
+        else if (bluePlayersAlive == redPlayersAlive)
+        {
+            currentRound--;
+        }
+
         if (redRoundsWon == Mathf.CeilToInt((float)maxRounds / 2) || blueRoundsWon == Mathf.CeilToInt((float)maxRounds / 2))
         {
             matchEndTimer = TickTimer.CreateFromSeconds(Runner, matchEndDelay);
@@ -147,7 +152,10 @@ public class RoundManager : NetworkBehaviour
             RPC_BlueTeamWinsAnnouncer();
         }
 
-        else Debug.Log("Tie!");
+        else
+        {
+            Debug.Log("Tie!");
+        }
         //RPC_HideRoundUI();
         RPC_GoToVictoryCamera();
 
@@ -184,6 +192,7 @@ public class RoundManager : NetworkBehaviour
         if (roundEndTimer.Expired(Runner))
         { 
             roundEndTimer = TickTimer.None;
+            FindAnyObjectByType<CoreBehaviour>().Die();
             ResetRound?.Invoke();
         }
 

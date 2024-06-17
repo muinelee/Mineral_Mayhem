@@ -41,8 +41,6 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
         team = NetworkPlayer.Team.Neutral;
 
         RPC_PlaySpawnedSFX();
-
-        if (RoundManager.Instance != null) RoundManager.Instance.ResetRound += Die;
     }
 
     public void OnTakeDamage(float damageAmount, bool isReact)
@@ -83,10 +81,9 @@ public class CoreBehaviour : NetworkBehaviour, IHealthComponent
         }
     }
 
-    private void Die()
+    public void Die()
     {
         if (!Object.HasStateAuthority) return;
-        if (RoundManager.Instance != null) RoundManager.Instance.ResetRound -= Die;
         Runner.Despawn(Object);
     }
 
