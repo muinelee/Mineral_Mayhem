@@ -23,6 +23,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
     [SerializeField] private bool isShrinking = false;
     [SerializeField] private CharacterEntity[] characters;
     private TickTimer damageTimer = TickTimer.None;
+    private bool canDamage = true;
 
     //references
     [Header("References")]
@@ -117,6 +118,8 @@ public class ShrinkingStorm : NetworkAttack_Base {
 
         if (!runner.IsServer) return;
 
+        if (!canDamage) return;
+
         runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
         foreach (LagCompensatedHit hit in hits) {
 
@@ -168,6 +171,7 @@ public class ShrinkingStorm : NetworkAttack_Base {
     private void ResetStorm(){
         firstTrigger = true;
         if (!runner.IsServer) return;
+        AllowDamage();
         RPC_ResetStorm();
     }
 
@@ -223,5 +227,15 @@ public class ShrinkingStorm : NetworkAttack_Base {
                 exitStorm?.Invoke();
             }
         }
+    }
+
+    public void AllowDamage()
+    {
+        canDamage = true;
+    }
+
+    public void PreventDamage()
+    {
+        canDamage = false;
     }
 }
