@@ -236,7 +236,8 @@ public class CharacterSelect : NetworkBehaviour
         characterLookup[NetworkPlayer.Local].Input.CharacterSelected = true;
         characterLookup[NetworkPlayer.Local].PlayerUI.SpawnPlayerUI();
         NetworkPlayer_InGameUI.instance.ShowPlayerUI();
-        RoundUI.instance.ShowRoundUI();
+
+        if (NetworkPlayer.Players.Count > 1) RoundUI.instance.ShowRoundUI();
         
         NetworkCameraEffectsManager.instance.GoToTopCamera();
         //  ResetButtonVisual(currentSelectedCharacterButton);

@@ -36,6 +36,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     [SerializeField] private Material shaderGraphMaterial;
     private Material materialInstance;
 
+    private ShowOverlays overlays;
+
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
@@ -64,6 +66,9 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         {
             Respawn();
         }
+
+        overlays = FindAnyObjectByType<ShowOverlays>();
+        overlays.ShowHealthOverlay(HP / startingHP);
     }
 
     private void PrimeShieldMaterial()
@@ -100,6 +105,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
             NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
             if (hitReact) RPC_PlayHitAnimation();
         }
+
+        overlays.ShowHealthOverlay(HP / startingHP);
     }
 
     public void HandleBlockMeter()
@@ -180,6 +187,10 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         DisableControls();
 
+        overlays.OnEnterStorm();
+
+        TimerManager.instance.StopTimer(false);
+
         teamCamTimer = TickTimer.CreateFromSeconds(Runner, timeUntilTeamCam);
 
         Character.Animator.anim.Play("Death");
@@ -195,10 +206,15 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
             if (team == NetworkPlayer.Team.Red) RoundManager.Instance.RedPlayersDies();
             else RoundManager.Instance.BluePlayersDies();
         }
+
+
     }
     public void HandleRespawn()
     {
-        FindAnyObjectByType<ShowOverlays>().OnEnterStorm();
+        overlays.OnEnterStorm();
+        overlays.ShowHealthOverlay(1);
+        TimerManager.instance.ResetTimer(0);
+
         Character.Animator.anim.Play("Run");
         Character.Animator.anim.Play("Run", 2);
         Character.Rigidbody.Rigidbody.velocity = Vector3.zero;
