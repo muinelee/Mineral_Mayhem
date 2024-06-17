@@ -8,7 +8,7 @@ public class ShowOverlays : MonoBehaviour
     [SerializeField] CG_Fade overlayStorm2;
     [SerializeField] CG_Fade overlayStorm3;
 
-    [SerializeField] CanvasGroup overlayHealth;
+    [SerializeField] CG_Fade overlayHealth;
 
     [SerializeField] float delay = 2f;
 
@@ -17,7 +17,7 @@ public class ShowOverlays : MonoBehaviour
     public void ShowHealthOverlay(float healthPercent)
     {
         float alpha = ((healthPercent - 1f) * -1f) - 0.5f;
-        overlayHealth.alpha = alpha;
+        overlayHealth.GetComponent<CanvasGroup>().alpha = alpha;
     }
 
     [ContextMenu("Exit Eye of Storm")]

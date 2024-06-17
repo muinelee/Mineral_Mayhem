@@ -67,7 +67,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
             Respawn();
         }
 
-        overlays = FindAnyObjectByType<ShowOverlays>();
+        overlays = FindObjectOfType<ShowOverlays>();
         overlays.ShowHealthOverlay(HP / startingHP);
     }
 
@@ -106,7 +106,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
             if (hitReact) RPC_PlayHitAnimation();
         }
 
-        overlays.ShowHealthOverlay(HP / startingHP);
+        RPC_HealthOverlay();
     }
 
     public void HandleBlockMeter()
@@ -187,8 +187,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         DisableControls();
 
-        overlays.OnEnterStorm();
-
+        RPC_HealthOverlay();
+        RPC_RemoveStormOverlay();
         TimerManager.instance.StopTimer(false);
 
         teamCamTimer = TickTimer.CreateFromSeconds(Runner, timeUntilTeamCam);
@@ -211,8 +211,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     }
     public void HandleRespawn()
     {
-        overlays.OnEnterStorm();
-        overlays.ShowHealthOverlay(1);
+        RPC_HealthOverlay();
+        RPC_RemoveStormOverlay();
         TimerManager.instance.ResetTimer(0);
 
         Character.Animator.anim.Play("Run");
@@ -242,6 +242,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public void Heal(float amount)
     {
         HP = Mathf.Min(HP + amount, startingHP);
+        RPC_HealthOverlay();
     }
 
     public void Respawn()
@@ -303,5 +304,19 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public override void OnHeal(float x)
     {
         Heal(x);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_HealthOverlay()
+    {
+        if (NetworkPlayer.Local.Object.InputAuthority == this.Object.InputAuthority)
+            overlays.ShowHealthOverlay(HP / startingHP);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_RemoveStormOverlay()
+    {
+        if (NetworkPlayer.Local.Object.InputAuthority == this.Object.InputAuthority)
+            overlays.OnEnterStorm();
     }
 }

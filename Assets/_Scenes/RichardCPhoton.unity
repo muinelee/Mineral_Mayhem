@@ -8592,6 +8592,7 @@ GameObject:
   - component: {fileID: 1906100720}
   - component: {fileID: 1906100719}
   - component: {fileID: 1906100718}
+  - component: {fileID: 1906100722}
   m_Layer: 5
   m_Name: IMG_HealthOverlay
   m_TagString: Untagged
@@ -8668,6 +8669,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1906100722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906100717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29b617ba98b4f8b48b15c36a532901d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lerpDuration: 0.5
+  startValue: 0
+  endValue: 1
+  delayOpen: 0
 --- !u!1 &1962149155
 GameObject:
   m_ObjectHideFlags: 0
@@ -13042,7 +13059,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.7058824}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -13486,7 +13503,7 @@ PrefabInstance:
     - target: {fileID: 2175559660157536185, guid: a7e04783c09fc184b958936c7518fd1f, type: 3}
       propertyPath: overlayHealth
       value: 
-      objectReference: {fileID: 1906100718}
+      objectReference: {fileID: 1906100722}
     - target: {fileID: 2175559660157536185, guid: a7e04783c09fc184b958936c7518fd1f, type: 3}
       propertyPath: overlayStorm1
       value: 
@@ -13511,6 +13528,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 3268957}
+    - target: {fileID: 2457823123366888335, guid: a7e04783c09fc184b958936c7518fd1f, type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2738976463433285315, guid: a7e04783c09fc184b958936c7518fd1f, type: 3}
       propertyPath: m_Layer
       value: 5
