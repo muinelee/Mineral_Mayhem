@@ -189,8 +189,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         DisableControls();
 
-        RPC_HealthOverlay();
-        RPC_RemoveStormOverlay();
+        if (Object.HasStateAuthority) RPC_HealthOverlay();
+        if (Object.HasStateAuthority) RPC_RemoveStormOverlay();
         TimerManager.instance.StopTimer(false);
 
         teamCamTimer = TickTimer.CreateFromSeconds(Runner, timeUntilTeamCam);
