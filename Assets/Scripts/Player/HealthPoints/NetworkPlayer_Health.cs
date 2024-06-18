@@ -215,8 +215,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     }
     public void HandleRespawn()
     {
-        RPC_HealthOverlay();
-        RPC_RemoveStormOverlay();
+        if (Object.HasStateAuthority) RPC_HealthOverlay();
+        if (Object.HasStateAuthority) RPC_RemoveStormOverlay();
         TimerManager.instance.ResetTimer(0);
 
         Character.Animator.anim.Play("Run");
