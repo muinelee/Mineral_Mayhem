@@ -800,6 +800,7 @@ GameObject:
   - component: {fileID: 169211737}
   - component: {fileID: 169211736}
   - component: {fileID: 169211735}
+  - component: {fileID: 169211738}
   m_Layer: 5
   m_Name: IMG_HealthOverlay
   m_TagString: Untagged
@@ -876,6 +877,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 169211733}
   m_CullTransparentMesh: 1
+--- !u!114 &169211738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169211733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29b617ba98b4f8b48b15c36a532901d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lerpDuration: 0.5
+  startValue: 0
+  endValue: 1
+  delayOpen: 0
 --- !u!1 &217904153
 GameObject:
   m_ObjectHideFlags: 0
@@ -9227,6 +9244,7 @@ MonoBehaviour:
   spawnPoints: []
   healthPickup: {fileID: 0}
   altPickup: {fileID: 0}
+  coreDelay: 10
   core: {fileID: 8853772122572866974, guid: a0f5adf9e67a267418d6999756824dd1, type: 3}
   definition: {fileID: 11400000, guid: 818f5c763aed15247859e9c3e45289f5, type: 2}
   spline: {fileID: 0}
@@ -11682,7 +11700,7 @@ PrefabInstance:
     - target: {fileID: 72875300938085168, guid: a4229185ae0e07e4fbc8225122fa8efb, type: 3}
       propertyPath: overlayHealth
       value: 
-      objectReference: {fileID: 169211735}
+      objectReference: {fileID: 169211738}
     - target: {fileID: 886322533639169366, guid: a4229185ae0e07e4fbc8225122fa8efb, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
@@ -11875,6 +11893,10 @@ PrefabInstance:
       propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4372155939503076868, guid: a4229185ae0e07e4fbc8225122fa8efb, type: 3}
+      propertyPath: m_ScrollSensitivity
+      value: 3.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4406830866232915718, guid: a4229185ae0e07e4fbc8225122fa8efb, type: 3}
       propertyPath: m_Camera
       value: 
@@ -12002,6 +12024,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 5927978986484438461, guid: a4229185ae0e07e4fbc8225122fa8efb, type: 3}
+    - {fileID: 229548345991484298, guid: a4229185ae0e07e4fbc8225122fa8efb, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7052914565153267891, guid: a4229185ae0e07e4fbc8225122fa8efb, type: 3}
       insertIndex: -1
