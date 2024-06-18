@@ -18,6 +18,9 @@ public class INP_Pause : MonoBehaviour
     // Used for ClosePauseMenuUntilPastCharacterSelect.cs
     public bool pastCharacterSelect = false;
 
+    public UnityEvent OnPause;
+    public UnityEvent OnUnpause;
+
     //--------------------------------//
 
     private void Awake()
@@ -50,6 +53,8 @@ public class INP_Pause : MonoBehaviour
 
             paused = false;
 
+            OnUnpause?.Invoke();
+
             //Cursor.lockState = CursorLockMode.Locked;
             //Cursor.visible = false;
         }
@@ -76,6 +81,8 @@ public class INP_Pause : MonoBehaviour
                     windowsToOpen[i].GetComponent<CanvasGroup>().alpha = 1;
                 }
             }
+
+            OnPause?.Invoke();
 
             //Cursor.lockState = CursorLockMode.Confined;
             //Cursor.visible = true;

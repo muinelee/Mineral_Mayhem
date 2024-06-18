@@ -123,4 +123,16 @@ public class ArchiveUIOverlay : MonoBehaviour
     {
         sensitivityText.text = ((int)value).ToString();
     }
+
+    public void TurnOn(bool on)
+    {
+        if (on)
+        {
+            State = ArchiveUIState.Active;
+        }
+        else
+        {
+            State = ArchiveUIState.Hidden;
+        }
+    }
 }

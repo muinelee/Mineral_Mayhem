@@ -6207,8 +6207,13 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9202458669459150117, guid: 325bf3330df54d34693b6d3953a7afd2, type: 3}
+      propertyPath: m_ScrollSensitivity
+      value: 3.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4627223009411444907, guid: 325bf3330df54d34693b6d3953a7afd2, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 325bf3330df54d34693b6d3953a7afd2, type: 3}
@@ -6221,17 +6226,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dd3f56fec1b8374438693218d28b36e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1355462025 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6170742903765757195, guid: 325bf3330df54d34693b6d3953a7afd2, type: 3}
-  m_PrefabInstance: {fileID: 1355462023}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 810887d9fc502084ba8fc39ed0470910, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1355462026 stripped
@@ -9740,8 +9734,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1596800849579836642}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.010577938, y: -0, z: -0, w: 0.9999441}
-  m_LocalPosition: {x: -0.058, y: 2.98, z: 27.45}
+  m_LocalRotation: {x: 0.5519369, y: -0, z: -0, w: 0.83388585}
+  m_LocalPosition: {x: 0, y: 13.49, z: -3.46}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11396,7 +11390,6 @@ MonoBehaviour:
   PP_Brightness: {fileID: 5621678045963890731}
   PP_Contrast: {fileID: 4789896735139705924}
   PP_Saturation: {fileID: 5256681320901791574}
-  S_Windowed: {fileID: 1355462025}
   S_PostProcessing: {fileID: 1355462029}
   S_Master: {fileID: 1355462032}
   S_SFX: {fileID: 1355462031}
@@ -11757,7 +11750,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.000004
+  field of view: 42
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
