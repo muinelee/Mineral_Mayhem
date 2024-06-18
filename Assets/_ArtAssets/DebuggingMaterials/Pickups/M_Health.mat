@@ -21,23 +21,17 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_Health
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 599dd6f8e36e08a47a3f737d69f51cda, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _ALPHAPREMULTIPLY_ON
-  - _EMISSION
-  - _SURFACE_TYPE_TRANSPARENT
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
-  stringTagMap:
-    RenderType: Transparent
-  disabledShaderPasses:
-  - DepthOnly
-  - SHADOWCASTER
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -66,6 +60,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _GatherTexture2D_51947fe7a7184ead9812c53ac2039a72_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: a68ecd156fd314c42826cf165cf4174b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -80,6 +78,18 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_18e8cc101a3742dca8f9e3d29542fa86_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 27c8d30df1424484ea2f8885ca382dd9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_90f42ce2c8a047f98a0967e2e776e47f_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: bcb20bdf3e5982943a560d19ed0cb57e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_957096400d7341a2bb83413486e8e134_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: a68ecd156fd314c42826cf165cf4174b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -117,9 +127,12 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Metallic: 1
+    - _Gradient_Median: 0.5
+    - _Gradient_Multiplier: 1000
+    - _Metallic: 7.83
     - _OcclusionStrength: 1
     - _Parallax: 0.005
+    - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Smoothness: 1
@@ -132,7 +145,9 @@ Material:
     - _ZWrite: 0
     m_Colors:
     - _BaseColor: {r: 0.14117646, g: 0.8980392, b: 0.2504145, a: 0.78039217}
+    - _Bottom_Color: {r: 0, g: 1, b: 0.3025806, a: 1}
     - _Color: {r: 0.14117646, g: 0.8980392, b: 0.2504145, a: 0.78039217}
     - _EmissionColor: {r: 0.020041576, g: 0.15094328, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _Top_Color: {r: 0.49263918, g: 1, b: 0.23137254, a: 1}
   m_BuildTextureStacks: []
