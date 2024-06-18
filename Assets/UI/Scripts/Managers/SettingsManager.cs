@@ -1,7 +1,6 @@
 public class SettingsManager
 {
     // Settings Data
-    public static int windowed = 1;
     public static int postProcessing = 0;
 
     public static float brightness = 0.75f;

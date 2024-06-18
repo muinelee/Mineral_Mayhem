@@ -7,7 +7,7 @@ public class SaveManager : MonoBehaviour
 {
     private void Start()
     {
-        if (PlayerPrefs.HasKey("Windowed"))
+        if (PlayerPrefs.HasKey("PostProcessing"))
             LoadData();
         else
             ChangeSetting.instance.ResetSettings();
@@ -19,7 +19,6 @@ public class SaveManager : MonoBehaviour
 
     public void SaveData()
     {
-        PlayerPrefs.SetInt("Windowed", SettingsManager.windowed);
         PlayerPrefs.SetInt("PostProcessing", SettingsManager.postProcessing);
 
         PlayerPrefs.SetFloat("VolumeMaster", SettingsManager.volumeMaster);
@@ -33,9 +32,8 @@ public class SaveManager : MonoBehaviour
 
     public void LoadData()
     {
-        if (PlayerPrefs.HasKey("Windowed"))
+        if (PlayerPrefs.HasKey("PostProcessing"))
         {
-            SettingsManager.windowed = PlayerPrefs.GetInt("Windowed");
             SettingsManager.postProcessing = PlayerPrefs.GetInt("PostProcessing");
 
             SettingsManager.volumeMaster = PlayerPrefs.GetFloat("VolumeMaster");
