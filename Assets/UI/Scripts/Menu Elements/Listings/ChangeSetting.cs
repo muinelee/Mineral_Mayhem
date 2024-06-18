@@ -15,7 +15,6 @@ public class ChangeSetting : MonoBehaviour
     [SerializeField] Volume PP_Saturation;
 
     [Header("Settings Listings References")]
-    [SerializeField] SETTING_Selection S_Windowed;
     [SerializeField] SETTING_Selection S_PostProcessing;
     [SerializeField] SETTING_Slider S_Master;
     [SerializeField] SETTING_Slider S_SFX;
@@ -55,7 +54,6 @@ public class ChangeSetting : MonoBehaviour
         PP_Contrast.weight = SettingsManager.contrast;
         PP_Saturation.weight = SettingsManager.saturation;
 
-        S_Windowed.SetSettings();
         S_PostProcessing.SetSettings();
         S_Master.SetSettings();
         S_SFX.SetSettings();
@@ -77,7 +75,6 @@ public class ChangeSetting : MonoBehaviour
         PP_Contrast.weight = 0.75f;
         PP_Saturation.weight = 0.55f;
 
-        S_Windowed.ResetSettings();
         S_PostProcessing.ResetSettings();
         S_Master.ResetSettings();
         S_SFX.ResetSettings();
@@ -89,13 +86,6 @@ public class ChangeSetting : MonoBehaviour
 
     public void ChangeSelection(int selection, string type)
     {
-        if (type == "windowed")
-        {
-            SettingsManager.windowed = selection;
-
-            // Setting Effect
-
-        }
         if (type == "postProcessing")
         {
             SettingsManager.postProcessing = selection;
