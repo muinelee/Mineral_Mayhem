@@ -117,12 +117,14 @@ public class RoundManager : NetworkBehaviour
         {
             redRoundsWon++;
             RPC_UpdateRoundUIForClients(true);
+            RPC_DisplayRedWinsRound();
         }
 
         else if (bluePlayersAlive > redPlayersAlive)
         {
             blueRoundsWon++;
             RPC_UpdateRoundUIForClients(false);
+            RPC_DisplayBlueWinsRound();
         }
 
         else if (bluePlayersAlive == redPlayersAlive)
@@ -139,6 +141,9 @@ public class RoundManager : NetworkBehaviour
         roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
 
         if (Runner.IsServer) FindAnyObjectByType<ShrinkingStorm>().PreventDamage();
+
+        RPC_GrowRoundUI();
+        RPC_StopTimer();
     }
 
     public void MatchEnd()
@@ -304,5 +309,22 @@ public class RoundManager : NetworkBehaviour
     private void RPC_BlueTeamWinsAnnouncer()
     {
         AudioManager.Instance.PlayAudioSFX(blueTeamWins, transform.localPosition);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_DisplayRedWinsRound()
+    {
+        GameOverManager.Instance.DisplayRedWinsRound();
+    }
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_DisplayBlueWinsRound()
+    {
+        GameOverManager.Instance.DisplayBlueWinsRound();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_StopTimer()
+    {
+        TimerManager.instance.StopTimer(false);
     }
 }

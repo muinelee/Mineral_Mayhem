@@ -1,6 +1,7 @@
 using Fusion;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -117,6 +118,9 @@ public class CharacterEntity : CharacterComponent
     public bool hasDespawned = false;
     public DecalProjector TeamIndicator;
     public Material materialInstance;
+    [SerializeField] TextMeshProUGUI playerName;
+    [SerializeField] TMP_FontAsset fontBlueTeam;
+    [SerializeField] TMP_FontAsset fontRedTeam;
 
     public GameObject Shield;
 
@@ -169,7 +173,15 @@ public class CharacterEntity : CharacterComponent
     {
         this.Team = team;
 
-        if (team == NetworkPlayer.Team.Red) materialInstance.SetColor("_Color", Color.red);
-        else materialInstance.SetColor("_Color", Color.blue);
+        if (team == NetworkPlayer.Team.Red)
+        {
+            materialInstance.SetColor("_Color", Color.red);
+            playerName.font = fontRedTeam;
+        }
+        else
+        {
+            materialInstance.SetColor("_Color", Color.blue);
+            playerName.font = fontBlueTeam;
+        }
     }
 }

@@ -16,6 +16,7 @@ public class CountDownTimer : MonoBehaviour
     [SerializeField] private AudioClip[] countdownAudio;
 
     public int countDownNumber = 3;
+    private bool firstTime = true;
 
     private void Start()
     {
@@ -29,7 +30,9 @@ public class CountDownTimer : MonoBehaviour
 
     IEnumerator StartCountDownHelper()
     {
-        RoundUI.instance.GrowRoundUI();
+        if (RoundUI.instance.roundUIBar.GetComponent<RectTransform>().localScale.x == RoundUI.instance.endScaleX)
+            RoundUI.instance.GrowRoundUI();
+        TimerManager.instance.StopTimer(true);
 
         int index = 0;
         countDownNumber = 3;
