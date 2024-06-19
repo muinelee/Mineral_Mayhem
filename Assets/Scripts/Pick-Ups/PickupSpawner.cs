@@ -17,6 +17,8 @@ public class PickupSpawner : NetworkBehaviour
         if (!Runner.IsServer) return;
         
         StartPickupSpawnTimer(respawnTime);
+
+        if (RoundManager.Instance != null) RoundManager.Instance.ResetRound += PickupDestroy;
     }
 
     private void StartPickupSpawnTimer(float delay)
@@ -53,6 +55,8 @@ public class PickupSpawner : NetworkBehaviour
     {
         if (!Runner.IsServer) return;
 
-        Runner.Despawn(currentPickup);
+        if (currentPickup != null) Runner.Despawn(currentPickup);
+
+        else StartPickupSpawnTimer(respawnTime);
     }
 }
