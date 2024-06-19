@@ -21,7 +21,7 @@ public class RoundUI : MonoBehaviour
     [SerializeField] Sprite gemBlue;
     [SerializeField] Sprite gemRed;
 
-    [SerializeField] CG_Fade roundUIBar;
+    public CG_Fade roundUIBar;
 
     [Header("Lerp Settings Expand/Collapse")]
     [SerializeField] private float lerpDuration = 0.5f;
@@ -32,8 +32,8 @@ public class RoundUI : MonoBehaviour
 
     [Header("Lerp Settings Grow/Shrink")]
     [SerializeField] private float lerpDuration2 = 0.5f;
-    [SerializeField] private float startScaleX = 1;
-    [SerializeField] private float endScaleX = 0.55f;
+    public float startScaleX = 1;
+    public float endScaleX = 0.55f;
 
     private float curValue2;
 

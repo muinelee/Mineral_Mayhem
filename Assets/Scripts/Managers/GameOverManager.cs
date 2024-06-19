@@ -10,8 +10,11 @@ public class GameOverManager : NetworkBehaviour
     public static GameOverManager Instance { get; set; }
 
     [Header("Text Images")]
-    [SerializeField] private GameObject redWinImage;
-    [SerializeField] private GameObject blueWinImage;
+    [SerializeField] private CG_Fade redWinImage;
+    [SerializeField] private CG_Fade blueWinImage;
+
+    [SerializeField] private CG_Fade redWinRoundImage;
+    [SerializeField] private CG_Fade blueWinRoundImage;
 
     [Header("GameOver Timer")]
     [SerializeField] private float gameOverScreenDuration;
@@ -35,14 +38,42 @@ public class GameOverManager : NetworkBehaviour
 
     private void DisplayBlueWins()
     {
-        blueWinImage.SetActive(true);
+        blueWinImage.gameObject.SetActive(true);
+        blueWinImage.FadeIn();
         MoveWinners(NetworkPlayer.Team.Blue);
     }
-
     private void DisplayRedWins()
     {
-        redWinImage.SetActive(true);
+        redWinImage.gameObject.SetActive(true);
+        redWinImage.FadeIn();
         MoveWinners(NetworkPlayer.Team.Red);
+    }
+
+    public void DisplayBlueWinsRound()
+    {
+        StartCoroutine(iDisplayBlueWinsRound());
+    }
+    private IEnumerator iDisplayBlueWinsRound()
+    {
+        blueWinRoundImage.gameObject.SetActive(true);
+        blueWinRoundImage.FadeIn();
+
+        yield return new WaitForSeconds(2.5f);
+
+        blueWinRoundImage.FadeOut();
+    }
+    public void DisplayRedWinsRound()
+    {
+        StartCoroutine(iDisplayRedWinsRound());
+    }
+    private IEnumerator iDisplayRedWinsRound()
+    {
+        redWinRoundImage.gameObject.SetActive(true);
+        redWinRoundImage.FadeIn();
+
+        yield return new WaitForSeconds(2.5f);
+
+        redWinRoundImage.FadeOut();
     }
 
     public void DisplayWinners(bool isRedWins)

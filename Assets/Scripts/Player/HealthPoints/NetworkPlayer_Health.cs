@@ -217,7 +217,6 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         if (Object.HasStateAuthority) RPC_HealthOverlay();
         if (Object.HasStateAuthority) RPC_RemoveStormOverlay();
-        TimerManager.instance.ResetTimer(0);
 
         Character.Animator.anim.Play("Run");
         Character.Animator.anim.Play("Run", 2);
