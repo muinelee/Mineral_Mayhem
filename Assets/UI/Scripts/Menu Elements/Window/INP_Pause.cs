@@ -12,6 +12,7 @@ public class INP_Pause : MonoBehaviour
     [SerializeField] GameObject[] windowsToOpen;
     [SerializeField] GameObject[] windowsToClose;
     [SerializeField] float delay = 0.5f;
+    public GameObject reselectCharacterButton;
 
     public bool paused = false;
 
