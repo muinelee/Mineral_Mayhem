@@ -40,6 +40,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     [SerializeField] AudioClip onDeathCrowdCheer;
     private ShowOverlays overlays;
 
+    [SerializeField] Transform popupSpawnPoint;
+
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
@@ -109,6 +111,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         }
 
         RPC_HealthOverlay();
+        RPC_CreateDamagePopup(x);
     }
 
     public void HandleBlockMeter()
@@ -246,6 +249,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         HP = Mathf.Min(HP + amount, startingHP);
         RPC_HealthOverlay();
+        RPC_CreateDamagePopup(-amount);
     }
 
     public void Respawn()
@@ -321,5 +325,11 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         if (NetworkPlayer.Local.Object.InputAuthority == this.Object.InputAuthority)
             overlays.OnEnterStorm();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_CreateDamagePopup(float damage)
+    {
+        DamagePopup.Create(popupSpawnPoint, damage);
     }
 }
