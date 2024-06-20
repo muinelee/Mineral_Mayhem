@@ -181,6 +181,8 @@ public class RoundManager : NetworkBehaviour
 
     public void MatchStart()
     {
+        INP_Pause.instance.reselectCharacterButton.SetActive(false);
+
         NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
         MatchStartEvent?.Invoke();
         resetStorm?.Invoke();
