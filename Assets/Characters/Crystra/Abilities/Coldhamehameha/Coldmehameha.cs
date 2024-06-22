@@ -13,6 +13,7 @@ public class Coldmehameha : NetworkAttack_Base
     //ticktimer to work with lifetime
     private TickTimer lifeTimer = TickTimer.None;
     //spawn offset
+    private List<CharacterEntity> playersHit = new List<CharacterEntity>();
 
     [Header("Spawn Properties")]
     public int offset;
@@ -23,6 +24,9 @@ public class Coldmehameha : NetworkAttack_Base
     //list for hits
     List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
     [SerializeField] private LayerMask collisionLayer;
+
+    [SerializeField] AudioClip announcerVoiceLine;
+    private bool voiceLinePlayed = false;
 
     public override void Spawned() {
         //call base class spawn function
@@ -77,7 +81,7 @@ public class Coldmehameha : NetworkAttack_Base
         //get the character rotation
         Quaternion rotation = Quaternion.LookRotation(character.transform.forward);
         //signature for hits using the characterposition + (rotation * 3(half size of the box)
-        Runner.LagCompensation.OverlapBox((character.transform.position + (character.transform.forward * 3)), extends, rotation, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
+        Runner.LagCompensation.OverlapBox((transform.position + (transform.forward * extends.z)), extends, transform.rotation, player: Object.InputAuthority, hits, collisionLayer, HitOptions.IgnoreInputAuthority);
         //loop to check for hits
         foreach (LagCompensatedHit hit in hits) {
 
@@ -88,7 +92,7 @@ public class Coldmehameha : NetworkAttack_Base
                 //if health component is not dead, or if the team is the same, continue
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
                 //call the on take damage function from the health component
-                healthComponent.OnTakeDamage(damage);
+                healthComponent.OnTakeDamage(damage, false);
                 //apply knockback when hit
                 healthComponent.OnKnockBack(knockback, this.transform.position);
             }
@@ -97,9 +101,33 @@ public class Coldmehameha : NetworkAttack_Base
 
             if (statusEffectSO.Count > 0 && characterEntity) {
                 foreach (StatusEffect status in statusEffectSO) {
-                    characterEntity.OnStatusBegin(status);
+
+                    if (!playersHit.Contains(characterEntity)){
+
+                        characterEntity.OnStatusBegin(status);
+                        playersHit.Add(characterEntity);
+                        healthComponent.OnTakeDamage(0, true);
+                    }
+
                 }
             }
+
+            if (healthComponent.HP <= 0 && characterEntity && !voiceLinePlayed)
+            {
+                voiceLinePlayed = true;
+                RPC_PlayAnnouncerVoiceLine();
+            }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube((transform.position + (transform.forward * (extends.z / 2))), extends);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayAnnouncerVoiceLine()
+    {
+        AudioManager.Instance.PlayAudioSFX(announcerVoiceLine, transform.position);
     }
 }

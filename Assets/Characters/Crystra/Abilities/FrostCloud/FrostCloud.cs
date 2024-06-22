@@ -63,10 +63,7 @@ public class FrostCloud : NetworkAttack_Base
 
             if (healthComponent != null)
             {
-                Debug.Log("Frost Cloud Deal Damage is being called");
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
-
-                healthComponent.OnTakeDamage(damage);
             }
             
             CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();

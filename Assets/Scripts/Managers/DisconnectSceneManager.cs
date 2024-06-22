@@ -18,6 +18,6 @@ public class DisconnectSceneManager : MonoBehaviour
 
     public void ReturnToLobby()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 }

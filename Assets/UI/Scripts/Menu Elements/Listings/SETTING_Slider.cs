@@ -68,17 +68,17 @@ public class SETTING_Slider : MonoBehaviour
         }
         if (settingType == "brightness")
         {
-            slider.value = 0.55f;
+            slider.value = 0.75f;
             SliderValueChanged();
         }
         if (settingType == "contrast")
         {
-            slider.value = 0.7f;
+            slider.value = 0.75f;
             SliderValueChanged();
         }
         if (settingType == "saturation")
         {
-            slider.value = 0.6f;
+            slider.value = 0.55f;
             SliderValueChanged();
         }
     }
@@ -93,5 +93,14 @@ public class SETTING_Slider : MonoBehaviour
     {
         text.text = "  " + (value * 100).ToString("0") + "%";
         ChangeSetting.instance.ChangeValue(value, settingType);
+    }
+
+    public void IncrementSlider(float value)
+    {
+        slider.value += value;
+    }
+    public void DecrementSlider(float value)
+    {
+        slider.value -= value;
     }
 }

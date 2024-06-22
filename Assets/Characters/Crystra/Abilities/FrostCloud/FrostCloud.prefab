@@ -79,12 +79,12 @@ MonoBehaviour:
   knockback: 0
   SFX:
   - {fileID: 8300000, guid: 06059ab591d5ce840bf7843e7e06bfff, type: 3}
-  - {fileID: 8300000, guid: 204661811a350cd45b835a3be8ae2cd6, type: 3}
   statusEffectSO:
   - {fileID: 11400000, guid: 10e1a3d178498c34aa05a534f07168cd, type: 2}
+  onHitEffect: {fileID: 0}
   lifetime: 1
   offset: 0
-  radius: 2.5
+  radius: 5
   playerLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -238,18 +238,18 @@ PrefabInstance:
     - target: {fileID: 358103966154831000, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 4da739d41876a7048bfd76d356d03479, type: 2}
+      objectReference: {fileID: 2100000, guid: b4d5db242a8d4b048b39afe1f90856bc, type: 2}
     - target: {fileID: 3113604287043247640, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: b94b0ebf566bde84fac19f19a0d7827e, type: 2}
+      objectReference: {fileID: 2100000, guid: c67a504088d5e684bbbf1ac2a4960ea8, type: 2}
     - target: {fileID: 6821738634456582036, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
       propertyPath: m_Name
       value: FrostCloud_VFX
       objectReference: {fileID: 0}
     - target: {fileID: 6821738634456582036, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8169952483096280876, guid: ddc1be2663a08574ea63b38379ffad54, type: 3}
       propertyPath: m_LocalPosition.x

@@ -1,6 +1,10 @@
+using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
-using Fusion;
+using UnityEngine.Events;
+using UnityEngine.Splines;
+using UnityEngine.UI;
+using UnityEngine.VFX;
 
 public class ShrinkingStorm : NetworkAttack_Base { 
 
@@ -19,16 +23,37 @@ public class ShrinkingStorm : NetworkAttack_Base {
     [SerializeField] private bool isShrinking = false;
     [SerializeField] private CharacterEntity[] characters;
     private TickTimer damageTimer = TickTimer.None;
+    private bool canDamage = true;
 
     //references
     [Header("References")]
     [SerializeField] private CapsuleCollider stormCollider;
     [SerializeField] private float damageDelay;
+    public SplineContainer spline;
+
+    //UI references
+    [Header("UI References")]
+    [SerializeField] private Image stormImageBase;
+    [SerializeField] private Image stormImage2;
+    [SerializeField] private Image stormImage3;
+
 
     [Header("Damage Variables")]
     [SerializeField] private float radius;
     [SerializeField] private LayerMask playerLayer;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
+
+    [Header("Visual Effect")]
+    [SerializeField] private VisualEffect stormVFX;
+
+    private NetworkRunner runner;
+
+    public CharacterEntity player;
+
+    public UnityEvent enterStorm;
+    public UnityEvent exitStorm;
+
+    private bool firstTrigger = false;
 
     // Start is called before the first frame update
     void Start() {
@@ -36,8 +61,16 @@ public class ShrinkingStorm : NetworkAttack_Base {
         if (!stormCollider) {
             Debug.LogError("No collider found");
         }
+
+        Vector3 spawn = GetSpawnLocation();
+        transform.position = spawn;
+        Debug.Log("Storm spawned at " + spawn);
         //subscribe to the event
         //Debug.Log("Subscribed to event");
+
+        runner = FindAnyObjectByType<NetworkRunner>();
+
+        if (!runner.IsServer) return;
 
         RoundManager.resetStorm += ResetStorm;
         RoundManager.startStorm += ShrinkStorm;
@@ -45,16 +78,19 @@ public class ShrinkingStorm : NetworkAttack_Base {
 
     private void OnDestroy()
     {
+        if (!runner.IsServer) return;
+
         RoundManager.resetStorm -= ResetStorm;
         RoundManager.startStorm -= ShrinkStorm;
     }
 
     // Update is called once per frame
     void FixedUpdate() {
+
         if (isShrinking) {
             //lerp the scale of the object to shrink it
             StormScaleChange();
-            if (damageTimer.Expired(Runner)) {
+            if (damageTimer.Expired(runner)) {
             //for each player in the scene
             foreach (CharacterEntity playerchar in characters) {
                 //Debug.Log(playerchar.transform.position);
@@ -64,10 +100,11 @@ public class ShrinkingStorm : NetworkAttack_Base {
                         //Debug.Log("Player is in the storm");
                         DealDamage();
                         //ManageDamage();
+                        //show UI screen for inside storm indicator
                     }
                 }
                 damageTimer = TickTimer.None;
-                damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
+                damageTimer = TickTimer.CreateFromSeconds(runner, damageDelay);
             }
         }
     }
@@ -79,15 +116,20 @@ public class ShrinkingStorm : NetworkAttack_Base {
 
     protected override void DealDamage() {
 
-        if (!Runner.IsServer) return;
+        if (!runner.IsServer) return;
 
-        Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
+        if (!canDamage) return;
+
+        runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
         foreach (LagCompensatedHit hit in hits) {
+
+            // Cores don't have character entities so find objects with a character entities and a health component
+            CharacterEntity characterEntity =  hit.GameObject.GetComponentInParent<CharacterEntity>();
             IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
 
-            if (healthComponent != null) {
+            if (healthComponent != null && characterEntity != null) {
                 if (!stormCollider.bounds.Contains(hit.GameObject.transform.position)) {
-                    healthComponent.OnTakeDamage(damage);
+                    healthComponent.OnTakeDamage(damage, false);
                     //Debug.Log("player dealt " + damage);
                 }
             }
@@ -103,12 +145,14 @@ public class ShrinkingStorm : NetworkAttack_Base {
     private void ShrinkStorm() {
         isShrinking = true;
         remainingTime = 0f;
-        transform.localScale = startScale;
+        //transform.localScale = startScale;
         //list of character positions found
         characters = FindObjectsOfType<CharacterEntity>();
         //set damage timer to 1 second
-        damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
+        damageTimer = TickTimer.CreateFromSeconds(runner, damageDelay);
         //Debug.Log(isShrinking);
+
+        INP_Pause.instance.pastCharacterSelect = true;
     }
     
     private void StormScaleChange() {
@@ -117,15 +161,17 @@ public class ShrinkingStorm : NetworkAttack_Base {
     }
 
     private void ManageDamage() {
-        if (!damageTimer.Expired(Runner)) return;
+        if (!damageTimer.Expired(runner)) return;
 
         damageTimer = TickTimer.None;
-        damageTimer = TickTimer.CreateFromSeconds(Runner, damageDelay);
+        damageTimer = TickTimer.CreateFromSeconds(runner, damageDelay);
         DealDamage();
     }
 
     private void ResetStorm(){
-        if (!Runner.IsServer) return;
+        firstTrigger = true;
+        if (!runner.IsServer) return;
+        AllowDamage();
         RPC_ResetStorm();
     }
 
@@ -133,5 +179,63 @@ public class ShrinkingStorm : NetworkAttack_Base {
     private void RPC_ResetStorm()
     {
         this.transform.localScale = startScale;
+        this.ShrinkStorm();
+        this.stormVFX.Stop();
+        this.stormVFX.Play();
+
+        transform.position = GetSpawnLocation();
+    }
+
+    public Vector3 GetSpawnLocation() {
+        if (spline != null) {
+            float randomLocation = Random.Range(0f, 1f);
+            return spline.EvaluatePosition(randomLocation);
+        }
+        else {
+            Debug.LogWarning("Spline is not assigned for core spawning.");
+            return Vector3.zero;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(transform.position, stormCollider.radius * transform.localScale.x);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            CharacterEntity entity = other.GetComponent<CharacterEntity>();
+
+            if (entity != null && entity == player)
+            {
+                if (!firstTrigger)
+                enterStorm?.Invoke();
+                firstTrigger = false;
+            }
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            CharacterEntity entity = other.GetComponent<CharacterEntity>();
+
+            if (entity != null && entity == player)
+            {
+                exitStorm?.Invoke();
+            }
+        }
+    }
+
+    public void AllowDamage()
+    {
+        canDamage = true;
+    }
+
+    public void PreventDamage()
+    {
+        canDamage = false;
     }
 }

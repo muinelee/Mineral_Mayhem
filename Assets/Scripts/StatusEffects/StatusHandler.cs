@@ -1,3 +1,4 @@
+using Fusion;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -68,6 +69,7 @@ public class StatusHandler : CharacterComponent
 
         statuses.Add(data);
         data.status.OnStatusApplied(this);
+        if (effect is StunStatus) RPC_PlayEffectAnimation("Stunned");
     }
 
     public void RemoveStatus(StatusData data)
@@ -108,5 +110,25 @@ public class StatusHandler : CharacterComponent
     public float GetDamageReduction()
     {
         return Mathf.Clamp(((200 - GetArmorValue()) / 100), 0, 2);
+    }
+
+    public bool IsStunned()
+    {
+        return stun > 0;
+    }
+
+    public bool HasUncleansableStun()
+    {
+        foreach (StatusData status in statuses)
+        {
+            if (status.status.GetType() == typeof(StunStatus) && !status.status.isCleanseable) return true;
+        }
+        return false;
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_PlayEffectAnimation(string effect)
+    {
+        this.Character.Animator.anim.CrossFade(effect, 0.1f);
     }
 }

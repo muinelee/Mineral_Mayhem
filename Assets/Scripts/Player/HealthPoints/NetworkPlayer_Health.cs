@@ -8,7 +8,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public float HP { get; set; }
 
     // Callback is Temporary until OnHPChanged is implemented
-    [Networked(OnChanged = nameof(OnHPChanged))]  
+    [Networked(OnChanged = nameof(OnHPChanged))]
     public float BP { get; set; }
 
     [Networked(OnChanged = nameof(OnStateChanged))]
@@ -19,7 +19,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     private bool isInitialized = false;
 
     // Health Properties
-    [SerializeField] private float startingHP = 100;
+    public float startingHP = 100;
 
     // Block Properties
     [SerializeField] private float startingBP = 100;
@@ -35,6 +35,12 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     [SerializeField] private Material shaderGraphMaterial;
     private Material materialInstance;
+
+    // Audio
+    [SerializeField] AudioClip onDeathCrowdCheer;
+    private ShowOverlays overlays;
+
+    [SerializeField] Transform popupSpawnPoint;
 
     public override void Init(CharacterEntity character)
     {
@@ -54,16 +60,19 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public override void Spawned()
     {
         if (HP == startingHP) isDead = false;
-        RoundManager rm = RoundManager.Instance; 
+        RoundManager rm = RoundManager.Instance;
         if (rm != null)
         {
             rm.ResetRound += Respawn;
-            rm.MatchEndEvent += DisableControls; 
+            rm.MatchEndEvent += DisableControls;
         }
         else
         {
-            Respawn(); 
+            Respawn();
         }
+
+        overlays = FindObjectOfType<ShowOverlays>();
+        overlays.ShowHealthOverlay(HP / startingHP);
     }
 
     private void PrimeShieldMaterial()
@@ -75,9 +84,34 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         else Debug.Log($"No Renderer on Shield found for {gameObject.name}");
     }
 
-    public override void OnHit(float x)
+    public override void OnHit(float x, bool hitReact)
     {
-        OnTakeDamage(x);
+        if (x < 0 || isDead) return;
+
+        //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
+        float currDamageAmount = x * Character.StatusHandler.GetDamageReduction();
+
+        if (Character.Attack.isDefending)
+        {
+            float blockDamageAmount = (currDamageAmount * (blockDamageReduction));
+            BP = Mathf.Max(BP - blockDamageAmount, 0);
+            currDamageAmount = (currDamageAmount * (1 - blockDamageReduction));
+        }
+
+        HP -= currDamageAmount;
+
+        if (HP <= 0)
+        {
+            isDead = true;
+        }
+        else
+        {
+            NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
+            if (hitReact) RPC_PlayHitAnimation();
+        }
+
+        RPC_HealthOverlay();
+        RPC_CreateDamagePopup(x);
     }
 
     public void HandleBlockMeter()
@@ -101,6 +135,8 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
 
     private void HandleBlockDepletion()
     {
+        if (!Runner.IsServer) return;
+
         canBlock = false;
         Character.OnStatusBegin(blockDepletedStun);
     }
@@ -123,7 +159,7 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
             return;
         }
 
-        if (teamCamTimer.Expired(Runner))
+        if (teamCamTimer.Expired(Runner) && Runner.SessionInfo.MaxPlayers > 2)
         {
             teamCamTimer = TickTimer.None;
             NetworkCameraEffectsManager.instance.GoToTeamCamera();
@@ -131,29 +167,16 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     }
 
     // Function only called on the server
-    public void OnTakeDamage(float damageAmount)
+    public void OnTakeDamage(float damageAmount, bool playReact)
     {
-        if (damageAmount < 0 || isDead) return;
-
-        //Applies any damage reduction effects to the damage taken. currDamageAmount created to help with screenshake when being hit instead of adding the equation there
-        float currDamageAmount = damageAmount * Character.StatusHandler.GetDamageReduction();
-
-        if (Character.Attack.isDefending)
-        {
-            float blockDamageAmount = (currDamageAmount * (blockDamageReduction));
-            BP = Mathf.Max(BP - blockDamageAmount, 0);
-            currDamageAmount = (currDamageAmount * (1 - blockDamageReduction));
-        }
-
-        HP -= currDamageAmount;
-
-        if (HP <= 0)
-        {
-            isDead = true;
-        }
-        else NetworkCameraEffectsManager.instance.CameraHitEffect(currDamageAmount);
+        Character.OnHit(damageAmount, playReact);
     }
 
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_PlayHitAnimation()
+    {
+        Character.Animator.anim.Play("Hit", 1);
+    }
 
     public void OnKnockBack(float force, Vector3 source)
     {
@@ -169,21 +192,38 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     {
         DisableControls();
 
+        if (Object.HasStateAuthority) RPC_HealthOverlay();
+        if (Object.HasStateAuthority) RPC_RemoveStormOverlay();
+        TimerManager.instance.StopTimer(false);
+
         teamCamTimer = TickTimer.CreateFromSeconds(Runner, timeUntilTeamCam);
 
-        Character.Animator.anim.CrossFade("Death", 0.2f);
+        AudioManager.Instance.PlayAudioSFX(onDeathCrowdCheer, transform.position);
 
-        if (!NetworkPlayer.Local.HasStateAuthority) return;
+        Character.Animator.anim.Play("Death");
+        Character.Animator.anim.Play("Death", 2);
+
+        if (!NetworkPlayer.Local.HasStateAuthority)
+        {
+            return;
+        }
+
         if (RoundManager.Instance)
         {
             if (team == NetworkPlayer.Team.Red) RoundManager.Instance.RedPlayersDies();
             else RoundManager.Instance.BluePlayersDies();
         }
+
+
     }
     public void HandleRespawn()
     {
-        EnableControls();
+        if (Object.HasStateAuthority) RPC_HealthOverlay();
+        if (Object.HasStateAuthority) RPC_RemoveStormOverlay();
+
         Character.Animator.anim.Play("Run");
+        Character.Animator.anim.Play("Run", 2);
+        Character.Rigidbody.Rigidbody.velocity = Vector3.zero;
         if (Object.HasInputAuthority) NetworkCameraEffectsManager.instance.GoToTopCamera();
     }
 
@@ -208,24 +248,19 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
     public void Heal(float amount)
     {
         HP = Mathf.Min(HP + amount, startingHP);
+        RPC_HealthOverlay();
+        RPC_CreateDamagePopup(-amount);
     }
 
     public void Respawn()
     {
         isDead = false;
         HP = startingHP;
-        StartCoroutine(ResetEnergy());
-    }
-
-    private IEnumerator ResetEnergy()
-    {
-        yield return 0;
-
-        Character.Energy.energy = 0;
     }
 
     public void DisableControls()
     {
+        Character.Attack.ActivateBlock(false);
         // Disable Input
         Character.Input.enabled = false;
         // Disable movement
@@ -234,12 +269,23 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
         Character.Attack.enabled = false;
         // Disable sphere collider
         Character.Collider.enabled = false;
-        // Disable gravity
-        Character.Rigidbody.Rigidbody.useGravity = false;
+
+        Character.Animator.anim.SetFloat("Xaxis", 0);
+        Character.Animator.anim.SetFloat("Zaxis", 0);
     }
 
     public void EnableControls()
     {
+        Character.Energy.energy = 0;
+
+        // Use helper to prevent player to from using ult on first frame
+        StartCoroutine(EnableControlHelper());
+    }
+
+    IEnumerator EnableControlHelper()
+    {
+        yield return 0;
+
         // Enable Input
         Character.Input.enabled = true;
         // Enable movement
@@ -260,5 +306,30 @@ public class NetworkPlayer_Health : CharacterComponent, IHealthComponent
             RoundManager.Instance.ResetRound -= Respawn;
             RoundManager.Instance.MatchEndEvent -= DisableControls;
         }
+    }
+
+    public override void OnHeal(float x)
+    {
+        Heal(x);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_HealthOverlay()
+    {
+        if (NetworkPlayer.Local.Object.InputAuthority == this.Object.InputAuthority)
+            overlays.ShowHealthOverlay(HP / startingHP);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_RemoveStormOverlay()
+    {
+        if (NetworkPlayer.Local.Object.InputAuthority == this.Object.InputAuthority)
+            overlays.OnEnterStorm();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_CreateDamagePopup(float damage)
+    {
+        DamagePopup.Create(popupSpawnPoint, damage);
     }
 }

@@ -42,7 +42,7 @@ public class RocketJump : NetworkAttack_Base
         if (rigTransform.position.y < startHeight && !attackLifeTimer.IsRunning)
         {
             //Spawn Particles
-            slamVFXInstance = Runner.Spawn(slamVFX, rigTransform.position, rigTransform.rotation);
+            slamVFXInstance = Runner.Spawn(slamVFX, rigTransform.position, slamVFX.transform.rotation);
             RPC_RocketJumpLandingSFX();
             attackLifeTimer = TickTimer.CreateFromSeconds(Runner, vfxDuration);
 
@@ -50,6 +50,7 @@ public class RocketJump : NetworkAttack_Base
 
             //Enable colliders
             character.Rigidbody.Rigidbody.useGravity = true;
+            character.Rigidbody.Rigidbody.velocity *= 0.2f;
         }
 
         if (attackLifeTimer.Expired(Runner)) AttackEnd();
@@ -58,7 +59,6 @@ public class RocketJump : NetworkAttack_Base
     private void AttackStart()
     {
         Runner.LagCompensation.OverlapSphere(transform.position, searchRadius, player: Object.InputAuthority, hits, collisionLayer);
-
 
         for (int i = 0; i < hits.Count; i++)
         {
@@ -74,7 +74,7 @@ public class RocketJump : NetworkAttack_Base
                 startHeight = rigTransform.position.y;
                 
                 // Apply force
-                character.Rigidbody.Rigidbody.AddForce(transform.forward * forceForward);
+                character.Rigidbody.Rigidbody.AddForce(transform.forward * forceForward, ForceMode.Impulse);
 
                 // Disable collider and gravity
                 character.Rigidbody.Rigidbody.useGravity = false;
@@ -101,7 +101,7 @@ public class RocketJump : NetworkAttack_Base
 
             if (playerHit == null || CheckIfSameTeam(playerHit.team)) continue;
 
-            playerHit.OnTakeDamage(damage);
+            playerHit.OnTakeDamage(damage, true);
             playerHit.OnKnockBack(knockback, rigTransform.position);
 
             StatusHandler statusHandler = hit.GameObject.GetComponentInParent<StatusHandler>();

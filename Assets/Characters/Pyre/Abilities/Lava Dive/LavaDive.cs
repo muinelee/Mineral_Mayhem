@@ -3,6 +3,7 @@ using UnityEngine;
 using Fusion;
 using Unity.VisualScripting;
 using UnityEditor;
+using static Fusion.NetworkCharacterController;
 
 public class LavaDive : NetworkAttack_Base 
 {
@@ -19,22 +20,34 @@ public class LavaDive : NetworkAttack_Base
     private TickTimer dashTimer = TickTimer.None;
     private TickTimer trailDamageTimer = TickTimer.None;
     private List<CharacterEntity> playerEntities = new List<CharacterEntity>();
+    private float numFireColumns = 3f;
+    private float fireColumnSpawnTime = 0.75f;
 
     [Header("Attack End Damage Properties")]
     [SerializeField] private float forceForward;
     [SerializeField] private float lingerTime;
     [SerializeField] private float attackRadius = 2;
     [SerializeField] private NetworkObject attackEndVFX;
+    [SerializeField] private NetworkObject fireColumnVFX;
+    private NetworkObject smashVFX;
     private bool finishDive = false;
     private TickTimer lingerTimer;
+
+    [Header("Stage Collider Mask")]
+    [SerializeField] private LayerMask stageLayers;
 
     private CharacterEntity character;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
     private Vector3 midwayPointRef;
 
+    [SerializeField] AudioClip announcerVoiceLine;
+    private bool voiceLinePlayed = false;
+
     public override void Spawned()
     {
         base.Spawned();
+
+        fireColumnSpawnTime = dashDuration / (numFireColumns + 1);
 
         AttackStart();
 
@@ -46,6 +59,16 @@ public class LavaDive : NetworkAttack_Base
     {
         if (Object.HasStateAuthority)
         {
+            // While the dash is active, spawn fire columns VFX
+            if (dashTimer.IsRunning)
+            {
+                if (dashDuration - dashTimer.RemainingTime(Runner) > fireColumnSpawnTime)
+                {
+                    Runner.Spawn(fireColumnVFX, character.transform.position, Quaternion.identity);
+                    dashDuration -= fireColumnSpawnTime;
+                }
+            }
+
             if (lingerTimer.Expired(Runner)) AttackEnd();
 
             // Ensure Trail does damage until the end
@@ -54,12 +77,20 @@ public class LavaDive : NetworkAttack_Base
             if (finishDive) return;
 
             character.Rigidbody.Rigidbody.AddForce(transform.forward * forceForward);
-
         }
 
         if (finishDive) return;
-        if (dashTimer.Expired(Runner)) DiveEnd();
-        trail.position = character.transform.position;
+        
+        trail.position = 
+            character.transform.position;
+
+        if (dashTimer.Expired(Runner)) dashTimer = TickTimer.None;
+
+        if (dashTimer.IsRunning) return;
+
+        RaycastHit[] ray = Physics.SphereCastAll(trail.position, 3, transform.up, 1, stageLayers);
+
+        if (ray.Length == 0) DiveEnd();
     }
 
     private void AttackStart()
@@ -92,6 +123,7 @@ public class LavaDive : NetworkAttack_Base
     private void AttackEnd()
     {
         lingerTimer = TickTimer.None;
+        Runner.Despawn(smashVFX);
         Runner.Despawn(Object);
     }
 
@@ -101,12 +133,13 @@ public class LavaDive : NetworkAttack_Base
         AudioManager.Instance.PlayAudioSFX(SFX[2], transform.position);
 
         DealDamage();
-        if (Runner.IsServer) Runner.Spawn(attackEndVFX, character.transform.position, Quaternion.identity);
+        if (Runner.IsServer) smashVFX = Runner.Spawn(attackEndVFX, character.transform.position, Quaternion.identity);
         lingerTimer = TickTimer.CreateFromSeconds(Runner, lingerTime);
 
         finishDive = true;
         character.Collider.enabled = true;
     }
+
     private void ManageTrailDamage()
     {
         if (!trailDamageTimer.Expired(Runner)) return;
@@ -138,17 +171,23 @@ public class LavaDive : NetworkAttack_Base
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.team)) continue;
 
-                healthComponent.OnTakeDamage(tickDamage);
+                healthComponent.OnTakeDamage(tickDamage, false);
             }
 
             // Apply status effect
             CharacterEntity playerHit = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
+            CharacterEntity characterEntity = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
 
             // Ensure is applied only once per player
             if (playerEntities.Contains(playerHit))
             {
                 playerEntities.Add(playerHit);
                 ApplyStatusEffect(playerHit);
+            }
+
+            if (healthComponent.HP <= 0 && characterEntity && !voiceLinePlayed)
+            {
+                RPC_PlayAnnouncerVoiceLine();
             }
         }
     }
@@ -173,18 +212,30 @@ public class LavaDive : NetworkAttack_Base
         for (int i = 0; i < hits.Count; i++)
         {
             IHealthComponent healthComponent = hits[i].GameObject.GetComponentInParent<IHealthComponent>();
+            CharacterEntity characterEntity = hits[i].GameObject.GetComponentInParent<CharacterEntity>();
 
             if (healthComponent != null)
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.team)) continue;
 
-                healthComponent.OnTakeDamage(damage);
+                healthComponent.OnTakeDamage(damage, true);
 
                 Vector3 playerhitPosition = hits[i].GameObject.transform.position;
                 Vector3 directionTowardsTrail = playerhitPosition + (playerhitPosition - transform.position) - Vector3.up;
 
                 healthComponent.OnKnockBack(knockback, directionTowardsTrail);
             }
+
+            if (healthComponent.HP <= 0 && characterEntity && !voiceLinePlayed)
+            {
+                RPC_PlayAnnouncerVoiceLine();
+            }
         }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayAnnouncerVoiceLine()
+    {
+        AudioManager.Instance.PlayAudioSFX(announcerVoiceLine, transform.position);
     }
 }

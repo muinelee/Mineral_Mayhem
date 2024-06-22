@@ -21,7 +21,7 @@ public class Terran_BasicAttack : NetworkAttack_Base
     {
         base.Spawned();
 
-        //AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
 
         transform.position += transform.forward * offset;
 
@@ -57,8 +57,9 @@ public class Terran_BasicAttack : NetworkAttack_Base
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
 
-                healthComponent.OnTakeDamage(damage);
+                healthComponent.OnTakeDamage(damage, true);
                 healthComponent.OnKnockBack(knockback, transform.position);
+                Runner.Spawn(this.onHitEffect, this.transform.position + onHitOffset, Quaternion.identity);
             }
         }
     }

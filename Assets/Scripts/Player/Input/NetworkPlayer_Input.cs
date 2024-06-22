@@ -11,6 +11,36 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
     public bool CharacterSelected = false;
     public LayerMask layerMask;
 
+    public float camScrollSpeed = 8f;
+    public float minCamDistance = 30f;
+    public float maxCamDistance = 60f;
+
+    public event Action<float> OnCameraDistanceChange;
+
+    private float cameraDistance = 48f;
+    public float CameraDistance
+    {
+        get { return cameraDistance; }
+        set
+        {
+            if (value == cameraDistance) return;
+            cameraDistance = Mathf.Clamp(value, minCamDistance, maxCamDistance);
+            OnCameraDistanceChange?.Invoke(cameraDistance);
+        }
+    }
+    public event Action<bool> OnCameraLockSwapped;
+    private bool cameraLockOnPlayer = true;
+    public bool CameraLockOnPlayer
+    {
+        get { return cameraLockOnPlayer; }
+        set
+        {
+            if (cameraLockOnPlayer == value) return;
+            cameraLockOnPlayer = value;
+            OnCameraLockSwapped?.Invoke(value);
+        }
+    }
+
     public override void Init(CharacterEntity character)
     {
         base.Init(character);
@@ -24,10 +54,6 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
         Runner.AddCallbacks(this);
 
         if (!Object.HasInputAuthority) return;
-
-        CinemachineVirtualCamera virtualCam = GameObject.FindWithTag("PlayerCamera").GetComponent<CinemachineVirtualCamera>();
-        virtualCam.Follow = this.transform;
-        virtualCam.LookAt = this.transform;
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -37,21 +63,31 @@ public class NetworkPlayer_Input : CharacterComponent, INetworkRunnerCallbacks
         Runner.RemoveCallbacks(this);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse2)) CameraLockOnPlayer = !CameraLockOnPlayer;
+        float scrollInput = Input.GetAxis("Mouse ScrollWheel");
+        CameraDistance += scrollInput * - camScrollSpeed;
+    }
+
     public NetworkInputData GetInput()
     {
         var userInput = new NetworkInputData();
         if (!CharacterSelected) return userInput;
 
-        if (Input.GetKey(KeyCode.Space)) userInput.Buttons |= NetworkInputData.ButtonDash;
-        if (Input.GetKey(KeyCode.Mouse0)) userInput.Buttons |= NetworkInputData.ButtonBasic;
-        if (Input.GetKey(KeyCode.Mouse1)) userInput.Buttons |= NetworkInputData.ButtonBlock;
-        if (Input.GetKey(KeyCode.Q)) userInput.Buttons |= NetworkInputData.ButtonQ;
-        if (Input.GetKey(KeyCode.E)) userInput.Buttons |= NetworkInputData.ButtonE;
-        if (Input.GetKey(KeyCode.F)) userInput.Buttons |= NetworkInputData.ButtonF;
         if (Input.GetKey(KeyCode.W)) userInput.Buttons |= NetworkInputData.ButtonW;
         if (Input.GetKey(KeyCode.A)) userInput.Buttons |= NetworkInputData.ButtonA;
         if (Input.GetKey(KeyCode.S)) userInput.Buttons |= NetworkInputData.ButtonS;
         if (Input.GetKey(KeyCode.D)) userInput.Buttons |= NetworkInputData.ButtonD;
+
+        if (Input.GetKey(KeyCode.F)) userInput.Buttons |= NetworkInputData.ButtonF;
+        else if (Input.GetKey(KeyCode.Q)) userInput.Buttons |= NetworkInputData.ButtonQ;
+        else if (Input.GetKey(KeyCode.E)) userInput.Buttons |= NetworkInputData.ButtonE;
+        else if (Input.GetKey(KeyCode.Space)) userInput.Buttons |= NetworkInputData.ButtonDash;
+        else if (Input.GetKey(KeyCode.Mouse0)) userInput.Buttons |= NetworkInputData.ButtonBasic;
+        
+        if (Input.GetKey(KeyCode.Mouse1)) userInput.Buttons |= NetworkInputData.ButtonBlock;
+        
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit raycastHit, Mathf.Infinity, layerMask))
             userInput.cursorLocation = new Vector2(raycastHit.point.x, raycastHit.point.z);
 

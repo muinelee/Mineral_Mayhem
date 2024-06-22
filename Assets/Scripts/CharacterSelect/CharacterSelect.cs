@@ -3,12 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CharacterSelect : NetworkBehaviour
 {
     // Character select event for storm mechanics
     public delegate void CharacterSelectEvent();
+
+    public static CharacterSelect instance;
+
+    [SerializeField] ShrinkingStorm storm;
 
     [Header("Character Select")]
     public List<SO_Character> characters;
@@ -19,6 +25,10 @@ public class CharacterSelect : NetworkBehaviour
     [SerializeField] private BTN_OpenClose[] abilityPortraits;
     [SerializeField] private TMP_Text currentAbilityDescription;
     [SerializeField] private TMP_Text backstory;
+
+    [SerializeField] private Slider sliderHealth;
+    [SerializeField] private Slider sliderDamage;
+    [SerializeField] private Slider sliderSpeed;
 
     [Header("Level start")]
     [SerializeField] private float characterSelectDuration = 10;
@@ -34,9 +44,15 @@ public class CharacterSelect : NetworkBehaviour
 
     //public event for storm mechanics
     public static event CharacterSelectEvent OnCharacterSelect;
-    private void Start()
-    {
+    public UnityEvent finalizeCharSelect;
 
+    // Voice line cooldown
+    [SerializeField] private float voiceLineCooldown = 3f;
+    [SerializeField] private float lastVoiceLineTime = -3f;
+
+    private void Awake()
+    {
+        instance = this;
     }
 
     private void FixedUpdate()
@@ -48,34 +64,25 @@ public class CharacterSelect : NetworkBehaviour
 
         NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
         if (RoundManager.Instance) RoundManager.Instance.MatchStart();
+        RoundUI.instance.ShrinkRoundUI();
         this.gameObject.SetActive(false);
     }
 
     public void SelectCharacter(int characterIndex)
     {
-        int index = NetworkPlayer.Players.IndexOf(NetworkPlayer.Local);
+        int playerID = NetworkPlayer.Local.Object.InputAuthority.PlayerId;
         NetworkPlayer.Local.RPC_SetCharacterID(characterIndex);
 
-        // Needing for removing monobehaviour HUD before RPC call
-        NetworkPlayer player = NetworkPlayer.Players[index];
-        if (characterLookup.ContainsKey(player) == true)
+        // Play voice line for selected character
+        if (Time.time >= lastVoiceLineTime + voiceLineCooldown)
         {
-            if (characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI != null)
-            {
-                Debug.Log("Deleted player UI");
-                Destroy(characterLookup[player].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
-            }
+            AudioManager.Instance.PlayAudioSFX(characters[characterIndex].voiceLine[0], spawnPoints[spawnPoint].position);
+            lastVoiceLineTime = Time.time;
         }
 
-        CharacterEntity[] character = FindObjectsOfType<CharacterEntity>();
+        RPC_SpawnCharacter(playerID, spawnPoint);
 
-        // Play voice line for selected character
-        AudioManager.Instance.PlayAudioSFX(characters[characterIndex].voiceLine[0], spawnPoints[spawnPoint].position);
-
-        RPC_SpawnCharacter(index, spawnPoint);
-        Debug.Log($"Character lookup contains player {characterLookup.ContainsKey(player)}");
-
-        PlayerPrefs.SetInt("lastSelectedCharacter", characterIndex);
+        ClientInfo.CharacterID = characterIndex;
     }
 
     private void SetupAbilityUI(SO_Character character)
@@ -86,6 +93,14 @@ public class CharacterSelect : NetworkBehaviour
             character.characterQAbilityPortrait,
             character.characterEAbilityPortrait,
             character.characterFAbilityPortrait
+        };
+
+        Sprite[] abilityPortraitsIcons =
+        {
+            character.characterBasicAbilityPortraitIcon,
+            character.characterQAbilityPortraitIcon,
+            character.characterEAbilityPortraitIcon,
+            character.characterFAbilityPortraitIcon
         };
 
         string[] abilityDescriptions =
@@ -99,10 +114,18 @@ public class CharacterSelect : NetworkBehaviour
         for (int i = 0; i < abilityPortraits.Length; i++)
         {
             this.abilityPortraits[i].GetComponent<Image>().sprite = abilityPortraits[i];
+            this.abilityPortraits[i].transform.GetChild(0).GetComponent<Image>().sprite = abilityPortraitsIcons[i];
             int index = i;
             this.abilityPortraits[i].onPress.RemoveAllListeners();
             this.abilityPortraits[i].onPress.AddListener(() => UpdateAbilityDescription(abilityDescriptions[index]));
         }
+    }
+
+    private void SetupStatbars(SO_Character character)
+    {
+        sliderHealth.value = character.health;
+        sliderDamage.value = character.damage;
+        sliderSpeed.value = character.speed;
     }
 
     private void UpdateAbilityDescription(string description)
@@ -141,9 +164,19 @@ public class CharacterSelect : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    private void RPC_SpawnCharacter(int playerIndex, int spawnLocation)
+    private void RPC_SpawnCharacter(int playerID, int spawnLocation)
     {
         if (!Runner.IsServer) return;
+
+        int playerIndex = 0;
+
+        foreach (NetworkPlayer p in NetworkPlayer.Players)
+        {
+            if (p.Object.InputAuthority.PlayerId == playerID)
+            {
+                playerIndex = NetworkPlayer.Players.IndexOf(p);
+            }
+        }
 
         NetworkPlayer player = NetworkPlayer.Players[playerIndex];
 
@@ -156,6 +189,7 @@ public class CharacterSelect : NetworkBehaviour
         }
 
         else
+
         {
             Runner.Despawn(characterLookup[player].Object);
             characterLookup[player] = Runner.Spawn(characters[player.CharacterID].prefab, spawnPoints[spawnLocation].position, Quaternion.identity, player.Object.InputAuthority);
@@ -186,6 +220,7 @@ public class CharacterSelect : NetworkBehaviour
             // Setup ability portraits and descriptions
             SetupAbilityUI(characterSO);
             UpdateAbilityDescription(characterSO.characterBasicAbilityDescription);
+            SetupStatbars(characterSO);
         }
         else characterLookup.Remove(player);
     }
@@ -195,15 +230,23 @@ public class CharacterSelect : NetworkBehaviour
     /// </summary>
     public void FinalizeChoice()
     {
+        if (!this.gameObject.activeSelf) return;
+
         // Enable player control
         characterLookup[NetworkPlayer.Local].Input.CharacterSelected = true;
         characterLookup[NetworkPlayer.Local].PlayerUI.SpawnPlayerUI();
+        NetworkPlayer_InGameUI.instance.ShowPlayerUI();
 
+        if (NetworkPlayer.Players.Count > 1) RoundUI.instance.ShowRoundUI();
+        
         NetworkCameraEffectsManager.instance.GoToTopCamera();
         //  ResetButtonVisual(currentSelectedCharacterButton);
         //  characterSelectScreen.gameObject.SetActive(true);
         //  characterSelectScreen.FadeOut();
         OnCharacterSelect?.Invoke();
+        finalizeCharSelect?.Invoke();
+
+        if (storm) storm.player = characterLookup[NetworkPlayer.Local];
     }
 
     /// <summary>
@@ -211,11 +254,12 @@ public class CharacterSelect : NetworkBehaviour
     /// </summary>
     public void RenableCharacterSelect()
     {
-        //  characterSelectScreen.SetActive(true);
+        characterSelectScreen.gameObject.SetActive(true);
+        characterSelectScreen.FadeIn();
+        RoundUI.instance.HideRoundUI();
         //  reselectButton.gameObject.SetActive(false);
-        if (Runner.SessionInfo.MaxPlayers > 1) Destroy(characterLookup[NetworkPlayer.Local].GetComponent<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
-        else Destroy(FindObjectOfType<NetworkPlayer_OnSpawnUI>().playerUI.gameObject);
-        RPC_CharacterReselect(NetworkPlayer.Local);
+
+        //RPC_CharacterReselect(NetworkPlayer.Local);
         if (NetworkPlayer.Local.team == NetworkPlayer.Team.Red) NetworkCameraEffectsManager.instance.GoToRedCamera();
         else if (NetworkPlayer.Local.team == NetworkPlayer.Team.Blue) NetworkCameraEffectsManager.instance.GoToBlueCamera();
     }
@@ -250,11 +294,15 @@ public class CharacterSelect : NetworkBehaviour
         characterSelectScreen.gameObject.SetActive(true);
         characterSelectScreen.FadeIn();
 
+        Debug.Log($"The size of the Players list is {NetworkPlayer.Players.Count}");
+
         RoundManager.Instance.ResetRound += SetPlayerToSpawn;
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
             int spawnLocation = (player.team == NetworkPlayer.Team.Red) ? 0 : 2;
+
             spawnLocation += ReadyUpManager.instance.GetIndex(player);
+            Debug.Log($"Spawn location value is {spawnLocation}");
             Vector3 spawnVector = matchStartPoints[spawnLocation].position;
             RoundManager.Instance.respawnPoints.Add(player, spawnVector);
         }
@@ -268,7 +316,8 @@ public class CharacterSelect : NetworkBehaviour
         // Character Select Timer
         characterSelectTimer = TickTimer.CreateFromSeconds(Runner, characterSelectDuration);
 
-        int lastSelectedCharacter = PlayerPrefs.GetInt("lastSelectedCharacter", 0);
-        SelectCharacter(lastSelectedCharacter);
+        TimerManager.instance.ResetTimer(characterSelectDuration);
+
+        SelectCharacter(ClientInfo.CharacterID);
     }
 }

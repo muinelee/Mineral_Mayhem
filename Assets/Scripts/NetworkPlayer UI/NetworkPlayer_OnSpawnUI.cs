@@ -26,20 +26,21 @@ public class NetworkPlayer_OnSpawnUI : CharacterComponent
         {
             //RoundManager.Instance.MatchStartEvent += SpawnPlayerUI;
         }
+
+        playerUI = FindObjectOfType<NetworkPlayer_InGameUI>();
     }
 
     public void SpawnPlayerUI()
     {
         if (Object.HasInputAuthority)
         {
-            playerUI = Instantiate(playerUIPF, GameObject.FindGameObjectWithTag("UI Canvas").transform);
+            Debug.Log("OnSpawnUI");
 
             // Local player health linked to player UI
             playerUI.SetPlayerHealth(GetComponent<NetworkPlayer_Health>());
 
             // Local player energy linked to player UI
             playerUI.SetPlayerEnergy(GetComponent<NetworkPlayer_Energy>());
-
 
             // Local player movement linked to player UI
             NetworkPlayer_Movement playerMovement = GetComponent<NetworkPlayer_Movement>();

@@ -5,16 +5,32 @@ using UnityEngine.Events;
 
 public class INP_Pause : MonoBehaviour
 {
+    public static INP_Pause instance;
+
     [SerializeField] KeyCode pauseKey = KeyCode.Escape;
     [SerializeField] CG_Fade menu;
     [SerializeField] GameObject[] windowsToOpen;
     [SerializeField] GameObject[] windowsToClose;
     [SerializeField] float delay = 0.5f;
+    public GameObject reselectCharacterButton;
 
-    bool paused = false;
+    public bool paused = false;
+
+    // Used for ClosePauseMenuUntilPastCharacterSelect.cs
+    public bool pastCharacterSelect = false;
+
+    public UnityEvent OnPause;
+    public UnityEvent OnUnpause;
 
     //--------------------------------//
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
     private void Update()
     {
         if (Input.GetKeyUp(pauseKey))
@@ -37,6 +53,8 @@ public class INP_Pause : MonoBehaviour
             yield return new WaitForSecondsRealtime(delay);
 
             paused = false;
+
+            OnUnpause?.Invoke();
 
             //Cursor.lockState = CursorLockMode.Locked;
             //Cursor.visible = false;
@@ -65,6 +83,8 @@ public class INP_Pause : MonoBehaviour
                 }
             }
 
+            OnPause?.Invoke();
+
             //Cursor.lockState = CursorLockMode.Confined;
             //Cursor.visible = true;
         }
@@ -73,5 +93,14 @@ public class INP_Pause : MonoBehaviour
     public void ChangePauseBool(bool isPaused)
     {
         paused = isPaused;
+    }
+
+    public void PastCharacterSelect()
+    {
+        pastCharacterSelect = true;
+    }
+    public void BackToCharacterSelect()
+    {
+        pastCharacterSelect = false;
     }
 }

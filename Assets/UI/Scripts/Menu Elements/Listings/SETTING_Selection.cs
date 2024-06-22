@@ -19,11 +19,6 @@ public class SETTING_Selection : MonoBehaviour
             selected = SettingsManager.postProcessing;
             UpdateSetting();
         }
-        if (settingType == "windowed")
-        {
-            selected = SettingsManager.windowed;
-            UpdateSetting();
-        }
     }
 
     public void ResetSettings()
@@ -31,11 +26,6 @@ public class SETTING_Selection : MonoBehaviour
         if (settingType == "postProcessing")
         {
             selected = 0;
-            UpdateSetting();
-        }
-        if (settingType == "windowed")
-        {
-            selected = 1;
             UpdateSetting();
         }
     }
@@ -78,6 +68,5 @@ public class SETTING_Selection : MonoBehaviour
         }
 
         if (settingType != "") ChangeSetting.instance.ChangeSelection(selected, settingType);
-        Debug.Log("Option: " + selected);
     }
 }

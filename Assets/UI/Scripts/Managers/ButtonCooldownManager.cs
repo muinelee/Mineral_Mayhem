@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ButtonCooldownManager : MonoBehaviour
 {
     public static ButtonCooldownManager instance;
 
-    [SerializeField] BTN_OpenClose[] buttons;
+    [SerializeField] public BTN_OpenClose[] buttons;
 
     [SerializeField] float cooldownTime = 1f;
 
@@ -30,7 +31,7 @@ public class ButtonCooldownManager : MonoBehaviour
         {
             if (buttons[i] != null)
             {
-                buttons[i].disabled = true;
+                buttons[i].GetComponent<EventTrigger>().enabled = false;
             }
         }
 
@@ -40,7 +41,7 @@ public class ButtonCooldownManager : MonoBehaviour
         {
             if (buttons[i] != null)
             {
-                buttons[i].disabled = false;
+                buttons[i].GetComponent<EventTrigger>().enabled = true;
             }
         }
     }

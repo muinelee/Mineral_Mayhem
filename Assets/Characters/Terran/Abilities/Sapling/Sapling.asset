@@ -13,10 +13,17 @@ MonoBehaviour:
   m_Name: Sapling
   m_EditorClassIdentifier: 
   attack: {fileID: 3520664081436305796, guid: bf045c390d245814295df7f35ce3cd55, type: 3}
-  voiceLine: {fileID: 0}
-  attackName: TempTerran_Sapling
+  voiceLine:
+  - {fileID: 8300000, guid: e512f418d4b19a64ca0fea32d0516401, type: 3}
+  - {fileID: 8300000, guid: 68dd4e2df64e1a7479aecb1327e1576e, type: 3}
+  - {fileID: 8300000, guid: ce64ca4e326b45e4f819c21dd06d88e9, type: 3}
+  - {fileID: 8300000, guid: 26ff0e87cc36be24d8f470dbea70c499, type: 3}
+  attackName: Sapling
   attackDescription: 
-  attackIcon: {fileID: 0}
-  abilitySlow: 1
-  turnSlow: 0
-  coolDown: 2
+  attackIcon: {fileID: 21300000, guid: 1232009cb4feef341ae689a847d32c58, type: 3}
+  attackBackground: {fileID: 21300000, guid: 1232009cb4feef341ae689a847d32c58, type: 3}
+  attackBackgroundGrey: {fileID: 21300000, guid: d0f8a85694d6680409982c751199d493, type: 3}
+  abilitySlow: 0.05
+  turnSlow: 0.2
+  coolDown: 9
+  allowDashCancel: 0

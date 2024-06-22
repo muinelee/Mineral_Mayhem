@@ -2,6 +2,7 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static CharacterVisualHandler;
 
 public class NetworkPlayer_AnimationLink : CharacterComponent
 {
@@ -16,7 +17,7 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
     // Start is called before the first frame update
     public override void Spawned()
     {
-        anim = GetComponent<Animator>();        
+        anim = GetComponent<Animator>();
     }
 
     public void FireQAttack()
@@ -49,22 +50,47 @@ public class NetworkPlayer_AnimationLink : CharacterComponent
         Character.Attack.ChainBasicAttack();
     }
 
+    public void AllowMomentum()
+    {
+        Character.Attack.AttackMomentum();
+    }
+
     public void ResetAnimation()
     {
-        Character.Attack.ResetAttackCapabilities();
+        if (Character.Health.isDead) return;
+
+        StartCoroutine(AttackResetHelper(0.25f));
+        //Character.Attack.ResetAttackCapabilities();
         anim.CrossFade("Run", 0.2f);
+        anim.CrossFade("Run", 0.2f, 2);
+    }
+
+    IEnumerator AttackResetHelper(float timeDelay)
+    {
+        yield return new WaitForSeconds(timeDelay);
+
+        Character.Attack.ResetAttackCapabilities();
     }
 
     public override void OnBlock(bool isBlocking)
     {
-        base.OnBlock(isBlocking);
+        RPC_DetermineAnimFromBlockState(isBlocking);
+    }
 
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_DetermineAnimFromBlockState(bool isBlocking)
+    {
         if (isBlocking)
         {
-            anim.CrossFade("Block", 0.2f);
+            anim.CrossFade("Block", 0.08f);
+            anim.CrossFade("Helper", 0.2f, 2);
         }
         else
         {
+            if (Character.StatusHandler.IsStunned())
+            {
+                return;
+            }
             ResetAnimation();
         }
     }

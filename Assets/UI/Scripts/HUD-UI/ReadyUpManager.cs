@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using UnityEngine.UI;
-using TMPro;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class ReadyUpManager : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class ReadyUpManager : MonoBehaviour
 
     [SerializeField] private GameObject readyUp;
     [SerializeField] private GameObject unReadyUp;
-    [SerializeField] private CG_Fade startGame;
+    [SerializeField] private BTN_OpenClose startGame;
 
     [Header("Blue Team properties")]
     [SerializeField] private List<NetworkPlayer> blueTeamList;
@@ -23,7 +24,7 @@ public class ReadyUpManager : MonoBehaviour
 
     [Header("Undecided Team properties")]
     [SerializeField] private List<NetworkPlayer> undecidedTeamList;
-    [SerializeField] private VerticalLayoutGroup undecidedTeamLayoutGroup;
+    [SerializeField] private HorizontalLayoutGroup undecidedTeamLayoutGroup;
 
     [Header("Item List Prefabs")]
     [SerializeField] private ReadyUpName playerTeamDisplayPF;
@@ -31,12 +32,26 @@ public class ReadyUpManager : MonoBehaviour
     [Header("Round Manager")]
     [SerializeField] private RoundManager roundManagerPF;
 
+    [Header("Asset References")]
+    [SerializeField] Sprite redTeamBackground;
+    [SerializeField] Sprite blueTeamBackground;
+    [SerializeField] Sprite unassignedBackground;
+    [SerializeField] Sprite readyBackground;
+
+    private NetworkRunner runner;
+
+    // Arena
+    private Arena arena;
+
     // Keep track of which player is at team list
     private Dictionary<NetworkPlayer, ReadyUpName> playerTeamDisplayPair = new Dictionary<NetworkPlayer, ReadyUpName>();
 
     private void Awake()
     {
         instance = this;
+        arena = FindAnyObjectByType<Arena>();
+        Debug.Log($"This is how many players are in the match {NetworkPlayer.Players.Count}");
+        runner = FindAnyObjectByType<NetworkRunner>();
     }
 
     public void OnStartGame()
@@ -44,7 +59,6 @@ public class ReadyUpManager : MonoBehaviour
         if (!NetworkPlayer.Local.HasStateAuthority) return;
 
         //Check to see if there are enough players
-        NetworkRunner runner = FindAnyObjectByType<NetworkRunner>();
 
         if (runner.SessionInfo.PlayerCount != runner.SessionInfo.MaxPlayers) return;
 
@@ -63,7 +77,8 @@ public class ReadyUpManager : MonoBehaviour
 
     public void OnQuitGame()
     {
-        FindObjectOfType<Arena>().QuitToMenu();
+        NetworkPlayer.Players.Clear();
+        arena.QuitToMenu();
     }
 
     public void FadeScreenIn()
@@ -73,19 +88,29 @@ public class ReadyUpManager : MonoBehaviour
 
     public void PrimeReadyUpUI(NetworkPlayer player)
     {
-        if (player.HasStateAuthority)
+        if (!player.HasStateAuthority)
         {
-            startGame.gameObject.SetActive(true);
-            startGame.FadeIn();
+            startGame.disabled = true;
+            startGame.GetComponent<BTN_Animation>().ColorDisable();
+            startGame.GetComponent<EventTrigger>().enabled = false;
         }
 
-        foreach (NetworkPlayer netPlayer in NetworkPlayer.Players)
+        foreach (NetworkPlayer netPlayer in FindObjectsOfType<NetworkPlayer>())
         {
             // Display team colors if players not ready
             if (netPlayer.team == NetworkPlayer.Team.Blue) JoinBlueTeam(netPlayer);
             else if (netPlayer.team == NetworkPlayer.Team.Red) JoinRedTeam(netPlayer);
             else if (netPlayer.team == NetworkPlayer.Team.Undecided && netPlayer != NetworkPlayer.Local) JoinUndecided(netPlayer);
         }
+
+        StartCoroutine(CheckReadyHelper());
+    }
+
+    IEnumerator CheckReadyHelper()
+    {
+        yield return 0;
+
+        CheckIsOthersReady();
     }
 
     #region <----- Ready Up Functionality ----->
@@ -116,15 +141,15 @@ public class ReadyUpManager : MonoBehaviour
 
         if (undecidedTeamList.Contains(player)) return;
 
-        playerTeamDisplayPair[player].GetComponent<Image>().color = Color.green;
+        playerTeamDisplayPair[player].GetComponent<Image>().sprite = readyBackground;
 
         player.isReady = true;
     }
 
     public void UnReadyUp(NetworkPlayer player)
     {
-        if (player.team == NetworkPlayer.Team.Blue) playerTeamDisplayPair[player].GetComponent<Image>().color = Color.blue;
-        else if (player.team == NetworkPlayer.Team.Red) playerTeamDisplayPair[player].GetComponent<Image>().color = Color.red;
+        if (player.team == NetworkPlayer.Team.Blue) playerTeamDisplayPair[player].GetComponent<Image>().sprite = blueTeamBackground;
+        else if (player.team == NetworkPlayer.Team.Red) playerTeamDisplayPair[player].GetComponent<Image>().sprite = redTeamBackground;
 
         player.isReady = false;
     }
@@ -150,7 +175,7 @@ public class ReadyUpManager : MonoBehaviour
     public void JoinBlueTeam(NetworkPlayer player)
     {
         // Manage player in team lists
-        if (blueTeamList.Contains(player)) return;
+        if (blueTeamList.Contains(player) || blueTeamList.Count ==  runner.SessionInfo.MaxPlayers/2) return;
         if (redTeamList.Contains(player)) redTeamList.Remove(player);
         if (undecidedTeamList.Contains(player)) undecidedTeamList.Remove(player);
 
@@ -168,7 +193,7 @@ public class ReadyUpManager : MonoBehaviour
         ReadyUpName readyUpName = Instantiate(playerTeamDisplayPF, blueTeamLayoutGroup.transform);
         readyUpName.SetPlayer(player);
 
-        readyUpName.GetComponent<Image>().color = Color.blue;
+        readyUpName.GetComponent<Image>().sprite = blueTeamBackground;
 
         // Destroy player display name if one is already present in the other team list
         if (playerTeamDisplayPair.ContainsKey(player)) Destroy(playerTeamDisplayPair[player].gameObject);
@@ -182,7 +207,7 @@ public class ReadyUpManager : MonoBehaviour
     public void JoinRedTeam(NetworkPlayer player)
     {
         // Manager player in team lists
-        if (redTeamList.Contains(player)) return;
+        if (redTeamList.Contains(player) || redTeamList.Count == runner.SessionInfo.MaxPlayers / 2) return;
         if (blueTeamList.Contains(player)) blueTeamList.Remove(player);
         if (undecidedTeamList.Contains(player)) undecidedTeamList.Remove(player);
 
@@ -200,7 +225,7 @@ public class ReadyUpManager : MonoBehaviour
         ReadyUpName readyUpName = Instantiate(playerTeamDisplayPF, redTeamLayoutGroup.transform);
         readyUpName.SetPlayer(player);
 
-        readyUpName.GetComponent<Image>().color = Color.red;
+        readyUpName.GetComponent<Image>().sprite = redTeamBackground;
 
         // Destroy player display name if one is already present in the other team list
         if (playerTeamDisplayPair.ContainsKey(player)) Destroy(playerTeamDisplayPair[player].gameObject);
@@ -208,6 +233,7 @@ public class ReadyUpManager : MonoBehaviour
 
         // Add playre to the red team
         redTeamList.Add(player);
+
         player.team = NetworkPlayer.Team.Red;
     }
 
@@ -221,7 +247,7 @@ public class ReadyUpManager : MonoBehaviour
     {
         ReadyUpName readyUpName = Instantiate(playerTeamDisplayPF, undecidedTeamLayoutGroup.transform);
         readyUpName.SetPlayer(player);
-        readyUpName.GetComponent<Image>().color = Color.grey;
+        readyUpName.GetComponent<Image>().sprite = unassignedBackground;
 
         playerTeamDisplayPair[player] = readyUpName;
 
@@ -282,9 +308,15 @@ public class ReadyUpManager : MonoBehaviour
     {
         foreach (NetworkPlayer player in NetworkPlayer.Players)
         {
+            Debug.Log($"Player {player.playerName} is being checked");
+            Debug.Log($"{player.playerName} index in Local Players list is {NetworkPlayer.Players.IndexOf(player)}");
+        }
+
+        foreach (NetworkPlayer player in NetworkPlayer.Players)
+        {
             if (player.isReady)
             {
-                playerTeamDisplayPair[player].GetComponent<Image>().color = Color.green;
+                playerTeamDisplayPair[player].transform.GetComponent<Image>().sprite = readyBackground;
                 ReadyUp(player);
             }
         }

@@ -15,7 +15,6 @@ public class ChangeSetting : MonoBehaviour
     [SerializeField] Volume PP_Saturation;
 
     [Header("Settings Listings References")]
-    [SerializeField] SETTING_Selection S_Windowed;
     [SerializeField] SETTING_Selection S_PostProcessing;
     [SerializeField] SETTING_Slider S_Master;
     [SerializeField] SETTING_Slider S_SFX;
@@ -35,7 +34,11 @@ public class ChangeSetting : MonoBehaviour
     }
     private void Start()
     {
-        
+        if (!PlayerPrefs.HasKey("InitSettings"))
+        {
+            ResetSettings();
+            PlayerPrefs.SetInt("InitSettings", 1);
+        }
     }
 
     public void SetSettings()
@@ -51,7 +54,6 @@ public class ChangeSetting : MonoBehaviour
         PP_Contrast.weight = SettingsManager.contrast;
         PP_Saturation.weight = SettingsManager.saturation;
 
-        S_Windowed.SetSettings();
         S_PostProcessing.SetSettings();
         S_Master.SetSettings();
         S_SFX.SetSettings();
@@ -69,11 +71,10 @@ public class ChangeSetting : MonoBehaviour
         mixer.SetFloat("music", 0.8f * 80 - 80);
         mixer.SetFloat("sfx", 1 * 80 - 80);
 
-        PP_Brightness.weight = 0.55f;
-        PP_Contrast.weight = 0.7f;
-        PP_Saturation.weight = 0.6f;
+        PP_Brightness.weight = 0.75f;
+        PP_Contrast.weight = 0.75f;
+        PP_Saturation.weight = 0.55f;
 
-        S_Windowed.ResetSettings();
         S_PostProcessing.ResetSettings();
         S_Master.ResetSettings();
         S_SFX.ResetSettings();
@@ -85,13 +86,6 @@ public class ChangeSetting : MonoBehaviour
 
     public void ChangeSelection(int selection, string type)
     {
-        if (type == "windowed")
-        {
-            SettingsManager.windowed = selection;
-
-            // Setting Effect
-
-        }
         if (type == "postProcessing")
         {
             SettingsManager.postProcessing = selection;
@@ -107,7 +101,6 @@ public class ChangeSetting : MonoBehaviour
         if (type == "brightness")
         {
             SettingsManager.brightness = value;
-            Debug.Log("Brightness: " + SettingsManager.brightness + " / " + value);
 
             // Setting Effect
             PP_Brightness.weight = value;
@@ -131,21 +124,21 @@ public class ChangeSetting : MonoBehaviour
             SettingsManager.volumeMaster = value;
 
             // Setting Effect
-            mixer.SetFloat("master", SettingsManager.volumeMaster * 80 - 80);
+            mixer.SetFloat("master", SettingsManager.volumeMaster > 0 ? Mathf.Log10(SettingsManager.volumeMaster) * 20 : -80);
         }
         else if (type == "volumeMusic")
         {
             SettingsManager.volumeMusic = value;
 
             // Setting Effect
-            mixer.SetFloat("music", SettingsManager.volumeMusic * 80 - 80);
+            mixer.SetFloat("music", SettingsManager.volumeMusic > 0 ? Mathf.Log10(SettingsManager.volumeMusic) * 20 : -80);
         }
         else if (type == "volumeSFX")
         {
             SettingsManager.volumeSFX = value;
 
             //Setting Effect
-            mixer.SetFloat("sfx", SettingsManager.volumeSFX * 80 - 80);
+            mixer.SetFloat("sfx", SettingsManager.volumeSFX > 0 ? Mathf.Log10(SettingsManager.volumeSFX) * 20 : -80);
 
         }
     }

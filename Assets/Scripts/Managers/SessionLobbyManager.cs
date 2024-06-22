@@ -11,11 +11,6 @@ public class SessionLobbyManager : MonoBehaviour
     [SerializeField] private SessionListItem sessionListItemPF;
     [SerializeField] private VerticalLayoutGroup sessionList;
 
-    private void Awake()
-    {
-        ClearList();
-    }
-
     public void ClearList()
     {
         // Clear

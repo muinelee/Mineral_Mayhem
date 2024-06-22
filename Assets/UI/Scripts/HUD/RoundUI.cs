@@ -12,34 +12,30 @@ public class RoundUI : MonoBehaviour
 
     [Header("UI Element References")]
     [SerializeField] Image gemLeft1;
-    [SerializeField] Image gemLeftOutline1;
     [SerializeField] Image gemLeft2;
-    [SerializeField] Image gemLeftOutline2;
-    [SerializeField] Image gemLeft3;
-    [SerializeField] Image gemLeftOutline3;
     [SerializeField] Image gemRight1;
-    [SerializeField] Image gemRightOutline1;
     [SerializeField] Image gemRight2;
-    [SerializeField] Image gemRightOutline2;
-    [SerializeField] Image gemRight3;
-    [SerializeField] Image gemRightOutline3;
 
     [Header("Asset References")]
     [SerializeField] Sprite gemGrey;
-    [SerializeField] Sprite gemGreyOutline;
     [SerializeField] Sprite gemBlue;
-    [SerializeField] Sprite gemBlueOutline;
     [SerializeField] Sprite gemRed;
-    [SerializeField] Sprite gemRedOutline;
 
-    [SerializeField] CG_Fade roundUIBar;
+    public CG_Fade roundUIBar;
 
-    [Header("Lerp Settings")]
+    [Header("Lerp Settings Expand/Collapse")]
     [SerializeField] private float lerpDuration = 0.5f;
-    [SerializeField] private float startScaleX = 0;
-    [SerializeField] private float endScaleX = 1f;
+    [SerializeField] private float startSizeX = 0;
+    [SerializeField] private float endSizeX = 1f;
 
     private float curValue;
+
+    [Header("Lerp Settings Grow/Shrink")]
+    [SerializeField] private float lerpDuration2 = 0.5f;
+    public float startScaleX = 1;
+    public float endScaleX = 0.55f;
+
+    private float curValue2;
 
     //------------------------------//
 
@@ -58,21 +54,12 @@ public class RoundUI : MonoBehaviour
             blueWins = 1;
 
             gemLeft1.sprite = gemBlue;
-            gemLeftOutline1.sprite = gemBlueOutline;
         }
         else if (blueWins == 1)
         {
             blueWins = 2;
 
             gemLeft2.sprite = gemBlue;
-            gemLeftOutline2.sprite = gemBlueOutline;
-        }
-        else if (blueWins == 2)
-        {
-            blueWins = 3;
-
-            gemLeft3.sprite = gemBlue;
-            gemLeftOutline3.sprite = gemBlueOutline;
         }
     }
     public void RedWin()
@@ -81,25 +68,17 @@ public class RoundUI : MonoBehaviour
         {
             redWins = 1;
 
-            gemLeft1.sprite = gemRed;
-            gemLeftOutline1.sprite = gemRedOutline;
+            gemRight1.sprite = gemRed;
         }
         else if (redWins == 1)
         {
             redWins = 2;
 
-            gemLeft2.sprite = gemRed;
-            gemLeftOutline2.sprite = gemRedOutline;
-        }
-        else if (redWins == 2)
-        {
-            redWins = 3;
-
-            gemLeft3.sprite = gemRed;
-            gemLeftOutline3.sprite = gemRedOutline;
+            gemRight2.sprite = gemRed;
         }
     }
 
+    [ContextMenu("Collapse Round UI")]
     public void CollapseRoundUI()
     {
         StartCoroutine(iCollapseRoundUI());
@@ -110,16 +89,17 @@ public class RoundUI : MonoBehaviour
         while (timeElapsed < lerpDuration)
         {
 
-            curValue = Mathf.Lerp(endScaleX, startScaleX, timeElapsed / lerpDuration);
-            roundUIBar.transform.localScale = new Vector3(curValue, roundUIBar.transform.localScale.y, roundUIBar.transform.localScale.z);
+            curValue = Mathf.Lerp(startSizeX, endSizeX, timeElapsed / lerpDuration);
+            roundUIBar.GetComponent<RectTransform>().sizeDelta = new Vector2(curValue, roundUIBar.GetComponent<RectTransform>().sizeDelta.y);
 
             timeElapsed += Time.unscaledDeltaTime;
             yield return null;
         }
-        curValue = startScaleX;
-        roundUIBar.transform.localScale = new Vector3(startScaleX, roundUIBar.transform.localScale.y, roundUIBar.transform.localScale.z);
+        curValue = endSizeX;
+        roundUIBar.GetComponent<RectTransform>().sizeDelta = new Vector2(curValue, roundUIBar.GetComponent<RectTransform>().sizeDelta.y);
     }
 
+    [ContextMenu("Expand Round UI")]
     public void ExpandRoundUI()
     {
         StartCoroutine(iExpandRoundUI());
@@ -130,14 +110,56 @@ public class RoundUI : MonoBehaviour
         while (timeElapsed < lerpDuration)
         {
 
-            curValue = Mathf.Lerp(startScaleX, endScaleX, timeElapsed / lerpDuration);
-            roundUIBar.transform.localScale = new Vector3(curValue, roundUIBar.transform.localScale.y, roundUIBar.transform.localScale.z);
+            curValue = Mathf.Lerp(endSizeX, startSizeX, timeElapsed / lerpDuration);
+            roundUIBar.GetComponent<RectTransform>().sizeDelta = new Vector2(curValue, roundUIBar.GetComponent<RectTransform>().sizeDelta.y);
 
             timeElapsed += Time.unscaledDeltaTime;
             yield return null;
         }
-        curValue = endScaleX;
-        roundUIBar.transform.localScale = new Vector3(endScaleX, roundUIBar.transform.localScale.y, roundUIBar.transform.localScale.z);
+        curValue = startSizeX;
+        roundUIBar.GetComponent<RectTransform>().sizeDelta = new Vector2(curValue, roundUIBar.GetComponent<RectTransform>().sizeDelta.y);
+    }
+
+    [ContextMenu("Shrink Round UI")]
+    public void ShrinkRoundUI()
+    {
+        StartCoroutine(iShrinkRoundUI());
+    }
+    private IEnumerator iShrinkRoundUI()
+    {
+        float timeElapsed = 0;
+        while (timeElapsed < lerpDuration2)
+        {
+
+            curValue2 = Mathf.Lerp(startScaleX, endScaleX, timeElapsed / lerpDuration2);
+            roundUIBar.GetComponent<RectTransform>().localScale = new Vector3(curValue2, curValue2, curValue2);
+
+            timeElapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        curValue2 = endScaleX;
+        roundUIBar.GetComponent<RectTransform>().localScale = new Vector3(curValue2, curValue2, curValue2);
+    }
+
+    [ContextMenu("Grow Round UI")]
+    public void GrowRoundUI()
+    {
+        StartCoroutine(iGrowRoundUI());
+    }
+    private IEnumerator iGrowRoundUI()
+    {
+        float timeElapsed = 0;
+        while (timeElapsed < lerpDuration2)
+        {
+
+            curValue2 = Mathf.Lerp(endScaleX, startScaleX, timeElapsed / lerpDuration2);
+            roundUIBar.GetComponent<RectTransform>().localScale = new Vector3(curValue2, curValue2, curValue2);
+
+            timeElapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        curValue2 = startScaleX;
+        roundUIBar.GetComponent<RectTransform>().localScale = new Vector3(curValue2, curValue2, curValue2);
     }
 
     public void ShowRoundUI()

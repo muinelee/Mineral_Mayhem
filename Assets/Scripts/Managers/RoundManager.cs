@@ -44,6 +44,8 @@ public class RoundManager : NetworkBehaviour
     [Header("Round End Properties")]
     [SerializeField] private float matchEndDelay = 5;
     private TickTimer matchEndTimer = TickTimer.None;
+    [SerializeField] AudioClip redTeamWins;
+    [SerializeField] AudioClip blueTeamWins;
 
     public override void Spawned() 
     {
@@ -87,9 +89,7 @@ public class RoundManager : NetworkBehaviour
         currentRound++;
         resetStorm?.Invoke();
         startStorm?.Invoke();
-        // Round start based on if its round 1, then its 30s, if not, 10s 
-        float startDuration = (currentRound == 1) ? gameStartDuration : roundStartDuration;
-        roundStartTimer = TickTimer.CreateFromSeconds(Runner, startDuration);
+
         // Spawning/Setting players back into their own positions 
 
         // Resetting health and lives 
@@ -98,58 +98,110 @@ public class RoundManager : NetworkBehaviour
         bluePlayersAlive = teammSize;
 
         // Show Round UI
-        RPC_ShowRoundUI();
+        //RPC_ShowRoundUI();
+
+        StartCoroutine(StartCountDown());
     }
 
     public void RoundEnd() 
     {
+        StartCoroutine(iRoundEnd());
+    }
+    private IEnumerator iRoundEnd()
+    {
+        yield return 0;
+
         // Checks which team has more players alive
         // Blueplayer and red playerdies already checks if all members on team dies 
         if (redPlayersAlive > bluePlayersAlive)
         {
             redRoundsWon++;
             RPC_UpdateRoundUIForClients(true);
+            RPC_DisplayRedWinsRound();
         }
 
         else if (bluePlayersAlive > redPlayersAlive)
         {
-            blueRoundsWon++; 
+            blueRoundsWon++;
             RPC_UpdateRoundUIForClients(false);
+            RPC_DisplayBlueWinsRound();
+        }
+
+        else if (bluePlayersAlive == redPlayersAlive)
+        {
+            currentRound--;
         }
 
         if (redRoundsWon == Mathf.CeilToInt((float)maxRounds / 2) || blueRoundsWon == Mathf.CeilToInt((float)maxRounds / 2))
         {
             matchEndTimer = TickTimer.CreateFromSeconds(Runner, matchEndDelay);
-            return;
+            yield break;
         }
 
         roundEndTimer = TickTimer.CreateFromSeconds(Runner, roundEndDuration);
+
+        if (Runner.IsServer) FindAnyObjectByType<ShrinkingStorm>().PreventDamage();
+
+        RPC_GrowRoundUI();
+        RPC_StopTimer();
     }
 
     public void MatchEnd()
     {
-        if (redRoundsWon > blueRoundsWon) RPC_DisplayGameOver(true);
-        else if (blueRoundsWon > redRoundsWon) RPC_DisplayGameOver(false);
-        else Debug.Log("Tie!");
-        RPC_HideRoundUI();
+        if (redRoundsWon > blueRoundsWon)
+        {
+            RPC_DisplayGameOver(true);
+            RPC_RedTeamWinsAnnouncer();
+        }
+        else if (blueRoundsWon > redRoundsWon)
+        {
+            RPC_DisplayGameOver(false);
+            RPC_BlueTeamWinsAnnouncer();
+        }
+
+        else
+        {
+            Debug.Log("Tie!");
+        }
+        //RPC_HideRoundUI();
         RPC_GoToVictoryCamera();
+
+        StartCoroutine(iMatchEnd());
+    }
+    private IEnumerator iMatchEnd()
+    {
+        yield return new WaitForSecondsRealtime(4f);
+
+        RPC_CollapseRoundUI();
+
+        yield return new WaitForSecondsRealtime(1.5f);
+
+        RPC_HideRoundUI();
     }
 
     public void MatchStart()
     {
+        INP_Pause.instance.reselectCharacterButton.SetActive(false);
+
         NetworkCameraEffectsManager.instance.StartCinematic(NetworkPlayer.Local);
         MatchStartEvent?.Invoke();
         resetStorm?.Invoke();
         startStorm?.Invoke();
+        NetworkPlayer_InGameUI.instance.HidePlayerUI();
         
-        if (Runner.IsServer) RPC_HideRoundUI();
+        if (Runner.IsServer)
+        {
+            RPC_DisableControls(true);
+            //RPC_ShowRoundUI();
+        }
     }
 
     public override void FixedUpdateNetwork()
     {
         if (roundEndTimer.Expired(Runner))
         { 
-            roundEndTimer = TickTimer.None; 
+            roundEndTimer = TickTimer.None;
+            FindAnyObjectByType<CoreBehaviour>().Die();
             ResetRound?.Invoke();
         }
 
@@ -158,11 +210,25 @@ public class RoundManager : NetworkBehaviour
             matchEndTimer = TickTimer.None;
             MatchEndEvent?.Invoke();
         }
-    } 
+    }
 
     public void OnResetRound()
     {
         ResetRound?.Invoke();
+    }
+
+    IEnumerator StartCountDown()
+    {
+        yield return 0;
+        RPC_DisableControls(true);
+        yield return new WaitForSeconds(2f);
+        RPC_PlayCountdown();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayCountdown()
+    {
+        CountDownTimer.instance.StartCountDown();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -170,6 +236,17 @@ public class RoundManager : NetworkBehaviour
     {
         if (isRedWin) RoundUI.instance.RedWin();
         else RoundUI.instance.BlueWin();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_DisableControls(bool disable)
+    {
+        CharacterEntity[] characters = FindObjectsOfType<CharacterEntity>();
+        foreach (CharacterEntity character in characters)
+        {
+            if (disable) character.Health.DisableControls();
+            else character.Health.EnableControls();
+        }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -197,5 +274,59 @@ public class RoundManager : NetworkBehaviour
     {
         RoundUI.instance.HideRoundUI();
         NetworkPlayer_InGameUI.instance.HidePlayerUI();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_ExpandRoundUI()
+    {
+        RoundUI.instance.ExpandRoundUI();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_CollapseRoundUI()
+    {
+        RoundUI.instance.CollapseRoundUI();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_GrowRoundUI()
+    {
+        TimerManager.instance.StopTimer(false);
+        RoundUI.instance.GrowRoundUI();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_ShrinkRoundUI()
+    {
+        RoundUI.instance.ShrinkRoundUI();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_RedTeamWinsAnnouncer()
+    {
+        AudioManager.Instance.PlayAudioSFX(redTeamWins, transform.localPosition);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_BlueTeamWinsAnnouncer()
+    {
+        AudioManager.Instance.PlayAudioSFX(blueTeamWins, transform.localPosition);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_DisplayRedWinsRound()
+    {
+        GameOverManager.Instance.DisplayRedWinsRound();
+    }
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_DisplayBlueWinsRound()
+    {
+        GameOverManager.Instance.DisplayBlueWinsRound();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_StopTimer()
+    {
+        TimerManager.instance.StopTimer(false);
     }
 }

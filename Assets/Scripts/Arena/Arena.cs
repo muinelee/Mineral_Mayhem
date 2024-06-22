@@ -10,11 +10,13 @@ public class Arena : NetworkBehaviour
     public Transform[] spawnPoints;
     public GameObject healthPickup;
     public GameObject altPickup;    // at time of writing I forget name of other collectible in-game lol - there may also be more than one, can create list
+    public float coreDelay = 10f;
     public NetworkObject core;
 
     public SO_ArenaDefinition definition;    //Will have information relative to the specific arena we are on (music/name/index/icon/image, etc)
-
     public SplineContainer spline;
+
+    public AudioClip countDownVoiceLine;
 
     private NetworkObject currentCore;
     private Coroutine coreSpawnCoroutine;
@@ -48,7 +50,7 @@ public class Arena : NetworkBehaviour
             yield return null;
         }
 
-        StartCoreSpawnTimer(5f);
+        StartCoreSpawnTimer(coreDelay);
     }
 
 
@@ -59,14 +61,13 @@ public class Arena : NetworkBehaviour
 
         GameManager.SetArena(this);
         GameManager.LoadLayout();
-
     }
 
     public override void Spawned()
     {
         base.Spawned();
 
-        StartCoreSpawnTimer(5f);
+        StartCoreSpawnTimer(coreDelay * 3);
     }
 
     private void OnDestroy()

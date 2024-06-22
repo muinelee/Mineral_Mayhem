@@ -16,8 +16,17 @@ public class SO_Character : ScriptableObject
     public Sprite characterEAbilityPortrait;
     public Sprite characterFAbilityPortrait;
 
+    public Sprite characterBasicAbilityPortraitIcon;
+    public Sprite characterQAbilityPortraitIcon;
+    public Sprite characterEAbilityPortraitIcon;
+    public Sprite characterFAbilityPortraitIcon;
+
     public string characterName;
     public string characterRace;
+
+    public float health;
+    public float damage;
+    public float speed;
 
     [TextArea(3, 10)]
     public string backstory;

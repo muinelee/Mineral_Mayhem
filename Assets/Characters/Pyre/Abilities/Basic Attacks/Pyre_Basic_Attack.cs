@@ -28,14 +28,14 @@ public class Pyre_Basic_Attack : NetworkAttack_Base
         transform.position += transform.forward * offset;
 
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifeDuration);
+
+        DealDamage();
     }
 
     // Update is called once per frame
     public override void FixedUpdateNetwork()
     {
         if (!Runner.IsServer) return;
-
-        DealDamage();
 
         if (lifeTimer.Expired(Runner))
         {
@@ -60,9 +60,9 @@ public class Pyre_Basic_Attack : NetworkAttack_Base
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
 
-                healthComponent.OnTakeDamage(damage);
+                healthComponent.OnTakeDamage(damage, true);
                 healthComponent.OnKnockBack(knockback, transform.position);
-                AttackEnd();
+                Runner.Spawn(this.onHitEffect, this.transform.position + onHitOffset, Quaternion.identity);
             }
         }
     }

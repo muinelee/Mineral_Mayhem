@@ -16,7 +16,7 @@ public interface IHealthComponent
     public void HandleRespawn() { }
 
     // Function for when taking damage
-    public void OnTakeDamage(float damageAmount) { }
+    public void OnTakeDamage(float damageAmount, bool playReact) { }
 
     // Function for if the object can get knockedback
     public void OnKnockBack(float force, Vector3 source) { }

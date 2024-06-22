@@ -10,8 +10,11 @@ public class GameOverManager : NetworkBehaviour
     public static GameOverManager Instance { get; set; }
 
     [Header("Text Images")]
-    [SerializeField] private GameObject redWinImage;
-    [SerializeField] private GameObject blueWinImage;
+    [SerializeField] private CG_Fade redWinImage;
+    [SerializeField] private CG_Fade blueWinImage;
+
+    [SerializeField] private CG_Fade redWinRoundImage;
+    [SerializeField] private CG_Fade blueWinRoundImage;
 
     [Header("GameOver Timer")]
     [SerializeField] private float gameOverScreenDuration;
@@ -35,14 +38,42 @@ public class GameOverManager : NetworkBehaviour
 
     private void DisplayBlueWins()
     {
-        blueWinImage.SetActive(true);
+        blueWinImage.gameObject.SetActive(true);
+        blueWinImage.FadeIn();
         MoveWinners(NetworkPlayer.Team.Blue);
     }
-
     private void DisplayRedWins()
     {
-        redWinImage.SetActive(true);
+        redWinImage.gameObject.SetActive(true);
+        redWinImage.FadeIn();
         MoveWinners(NetworkPlayer.Team.Red);
+    }
+
+    public void DisplayBlueWinsRound()
+    {
+        StartCoroutine(iDisplayBlueWinsRound());
+    }
+    private IEnumerator iDisplayBlueWinsRound()
+    {
+        blueWinRoundImage.gameObject.SetActive(true);
+        blueWinRoundImage.FadeIn();
+
+        yield return new WaitForSeconds(2.5f);
+
+        blueWinRoundImage.FadeOut();
+    }
+    public void DisplayRedWinsRound()
+    {
+        StartCoroutine(iDisplayRedWinsRound());
+    }
+    private IEnumerator iDisplayRedWinsRound()
+    {
+        redWinRoundImage.gameObject.SetActive(true);
+        redWinRoundImage.FadeIn();
+
+        yield return new WaitForSeconds(2.5f);
+
+        redWinRoundImage.FadeOut();
     }
 
     public void DisplayWinners(bool isRedWins)
@@ -52,6 +83,8 @@ public class GameOverManager : NetworkBehaviour
 
         gameOverTimer = TickTimer.CreateFromSeconds(Runner, gameOverScreenDuration);
         gameOver = true;
+
+        FindAnyObjectByType<ShrinkingStorm>().gameObject.SetActive(false);
     }
 
     private void MoveWinners(NetworkPlayer.Team team)
@@ -66,22 +99,28 @@ public class GameOverManager : NetworkBehaviour
             {
                 player.Health.DisableControls();
 
-                player.gameObject.GetComponentInChildren<NetworkPlayer_WorldSpaceHUD>().HideFloatingHealthBar();
+                player.Rigidbody.Rigidbody.velocity = Vector3.zero;
 
-                player.transform.rotation = victoryPositionSolo.rotation;
+                player.Animator.anim.Play("Victory");
+                player.Animator.anim.Play("Victory", 2);
+
+                player.gameObject.GetComponentInChildren<NetworkPlayer_WorldSpaceHUD>().HideFloatingHealthBar();
                 
                 if (Runner.SessionInfo.MaxPlayers > 2)
                 {
                     player.transform.position = victoryPositionsTeam[index].position;
-
+                    player.transform.rotation = victoryPositionsTeam[index].rotation;
                     index++;
                 }
 
                 else if (Runner.SessionInfo.MaxPlayers == 2)
                 {
                     player.transform.position = victoryPositionSolo.position;
+                    player.transform.rotation = victoryPositionSolo.rotation;
                 }
             }
+
+            else player.transform.position = Vector3.zero;
         }
     }
 
@@ -99,7 +138,7 @@ public class GameOverManager : NetworkBehaviour
         {
             Debug.Log($"this ran {num}");
             num++;
-            if (player.Object.HasStateAuthority) continue;
+            if (player.Object.HasInputAuthority) continue;
             runner.Disconnect(player.Object.InputAuthority);
         }
 
@@ -107,7 +146,7 @@ public class GameOverManager : NetworkBehaviour
 
         runner.Shutdown();
 
-        if (gameOver) SceneManager.LoadScene(0);
-        else SceneManager.LoadScene(4);
+        if (gameOver) SceneManager.LoadScene("Main Menu");
+        else SceneManager.LoadScene("PlayerDisconnected");
     }
 }

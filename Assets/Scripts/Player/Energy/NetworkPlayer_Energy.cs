@@ -36,7 +36,7 @@ public class NetworkPlayer_Energy : CharacterComponent
     public void AddEnergy(float value)
     {
         // Add value by percentage
-        energy += value/100 * fullCharge;
+        energy = Mathf.Min(energy + value/100 * fullCharge, fullCharge);
     }
 
     public float GetEnergyPercentage()

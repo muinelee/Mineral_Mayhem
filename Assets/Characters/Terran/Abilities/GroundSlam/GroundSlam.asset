@@ -13,10 +13,18 @@ MonoBehaviour:
   m_Name: GroundSlam
   m_EditorClassIdentifier: 
   attack: {fileID: 646205990537829603, guid: 2634ffe8a4144d448aef78a50e3314f3, type: 3}
-  voiceLine: {fileID: 0}
-  attackName: TempTerran_GroundSlam
+  voiceLine:
+  - {fileID: 8300000, guid: c805b44caa6263b4fadd2aab8978ecbb, type: 3}
+  - {fileID: 8300000, guid: a0181177d5fa73148baf1594d4170c18, type: 3}
+  - {fileID: 8300000, guid: a02ec64aad3f74b4b94e02a7ccbdfca7, type: 3}
+  - {fileID: 8300000, guid: 76050e2fdf0ab1543afeffa3cdec074a, type: 3}
+  - {fileID: 8300000, guid: 8576a96f97c5b504daf4f0e116fe28b9, type: 3}
+  attackName: Ground_Slam
   attackDescription: 
-  attackIcon: {fileID: 0}
-  abilitySlow: 0
-  turnSlow: 0
-  coolDown: 5
+  attackIcon: {fileID: 21300000, guid: 43b327ea7f3a0da44889b89dc63d929f, type: 3}
+  attackBackground: {fileID: 21300000, guid: 43b327ea7f3a0da44889b89dc63d929f, type: 3}
+  attackBackgroundGrey: {fileID: 21300000, guid: c9b8dab23afc92a4cbc2d699202ff702, type: 3}
+  abilitySlow: 0.15
+  turnSlow: 0.4
+  coolDown: 7
+  allowDashCancel: 0

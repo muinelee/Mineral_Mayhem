@@ -5,6 +5,7 @@ using UnityEngine;
 public class VineGround : NetworkAttack_Base
 {
     [SerializeField] private float radius;
+    [SerializeField] private float radiusExpansionRate;
 
     [SerializeField] private float lifetimeDuration = 5f;
     private TickTimer lifeTimer;
@@ -17,9 +18,15 @@ public class VineGround : NetworkAttack_Base
     [SerializeField] private LayerMask playerLayer;
     private List<LagCompensatedHit> hits = new List<LagCompensatedHit>();
 
+    [SerializeField] AudioClip announcerVoiceLine;
+    private bool voiceLinePlayed = false;
+
     public override void Spawned()
     {
         base.Spawned();
+
+        AudioManager.Instance.PlayAudioSFX(SFX[0], transform.position);
+        //AudioManager.Instance.PlayAudioSFX(SFX[1], transform.position);
 
         tickRateTimer = TickTimer.CreateFromSeconds(Runner, tickRate);
         lifeTimer = TickTimer.CreateFromSeconds(Runner, lifetimeDuration);
@@ -49,18 +56,26 @@ public class VineGround : NetworkAttack_Base
     {
         if (!Runner.IsServer) return;
 
+        radius += radiusExpansionRate;
+
         Runner.LagCompensation.OverlapSphere(transform.position, radius, player: Object.InputAuthority, hits, playerLayer, HitOptions.IgnoreInputAuthority);
 
         foreach (LagCompensatedHit hit in hits)
         {
             // Deal damage to all things in radius
             IHealthComponent healthComponent = hit.GameObject.GetComponentInParent<IHealthComponent>();
-
+            CharacterEntity characterEntity = hit.GameObject.GetComponentInParent<CharacterEntity>();
             if (healthComponent != null)
             {
                 if (healthComponent.isDead || CheckIfSameTeam(healthComponent.GetTeam())) continue;
 
-                healthComponent.OnTakeDamage(damage);
+                healthComponent.OnTakeDamage(damage, false);
+
+                if (healthComponent.HP <= 0 && characterEntity && !voiceLinePlayed)
+                {
+                    voiceLinePlayed = true;
+                    RPC_PlayAnnouncerVoiceLine();
+                }
             }
 
             // Apply status effect once per enemy player hit
@@ -72,8 +87,12 @@ public class VineGround : NetworkAttack_Base
 
                 foreach (StatusEffect status in statusEffectSO)
                 {
+                    // Apply effect
                     playerHitStatusHandler.AddStatus(status);
                     playersHit.Add(playerHitStatusHandler);
+
+                    // Activate hit react once
+                    healthComponent.OnTakeDamage(0, true);
                 }
             }
         }
@@ -82,5 +101,11 @@ public class VineGround : NetworkAttack_Base
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, radius);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayAnnouncerVoiceLine()
+    {
+        AudioManager.Instance.PlayAudioSFX(announcerVoiceLine, transform.position);
     }
 }

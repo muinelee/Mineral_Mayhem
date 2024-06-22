@@ -28,7 +28,7 @@ public class CharacterComponent : NetworkBehaviour
     /// <summary>
     /// Called when a player takes damage
     /// </summary>
-    public virtual void OnHit(float x) { }
+    public virtual void OnHit(float x, bool hitReact) { }
 
     /// <summary>
     /// Called when a player gets healed
@@ -68,7 +68,7 @@ public class CharacterComponent : NetworkBehaviour
     /// <summary>
     /// Called when a character picks something up
     /// </summary>
-    public virtual void OnPickup() { }
+    public virtual void OnPickup(bool isSpeed) { }
 
     public virtual void OnEnergyChange(float x) { }
 }

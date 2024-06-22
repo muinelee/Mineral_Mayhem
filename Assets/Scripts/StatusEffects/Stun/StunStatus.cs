@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Unity.Collections.Unicode;
-using UnityEngine.TextCore.Text;
+using Fusion;
+using Unity.VisualScripting;
 
 [CreateAssetMenu(fileName = "New Status Effect", menuName = "Scriptable Object/Status Effect/Stun Status")]
 public class StunStatus : StatusEffect
@@ -10,8 +10,7 @@ public class StunStatus : StatusEffect
     [SerializeField] public string animationName = "GravityStun";
     public override void OnStatusApplied(StatusHandler handler)
     {
-        if (animationName != "") handler.Character.Animator.anim.CrossFade(animationName, 0.2f);
-        else handler.Character.Animator.ResetAnimation();
+        handler.stun++;
         handler.Character.Movement.canMove = false;
         handler.Character.Attack.canAttack = false;
         handler.Character.OnBlock(false);        

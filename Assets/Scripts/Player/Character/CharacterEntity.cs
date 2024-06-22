@@ -1,28 +1,32 @@
 using Fusion;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class CharacterEntity : CharacterComponent
 {
     public static event Action<CharacterEntity> OnCharacterSpawned;
     public static event Action<CharacterEntity> OnCharacterDespawned;
 
-    public event Action<float> OnHitEvent;
+    public Transform cameraTarget;
+
+    public event Action<float, bool> OnHitEvent;
     public event Action<float> OnHealEvent;
     public event Action<bool> OnBlockEvent;
     public event Action<StatusEffect> OnStatusBeginEvent;
     public event Action<StatusEffect> OnStatusEndedEvent;
     public event Action OnCleanseEvent;
-    public event Action OnPickupEvent;
+    public event Action<bool> OnPickupEvent;
     public event Action<float> OnEnergyChangeEvent;
     public event Action OnCharacterDeathEvent;
     public event Action OnRoundEndEvent;
 
     #region Exposed Delegate Function Calls
-    public override void OnHit(float x)
+    public override void OnHit(float x, bool hitReact)
     {
-        OnHitEvent?.Invoke(x);
+        OnHitEvent?.Invoke(x, hitReact);
     }
     public override void OnHeal(float x)
     {
@@ -52,9 +56,9 @@ public class CharacterEntity : CharacterComponent
     {
         OnRoundEndEvent?.Invoke();
     }
-    public override void OnPickup()
+    public override void OnPickup(bool isSpeed)
     {
-        OnPickupEvent?.Invoke();
+        OnPickupEvent?.Invoke(isSpeed);
     }
     #endregion
 
@@ -69,6 +73,7 @@ public class CharacterEntity : CharacterComponent
     public NetworkPlayer_Health Health { get; private set; }
     public NetworkPlayer_Energy Energy { get; private set; }
     public NetworkPlayer_OnSpawnUI PlayerUI { get; private set; }
+    public CharacterVisualHandler VisualHandler { get; private set; }
 
     # region Private Setter Functions
     public void SetAnimationLink(NetworkPlayer_AnimationLink characterComp)
@@ -103,11 +108,19 @@ public class CharacterEntity : CharacterComponent
     {
         PlayerUI = characterComp;
     }
+    public void SetVisualHandler(CharacterVisualHandler characterComp)
+    {
+        VisualHandler = characterComp;
+    }
     #endregion
 
     public NetworkPlayer.Team Team { get; private set; }
     public bool hasDespawned = false;
-    public SpriteRenderer TeamIndicator;
+    public DecalProjector TeamIndicator;
+    public Material materialInstance;
+    [SerializeField] TextMeshProUGUI playerName;
+    [SerializeField] TMP_FontAsset fontBlueTeam;
+    [SerializeField] TMP_FontAsset fontRedTeam;
 
     public GameObject Shield;
 
@@ -118,7 +131,10 @@ public class CharacterEntity : CharacterComponent
         Rigidbody = GetComponent<NetworkRigidbody>();
         Collider = GetComponent<Collider>();
 
-        if (!TeamIndicator) TeamIndicator = GetComponentInChildren<SpriteRenderer>();
+        if (!TeamIndicator) TeamIndicator = GetComponentInChildren<DecalProjector>();
+        materialInstance = new Material(TeamIndicator.material);
+        TeamIndicator.material = materialInstance;
+
         if (Object.HasInputAuthority) RPC_SetTeam(NetworkPlayer.Local.team);
         
         var components = GetComponentsInChildren<CharacterComponent>();
@@ -128,7 +144,11 @@ public class CharacterEntity : CharacterComponent
             component.Init(this);
         }
 
-        if (Object.HasInputAuthority) NetworkCameraEffectsManager.instance.SetPlayerCamera(transform);
+        if (Object.HasInputAuthority)
+        {
+            if (cameraTarget == null) cameraTarget = transform.Find("CameraTarget");
+            NetworkCameraEffectsManager.instance.SetPlayerCamera(cameraTarget);
+        }
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -153,7 +173,15 @@ public class CharacterEntity : CharacterComponent
     {
         this.Team = team;
 
-        if (team == NetworkPlayer.Team.Red) this.TeamIndicator.color = Color.red;
-        else this.TeamIndicator.color = Color.blue;
+        if (team == NetworkPlayer.Team.Red)
+        {
+            materialInstance.SetColor("_Color", Color.red);
+            playerName.font = fontRedTeam;
+        }
+        else
+        {
+            materialInstance.SetColor("_Color", Color.blue);
+            playerName.font = fontBlueTeam;
+        }
     }
 }

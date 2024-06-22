@@ -4,7 +4,16 @@ using UnityEngine;
 public class HealthPickup : NetworkBehaviour
 {
     [SerializeField] private int healthAmount = 20;
-    [SerializeField] private LayerMask targetLayer; 
+    [SerializeField] private LayerMask targetLayer;
+    [SerializeField] private AudioClip pickupSFX;
+    [SerializeField] private NetworkObject pickupEffect;
+
+    public override void Spawned()
+    {
+        if (!Runner.IsServer) return;
+
+        if (RoundManager.Instance) RoundManager.Instance.ResetRound += PickedUp;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -12,13 +21,32 @@ public class HealthPickup : NetworkBehaviour
 
         if (targetLayer == (targetLayer | (1 << other.gameObject.layer)))
         {
-            NetworkPlayer_Health playerHealth = other.GetComponent<NetworkPlayer_Health>();
-            Debug.Log("COllided with player");
-            if (playerHealth != null)
+            AudioManager.Instance.PlayAudioSFX(pickupSFX, transform.position);
+            CharacterEntity character = other.GetComponent<CharacterEntity>();
+
+            if (character != null)
             {
-                playerHealth.Heal(healthAmount);
-                Runner.Despawn(Object);
+                character.OnHeal(healthAmount);
+                if (pickupEffect != null)
+                {
+                    NetworkObject pickupVFX = Runner.Spawn(pickupEffect, character.transform.position, transform.rotation);
+                    
+                    if (pickupVFX != null)
+                    {
+                        pickupVFX.GetComponent<Transform>().SetParent(character.transform);
+                    }
+                }
+                PickedUp();
             }
         }
+    }
+
+    public void PickedUp()
+    {
+        if (!Runner.IsServer) return;
+
+        if (RoundManager.Instance) RoundManager.Instance.ResetRound -= PickedUp;
+        
+        Runner.Despawn(Object);
     }
 }

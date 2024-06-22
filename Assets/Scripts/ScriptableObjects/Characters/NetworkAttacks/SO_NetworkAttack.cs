@@ -18,6 +18,8 @@ public class SO_NetworkAttack : ScriptableObject
 
     [Header("Attack Icon")]
     [SerializeField] protected Sprite attackIcon;
+    [SerializeField] protected Sprite attackBackground;
+    [SerializeField] protected Sprite attackBackgroundGrey;
 
     [Header("Ability Slow Percentage on activation")]
     [SerializeField, Range(0,1)] protected float abilitySlow;
@@ -26,6 +28,9 @@ public class SO_NetworkAttack : ScriptableObject
     [Header("Cooldown Properties")]
     [SerializeField] private float coolDown;
 
+    [Header("Allow Dash Cancel Property")]
+    [SerializeField] private bool allowDashCancel = false;
+
     public NetworkObject GetAttackPrefab()
     {
         return attack;
@@ -33,6 +38,14 @@ public class SO_NetworkAttack : ScriptableObject
     public Sprite GetAttackIcon()
     {
         return attackIcon;
+    }
+    public Sprite GetAttackBackground()
+    {
+        return attackBackground;
+    }
+    public Sprite GetAttackBackgroundGrey()
+    {
+        return attackBackgroundGrey;
     }
 
     public float GetTurnSlow()
@@ -53,5 +66,10 @@ public class SO_NetworkAttack : ScriptableObject
     public AudioClip[] GetVoiceLine()
     {
         return voiceLine;
+    }
+
+    public bool GetAllowDashCancel()
+    {
+        return allowDashCancel;
     }
 }
